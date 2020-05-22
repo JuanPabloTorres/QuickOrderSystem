@@ -89,6 +89,7 @@ namespace QuickOrderAdmin.Controllers
                 var newStore = new Store()
                 {
                     StoreId = Guid.NewGuid(),
+                    /////////////////////////CHANGE///////////////////////
                     StoreName = registerStoreViewModel.StoreName,
                     WorkHours = listWorkHour,
                     StoreImage = ImgToBty
