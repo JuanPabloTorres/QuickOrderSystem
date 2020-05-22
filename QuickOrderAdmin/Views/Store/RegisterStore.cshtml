@@ -1,0 +1,118 @@
+﻿@model QuickOrderAdmin.Models.RegisterStoreViewModel
+
+@{
+    ViewData["Title"] = "RegisterStore";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h1>RegisterStore</h1>
+
+<h4>RegisterStoreViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="RegisterStore" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFile" asp-for="File">
+                <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+
+           
+
+            <div class="form-group">
+                <label asp-for="StoreName" class="control-label"></label>
+                <input asp-for="StoreName" class="form-control" />
+                <span asp-validation-for="StoreName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MOpenTime" class="control-label"></label>
+                <input asp-for="MOpenTime" class="form-control" />
+                <span asp-validation-for="MOpenTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MCloseTime" class="control-label"></label>
+                <input asp-for="MCloseTime" class="form-control" />
+                <span asp-validation-for="MCloseTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TOpenTime" class="control-label"></label>
+                <input asp-for="TOpenTime" class="form-control" />
+                <span asp-validation-for="TOpenTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TCloseTime" class="control-label"></label>
+                <input asp-for="TCloseTime" class="form-control" />
+                <span asp-validation-for="TCloseTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WOpenTime" class="control-label"></label>
+                <input asp-for="WOpenTime" class="form-control" />
+                <span asp-validation-for="WOpenTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WCloseTime" class="control-label"></label>
+                <input asp-for="WCloseTime" class="form-control" />
+                <span asp-validation-for="WCloseTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThOpenTime" class="control-label"></label>
+                <input asp-for="ThOpenTime" class="form-control" />
+                <span asp-validation-for="ThOpenTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThCloseTime" class="control-label"></label>
+                <input asp-for="ThCloseTime" class="form-control" />
+                <span asp-validation-for="ThCloseTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FOpenTime" class="control-label"></label>
+                <input asp-for="FOpenTime" class="form-control" />
+                <span asp-validation-for="FOpenTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FCloseTime" class="control-label"></label>
+                <input asp-for="FCloseTime" class="form-control" />
+                <span asp-validation-for="FCloseTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SOpenTime" class="control-label"></label>
+                <input asp-for="SOpenTime" class="form-control" />
+                <span asp-validation-for="SOpenTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SCloseTime" class="control-label"></label>
+                <input asp-for="SCloseTime" class="form-control" />
+                <span asp-validation-for="SCloseTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SuOpenTime" class="control-label"></label>
+                <input asp-for="SuOpenTime" class="form-control" />
+                <span asp-validation-for="SuOpenTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SuCloseTime" class="control-label"></label>
+                <input asp-for="SuCloseTime" class="form-control" />
+                <span asp-validation-for="SuCloseTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script>
+// Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+</script>
