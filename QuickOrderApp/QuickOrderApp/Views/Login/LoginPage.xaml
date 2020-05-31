@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+            NavigationPage.HasNavigationBar="False"
+             BackgroundImageSource="Background.jpg"
+             x:Class="QuickOrderApp.Views.Login.LoginPage">
+    <StackLayout VerticalOptions="Center">
+        <Label Text="Quick Order" HorizontalOptions="Center"  VerticalOptions="Start" FontSize="Title" FontAttributes="Bold" TextColor="Black"/>
+        <BoxView HorizontalOptions="Fill" HeightRequest="0.2" BackgroundColor="Black" Margin="10"/>
+
+        <Frame HasShadow="True" CornerRadius="5"  VerticalOptions="Center" Margin="4">
+        <StackLayout VerticalOptions="Center">
+            <Label Text="Sign In" HorizontalOptions="Center" FontSize="Title" FontAttributes="Bold" TextColor="Black"/>
+    
+            <StackLayout VerticalOptions="Center" Margin="5">
+            <Entry Placeholder="Username" Text="{Binding Username}"/>
+                <Entry Placeholder="Password" Keyboard="Text" IsPassword="True" Text="{Binding Password}" />
+                    <button:SfButton Text="Login"  Command="{Binding LoginCommand}" Margin="15" CornerRadius="20" BackgroundColor="#FFD600" TextColor="Black" HasShadow="True" FontAttributes="Bold"/>
+            <button:SfButton Text="Register" Command="{Binding RegisterCommand}" Margin="15" CornerRadius="20" BackgroundColor="LightGray" TextColor="Black" HasShadow="True" FontAttributes="Bold"/>
+                <button:SfButton Text="Forgot Password" Margin="15" CornerRadius="20" BackgroundColor="LightGray" TextColor="Black" HasShadow="True" FontAttributes="Bold"/>
+           
+        </StackLayout>
+        </StackLayout>
+            
+        </Frame>
+    </StackLayout>
+ 
+</ContentPage>

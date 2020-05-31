@@ -31,7 +31,7 @@ namespace QuickOrderApp.Web.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            //modelBuilder.Entity<Store>().HasMany(w => w.WorkHours).WithOne(s => s.WorkHourStore).OnDelete(DeleteBehavior.Cascade);
         }
 
     }

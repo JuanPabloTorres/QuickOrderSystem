@@ -7,13 +7,19 @@ using Xamarin.Forms;
 
 using QuickOrderApp.Models;
 using QuickOrderApp.Services;
+using Library.Services.Interface;
 
 namespace QuickOrderApp.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
         public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        public IProductDataStore productDataStore => DependencyService.Get<IProductDataStore>();
+        public IUserDataStore userDataStore => DependencyService.Get<IUserDataStore>();
+        public IOrderProductDataStore orderProductDataStore => DependencyService.Get<IOrderProductDataStore>();
+        public IStoreDataStore StoreDataStore => DependencyService.Get<IStoreDataStore>();
 
+        public IOrderDataStore orderDataStore => DependencyService.Get<IOrderDataStore>();
         bool isBusy = false;
         public bool IsBusy
         {

@@ -18,13 +18,36 @@ namespace Library.Models
 
         public Guid BuyerId { get; set; }
 
+        public Guid StoreId { get; set; }
+
+        [ForeignKey("StoreId")]
+        public Store StoreOrder { get; set; }
+
         public Type OrderType { get; set; }
+        public Status OrderStatus { get; set; }
+
+        bool IsSubmit { get; set; }
 
     }
 
     public enum Type
     {
         PickUp,
-        Delivery
+        Delivery,
+        None
     }
+
+    public enum Status
+    {
+        InProccess,
+        Pending,
+        Completed,
+        OnTheWay,
+        NotSubmited,
+        Submited
+        
+    }
+
+    
+
 }

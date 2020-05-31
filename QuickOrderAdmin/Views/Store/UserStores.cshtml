@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Library.Models.Store>
+@using System.Linq
+
+@{
+    ViewData["Title"] = "UserStores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center">Your stores</h1>
+
+<p>
+    <a asp-action="RegisterStore" class="btn btn-warning">Register Store</a>
+</p>
+
+
+
+@*@{int i = 0;}*@
+<div class="container ">
+
+    @foreach (var item in Model)
+    {
+
+        @*@if (i == 0 || i % 3 != 0)
+        {
+            
+        }*@
+        <div class="card mx-auto" style="width:400px;">
+            <img src="data:image;base64,@System.Convert.ToBase64String(item.StoreImage)" width="120" height="120" class="rounded-circle mx-auto d-block" />
+            <div class="card-body">
+                <h4 class="card-title text-center">@item.StoreName</h4>
+                @*<span>@i</span>
+                @{i++;
+                }*@
+
+            </div>
+            <div class=" card-footer text-center">
+                @Html.ActionLink("Edit", "Edit", new {  id=item.StoreId  }) |
+                @Html.ActionLink("Details", "DetailStore", new {  id=item.StoreId }) |
+                @Html.ActionLink("Delete", "DeleteStore", new {  id=item.StoreId  })
+            </div>
+        </div>
+        <br />
+    }
+
+</div>
+

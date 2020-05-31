@@ -21,10 +21,10 @@ namespace Library.Models
 
         public ICollection<Store> Stores { get; set; }
 
-        public Guid StoreRegisterLicenseId { get; set; }
+        //public Guid StoreRegisterLicenseId { get; set; }
 
-        [ForeignKey("StoreRegisterLicenseId")]
-        public StoreLicense UserStoreLicense { get; set; }
+        //[ForeignKey("StoreRegisterLicenseId")]
+        //public StoreLicense UserStoreLicense { get; set; }
 
 
 

@@ -9,6 +9,7 @@ using Library.Models;
 using Library.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using QuickOrderAdmin.Models;
+using QuickOrderAdmin.Utilities;
 
 namespace QuickOrderAdmin.Controllers
 {
@@ -118,10 +119,9 @@ namespace QuickOrderAdmin.Controllers
         {
             if (UserInfoNotNullOrEmpty(userVm))
             {
-                var LicenseValid =  storeLicenseDataStore.StoreLicenseExists(userVm.StoreLicence);
+                //var LicenseValid =  storeLicenseDataStore.StoreLicenseExists(userVm.StoreLicence);
 
-                if (LicenseValid)
-                {
+               
                     var userLogin = new Login()
                     {
                         LoginId = Guid.NewGuid(),
@@ -136,22 +136,28 @@ namespace QuickOrderAdmin.Controllers
                         LoginId = userLogin.LoginId,
                         Name = userVm.Name,
                         UserLogin = userLogin,
-                        StoreRegisterLicenseId = userVm.StoreLicence
-
                     };
 
                     var addedUser = await userDataStore.AddItemAsync(newUser);
 
                     if (addedUser)
                     {
-                        return RedirectToAction("Index", "Login");
+
+                    var result = userDataStore.CheckUserCredential(userLogin.Username, userLogin.Password);
+
+                    if (result != null)
+                    {
+                        LogUser.LoginUser = result;
                     }
-                }
-                else
-                {
-                    ViewBag.LicenseError = "License is not valid.";
-                    return View();
-                }
+
+                    return RedirectToAction("RegisterStore", "Store");
+                    }
+                
+                //else
+                //{
+                //    ViewBag.LicenseError = "License is not valid.";
+                //    return View();
+                //}
             }
 
             return View();

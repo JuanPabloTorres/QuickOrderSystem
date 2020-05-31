@@ -19,6 +19,7 @@ namespace QuickOrderAdmin.Controllers
             userDataStore = userData;
         }
 
+        //Sign In Action
         public IActionResult Index(LoginViewModel loginViewModel)
         {
             if (LoginInfoNotNullOrEmpty(loginViewModel))
@@ -28,6 +29,19 @@ namespace QuickOrderAdmin.Controllers
                 if (result != null)
                 {
                     LogUser.LoginUser = result;
+
+                    var stores = new List<Store>(result.Stores);
+
+                    if (stores.Count() > 0)
+                    {
+
+                    SelectedStore.CurrentStore = stores[0];
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("RegisterStore", "Store");
+                    }
 
                     return RedirectToAction("Index", "Home");
                 }

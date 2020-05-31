@@ -64,10 +64,13 @@ namespace QuickOrderApp.Web.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("int");
+
                     b.Property<int>("OrderType")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("StoreId")
+                    b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("OrderId");
@@ -83,17 +86,26 @@ namespace QuickOrderApp.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("OrderId")
+                    b.Property<Guid>("BuyerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
+
+                    b.Property<byte[]>("ProductImage")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("ProductName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("OrderProductId");
 
@@ -114,10 +126,13 @@ namespace QuickOrderApp.Web.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<byte[]>("ProductImage")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("ProductName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("StoreId")
+                    b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ProductId");
@@ -139,10 +154,15 @@ namespace QuickOrderApp.Web.Migrations
                     b.Property<string>("StoreName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("StoreRegisterLicenseId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("StoreId");
+
+                    b.HasIndex("StoreRegisterLicenseId");
 
                     b.HasIndex("UserId");
 
@@ -178,14 +198,9 @@ namespace QuickOrderApp.Web.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("StoreRegisterLicenseId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("UserId");
 
                     b.HasIndex("LoginId");
-
-                    b.HasIndex("StoreRegisterLicenseId");
 
                     b.ToTable("Users");
                 });
@@ -205,7 +220,7 @@ namespace QuickOrderApp.Web.Migrations
                     b.Property<DateTime>("OpenTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("StoreId")
+                    b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("WorkHourId");
@@ -217,27 +232,39 @@ namespace QuickOrderApp.Web.Migrations
 
             modelBuilder.Entity("Library.Models.Order", b =>
                 {
-                    b.HasOne("Library.Models.Store", null)
+                    b.HasOne("Library.Models.Store", "StoreOrder")
                         .WithMany("Orders")
-                        .HasForeignKey("StoreId");
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Library.Models.OrderProduct", b =>
                 {
                     b.HasOne("Library.Models.Order", null)
                         .WithMany("OrderProducts")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Library.Models.Product", b =>
                 {
                     b.HasOne("Library.Models.Store", null)
                         .WithMany("Products")
-                        .HasForeignKey("StoreId");
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Library.Models.Store", b =>
                 {
+                    b.HasOne("Library.Models.StoreLicense", "UserStoreLicense")
+                        .WithMany()
+                        .HasForeignKey("StoreRegisterLicenseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Library.Models.User", null)
                         .WithMany("Stores")
                         .HasForeignKey("UserId");
@@ -250,19 +277,15 @@ namespace QuickOrderApp.Web.Migrations
                         .HasForeignKey("LoginId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Library.Models.StoreLicense", "UserStoreLicense")
-                        .WithMany()
-                        .HasForeignKey("StoreRegisterLicenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Library.Models.WorkHour", b =>
                 {
                     b.HasOne("Library.Models.Store", null)
                         .WithMany("WorkHours")
-                        .HasForeignKey("StoreId");
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

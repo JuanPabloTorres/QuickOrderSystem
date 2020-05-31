@@ -16,6 +16,11 @@ namespace Library.Models
 
         public DateTime CloseTime { get; set; }
 
+        public Guid StoreId { get; set; }
+
+        //[ForeignKey("StoreId")]
+        //public Store WorkHourStore { get; set; }
+
         public string Day { get; set; }
     }
 }

@@ -31,7 +31,8 @@ namespace QuickOrderAdmin
             services.AddSingleton<IStoreLicenseDataStore, StoreLicenceDataStore>();
             services.AddSingleton<IStoreDataStore, StoreDataStore>();
             services.AddSingleton<IUserDataStore, UserDataStore>();
-          
+            services.AddSingleton<IProductDataStore, ProductDataStore>();
+            services.AddSingleton<IOrderDataStore, OrderDataStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

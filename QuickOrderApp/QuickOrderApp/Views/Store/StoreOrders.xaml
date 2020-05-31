@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             mc:Ignorable="d"
+             Title="Orders"
+             BackgroundImageSource="Background.jpg"
+             Routing.Route="StoreOrderRoute"
+             x:Class="QuickOrderApp.Views.Store.StoreOrders">
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView
+           
+      ItemsSource="{Binding UserOrders}"
+           HasUnevenRows="True"
+            Margin="5"
+                IsPullToRefreshEnabled="True"
+            SelectedItem="{Binding SelectedOrder}"
+                IsRefreshing="{Binding IsBusy}"
+                RefreshCommand="{Binding LoadItemsCommand}"
+            CachingStrategy="RecycleElement">
+
+                <!--Built in Cells-->
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame HasShadow="True" CornerRadius="4" Margin="4" Padding="0">
+
+                                <StackLayout  BackgroundColor="White">
+
+                                    <Frame 
+                                  HorizontalOptions="Fill"
+                                   HeightRequest="200"
+                                 
+           Padding="0"
+           IsClippedToBounds="True">
+
+                                        <Image Source="{Binding StoreImage,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill"/>
+                                    </Frame>
+                                    <Label Text="{Binding StoreName}" FontSize="Title" TextColor="Black" HorizontalOptions="Center" FontAttributes="Bold"></Label>
+                                    <BoxView HeightRequest="0.2" HorizontalOptions="Fill" Margin="4" BackgroundColor="Black"/>
+                                    <Label Text="{Binding OrderId ,StringFormat='#{0}'}" TextColor="Black" FontAttributes="Bold"/>
+                                    <Label Text="{Binding OrderDate,StringFormat='Date: {0:MM/dd/yyyy}'}" TextColor="Black" FontAttributes="Bold"/>
+                                    <Label Text="{Binding OrderType,StringFormat='Type: {0}'}" TextColor="Black" FontAttributes="Bold"/>
+                                    <Label Text="{Binding OStatus,StringFormat='Status:{0}'}" TextColor="Black" FontAttributes="Bold"/>
+                                    <Label Text="{Binding OrderItems,StringFormat='Items: {0}'}" TextColor="Black" FontAttributes="Bold"/>
+                                    <button:SfButton Text="Detail" Command="{Binding DetailCommand}" CornerRadius="5" 
+                                                     Margin="2"
+                                                     BackgroundColor="LightGray" FontAttributes="Bold" TextColor="Black" HasShadow="True"/>
+                                    <button:SfButton Text="Delete"
+                                                     Margin="2"
+                                                     Command="{Binding DeleteCommand}" CornerRadius="5" BackgroundColor="#FF756B" FontAttributes="Bold" TextColor="Black" HasShadow="True"/>
+                                </StackLayout>
+                            </Frame>
+
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+
+            </ListView>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

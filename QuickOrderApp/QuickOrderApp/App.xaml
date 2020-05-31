@@ -2,10 +2,22 @@
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:converters="clr-namespace:QuickOrderApp.Utilities.Converters"
              mc:Ignorable="d"
              x:Class="QuickOrderApp.App">
     <Application.Resources>
-        
+
+
+        <!--<Style x:Key="BaseButton"   TargetType="{x:Type button:SfButton}" >
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            <Setter Property="HorizontalTextAlignment" Value="Center" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+        </Style>-->
+        <!--Converters-->
+        <converters:BytesToImg x:Key="BytesToImgConverter" />
+
     </Application.Resources>
 </Application>

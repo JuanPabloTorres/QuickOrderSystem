@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Routing.Route="DetailOrderRoute"
+             Title="{Binding OrderDetail.StoreOrder.StoreName,StringFormat='Order Detail of {0}'}"
+             x:Class="QuickOrderApp.Views.Store.DetailOrder">
+    <ContentPage.Content>
+        <StackLayout>
+            <!--<Label Text="{Binding OrderDetail.StoreOrder.StoreName}" TextColor="Black" HorizontalOptions="Center"/>-->
+            <Label Text="{Binding OrderDetail.OrderId,StringFormat='Order #{0}'}" TextColor="Black" FontAttributes="Bold"/>
+            <Label Text="{Binding OrderDetail.OrderDate,StringFormat='Date: {0}'}" TextColor="Black" FontAttributes="Bold"/>
+            <Label Text="{Binding OrderDetail.OrderStatus,StringFormat='Items:{0}'}" TextColor="Black" FontAttributes="Bold"/>
+            <Label Text="{Binding OrderDetail.OrderProducts.Count,StringFormat='Items:{0}'}" TextColor="Black" FontAttributes="Bold"/>
+            <ListView
+                Margin="5"
+      ItemsSource="{Binding OrderDetail.OrderProducts}"
+          
+      HasUnevenRows="True"
+            CachingStrategy="RecycleElement">
+
+                <!--Built in Cells-->
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Margin="8">
+                                <Image Source="{Binding ProductImage,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill" HeightRequest="120" WidthRequest="80"/>
+                                <Label Text="{Binding ProductName}" TextColor="Black" FontAttributes="Bold"></Label>
+                                <Label Text="{Binding Price,StringFormat='{0:C}'}" FontAttributes="Bold" TextColor="Black"></Label>
+                                <Label Text="{Binding Quantity,StringFormat='Items: {0}'}" FontAttributes="Bold" TextColor="Black"/>
+
+                            </StackLayout>
+
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <BoxView HeightRequest="0.2" HorizontalOptions="Fill" BackgroundColor="Black"/>
+
+            <button:SfRadioGroup x:Name="radioGroup" Orientation="Horizontal" HorizontalOptions="Center" >
+                <button:SfRadioButton x:Name="radioButton1" Text="Pick Up" IsChecked="{Binding IspickUp}" CheckedColor="Orange"/>
+                <button:SfRadioButton x:Name="radioButton2" Text="Delivery" IsChecked="{Binding IsDelivery}" CheckedColor="Orange"/>
+               
+            </button:SfRadioGroup>
+
+            <StackLayout Margin="4">
+                
+            <Label Text="Tax 11.5%" TextColor="Black" FontAttributes="Bold"/>
+            <Label Text="Fees $0.02" TextColor="Black" FontAttributes="Bold"/>
+            <Label Text="{Binding OrderTypeFee,StringFormat='{0:C}'}" TextColor="Black" FontAttributes="Bold"/>
+            <Label Text="{Binding Total,StringFormat='Total:{0:C}'}" TextColor="Black" FontAttributes="Bold"/>
+            </StackLayout>
+
+            <button:SfButton Text="Checkout" BackgroundColor="LightGray" CornerRadius="5" Margin="15" HasShadow="True" Command="{Binding CheckoutCommand}" FontAttributes="Bold" TextColor="Black"/>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

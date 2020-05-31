@@ -15,5 +15,14 @@ namespace Library.Models
 
         public double Price { get; set; }
 
+        public Guid BuyerId { get; set; }
+
+        public Guid StoreId { get; set; }
+
+        public Guid OrderId { get; set; }
+
+        public byte[] ProductImage { get; set; }
+
+
     }
 }

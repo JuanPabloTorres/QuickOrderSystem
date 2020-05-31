@@ -4,6 +4,10 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using QuickOrderApp.Services;
 using QuickOrderApp.Views;
+using Library.Services;
+using QuickOrderApp.Views.Login;
+using Library.Models;
+using Library.Services.Interface;
 
 namespace QuickOrderApp
 {
@@ -19,16 +23,31 @@ namespace QuickOrderApp
         DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.1.132:5000/api" : "http://192.168.1.132:5000/api";
 
         public static bool UseMockDataStore = true;
-
+        public static User LogUser;
+        public static Store CurrentStore;
         public App()
         {
             InitializeComponent();
-
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjY0MTU4QDMxMzgyZTMxMmUzMEx6QkJ4RjEvcHl6V2VaMFF3TENBa0tUU1c1RWpKWlh3bDNUdXduc3J6Q2c9");
             if (UseMockDataStore)
-                DependencyService.Register<MockDataStore>();
+            {
+                Dependencies();
+
+            }
             else
                 DependencyService.Register<AzureDataStore>();
-            MainPage = new AppShell();
+
+            MainPage = new NavigationPage( new LoginPage());
+        }
+
+        void Dependencies()
+        {
+            DependencyService.Register<MockDataStore>();
+            DependencyService.Register<ProductDataStore>();
+            DependencyService.Register<UserDataStore>();
+            DependencyService.Register<StoreDataStore>();
+            DependencyService.Register<OrderProductDataStore>();
+            DependencyService.Register<OrderDataStore>();
         }
 
         protected override void OnStart()

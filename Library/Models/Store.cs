@@ -14,6 +14,8 @@ namespace Library.Models
 
         public string StoreName { get; set; }
 
+        public Guid? UserId { get; set; }
+
         public byte[] StoreImage { get; set; }
 
        public ICollection<Product> Products { get; set; }
@@ -21,6 +23,11 @@ namespace Library.Models
         public ICollection<WorkHour> WorkHours { get; set; }
 
         public ICollection<Order> Orders { get; set; }
+
+        public Guid StoreRegisterLicenseId { get; set; }
+
+        [ForeignKey("StoreRegisterLicenseId")]
+        public StoreLicense UserStoreLicense { get; set; }
 
     }
 }

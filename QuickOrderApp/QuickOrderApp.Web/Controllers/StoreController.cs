@@ -28,11 +28,18 @@ namespace QuickOrderApp.Web.Controllers
             return await _context.Stores.ToListAsync();
         }
 
+        // GET: api/Store
+        [HttpGet("[action]/{userid}")]
+        public async Task<ActionResult<IEnumerable<Store>>> GetStoresFromUser(Guid userid)
+        {
+            return await _context.Stores.Where(s=>s.UserId == userid).ToListAsync();
+        }
+
         // GET: api/Store/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Store>> GetStore(Guid id)
         {
-            var store = await _context.Stores.FindAsync(id);
+            var store =  _context.Stores.Where(s=>s.StoreId == id).Include(p=>p.Products).Include(w=>w.WorkHours).FirstOrDefault();
 
             if (store == null)
             {
@@ -81,6 +88,7 @@ namespace QuickOrderApp.Web.Controllers
         public async Task<ActionResult<Store>> PostStore(Store store)
         {
             _context.Stores.Add(store);
+            //_context.WorkHours.Attach(store.WorkHours)
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetStore", new { id = store.StoreId }, store);

@@ -7,5 +7,6 @@ namespace Library.Services.Interface
 {
     public interface IStoreDataStore:IDataStore<Store>
     {
+         IEnumerable<Store> GetStoresFromUser(Guid userid);
     }
 }

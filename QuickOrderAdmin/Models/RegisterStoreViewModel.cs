@@ -15,6 +15,10 @@ namespace QuickOrderAdmin.Models
         [Required(ErrorMessage = "Please enter store name"), StringLength(50)]
         public string StoreName { get; set; }
 
+        [Required]
+        [DisplayName("Store Register License")]
+        public Guid StoreLicence { get; set; }
+
         [DataType(DataType.Time)]  
         [DisplayFormat(DataFormatString = "{0:hh:mm tt}")]
         [DisplayName("Monday Open Time")]

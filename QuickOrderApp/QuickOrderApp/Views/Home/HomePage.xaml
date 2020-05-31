@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Routing.Route="HomePageRoute"
+             Title="Quick Order"
+             Shell.BackgroundColor="Orange"
+             Shell.TabBarForegroundColor="Orange"
+             Shell.TitleColor="Black"
+             Shell.TabBarTitleColor="Black"
+           
+             BackgroundImageSource="Background.jpg"
+             x:Class="QuickOrderApp.Views.Home.HomePage">
+    <ContentPage.Content>
+        <StackLayout>
+            
+       
+        <ListView
+           
+      ItemsSource="{Binding Stores}"
+           HasUnevenRows="True"
+            Margin="5"
+            SelectedItem="{Binding SelectedStore}"
+            CachingStrategy="RecycleElement">
+               
+            <!--Built in Cells-->
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Frame HasShadow="True" CornerRadius="4" Margin="8" Padding="0">
+                            
+                        <StackLayout  BackgroundColor="White">
+
+                            <Frame  
+                                  HorizontalOptions="Fill"
+                                   HeightRequest="200"
+                                 
+           Padding="0"
+           IsClippedToBounds="True">
+                                
+                        <Image Source="{Binding StoreImg,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill"/>
+                            </Frame>
+                        <Label Text="{Binding StoreName}" FontSize="Title" TextColor="Black" HorizontalOptions="Center"></Label>
+                            <BoxView HeightRequest="0.2" HorizontalOptions="Fill" Margin="4" BackgroundColor="Black"/>
+                            <button:SfButton Text="Buy On Store" Command="{Binding GoHomeStoreCommand}" CornerRadius="5" Margin="15" BackgroundColor="LightGray" TextColor="Black" FontAttributes="Bold" HasShadow="True"/>
+                           
+                        </StackLayout>
+                        </Frame>
+
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <!--Custom View Cells-->
+            <!--
+    <ListView.ItemTemplate>
+      <DataTemplate>
+        <ViewCell>
+          <StackLayout>
+            <Label Text="{Binding Text}" 
+                   d:Text="{Binding .}"
+                   Style="{DynamicResource ListItemTextStyle}" />
+            <Label Text="{Binding Detail}" 
+                   d:Text="Detail"
+                   Style="{DynamicResource ListItemDetailTextStyle}"/>
+          </StackLayout>
+        </ViewCell>
+      </DataTemplate>
+    </ListView.ItemTemplate>
+    -->
+        </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

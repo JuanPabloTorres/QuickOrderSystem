@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
@@ -12,10 +13,14 @@ namespace Library.Models
         [Key]
         public Guid ProductId { get; set; }
 
+        public byte[] ProductImage { get; set; }
+
         public string ProductName { get; set; }
 
         public double Price { get; set; }
 
         public int InventoryQuantity { get; set; }
+
+        public Guid StoreId { get; set; }
     }
 }

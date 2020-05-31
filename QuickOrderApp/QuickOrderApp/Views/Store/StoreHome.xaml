@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             mc:Ignorable="d"
+             Routing.Route="StoreHomeRoute"
+             Title="{Binding StoreName}"
+             BackgroundImageSource="Background.jpg"
+             x:Class="QuickOrderApp.Views.Store.StoreHome">
+
+  
+        <Grid >
+                <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+
+
+            </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                  
+                </Grid.ColumnDefinitions>
+            <Frame  HasShadow="True"
+                    Grid.Row="0" Grid.ColumnSpan="2"
+                                  HorizontalOptions="Fill"
+                                   HeightRequest="200"
+                                 
+           Padding="0"
+           IsClippedToBounds="True">
+
+                <Image Grid.Row="0" Grid.ColumnSpan="2" Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" Aspect="Fill" ></Image>
+            </Frame>
+
+            <button:SfButton Grid.Row="1" Grid.ColumnSpan="2" Text="Buy" Command="{Binding GoShowCommand}" CornerRadius="5" Margin="15" BackgroundColor="#FFD600" TextColor="Black" FontAttributes="Bold" HasShadow="True"/>
+
+            <!--<button:SfButton Grid.Row="1" Grid.Column="1" Text="Your Order" Command="{Binding GoHomeStoreCommand}" CornerRadius="5" Margin="15" BackgroundColor="#FFD600" TextColor="Black" FontAttributes="Bold"/>-->
+
+            <Frame HasShadow="True" CornerRadius="4"  Grid.Row="2" Grid.ColumnSpan="2" VerticalOptions="Center" Margin="5">
+                
+            <StackLayout Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalOptions="Center" >
+                <Label Text="{Binding WorkHour.Day}" TextColor="Black" FontAttributes="Bold"/>
+                <Label Text="{Binding WorkHour.OpenTime,StringFormat='Open:{0:hh:mm tt}'}" TextColor="Black"/>
+                <Label Text="{Binding WorkHour.CloseTime,StringFormat='Close:{0:hh:mm tt}'}" TextColor="Black"/>
+
+            </StackLayout>
+            </Frame>
+            
+         
+        </Grid>
+            
+    
+   
+</ContentPage>
