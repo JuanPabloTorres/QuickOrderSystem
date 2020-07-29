@@ -1,15 +1,11 @@
 ﻿using Library.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickOrderApp.Web.Context
 {
-    public class QOContext:DbContext
+    public class QOContext : DbContext
     {
-      
+
         public DbSet<User> Users { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -17,11 +13,14 @@ namespace QuickOrderApp.Web.Context
         public DbSet<WorkHour> WorkHours { get; set; }
 
         public DbSet<ForgotPassword> ForgotPasswords { get; set; }
-
+        public DbSet<Employee> Employees { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
 
+        public DbSet<UserRequest> Requests { get; set; }
+
         public DbSet<StoreLicense> StoreLicenses { get; set; }
+        public DbSet<EmployeeWorkHour> EmployeeWorkHours { get; set; }
 
 
         public QOContext(DbContextOptions options) : base(options)
@@ -31,7 +30,7 @@ namespace QuickOrderApp.Web.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Store>().HasMany(w => w.WorkHours).WithOne(s => s.WorkHourStore).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Employee>().HasMany(w => w.EmployeeWorkHours).WithOne(s => s.Employee).OnDelete(DeleteBehavior.Restrict);
         }
 
     }

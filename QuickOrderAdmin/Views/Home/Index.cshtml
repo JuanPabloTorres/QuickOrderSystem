@@ -4,49 +4,78 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <img src="data:image;base64,@System.Convert.ToBase64String(Model.StoreImage)" width="100" height="100" class="rounded-circle" />
-        </div>
-        <div class="col">
-            <h3>@Model.StoreName</h3>
-        </div>
-        <div class="col">
-            <div class="list-group list-group-horizontal">
-                @Html.ActionLink("Add Product", "AddProductStore", "Store", new { id = Model.StoreId, viewname = "Add" }, new { @class = "list-group-item list-group-item-action" })
-                @Html.ActionLink("Orders", "StoreOrders", "Store", new { id = Model.StoreId, viewname = "Orders" }, new { @class = "list-group-item list-group-item-action" })
-                @Html.ActionLink("Employees", "Partial", "Store", new { id = Model.StoreId, viewname = "Employees" }, new { @class = "list-group-item list-group-item-action" })
-                @Html.ActionLink("Store Location", "ShowMap", "Store", new { id = Model.StoreId, viewname = "Employees" }, new { @class = "list-group-item list-group-item-action" })
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <img src="data:image;base64,@System.Convert.ToBase64String(Model.StoreImage)" width="100" height="100" class="rounded-circle" />
+            </div>
+            <div class="col">
+                <h3>@Model.StoreName</h3>
+            </div>
+            <div class="col">
+                <div class="list-group list-group-horizontal">
+                    @Html.ActionLink("Add Product", "AddProductStore", "Store", new { id = Model.StoreId, viewname = "Add" }, new { @class = "list-group-item list-group-item-action" })
+                    @Html.ActionLink("Orders", "StoreOrders", "Store", new { id = Model.StoreId, viewname = "Orders" }, new { @class = "list-group-item list-group-item-action" })
+                    @Html.ActionLink("Store Employees", "ShowEmployees", "Employee", null, new { @class = "list-group-item list-group-item-action" })
+                    @Html.ActionLink("Remove Store", "ShowEmployees", "Store", new { id = Model.StoreId, viewname = "Employees" }, new { @class = "list-group-item list-group-item-action" })
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-@*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-        Launch demo modal
-    </button>
+    <table class="table table-hover">
+        <thead>
+            <tr>
 
-     Modal
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>*@
+                <th>
+                    <label>Product Image</label>
+                    @*@Html.DisplayNameFor(model => model.ProductImage)*@
+                </th>
+                <th>
+                    <label>Product Name</label>
+                    @*@Html.DisplayNameFor(model => model.ProductName)*@
+                </th>
+                <th>
+                    <label>Product Price</label>
+                    @*@Html.DisplayNameFor(model => model.Price)*@
+                </th>
+                <th>
+                    <label>Inventory Quantity</label>
+                    @*@Html.DisplayNameFor(model => model.InventoryQuantity)*@
+                </th>
 
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item   in ViewBag.Result)
+            {
+                <tr>
+
+                    <td>
+                        <img src="data:image;base64,@System.Convert.ToBase64String(item.ProductImage)" width="100" height="100" class="rounded-circle" />
+                    </td>
+                    <td>
+                        <label>@item.ProductName</label>
+                        @*@Html.DisplayFor(modelItem => item.ProductName)*@
+                    </td>
+                    <td>
+                        <label>@item.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</label>
+                    </td>
+                    <td>
+                        <label>@item.InventoryQuantity</label>
+                        @*@Html.DisplayFor(modelItem => item.InventoryQuantity)*@
+                    </td>
+
+                    @*<td>
+                        @Html.ActionLink("Edit", "EditProduct", new { id = item.ProductId }) |
+                        @Html.ActionLink("Details", "DetailProdut", new { id = item.ProductId }) |
+                        @Html.ActionLink("Delete", "DeleteProduct", new { id = item.ProductId })
+                    </td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
 
 

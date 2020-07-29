@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             mc:Ignorable="d"
+             Routing.Route="UpdateProfileRoute"
+               Shell.BackgroundColor="White"
+          Title="Update Profile"
+         Shell.NavBarHasShadow="True"
+             Shell.TitleColor="Black"
+             x:Class="QuickOrderApp.Views.Settings.UpdateProfile">
+    <ContentPage.Content>
+        <Grid  VerticalOptions="Center" HorizontalOptions="Fill">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0" Margin="2">
+                
+            <Label Text="Update Your User Information" HorizontalOptions="Center" FontSize="Title" TextColor="Black"/>
+            <BoxView HorizontalOptions="Fill" HeightRequest="0.1" BackgroundColor="Black"/>
+            </StackLayout>
+            <StackLayout Grid.Row="1">
+
+                <Label Text="Information To Update" HorizontalOptions="Start" FontSize="Body" TextColor="Black" Margin="5,0,0,0"/>
+                <BoxView HorizontalOptions="Fill" HeightRequest="0.1" BackgroundColor="Black"/>
+            </StackLayout>
+            <StackLayout Grid.Row="2" Margin="2">
+               
+                <Entry Placeholder="FullName" Text="{Binding Fullname}"/>
+            <Entry Placeholder=" Email" Text="{Binding Email}"/>
+            <Entry Placeholder=" Adress" Text="{Binding Address}"/>
+            <Entry Placeholder=" Phone" Text="{Binding Phone}"/>
+            <StackLayout>
+                <combobox:SfComboBox ComboBoxSource="{Binding Genders}" SelectedItem="{Binding GenderSelected}" Text="Gender"/>
+            </StackLayout>
+            </StackLayout>
+
+            <button:SfButton Text="Done"
+                             Grid.Row="3"
+                             Command="{Binding DoneCommand}" BackgroundColor="DodgerBlue" CornerRadius="5" HasShadow="True" Margin="5" FontAttributes="Bold" FontSize="Body" TextColor="Black"/>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

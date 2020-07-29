@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             mc:Ignorable="d"
+             Title="Employee Detail"
+             Routing.Route="StoreEmployeeDetailRoute"
+             x:Class="QuickOrderApp.Views.Store.StoreManger.StoreEmployeeDetail">
+
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                  
+                </Grid.RowDefinitions>
+              
+               
+                <StackLayout  Margin="5" Grid.Row="0" >
+                  
+                    <StackLayout>
+
+                        <Label Text="{Binding EmployeeDetail.EmployeeUser.Name,StringFormat='Name: {0}'}" FontSize="Body" />
+                        <Label Text="{Binding EmployeeDetail.EmployeeUser.Email,StringFormat='Email: {0}'}" FontSize="Body" />
+                        <Label Text="{Binding EmployeeDetail.Type,StringFormat='Position: {0}'}" FontSize="Body" />
+                        <Label Text="{Binding EmployeeDetail.EmployeeUser.Gender,StringFormat='Gender: {0}'}" FontSize="Body" />
+                        <Label Text="{Binding EmployeeDetail.EmployeeUser.Phone,StringFormat='Phone: {0}'}" FontSize="Body"/>
+                    </StackLayout>
+                </StackLayout>
+                <CollectionView ItemsSource="{Binding EmployeeDetail.EmployeeWorkHours}" Grid.Row="1" >
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Span="1" Orientation="Vertical" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <Label Text="{Binding Day}" FontSize="Title" HorizontalOptions="Center"/>
+                                <BoxView HorizontalOptions="FillAndExpand" HeightRequest="0.1" BackgroundColor="Black"/>
+                                <StackLayout Orientation="Vertical">
+
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                        <Label Text="Open" VerticalOptions="Center" FontSize="Body" />
+                                        <Label   Text="{Binding OpenTime,StringFormat='{0:hh:mm tt}'}" TextColor="Green" VerticalOptions="Center"   />
+
+                                        <Label Text="Close" VerticalOptions="Center" FontSize="Body"/>
+                                        <Label   Text="{Binding CloseTime,StringFormat='{0:hh:mm tt}'}" TextColor="Red" VerticalOptions="Center" />
+                                    </StackLayout>
+
+                                </StackLayout>
+                                <BoxView HorizontalOptions="FillAndExpand" HeightRequest="0.1" BackgroundColor="Black"/>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!--<button:SfButton Text="Edit" Grid.Row="2" Margin="10" CornerRadius="4" HasShadow="True" BackgroundColor="DodgerBlue" TextColor="Black"
+                
+                 Command="{Binding GoEditCommand}"/>-->
+            </Grid>
+    
+       
+  
+</ContentPage>

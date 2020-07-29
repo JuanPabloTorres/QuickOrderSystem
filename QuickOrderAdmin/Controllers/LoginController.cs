@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Library.Models;
+﻿using Library.Models;
 using Library.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using QuickOrderAdmin.Models;
 using QuickOrderAdmin.Utilities;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace QuickOrderAdmin.Controllers
 {
@@ -35,7 +32,7 @@ namespace QuickOrderAdmin.Controllers
                     if (stores.Count() > 0)
                     {
 
-                    SelectedStore.CurrentStore = stores[0];
+                        SelectedStore.CurrentStore = stores[0];
 
                     }
                     else
@@ -43,7 +40,8 @@ namespace QuickOrderAdmin.Controllers
                         return RedirectToAction("RegisterStore", "Store");
                     }
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.StoreId });
+                    //return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -51,24 +49,25 @@ namespace QuickOrderAdmin.Controllers
                 }
 
 
-            }else
+            }
+            else
             {
                 return View();
             }
 
-           
+
         }
 
         bool LoginInfoNotNullOrEmpty(LoginViewModel loginViewModel)
         {
-            if (!string.IsNullOrEmpty(loginViewModel.Username )&& !string.IsNullOrEmpty(loginViewModel.Password))
+            if (!string.IsNullOrEmpty(loginViewModel.Username) && !string.IsNullOrEmpty(loginViewModel.Password))
             {
                 return true;
             }
             else
             {
                 return false;
-            }    
+            }
         }
 
         public IActionResult ForgotPassword()
@@ -84,7 +83,7 @@ namespace QuickOrderAdmin.Controllers
                 var result = userDataStore.ForgotCodeSend(forgotPassword.Email);
 
                 ViewBag.CodeSended = "Code was sended to user email check the email.";
-                return RedirectToAction("ForgotPassword","Login");
+                return RedirectToAction("ForgotPassword", "Login");
             }
             else
             {
@@ -103,7 +102,7 @@ namespace QuickOrderAdmin.Controllers
                 if (result)
                 {
 
-                return RedirectToAction("Index", "Login");
+                    return RedirectToAction("Index", "Login");
                 }
                 else
                 {
@@ -117,6 +116,11 @@ namespace QuickOrderAdmin.Controllers
                 return RedirectToAction("ForgotPassword", "Login");
             }
 
+        }
+
+        public IActionResult SignOut()
+        {
+            return RedirectToAction("Index", new { loginViewModel = new LoginViewModel() });
         }
     }
 }

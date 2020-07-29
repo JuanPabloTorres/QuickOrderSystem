@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             mc:Ignorable="d"
+             Title="Inbox"
+               Shell.BackgroundColor="White"
+             Shell.TabBarForegroundColor="Orange"
+             Shell.TitleColor="Black"
+             Shell.TabBarTitleColor="Black"
+             x:Class="QuickOrderApp.Views.Inbox.InboxPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView
+           
+      ItemsSource="{Binding UserRequests}"
+         EmptyView="Not Message"
+            Margin="5"
+              >
+
+                <!--Built in Cells-->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                      
+                            <Frame HasShadow="True" CornerRadius="4" Margin="4" Padding="0" BorderColor="LightGray">
+
+                                <StackLayout  BackgroundColor="White">
+
+
+                                    <Label Text="{Binding RequestTitle}" FontSize="Title" TextColor="Black" HorizontalOptions="Center" FontAttributes="Bold"></Label>
+                                    <BoxView HeightRequest="0.1" HorizontalOptions="Fill" Margin="4" BackgroundColor="LightGray"/>
+
+                                    <button:SfButton Text="Accept" Command="{Binding RequestAnswerCommand}" CornerRadius="5" 
+                                                     Margin="2"
+                                                     CommandParameter="Accept"
+                                                     BackgroundColor="LightGray" FontAttributes="Bold" TextColor="Black" HasShadow="True"/>
+                                    <button:SfButton Text="Decline"
+                                                     Margin="2"
+                                                     CommandParameter="Decline"
+                                                     Command="{Binding RequestAnswerCommand}" CornerRadius="5" BackgroundColor="#FF756B" FontAttributes="Bold" TextColor="Black" HasShadow="True"/>
+                                </StackLayout>
+                            </Frame>
+
+                       
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+
+            </CollectionView>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

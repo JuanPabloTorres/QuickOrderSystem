@@ -1,55 +1,123 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             mc:Ignorable="d"
-             Routing.Route="StoreHomeRoute"
-             Title="{Binding StoreName}"
-             BackgroundImageSource="Background.jpg"
-             x:Class="QuickOrderApp.Views.Store.StoreHome">
-
-  
-        <Grid >
-                <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.StoreHome"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:maps="clr-namespace:Xamarin.Essentials;assembly=Xamarin.Essentials"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="{Binding StoreName}"
+    BackgroundColor="White"
+    Routing.Route="StoreHomeRoute"
+    mc:Ignorable="d">
 
 
-            </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                  
-                </Grid.ColumnDefinitions>
-            <Frame  HasShadow="True"
-                    Grid.Row="0" Grid.ColumnSpan="2"
-                                  HorizontalOptions="Fill"
-                                   HeightRequest="200"
-                                 
-           Padding="0"
-           IsClippedToBounds="True">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
 
-                <Image Grid.Row="0" Grid.ColumnSpan="2" Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" Aspect="Fill" ></Image>
-            </Frame>
 
-            <button:SfButton Grid.Row="1" Grid.ColumnSpan="2" Text="Buy" Command="{Binding GoShowCommand}" CornerRadius="5" Margin="15" BackgroundColor="#FFD600" TextColor="Black" FontAttributes="Bold" HasShadow="True"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
 
-            <!--<button:SfButton Grid.Row="1" Grid.Column="1" Text="Your Order" Command="{Binding GoHomeStoreCommand}" CornerRadius="5" Margin="15" BackgroundColor="#FFD600" TextColor="Black" FontAttributes="Bold"/>-->
+        </Grid.ColumnDefinitions>
+        <Frame
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            Padding="0"
+            HasShadow="True"
+            HeightRequest="200"
+            HorizontalOptions="Fill"
+            IsClippedToBounds="True">
 
-            <Frame HasShadow="True" CornerRadius="4"  Grid.Row="2" Grid.ColumnSpan="2" VerticalOptions="Center" Margin="5">
-                
-            <StackLayout Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalOptions="Center" >
-                <Label Text="{Binding WorkHour.Day}" TextColor="Black" FontAttributes="Bold"/>
-                <Label Text="{Binding WorkHour.OpenTime,StringFormat='Open:{0:hh:mm tt}'}" TextColor="Black"/>
-                <Label Text="{Binding WorkHour.CloseTime,StringFormat='Close:{0:hh:mm tt}'}" TextColor="Black"/>
+            <Image
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Aspect="Fill"
+                Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />
+        </Frame>
+
+        <StackLayout Grid.Row="1" Grid.ColumnSpan="2">
+            <Label
+                FontAttributes="Bold"
+                FontSize="Title"
+                HorizontalOptions="Center"
+                Text="{Binding StoreName}" />
+            <BoxView
+                Margin="8,0,8,0"
+                BackgroundColor="LightGray"
+                HeightRequest="0.1"
+                HorizontalOptions="Fill" />
+        </StackLayout>
+
+        <button:SfButton
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Margin="15"
+            BackgroundColor="DodgerBlue"
+            Command="{Binding GoShowCommand}"
+            CornerRadius="5"
+            FontAttributes="Bold"
+            HasShadow="True"
+            Text="Buy"
+            TextColor="Black" />
+
+
+        <Frame
+            Grid.Row="3"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            Padding="4"
+            CornerRadius="4"
+            HasShadow="True"
+            IsClippedToBounds="True"
+            VerticalOptions="Center">
+
+            <StackLayout
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                HorizontalOptions="Center"
+                Orientation="Horizontal">
+
+                <Label
+                    FontAttributes="Bold"
+                    Text="{Binding WorkHour.Day}"
+                    TextColor="Black" />
+                <Label Text="{Binding WorkHour.OpenTime, StringFormat='Open:{0:hh:mm tt}'}" TextColor="Green" />
+                <Label Text="{Binding WorkHour.CloseTime, StringFormat='Close:{0:hh:mm tt}'}" TextColor="Red" />
 
             </StackLayout>
-            </Frame>
-            
-         
-        </Grid>
-            
-    
-   
+
+        </Frame>
+
+        <ScrollView Grid.Row="4" Grid.ColumnSpan="2">
+            <StackLayout
+                Grid.Row="3"
+                Grid.ColumnSpan="2"
+                Margin="4"
+                Orientation="Vertical">
+
+                <Label
+                    FontSize="Body"
+                    HorizontalOptions="Start"
+                    Text="About Store" />
+
+                <Label FontSize="Caption" Text="{Binding StoreDescription}" />
+            </StackLayout>
+        </ScrollView>
+
+
+
+
+    </Grid>
+
+
+
+
 </ContentPage>

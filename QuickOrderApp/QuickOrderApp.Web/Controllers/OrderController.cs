@@ -1,12 +1,11 @@
-﻿ using System;
+﻿using Library.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using QuickOrderApp.Web.Context;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Library.Models;
-using QuickOrderApp.Web.Context;
 
 namespace QuickOrderApp.Web.Controllers
 {
@@ -32,7 +31,7 @@ namespace QuickOrderApp.Web.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(Guid id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = _context.Orders.Where(o => o.OrderId == id).Include(op => op.OrderProducts).FirstOrDefault();
 
             if (order == null)
             {
@@ -50,34 +49,71 @@ namespace QuickOrderApp.Web.Controllers
         {
             var oldOrder = _context.Orders.Where(o => o.OrderId == order.OrderId).FirstOrDefault();
 
+
+
             if (oldOrder != null)
             {
-               
-
-                //foreach (var item in order.OrderProducts)
-                //{
-                //    _context.Attach(item);
-                //}
 
                 try
                 {
+
                     _context.Orders.Remove(oldOrder);
 
                     _context.SaveChanges();
 
                     _context.Add(order);
-                    _context.Attach(order.StoreOrder);
 
-                    foreach (var item in order.StoreOrder.Products)
+                    //order.StoreOrder= null;
+
+                    if (order.StoreOrder != null)
                     {
 
-                    _context.Attach(item);
+                        _context.Attach(order.StoreOrder);
+
+                        if (order.StoreOrder.Products != null)
+                        {
+
+                            foreach (var item in order.StoreOrder.Products)
+                            {
+
+                                _context.Attach(item);
+                            }
+                        }
+
+
+                        order.StoreOrder.WorkHours = null;
+
+                        if (order.StoreOrder.WorkHours != null)
+                        {
+
+                            foreach (var item in order.StoreOrder.WorkHours)
+                            {
+                                _context.Attach(item);
+                            }
+                        }
                     }
 
-                    foreach (var item in order.StoreOrder.WorkHours)
+                    ProductController productController = new ProductController(_context);
+                    if (order.OrderStatus == Status.Submited)
                     {
-                        _context.Attach(item);
+                        foreach (var item in order.OrderProducts)
+                        {
+                            var product = _context.Products.Where(p => p.StoreId == item.StoreId && p.ProductName == item.ProductName).FirstOrDefault();
+
+                            if (product != null && product.InventoryQuantity > 0)
+                            {
+
+                                var result = productController.UpdateInventoryFromOrderSubmited(product.ProductId, item.Quantity);
+
+                            }
+
+
+                        }
                     }
+
+
+
+
                     _context.SaveChanges();
                 }
                 catch (Exception e)
@@ -85,7 +121,7 @@ namespace QuickOrderApp.Web.Controllers
 
                     Console.WriteLine(e);
                 }
-               
+
 
                 return true;
             }
@@ -138,7 +174,7 @@ namespace QuickOrderApp.Web.Controllers
         [HttpGet("[action]/{userid}")]
         public IEnumerable<Order> GetUserOrders(Guid userid)
         {
-            return _context.Orders.Where(e => e.BuyerId == userid).Include(o=>o.OrderProducts).ToList();
+            return _context.Orders.Where(e => e.BuyerId == userid).Include(o => o.OrderProducts).ToList();
         }
 
         [HttpGet("[action]/{storeId}")]

@@ -1,52 +1,148 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-xmlns:numericupdown="clr-namespace:Syncfusion.SfNumericUpDown.XForms;assembly=Syncfusion.SfNumericUpDown.XForms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             mc:Ignorable="d"
-             Routing.Route="ProductRoute"
-             Title="{Binding StoreName}"
-             BackgroundImageSource="Background.jpg"
-             x:Class="QuickOrderApp.Views.Store.Products">
-    <ListView
-      ItemsSource="{Binding StoreProducts}"
-            ItemTapped="Handle_ItemTapped"
-      HasUnevenRows="True"
-            CachingStrategy="RecycleElement">
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.Products"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:numericupdown="clr-namespace:Syncfusion.SfNumericUpDown.XForms;assembly=Syncfusion.SfNumericUpDown.XForms"
+    Title="{Binding StoreName}"
+    Routing.Route="ProductRoute"
+    mc:Ignorable="d">
+    <CollectionView EmptyView="Store does not have inventory." ItemsSource="{Binding StoreProducts}">
+        <CollectionView.ItemsLayout>
+            <GridItemsLayout Orientation="Vertical" Span="1" />
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
 
-        <!--Built in Cells-->
-        <ListView.ItemTemplate>
+                <ContentView>
+                    <Frame
+                        Margin="8"
+                        Padding="0"
+                        BorderColor="LightGray"
+                        CornerRadius="10"
+                        HasShadow="True">
+
+                        <StackLayout>
+                            <Frame
+                                Padding="0"
+                                HeightRequest="130"
+                                HorizontalOptions="Fill"
+                                IsClippedToBounds="True">
+                                <Image
+                                    Aspect="Fill"
+                                    HeightRequest="200"
+                                    Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}" />
+                            </Frame>
+
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="Title"
+                                HorizontalOptions="Center"
+                                Text="{Binding ProductName}" />
+
+                            <BoxView
+                                Margin="10,0,10,0"
+                                BackgroundColor="LightGray"
+                                HeightRequest="0.1"
+                                HorizontalOptions="Fill" />
+
+
+                            <Label
+                                Margin="8,0,8,0"
+                                FontAttributes="Bold"
+                                FontSize="Large"
+                                HorizontalOptions="Start"
+                                Text="{Binding ProductPrice, StringFormat='{0:C}'}" />
+
+                            <Label
+                                Margin="8,0,8,0"
+                                FontSize="20"
+                                HorizontalOptions="Start"
+                                Text="{Binding ItemLeft, StringFormat='Item left: {0}'}" />
+
+
+                            <StackLayout Margin="4">
+                                <Label
+                                    Margin="8,0,8,0"
+                                    FontAttributes="Bold"
+                                    FontSize="Medium"
+                                    HorizontalOptions="Start"
+                                    Text="Detail" />
+
+                                <ScrollView>
+
+                                    <Label
+                                        Margin="8,0,8,0"
+                                        FontSize="Medium"
+                                        Text="{Binding ProductDescription}" />
+                                </ScrollView>
+                            </StackLayout>
+
+                            <StackLayout>
+                                <numericupdown:SfNumericUpDown
+                                    Margin="15,0,15,0"
+                                    BorderColor="LightGray"
+                                    FontSize="30"
+                                    HorizontalOptions="Center"
+                                    MaximumDecimalDigits="0"
+                                    Minimum="0"
+                                    SpinButtonAlignment="Both"
+                                    TextAlignment="Center"
+                                    UpDownButtonColor="Gray"
+                                    Value="{Binding Quantity}" />
+                            </StackLayout>
+
+
+                            <button:SfButton
+                                Margin="10"
+                                BackgroundColor="DodgerBlue"
+                                Command="{Binding AddToCartCommand}"
+                                CornerRadius="5"
+                                FontAttributes="Bold"
+                                HasShadow="True"
+                                Text="Add To Cart"
+                                TextColor="Black" />
+                            <!--<Button Text="Show" Command="{Binding AddToCartCommand}"/>-->
+                        </StackLayout>
+                    </Frame>
+                </ContentView>
+
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+
+
+    <!--<CollectionView
+      ItemsSource="{Binding StoreProducts}"
+
+    >
+
+    -->
+    <!--  Built in Cells  -->
+    <!--
+        <CollectionView.ItemTemplate>
             <DataTemplate>
                 <ViewCell>
-                    <Frame Padding="3" Margin="8" HasShadow="True">
-                        
-                    <StackLayout >
-                        <Image Source="{Binding ProductImg,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill" HeightRequest="200"/>
-                        <Label Text="{Binding ProductName}" FontSize="Title"></Label>
-                        <Label Text="{Binding ProductPrice,StringFormat='{0:C}'}" FontSize="Body"></Label>
-                        <StackLayout>
-                            <numericupdown:SfNumericUpDown Value="{Binding Quantity}"  SpinButtonAlignment="Both" MaximumDecimalDigits="0"/>
-                        </StackLayout>
-                            <button:SfButton Text="Add To Cart" Command="{Binding AddToCartCommand}" CornerRadius="5" BackgroundColor="LightGray" FontAttributes="Bold" TextColor="Black" HasShadow="True"/>
-                            <!--<Button Text="Show" Command="{Binding AddToCartCommand}"/>-->
-                    </StackLayout>
-                    </Frame>
+
 
                 </ViewCell>
             </DataTemplate>
-        </ListView.ItemTemplate>
+        </CollectionView.ItemTemplate>
 
-        <!--Custom View Cells-->
-        <!--
+    -->
+    <!--  Custom View Cells  -->
+    <!--
     <ListView.ItemTemplate>
       <DataTemplate>
         <ViewCell>
           <StackLayout>
-            <Label Text="{Binding Text}" 
+            <Label Text="{Binding Text}"
                    d:Text="{Binding .}"
                    Style="{DynamicResource ListItemTextStyle}" />
-            <Label Text="{Binding Detail}" 
+            <Label Text="{Binding Detail}"
                    d:Text="Detail"
                    Style="{DynamicResource ListItemDetailTextStyle}"/>
           </StackLayout>
@@ -54,5 +150,6 @@ xmlns:numericupdown="clr-namespace:Syncfusion.SfNumericUpDown.XForms;assembly=Sy
       </DataTemplate>
     </ListView.ItemTemplate>
     -->
-    </ListView>
+    <!--
+    </CollectionView>-->
 </ContentPage>

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Library.Services
 {
-    public interface IDataStore<T> where T:class
+    public interface IDataStore<T> where T : class
     {
         Task<bool> AddItemAsync(T item);
         Task<bool> UpdateItemAsync(T item);

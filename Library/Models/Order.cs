@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Library.Models
 {
@@ -26,6 +25,8 @@ namespace Library.Models
         public Type OrderType { get; set; }
         public Status OrderStatus { get; set; }
 
+        public Employee PrepareBy { get; set; }
+
         bool IsSubmit { get; set; }
 
     }
@@ -45,9 +46,9 @@ namespace Library.Models
         OnTheWay,
         NotSubmited,
         Submited
-        
+
     }
 
-    
+
 
 }

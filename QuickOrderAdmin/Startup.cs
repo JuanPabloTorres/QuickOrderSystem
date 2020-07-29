@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Library.Interface;
 using Library.Services;
 using Library.Services.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,6 +27,9 @@ namespace QuickOrderAdmin
             services.AddSingleton<IUserDataStore, UserDataStore>();
             services.AddSingleton<IProductDataStore, ProductDataStore>();
             services.AddSingleton<IOrderDataStore, OrderDataStore>();
+            services.AddSingleton<IEmployeeDataStore, EmployeeDataStore>();
+            services.AddSingleton<IRequestDataStore, RequestDataStore>();
+            services.AddSingleton<IEmployeeWorkHourDataStore, EmployeeWorkHourDataStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

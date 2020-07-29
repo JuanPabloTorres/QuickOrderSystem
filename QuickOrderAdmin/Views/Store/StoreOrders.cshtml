@@ -5,10 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>StoreOrders</h1>
+<h1>@QuickOrderAdmin.Utilities.SelectedStore.CurrentStore.StoreName</h1>
+<hr />
 
-
-<table class="table">
+<table class="table table-hover">
     <thead>
         <tr>
             <th>
@@ -20,9 +20,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.BuyerId)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StoreId)
-            </th>
+           
             <th>
                 @Html.DisplayNameFor(model => model.OrderType)
             </th>
@@ -39,14 +37,12 @@
                 @Html.DisplayFor(modelItem => item.OrderId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
+                @item.OrderDate.ToString("dddd, dd MMMM yyyy")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.BuyerId)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StoreId)
-            </td>
+          
             <td>
                 @Html.DisplayFor(modelItem => item.OrderType)
             </td>
@@ -54,9 +50,8 @@
                 @Html.DisplayFor(modelItem => item.OrderStatus)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-               
+                @Html.ActionLink("Details", "OrderDetail", "Store",new {  id=item.OrderId },new { @class="btn btn-primary"}) 
+              
             </td>
         </tr>
 }

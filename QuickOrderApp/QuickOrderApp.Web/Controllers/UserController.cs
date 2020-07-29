@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Library.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Library.Models;
 using QuickOrderApp.Web.Context;
-using System.Net.Mail;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace QuickOrderApp.Web.Controllers
 {
@@ -47,33 +46,44 @@ namespace QuickOrderApp.Web.Controllers
         // PUT: api/User/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(Guid id, User user)
+        [HttpPut]
+        public async Task<User> PutUser(User user)
         {
-            if (id != user.UserId)
-            {
-                return BadRequest();
-            }
+            var oldUser = _context.Users.Where(u => u.UserId == user.UserId).FirstOrDefault();
 
-            _context.Entry(user).State = EntityState.Modified;
+            if (oldUser != null)
+            {
+                _context.Users.Remove(oldUser);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
+                _context.Users.Add(user);
+                _context.Attach(user.UserLogin);
+
+                if (user.Stores.Count > 0)
                 {
-                    return NotFound();
+                    foreach (var item in user.Stores)
+                    {
+                        _context.Attach(item);
+                    }
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return NoContent();
+
+                try
+                {
+
+                    _context.SaveChanges();
+                }
+                catch (Exception e)
+                {
+
+                    Console.WriteLine(e);
+                }
+
+                return user;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         // POST: api/User
@@ -111,9 +121,10 @@ namespace QuickOrderApp.Web.Controllers
 
             if (_context.Users.Count() > 0)
             {
+                var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).FirstOrDefault();
 
-            var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).FirstOrDefault();
-            return user;
+                //user.Employees = _context.Employees.Where(e => e.UserId == user.UserId).Include(s => s.EmployeeStore).ToList();
+                return user;
             }
             else
             {
@@ -177,16 +188,16 @@ namespace QuickOrderApp.Web.Controllers
         public bool ConfirmCode(string code)
         {
             var result = _context.ForgotPasswords.Where(u => u.Code == code).FirstOrDefault();
-            var userInfo = _context.Users.Where(u => u.Email == result.Email).Include(l=>l.UserLogin).FirstOrDefault();
+            var userInfo = _context.Users.Where(u => u.Email == result.Email).Include(l => l.UserLogin).FirstOrDefault();
 
             if (result != null)
-            {                
+            {
 
                 var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
                 var receiverEmail = new MailAddress(userInfo.Email, userInfo.Name);
 
                 var sub = "Loging Credials";
-                var body = "<div>Username" + userInfo.UserLogin.Username+ "</div>"+ "<div>Password" + userInfo.UserLogin.Password + "</div>";
+                var body = "<div>Username" + userInfo.UserLogin.Username + "</div>" + "<div>Password" + userInfo.UserLogin.Password + "</div>";
                 var smtp = new SmtpClient
                 {
                     Host = "smtp.gmail.com",

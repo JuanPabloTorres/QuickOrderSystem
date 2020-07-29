@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/item",
+      "launchUrl": "api/Order",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "QuickOrderApp.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/item",
+      "launchUrl": "api/Order",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

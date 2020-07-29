@@ -1,25 +1,32 @@
-﻿using System;
+﻿//using QuickOrderApp.Models;
+using Library.Services.Interface;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-
 using Xamarin.Forms;
-
-using QuickOrderApp.Models;
-using QuickOrderApp.Services;
-using Library.Services.Interface;
 
 namespace QuickOrderApp.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        //public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
         public IProductDataStore productDataStore => DependencyService.Get<IProductDataStore>();
         public IUserDataStore userDataStore => DependencyService.Get<IUserDataStore>();
         public IOrderProductDataStore orderProductDataStore => DependencyService.Get<IOrderProductDataStore>();
         public IStoreDataStore StoreDataStore => DependencyService.Get<IStoreDataStore>();
 
+        public IStoreLicenseDataStore storeLicenseDataStore => DependencyService.Get<IStoreLicenseDataStore>();
+        public IRequestDataStore requestDataStore => DependencyService.Get<IRequestDataStore>();
         public IOrderDataStore orderDataStore => DependencyService.Get<IOrderDataStore>();
+
+        public IEmployeeDataStore EmployeeDataStore => DependencyService.Get<IEmployeeDataStore>();
+        public IWorkHourDataStore WorkHourDataStore => DependencyService.Get<IWorkHourDataStore>();
+
+        public IEmployeeWorkHourDataStore EmployeeWorkHour => DependencyService.Get<IEmployeeWorkHourDataStore>();
+
+        public ICardDataStore CardDataStore => DependencyService.Get<ICardDataStore>();
+
         bool isBusy = false;
         public bool IsBusy
         {

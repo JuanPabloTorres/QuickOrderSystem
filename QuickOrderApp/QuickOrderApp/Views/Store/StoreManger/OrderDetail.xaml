@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             mc:Ignorable="d"
+           Title="Order Detail"
+             Routing.Route="StoreDetailOrderRoute"
+             x:Class="QuickOrderApp.Views.Store.StoreManger.OrderDetail">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="{Binding DetailOrder.OrderId}" />
+            <Label Text="{Binding DetailOrder.OrderDate}"/>
+            <Label Text="{Binding DetailOrder.OrderStatus}"/>
+
+            <CollectionView VerticalOptions="Center" EmptyView="Empty" 
+                                ItemsSource="{Binding DetailOrder.OrderProducts}" Grid.Row="3" Margin="5" SelectedItem="{Binding SelectedOrder}"
+                                SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate >
+
+                        <Frame  HasShadow="True" BorderColor="Black" Margin="5">
+
+                            <StackLayout  BackgroundColor="White" Orientation="Vertical" Margin="5">
+                                <Frame IsClippedToBounds="True" CornerRadius="5">
+                                    
+                                <Image Source="{Binding ProductImage}" WidthRequest="100" HeightRequest="200" Aspect="Fill"  Margin="5"></Image>
+                                </Frame>
+
+                                <Label Text="{Binding ProductName}"/>
+                                <Label Text="{Binding Quantity}"/>
+                                <Label Text="{Binding Price,StringFormat='Order Products: {0}'}"/>
+                                
+                            </StackLayout>
+                        </Frame>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <button:SfButton Text="Complete" HasShadow="True" CornerRadius="5" Margin="10" BackgroundColor="DodgerBlue" Command="{Binding CompleteCommand}" FontSize="Body"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

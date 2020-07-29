@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             mc:Ignorable="d"
+             Title="Add Product"
+             Routing.Route="AddProductRoute"
+             x:Class="QuickOrderApp.Views.Store.StoreManger.AddProductPage">
+    <ContentPage.Content>
+        <ScrollView>
+            
+        <StackLayout>
+                <Image Source="{Binding ProductImg}" WidthRequest="100" HeightRequest="200" Aspect="Fill" x:Name="logo" Margin="5"></Image>
+            <button:SfButton Text="Choose Image" HasShadow="True" CornerRadius="5" Margin="10" BackgroundColor="DodgerBlue" Command="{Binding IPickPhotoCommand}" />
+            <Label Text="Product Information" FontSize="Body"/>
+            <BoxView HorizontalOptions="Fill" HeightRequest="0.1" BackgroundColor="Black" Grid.Row="2"/>
+
+                <Entry Placeholder="Product Name" Text="{Binding ProductName}"/>
+
+
+                <Editor MinimumHeightRequest="120" Placeholder="Product Description" Text="{Binding ProductDescription}"/>
+                <Entry Placeholder="Product Price" Keyboard="Numeric" Text="{Binding ProductPrice}"/>
+                <Entry Placeholder="Inventory Quantiy" Keyboard="Numeric" Text="{Binding ProductQuantity}"/>
+                <button:SfButton Text="Complete" HasShadow="True" CornerRadius="5" Margin="10" BackgroundColor="DodgerBlue" Command="{Binding CompleteCommand}" FontSize="Body"/>
+        </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

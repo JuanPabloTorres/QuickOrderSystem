@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Title="Employee Control Panel"
+             Routing.Route="EmployeeControlPanelRoute"
+             x:Class="QuickOrderApp.Views.Store.EmployeeStoreControlPanel.EmployeeControlPanel">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="{Binding Username,StringFormat='Welcome, {0}'}" HorizontalOptions="Center" FontSize="Title"/>
+            <Grid Grid.Row="2">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Label Text="User Employee Stores" FontSize="Body" Grid.Row="0"/>
+                <BoxView HeightRequest="0.1" BackgroundColor="Black" HorizontalOptions="Fill" Grid.Row="1"/>
+
+                <CollectionView VerticalOptions="Center" EmptyView="Employee Control Empty" 
+                                ItemsSource="{Binding UserStoreEmployee}" Grid.Row="3" Margin="5" SelectedItem="{Binding EmployeeSelectedStore}"
+                                SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+
+                            <StackLayout  BackgroundColor="White" Orientation="Horizontal" Padding="5" Spacing="5">
+                                <Frame IsClippedToBounds="True" CornerRadius="5" Padding="0">
+
+                                    <Image Source="{Binding StoreImage,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill" HeightRequest="80" WidthRequest="80"/>
+                                </Frame>
+
+                                <Label Text="{Binding StoreName}" FontSize="Title" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center"></Label>
+
+                            </StackLayout>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+
+            </Grid>
+            <!--<Grid Margin="5">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+           
+
+            <button:SfButton Text="Orders" Grid.Row="0" Grid.Column="0" CornerRadius="5" HasShadow="True" BackgroundColor="DodgerBlue"/>
+            <button:SfButton Text="Take Order" Grid.Row="1" Grid.Column="0" CornerRadius="5" HasShadow="True" BackgroundColor="DodgerBlue"/>
+            <button:SfButton Text="Work Schedule" Grid.Row="2" Grid.Column="0" CornerRadius="5" HasShadow="True" BackgroundColor="DodgerBlue"/>
+            <button:SfButton Text="Sign Out" Grid.Row="3" Grid.Column="0" CornerRadius="5" HasShadow="True" BackgroundColor="DodgerBlue"/>
+
+        </Grid>
+
+            <Label Text="{Binding ,StringFormat='Start: {0}'}"/>
+            <Label Text="{Binding ,StringFormat='End: {0}'}"/>-->
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

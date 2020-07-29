@@ -1,5 +1,3 @@
-using System;
-
 namespace QuickOrderAdmin.Models
 {
     public class ErrorViewModel

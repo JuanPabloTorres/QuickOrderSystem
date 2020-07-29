@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Payment.PaymentPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout
+                Margin="30,20"
+                Orientation="Vertical"
+                Spacing="30">
+                <Button
+                    BackgroundColor="Black"
+                    Command="{Binding MakePaymentCommand}"
+                    CornerRadius="20"
+                    Text="MakePayment"
+                    TextColor="White"
+                    VerticalOptions="CenterAndExpand" />
+                <!--<Button BackgroundColor="Black" CornerRadius="20" TextColor="White" Clicked="GetCustomerInformationID" Text="GetCustomerbyID" VerticalOptions="CenterAndExpand"/>
+                <Button BackgroundColor="Black" CornerRadius="20" TextColor="White" Clicked="GetAllCustomerInformation" Text="GetAllCustomer" VerticalOptions="CenterAndExpand"/>
+                <Button BackgroundColor="Black" CornerRadius="20" TextColor="White" Clicked="GetRefundForSpecificTransaction" Text="Cancell Transaction" VerticalOptions="CenterAndExpand"/>
+                <Button BackgroundColor="Black" CornerRadius="20" TextColor="White" Clicked="GetRefundInformation" Text="Get Refund Information" VerticalOptions="CenterAndExpand"/>-->
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

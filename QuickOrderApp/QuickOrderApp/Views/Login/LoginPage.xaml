@@ -1,32 +1,110 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-            NavigationPage.HasNavigationBar="False"
-             BackgroundImageSource="Background.jpg"
-             x:Class="QuickOrderApp.Views.Login.LoginPage">
+<ContentPage
+    x:Class="QuickOrderApp.Views.Login.LoginPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:forms="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    BackgroundImageSource="Background.jpg"
+    NavigationPage.HasNavigationBar="False"
+    mc:Ignorable="d">
     <StackLayout VerticalOptions="Center">
-        <Label Text="Quick Order" HorizontalOptions="Center"  VerticalOptions="Start" FontSize="Title" FontAttributes="Bold" TextColor="Black"/>
-        <BoxView HorizontalOptions="Fill" HeightRequest="0.2" BackgroundColor="Black" Margin="10"/>
 
-        <Frame HasShadow="True" CornerRadius="5"  VerticalOptions="Center" Margin="4">
-        <StackLayout VerticalOptions="Center">
-            <Label Text="Sign In" HorizontalOptions="Center" FontSize="Title" FontAttributes="Bold" TextColor="Black"/>
-    
-            <StackLayout VerticalOptions="Center" Margin="5">
-            <Entry Placeholder="Username" Text="{Binding Username}"/>
-                <Entry Placeholder="Password" Keyboard="Text" IsPassword="True" Text="{Binding Password}" />
-                    <button:SfButton Text="Login"  Command="{Binding LoginCommand}" Margin="15" CornerRadius="20" BackgroundColor="#FFD600" TextColor="Black" HasShadow="True" FontAttributes="Bold"/>
-            <button:SfButton Text="Register" Command="{Binding RegisterCommand}" Margin="15" CornerRadius="20" BackgroundColor="LightGray" TextColor="Black" HasShadow="True" FontAttributes="Bold"/>
-                <button:SfButton Text="Forgot Password" Margin="15" CornerRadius="20" BackgroundColor="LightGray" TextColor="Black" HasShadow="True" FontAttributes="Bold"/>
-           
-        </StackLayout>
-        </StackLayout>
-            
+
+
+        <forms:AnimationView
+            Animation="loading.json"
+            AutoPlay="True"
+            HeightRequest="80"
+            HorizontalOptions="Center"
+            IsVisible="{Binding IsLoading}"
+            Loop="True"
+            WidthRequest="80" />
+
+
+        <Label
+            FontAttributes="Bold"
+            FontSize="40"
+            HorizontalOptions="Center"
+            Text="Quick Order"
+            TextColor="Black"
+            VerticalOptions="Start" />
+        <BoxView
+            Margin="10"
+            BackgroundColor="Black"
+            HeightRequest="0.2"
+            HorizontalOptions="Fill" />
+
+        <Frame
+            Margin="4"
+            CornerRadius="5"
+            HasShadow="True"
+            VerticalOptions="Center">
+            <StackLayout VerticalOptions="Center">
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="Title"
+                    HorizontalOptions="Center"
+                    Text="Sign In"
+                    TextColor="Black" />
+
+                <StackLayout Margin="5" VerticalOptions="Center">
+                    <Entry Placeholder="Username" Text="{Binding Username}" />
+                    <Entry
+                        IsPassword="True"
+                        Keyboard="Text"
+                        Placeholder="Password"
+                        Text="{Binding Password}" />
+                    <button:SfButton
+                        Margin="5"
+                        BackgroundColor="Orange"
+                        Command="{Binding LoginCommand}"
+                        CornerRadius="5"
+                        FontAttributes="Bold"
+                        HasShadow="True"
+                        Text="Log In"
+                        TextColor="Black" />
+                    <button:SfButton
+                        Margin="5"
+                        BackgroundColor="Orange"
+                        Command="{Binding LoginEmployeeCommand}"
+                        CornerRadius="5"
+                        FontAttributes="Bold"
+                        HasShadow="True"
+                        Text="Log In As Employee"
+                        TextColor="Black" />
+                    <Grid HorizontalOptions="Fill">
+
+                        <button:SfButton
+                            Grid.Row="0"
+                            Margin="5"
+                            BackgroundColor="DodgerBlue"
+                            Command="{Binding RegisterCommand}"
+                            CornerRadius="5"
+                            FontAttributes="Bold"
+                            HasShadow="True"
+                            Text="Register"
+                            TextColor="Black" />
+                        <button:SfButton
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="5"
+                            BackgroundColor="DodgerBlue"
+                            Command="{Binding GoForgotPasswordCommand}"
+                            CornerRadius="5"
+                            FontAttributes="Bold"
+                            HasShadow="True"
+                            Text="Forgot Password"
+                            TextColor="Black" />
+
+
+                    </Grid>
+                </StackLayout>
+            </StackLayout>
+
         </Frame>
     </StackLayout>
- 
+
 </ContentPage>

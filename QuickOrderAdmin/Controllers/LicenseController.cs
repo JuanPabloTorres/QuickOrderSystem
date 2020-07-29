@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Threading;
-using System.Threading.Tasks;
-using Library.Models;
+﻿using Library.Models;
 using Library.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using QuickOrderAdmin.Models;
 using QuickOrderAdmin.Utilities;
+using System;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace QuickOrderAdmin.Controllers
 {
@@ -17,7 +14,7 @@ namespace QuickOrderAdmin.Controllers
     {
         IStoreLicenseDataStore storeLicenseDataStore;
         IUserDataStore userDataStore;
-        public LicenseController(IStoreLicenseDataStore storeLicenseData,IUserDataStore userData)
+        public LicenseController(IStoreLicenseDataStore storeLicenseData, IUserDataStore userData)
         {
             storeLicenseDataStore = storeLicenseData;
             userDataStore = userData;
@@ -28,9 +25,9 @@ namespace QuickOrderAdmin.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GetLicencePro(string username,string cardNumber,int MM,int YY, int CVV, string email)
+        public async Task<IActionResult> GetLicencePro(string username, string cardNumber, int MM, int YY, int CVV, string email)
         {
-            if (CreditCardNotNullOrEmpty(username,cardNumber,MM,YY,CVV))
+            if (CreditCardNotNullOrEmpty(username, cardNumber, MM, YY, CVV))
             {
                 bool cardconfirm = true;
 
@@ -49,7 +46,7 @@ namespace QuickOrderAdmin.Controllers
                     {
                         var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
                         var receiverEmail = new MailAddress(email, "Juan Torres");
-                       
+
                         var sub = "Quick Order Lincense Code";
                         var body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
                         var smtp = new SmtpClient
@@ -63,8 +60,8 @@ namespace QuickOrderAdmin.Controllers
                         };
                         using (var mess = new MailMessage(senderEmail, receiverEmail)
                         {
-                           IsBodyHtml = true,
-                            Subject =sub,
+                            IsBodyHtml = true,
+                            Subject = sub,
                             Body = body
                         })
                         {
@@ -72,8 +69,8 @@ namespace QuickOrderAdmin.Controllers
                         }
                     }
 
-                    
-                return RedirectToAction("UserRegistration");
+
+                    return RedirectToAction("UserRegistration");
                 }
                 else
                 {
@@ -84,7 +81,7 @@ namespace QuickOrderAdmin.Controllers
             else
             {
 
-            return View();
+                return View();
             }
         }
 
@@ -121,27 +118,27 @@ namespace QuickOrderAdmin.Controllers
             {
                 //var LicenseValid =  storeLicenseDataStore.StoreLicenseExists(userVm.StoreLicence);
 
-               
-                    var userLogin = new Login()
-                    {
-                        LoginId = Guid.NewGuid(),
-                        Password = userVm.Password,
-                        Username = userVm.Username
-                    };
 
-                    var newUser = new User()
-                    {
-                        UserId = Guid.NewGuid(),
-                        Email = userVm.Email,
-                        LoginId = userLogin.LoginId,
-                        Name = userVm.Name,
-                        UserLogin = userLogin,
-                    };
+                var userLogin = new Login()
+                {
+                    LoginId = Guid.NewGuid(),
+                    Password = userVm.Password,
+                    Username = userVm.Username
+                };
 
-                    var addedUser = await userDataStore.AddItemAsync(newUser);
+                var newUser = new User()
+                {
+                    UserId = Guid.NewGuid(),
+                    Email = userVm.Email,
+                    LoginId = userLogin.LoginId,
+                    Name = userVm.Name,
+                    UserLogin = userLogin,
+                };
 
-                    if (addedUser)
-                    {
+                var addedUser = await userDataStore.AddItemAsync(newUser);
+
+                if (addedUser)
+                {
 
                     var result = userDataStore.CheckUserCredential(userLogin.Username, userLogin.Password);
 
@@ -151,8 +148,8 @@ namespace QuickOrderAdmin.Controllers
                     }
 
                     return RedirectToAction("RegisterStore", "Store");
-                    }
-                
+                }
+
                 //else
                 //{
                 //    ViewBag.LicenseError = "License is not valid.";

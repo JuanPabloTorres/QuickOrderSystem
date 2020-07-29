@@ -1,0 +1,71 @@
+﻿@model QuickOrderAdmin.Models.EmployeeViewModel
+@{
+    ViewData["Title"] = "SearchEmployee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card card-signin my-5">
+                <div class="card-body">
+                    <form class="form-signin" asp-action="SearchEmployee">
+                        <div class="form-group">
+
+                            <label class="control-label" asp-for="Search">Search Employee By Username</label>
+                            <input class="form-control" asp-for="Search" />
+                            <span asp-validation-for="Search" class="text-danger"></span>
+
+                        </div>
+
+
+                        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Search</button>
+
+
+                    </form>
+
+                    @*@if (!string.IsNullOrEmpty(ViewBag.CodeSended))
+                    {
+                        <p class="lead mb-0 text-center">ViewBag.CodeSended</p>
+                    }*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.UserResult != null)
+	{
+		 
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               <label>Name</label>
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.UserResult as IEnumerable<Library.Models.User>)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+              
+                <td>
+                    @Html.ActionLink("Send Request", "SendRequest", "Store", new { userId = item.UserId }, new { @class = "btn btn-warning" })
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+	}
+
+
+

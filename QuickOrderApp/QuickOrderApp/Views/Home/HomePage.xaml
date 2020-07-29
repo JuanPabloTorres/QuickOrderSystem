@@ -1,78 +1,166 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
-xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             Routing.Route="HomePageRoute"
-             Title="Quick Order"
-             Shell.BackgroundColor="Orange"
-             Shell.TabBarForegroundColor="Orange"
-             Shell.TitleColor="Black"
-             Shell.TabBarTitleColor="Black"
-           
-             BackgroundImageSource="Background.jpg"
-             x:Class="QuickOrderApp.Views.Home.HomePage">
+<ContentPage
+    x:Class="QuickOrderApp.Views.Home.HomePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
+    xmlns:local="clr-namespace:QuickOrderApp.Utilities.Shopping"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Quick Order"
+    BackgroundColor="White"
+    Routing.Route="HomePageRoute"
+    Shell.BackgroundColor="White"
+    Shell.TabBarForegroundColor="Orange"
+    Shell.TabBarTitleColor="Black"
+    Shell.TitleColor="Black"
+    mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
-            
-       
-        <ListView
-           
-      ItemsSource="{Binding Stores}"
-           HasUnevenRows="True"
-            Margin="5"
-            SelectedItem="{Binding SelectedStore}"
-            CachingStrategy="RecycleElement">
-               
-            <!--Built in Cells-->
-            <ListView.ItemTemplate>
+
+
+
+            <StackLayout>
+                <Frame
+                    Margin="8"
+                    Padding="0"
+                    CornerRadius="5"
+                    HasShadow="True">
+
+                    <Entry
+                        FontAttributes="Bold"
+                        FontSize="Large"
+                        HorizontalOptions="Fill"
+                        Placeholder="Search Store"
+                        Text="{Binding SearchText}"
+                        VerticalOptions="Fill" />
+                </Frame>
+                <button:SfButton
+                    Margin="15,0,15,0"
+                    BackgroundColor="Yellow"
+                    Command="{Binding SearchStoreCommand}"
+                    CornerRadius="5"
+                    FontAttributes="Bold"
+                    HasShadow="True"
+                    Text="Search"
+                    TextColor="Black" />
+            </StackLayout>
+
+
+
+
+
+            <CollectionView
+                Margin="5"
+                ItemsSource="{Binding Stores}"
+                SelectedItem="{Binding SelectedStore}"
+                SelectionMode="Single">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout
+                        HorizontalItemSpacing="5"
+                        Orientation="Vertical"
+                        Span="1"
+                        VerticalItemSpacing="5" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView Margin="3">
+
+                            <Frame
+                                Margin="8"
+                                Padding="0"
+                                BorderColor="LightGray"
+                                CornerRadius="10"
+                                HasShadow="True">
+
+                                <StackLayout BackgroundColor="White">
+
+                                    <Frame
+                                        Padding="0"
+                                        HeightRequest="200"
+                                        HorizontalOptions="Fill"
+                                        IsClippedToBounds="True">
+                                        <Image Aspect="Fill" Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />
+                                    </Frame>
+                                    <Label
+                                        FontSize="Title"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding StoreName}"
+                                        TextColor="Black" />
+                                    <BoxView
+                                        Margin="4"
+                                        BackgroundColor="Black"
+                                        HeightRequest="0.1"
+                                        HorizontalOptions="Fill" />
+
+                                    <Label
+                                        FontSize="Body"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding StoreType, StringFormat='Store Type: {0}'}" />
+                                    <StackLayout Margin="4">
+
+
+                                        <Label
+                                            FontSize="Body"
+                                            HorizontalOptions="Start"
+                                            Text="About Store" />
+
+                                        <Label FontSize="Caption" Text="{Binding StoreDescription}" />
+                                    </StackLayout>
+
+                                    <button:SfButton
+                                        Margin="15"
+                                        BackgroundColor="DodgerBlue"
+                                        Command="{Binding GoHomeStoreCommand}"
+                                        CornerRadius="5"
+                                        FontAttributes="Bold"
+                                        HasShadow="True"
+                                        Text="Shop"
+                                        TextColor="Black" />
+
+                                </StackLayout>
+                            </Frame>
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <!--<CollectionView
+                ItemsSource="{Binding Stores,Mode=TwoWay}"
+                Margin="5"
+                SelectedItem="{Binding SelectedStore}">
+
+
+            -->
+            <!--  Built in Cells  -->
+            <!--<CollectionView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <Frame HasShadow="True" CornerRadius="4" Margin="8" Padding="0">
-                            
-                        <StackLayout  BackgroundColor="White">
 
-                            <Frame  
-                                  HorizontalOptions="Fill"
-                                   HeightRequest="200"
-                                 
-           Padding="0"
-           IsClippedToBounds="True">
-                                
-                        <Image Source="{Binding StoreImg,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill"/>
+                            <Frame HasShadow="True" CornerRadius="8" Margin="8" Padding="0" BorderColor="LightGray">
+
+                                <StackLayout  BackgroundColor="White">
+
+                                    <Frame
+                                HorizontalOptions="Fill"
+                                HeightRequest="200"
+                                Padding="0"
+                                IsClippedToBounds="True">
+                                        <Image Source="{Binding StoreImg,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill"/>
+                                    </Frame>
+                                    <Label Text="{Binding StoreName}" FontSize="Title" TextColor="Black" HorizontalOptions="Center"></Label>
+                                    <BoxView HeightRequest="0.1" HorizontalOptions="Fill" Margin="4" BackgroundColor="Black"/>
+                                    <button:SfButton Text="See Store" Command="{Binding GoHomeStoreCommand}" CornerRadius="5" Margin="15" BackgroundColor="DodgerBlue" TextColor="Black" FontAttributes="Bold" HasShadow="True"/>
+
+                                </StackLayout>
                             </Frame>
-                        <Label Text="{Binding StoreName}" FontSize="Title" TextColor="Black" HorizontalOptions="Center"></Label>
-                            <BoxView HeightRequest="0.2" HorizontalOptions="Fill" Margin="4" BackgroundColor="Black"/>
-                            <button:SfButton Text="Buy On Store" Command="{Binding GoHomeStoreCommand}" CornerRadius="5" Margin="15" BackgroundColor="LightGray" TextColor="Black" FontAttributes="Bold" HasShadow="True"/>
-                           
-                        </StackLayout>
-                        </Frame>
-
-                    </ViewCell>
+                        </ViewCell>
                 </DataTemplate>
-            </ListView.ItemTemplate>
-
-            <!--Custom View Cells-->
+            </CollectionView.ItemTemplate>-->
             <!--
-    <ListView.ItemTemplate>
-      <DataTemplate>
-        <ViewCell>
-          <StackLayout>
-            <Label Text="{Binding Text}" 
-                   d:Text="{Binding .}"
-                   Style="{DynamicResource ListItemTextStyle}" />
-            <Label Text="{Binding Detail}" 
-                   d:Text="Detail"
-                   Style="{DynamicResource ListItemDetailTextStyle}"/>
-          </StackLayout>
-        </ViewCell>
-      </DataTemplate>
-    </ListView.ItemTemplate>
-    -->
-        </ListView>
+
+
+        </CollectionView>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

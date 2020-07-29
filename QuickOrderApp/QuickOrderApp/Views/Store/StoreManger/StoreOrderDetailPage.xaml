@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             mc:Ignorable="d"
+             Title="Detail Order"
+             x:Class="QuickOrderApp.Views.Store.StoreManger.StoreOrderDetailPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Margin="2">
+                
+            <Label Text="{Binding DetailOrder.OrderId,StringFormat='#{0}'}" FontSize="Body" TextColor="Black"/>
+            <Label Text="{Binding DetailOrder.OrderDate,StringFormat='Date:{0:MM/dd/yyyy}'}" FontSize="Body" TextColor="Black"/>
+            <Label Text="{Binding DetailOrder.OrderStatus,StringFormat='Status:{0}'}" FontSize="Body" TextColor="Black"/>
+            <Label Text="{Binding DetailOrder.OrderType,StringFormat='Type:{0}'}" FontSize="Body" TextColor="Black"/>
+            </StackLayout>
+           
+            <CollectionView VerticalOptions="Center" EmptyView="Empty" 
+                           
+                                ItemsSource="{Binding DetailOrder.OrderProducts}" Grid.Row="3" Margin="5" SelectedItem="{Binding SelectedOrder}"
+                                SelectionMode="Single">
+                <CollectionView.Header>
+                    <StackLayout>
+                        <Label Text="Order Products" FontSize="Title"  HorizontalOptions="Center" TextColor="Gray"/>
+                        <!--<BoxView HeightRequest="0.1" HorizontalOptions="Fill" BackgroundColor="Black"/>-->
+                    </StackLayout>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    
+                    <DataTemplate >
+
+                      
+                            <StackLayout Orientation="Vertical" Margin="5">
+
+                            <Frame IsClippedToBounds="True" CornerRadius="5" Padding="0">
+                                <Image Source="{Binding ProductImage, Converter={StaticResource BytesToImgConverter}}" WidthRequest="80" HeightRequest="80" Aspect="Fill" ></Image>
+                              
+                            </Frame>
+                          
+                            <BoxView HeightRequest="0.1" HorizontalOptions="FillAndExpand" BackgroundColor="Black"/>
+                            <Label Text="{Binding ProductName}"  HorizontalOptions="Center" FontSize="Title" />
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                
+                                <Label Text="{Binding Quantity,StringFormat='Quantity:{0}'}" FontSize="Body"/>
+                                <Label Text="{Binding Price,StringFormat='{0:C}'}" FontSize="Body"/>
+                            </StackLayout>
+
+                            </StackLayout>
+                      
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+           
+            <button:SfButton Text="Complete" HasShadow="True" CornerRadius="5" Margin="10" BackgroundColor="DodgerBlue" Command="{Binding CompleteOrderCommand}" FontSize="Body"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,12 +1,12 @@
 ﻿using Library.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace Library.Services.Interface
 {
-   public interface IStoreLicenseDataStore:IDataStore<StoreLicense>
+    public interface IStoreLicenseDataStore : IDataStore<StoreLicense>
     {
         bool StoreLicenseExists(Guid id);
+        Task<bool> PostStoreLicense(string email, string username);
     }
 }

@@ -1,9 +1,4 @@
-﻿using QuickOrderApp.ViewModels;
-using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -13,26 +8,24 @@ namespace QuickOrderApp.Views.Store
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Products : ContentPage
     {
-        public ObservableCollection<string> Items { get; set; }
+        StoreViewModel StoreViewModel;
 
         public Products()
         {
             InitializeComponent();
 
-            BindingContext = new StoreViewModel();
+            BindingContext = StoreViewModel = new StoreViewModel();
 
-          
+
         }
 
-        async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
+        protected async override void OnAppearing()
         {
-            if (e.Item == null)
-                return;
+            base.OnAppearing();
+            await StoreViewModel.GetStoreInformation(App.CurrentStore.StoreId.ToString());
 
-            await DisplayAlert("Item Tapped", "An item was tapped.", "OK");
-
-            //Deselect Item
-            ((ListView)sender).SelectedItem = null;
         }
+
+
     }
 }

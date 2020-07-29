@@ -1,11 +1,8 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace QuickOrderAdmin.Models
 {
@@ -15,11 +12,13 @@ namespace QuickOrderAdmin.Models
         [Required(ErrorMessage = "Please enter store name"), StringLength(50)]
         public string StoreName { get; set; }
 
+        public string StoreDescription { get; set; }
+
         [Required]
         [DisplayName("Store Register License")]
         public Guid StoreLicence { get; set; }
 
-        [DataType(DataType.Time)]  
+        [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{0:hh:mm tt}")]
         [DisplayName("Monday Open Time")]
         public DateTime MOpenTime { get; set; }
@@ -73,10 +72,10 @@ namespace QuickOrderAdmin.Models
         [DisplayName("Saturday open Time")]
         public DateTime SOpenTime { get; set; }
         [DataType(DataType.Time)]
-        [DisplayName("Thuersday close Time")]
+        [DisplayName("Saturday close Time")]
         public DateTime SCloseTime { get; set; }
 
-        public  readonly string Saturday;
+        public readonly string Saturday;
 
         [DataType(DataType.Time)]
         [DisplayName("Sunday open Time")]
@@ -88,8 +87,25 @@ namespace QuickOrderAdmin.Models
 
         public readonly string Sunday;
 
+        public StoreType SelectedStoreType { get; set; }
+
+        //public List<string> StoreTypes { get; set; }
+
         public IFormFile File { get; set; }
 
-       
+        public RegisterStoreViewModel()
+        {
+
+            //var values = Enum.GetValues(typeof(StoreType));
+            //StoreTypes = new List<string>();
+
+            //foreach (var item in values)
+            //{
+            //    StoreTypes.Add(item.ToString());
+            //}
+
+        }
+
+
     }
 }

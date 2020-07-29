@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Library.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using QuickOrderApp.Web.Context;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Library.Models;
-using QuickOrderApp.Web.Context;
 
 namespace QuickOrderApp.Web.Controllers
 {
@@ -129,7 +128,7 @@ namespace QuickOrderApp.Web.Controllers
         }
 
         [HttpGet("[action]/{userid}/{productname}")]
-        public bool OrderProductOfUserExist(Guid userid,string productname)
+        public bool OrderProductOfUserExist(Guid userid, string productname)
         {
             return _context.OrderProducts.Any(e => e.BuyerId == userid && e.ProductName == productname);
         }

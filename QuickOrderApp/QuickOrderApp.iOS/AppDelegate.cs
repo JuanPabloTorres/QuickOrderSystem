@@ -1,10 +1,7 @@
-using Syncfusion.XForms.iOS.Buttons;
-using Syncfusion.SfNumericUpDown.XForms.iOS;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using Foundation;
+using Syncfusion.SfNumericUpDown.XForms.iOS;
+using Syncfusion.XForms.iOS.Buttons;
+using Syncfusion.XForms.iOS.ComboBox;
 using UIKit;
 
 namespace QuickOrderApp.iOS
@@ -25,10 +22,12 @@ namespace QuickOrderApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
-global::Xamarin.Forms.Forms.Init();
-SfRadioButtonRenderer.Init();
-SfButtonRenderer.Init();
-SfNumericUpDownRenderer.Init();
+            global::Xamarin.Forms.Forms.Init();
+            SfPickerRenderer.Init();
+            SfComboBoxRenderer.Init();
+            SfRadioButtonRenderer.Init();
+            SfButtonRenderer.Init();
+            SfNumericUpDownRenderer.Init();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

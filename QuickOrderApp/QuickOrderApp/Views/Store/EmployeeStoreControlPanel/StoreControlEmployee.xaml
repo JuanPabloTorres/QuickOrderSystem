@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.EmployeeStoreControlPanel.StoreControlEmployee"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Employee Store Control"
+    Routing.Route="StoreControlEmployee"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+
+            </Grid.RowDefinitions>
+            <Frame
+                Grid.Row="0"
+                Padding="0"
+                HeightRequest="150"
+                HorizontalOptions="Fill"
+                IsClippedToBounds="True">
+
+                <Image Aspect="Fill" Source="{Binding Store.StoreImage, Converter={StaticResource BytesToImgConverter}}" />
+            </Frame>
+            <Label
+                Grid.Row="1"
+                FontAttributes="Bold"
+                FontSize="Title"
+                HorizontalOptions="Center"
+                Text="{Binding Store.StoreName}" />
+            <BoxView
+                Grid.Row="2"
+                Margin="8,0,8,0"
+                BackgroundColor="LightGray"
+                HeightRequest="0.1"
+                HorizontalOptions="Fill" />
+
+            <!--<button:SfButton Text="Check Inventory" Grid.Row="3" CornerRadius="5" HasShadow="True" Margin="3" BackgroundColor="DodgerBlue" FontAttributes="Bold" Command="{Binding GoAddProduct}"/>-->
+            <button:SfButton
+                Grid.Row="4"
+                Margin="3"
+                BackgroundColor="DodgerBlue"
+                Command="{Binding GoOrdersEmployeeCommand}"
+                CornerRadius="5"
+                FontAttributes="Bold"
+                HasShadow="True"
+                Text="Orders Check And Preparer" />
+
+            <Label
+                Grid.Row="5"
+                FontSize="Title"
+                HorizontalOptions="Center"
+                Text="{Binding StoreEmployee.Type, StringFormat='Employee Position: {0}'}" />
+            <!--<button:SfButton Text="Take Order" Grid.Row="5" CornerRadius="5" HasShadow="True" Margin="3" BackgroundColor="DodgerBlue" FontAttributes="Bold" Command="{Binding GoOrdersCommand}"/>-->
+            <CollectionView Grid.Row="6" ItemsSource="{Binding EmpWorkHour}">
+                <CollectionView.Header>
+                    <StackLayout>
+                        <Label
+                            FontSize="Title"
+                            HorizontalOptions="Start"
+                            Text="Work Schedule" />
+                    </StackLayout>
+                </CollectionView.Header>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="1" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+
+                            <BoxView
+                                Margin="8,0,8,0"
+                                BackgroundColor="LightGray"
+                                HeightRequest="0.1"
+                                HorizontalOptions="FillAndExpand" />
+                            <StackLayout Orientation="Vertical">
+                                <Label
+                                    FontSize="Title"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Day}" />
+                                <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+                                    <Label
+                                        FontSize="Body"
+                                        Text="Open"
+                                        VerticalOptions="Center" />
+                                    <Label
+                                        Text="{Binding OpenTime, StringFormat='{0:hh:mm tt}'}"
+                                        TextColor="Green"
+                                        VerticalOptions="Center" />
+
+                                    <Label
+                                        FontSize="Body"
+                                        Text="Close"
+                                        VerticalOptions="Center" />
+                                    <Label
+                                        Text="{Binding CloseTime, StringFormat='{0:hh:mm tt}'}"
+                                        TextColor="Red"
+                                        VerticalOptions="Center" />
+                                </StackLayout>
+
+                            </StackLayout>
+                            <!--<BoxView
+                                BackgroundColor="Black"
+                                HeightRequest="0.1"
+                                HorizontalOptions="FillAndExpand" />-->
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+        </Grid>
+
+    </ContentPage.Content>
+</ContentPage>

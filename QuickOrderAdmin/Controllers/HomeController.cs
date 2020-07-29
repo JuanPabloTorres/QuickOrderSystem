@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Library.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickOrderAdmin.Models;
 using QuickOrderAdmin.Utilities;
+using System.Diagnostics;
 
 namespace QuickOrderAdmin.Controllers
 {
@@ -14,13 +11,19 @@ namespace QuickOrderAdmin.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public IProductDataStore productDataStore;
+
+        public HomeController(ILogger<HomeController> logger, IProductDataStore productData)
         {
             _logger = logger;
+            productDataStore = productData;
         }
 
         public IActionResult Index()
         {
+
+
+
             return View(SelectedStore.CurrentStore);
         }
 

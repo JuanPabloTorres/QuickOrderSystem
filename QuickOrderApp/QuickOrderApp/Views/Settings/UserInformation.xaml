@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Settings.UserInformation"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms"
+    Title="Personal Information"
+    Routing.Route="UserInformationRoute"
+    Shell.BackgroundColor="White"
+    Shell.NavBarHasShadow="True"
+    Shell.TitleColor="Black"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <Grid VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <sfavatar:SfAvatarView
+                Grid.Row="0"
+                AvatarName="{Binding UserInformation.Name}"
+                BackgroundColor="DodgerBlue"
+                BorderWidth="0"
+                ContentType="Initials"
+                CornerRadius="25"
+                FontAttributes="Bold"
+                HasShadow="True"
+                HeightRequest="100"
+                HorizontalOptions="Center"
+                InitialsColor="Black"
+                InitialsType="DoubleCharacter"
+                WidthRequest="100" />
+            <StackLayout
+                Grid.Row="1"
+                Margin="5"
+                HorizontalOptions="Center"
+                VerticalOptions="Fill">
+                <BoxView
+                    BackgroundColor="Black"
+                    HeightRequest="0.2"
+                    HorizontalOptions="Fill" />
+                <StackLayout>
+
+                    <Label
+                        FontSize="Large"
+                        Text="{Binding Fullname, StringFormat='Name: {0}'}"
+                        VerticalOptions="Center" />
+                    <Label
+                        FontSize="Large"
+                        Text="{Binding Email, StringFormat='Email: {0}'}"
+                        VerticalOptions="Center" />
+                    <Label
+                        FontSize="Large"
+                        HorizontalOptions="Start"
+                        Text="{Binding Address, StringFormat='Address: {0}'}" />
+                    <Label
+                        FontSize="Large"
+                        HorizontalOptions="Start"
+                        Text="{Binding GenderSelected, StringFormat='Gender: {0}'}" />
+                    <Label
+                        FontSize="Large"
+                        HorizontalOptions="Start"
+                        Text="{Binding Phone, StringFormat='Phone: {0}'}" />
+                </StackLayout>
+            </StackLayout>
+            <button:SfButton
+                Grid.Row="2"
+                Margin="10"
+                BackgroundColor="Orange"
+                Command="{Binding UpdateProfileCommand}"
+                CornerRadius="4"
+                FontAttributes="Bold"
+                HasShadow="True"
+                HorizontalOptions="Fill"
+                Text="Update Profile"
+                TextColor="Black"
+                VerticalOptions="End" />
+            <button:SfButton
+                Grid.Row="3"
+                Margin="10"
+                BackgroundColor="Orange"
+                Command="{Binding GoRegisterCardCommand}"
+                CornerRadius="4"
+                FontAttributes="Bold"
+                HasShadow="True"
+                HorizontalOptions="Fill"
+                Text="Register Card "
+                TextColor="Black"
+                VerticalOptions="End" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

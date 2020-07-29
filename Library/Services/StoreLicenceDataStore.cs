@@ -3,15 +3,19 @@ using Library.Models;
 using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace Library.Services
 {
     public class StoreLicenceDataStore : DataStoreService<StoreLicense>, IStoreLicenseDataStore
     {
-        
+        public async Task<bool> PostStoreLicense(string email, string username)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(PostStoreLicense)}/{email}/{username}");
+            var response = HttpClient.GetStringAsync(FullAPIUri);
+            bool deserializeObject = JsonConvert.DeserializeObject<bool>(response.Result);
+            return deserializeObject;
+        }
 
         public bool StoreLicenseExists(Guid id)
         {

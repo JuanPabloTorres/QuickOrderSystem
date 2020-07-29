@@ -1,21 +1,87 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             x:Class="QuickOrderApp.Views.Login.RegisterPage">
+<ContentPage
+    x:Class="QuickOrderApp.Views.Login.RegisterPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    NavigationPage.HasNavigationBar="False"
+    mc:Ignorable="d">
+
+
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout VerticalOptions="Center">
+            <Label
+                FontAttributes="Bold"
+                FontSize="Title"
+                HorizontalOptions="Center"
+                Text="Register New User"
+                TextColor="Black"
+                VerticalOptions="Start" />
 
-            <Entry Placeholder="FullName" Text="{Binding Fullname}"/>
-            <Entry Placeholder=" Email" Text="{Binding Email}"/>
-            <Entry Placeholder="Username" Text="{Binding Username}"/>
-            <Entry Placeholder="Password" Text="{Binding Password}" IsPassword="True"/>
-            <Entry Placeholder="Confirmpassword" Text="{Binding ConfirmPassword}" IsPassword="True"/>
+            <BoxView
+                BackgroundColor="Black"
+                HeightRequest="0.1"
+                HorizontalOptions="Fill" />
 
-            <Button Text="Done" Command="{Binding DoneCommand}"/>
+            <StackLayout Margin="5" VerticalOptions="Center">
 
+                <StackLayout>
+                    <Label
+                        FontSize="Body"
+                        HorizontalOptions="Start"
+                        Text="User Information" />
+                    <BoxView
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <Entry Placeholder="FullName" Text="{Binding Fullname}" />
+                    <Entry Placeholder=" Email" Text="{Binding Email}" />
+                    <Entry Placeholder=" Adress" Text="{Binding Address}" />
+                    <Entry Placeholder=" Phone" Text="{Binding Phone}" />
+                    <StackLayout>
+                        <combobox:SfComboBox
+                            ComboBoxSource="{Binding Genders}"
+                            SelectedItem="{Binding GenderSelected}"
+                            Text="Gender" />
+                    </StackLayout>
+                </StackLayout>
+
+                <StackLayout>
+                    <Label
+                        FontSize="Body"
+                        HorizontalOptions="Start"
+                        Text="User Credential Information" />
+                    <BoxView
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <Entry Placeholder="Username" Text="{Binding Username}" />
+                    <Entry
+                        IsPassword="True"
+                        Placeholder="Password"
+                        Text="{Binding Password}" />
+                    <Entry
+                        IsPassword="True"
+                        Placeholder="Confirmpassword"
+                        Text="{Binding ConfirmPassword}" />
+                    <button:SfButton
+                        Margin="5"
+                        BackgroundColor="DodgerBlue"
+                        Command="{Binding DoneCommand}"
+                        CornerRadius="5"
+                        FontAttributes="Bold"
+                        FontSize="Body"
+                        HasShadow="True"
+                        Text="Done"
+                        TextColor="Black" />
+                </StackLayout>
+
+
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

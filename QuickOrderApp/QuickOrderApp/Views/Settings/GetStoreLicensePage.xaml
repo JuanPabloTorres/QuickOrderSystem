@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Settings.GetStoreLicensePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Routing.Route="StoreLicenseRoute"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center">
+            <Frame
+                Grid.Row="0"
+                Margin="5"
+                CornerRadius="5"
+                HasShadow="True">
+                <StackLayout VerticalOptions="Center">
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="Pro License."
+                        TextColor="Black" />
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="$100/month"
+                        TextColor="Black" />
+                    <Label
+                        HorizontalOptions="Center"
+                        Text="Get license to start use our Quick Order System and make your busissness grow."
+                        TextColor="Black" />
+                    <BoxView
+                        BackgroundColor="Black"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <button:SfButton
+                        Margin="10"
+                        BackgroundColor="DodgerBlue"
+                        Command="{Binding GetLicenseCommand}"
+                        CommandParameter="ProLicense"
+                        CornerRadius="5"
+                        HasShadow="True"
+                        Text="Get Licence" />
+                </StackLayout>
+            </Frame>
+            <!--<Frame HasShadow="True" Margin="5" CornerRadius="5" Grid.Row="0"  >
+                <StackLayout VerticalOptions="Center">
+                    <Label Text="Pro License" TextColor="Black" HorizontalOptions="Center" />
+                    <BoxView BackgroundColor="LightGray" HeightRequest="0.1" HorizontalOptions="Fill"/>
+                    <button:SfButton Text="Get Licence" Margin="10" BackgroundColor="DodgerBlue" HasShadow="True" CornerRadius="5"/>
+                </StackLayout>
+            </Frame>-->
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

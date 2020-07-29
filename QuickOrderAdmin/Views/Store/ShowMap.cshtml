@@ -4,87 +4,86 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <head>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFxOUdXCkK-ilbhH-td_IrCuGfedwzyY8"></script>
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFxOUdXCkK-ilbhH-td_IrCuGfedwzyY8&signed_in=true&callback=initMap"></script>
-                </head >
+<head>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFxOUdXCkK-ilbhH-td_IrCuGfedwzyY8"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFxOUdXCkK-ilbhH-td_IrCuGfedwzyY8&signed_in=true&callback=initMap">
+        var map = new google.maps;
+        function DisplayGoogleMap() {
 
-                    <body>
+            //Set the Latitude and Longitude of the Map
+            var myAddress = map.LatLng(18.102500, -66.483386);
 
-                        <input type="button" value="Click to Display Map" onclick="DisplayGoogleMap()" />
-                        <input type="button" onclick="ShowMap();" value="Get Location" />
+            document.getElementById("position").innerHTML = myAddress.latitude;
+            //Create Options or set different Characteristics of Google Map
+            var mapOptions = {
+                center: myAddress,
+                zoom: 15,
+                minZoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
 
-                        <p id="position"></p>
-                        <div id="myDiv" style="width:100%;height:400px;"></div>
+            //Display the Google map in the div control with the defined Options
+            var map = map.Map(document.getElementById("myDiv"), mapOptions);
 
-                        <script type="text/javascript">
-                            function DisplayGoogleMap() {
+            //Set Marker on the Map
+            var marker = map.Marker({
+                position: myAddress,
+                animation: google.maps.Animation.BOUNCE,
+            });
+
+            marker.setMap(map);
+
+        }
+        function ShowMap() {
+
+            var mymap = map.Map(document.getElementById('myDiv'), {
+                center: { lat: 18.102500, lng: -66.483386 },
+                zoom: 6
+            });
+            var infoWindow = maps.InfoWindow({ map: mymap });
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
 
 
-                            //Set the Latitude and Longitude of the Map
-                            var myAddress = new google.maps.LatLng(18.102500, -66.483386);
+                    };
+                    $('#position').text(pos.latitude);
+                    //document.getElementById("position").innerHTML = pos.latitude;
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Location found.');
+                    map.setCenter(pos);
+                }, function () {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
 
-                                document.getElementById("position").innerHTML = myAddress.latitude;
-                            //Create Options or set different Characteristics of Google Map
-                            var mapOptions = {
-                                center: myAddress,
-                                zoom: 15,
-                                minZoom: 15,
-                                mapTypeId: google.maps.MapTypeId.ROADMAP
-                            };
+            function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                infoWindow.setPosition(pos);
+                infoWindow.setContent(browserHasGeolocation ?
+                    'Error: The Geolocation service failed.' :
+                    'Error: Your browser doesn\'t support geolocation.');
+            }
+        }
+    </script>
+    <script type="text/javascript">
 
-                            //Display the Google map in the div control with the defined Options
-                            var map = new google.maps.Map(document.getElementById("myDiv"), mapOptions);
+    </script>
+</head>
 
-                            //Set Marker on the Map
-                            var marker = new google.maps.Marker({
-                                position: myAddress,
-                                animation: google.maps.Animation.BOUNCE,
-                            });
+<body>
 
-                            marker.setMap(map);
-                        }
-        </script>
-        <script type="text/javascript">
+    <input type="button" value="Click to Display Map" onclick="DisplayGoogleMap()" />
+    <input type="button" onclick="ShowMap();" value="Get Location" />
 
-            function ShowMap() {
-                var maps = new google.maps;
-                            var map = maps.Map(document.getElementById('myDiv'), {
-                                center: {lat: 18.102500, lng: -66.483386 },
-                                zoom: 6
-                            });
-                            var infoWindow = maps.InfoWindow({map: map });
+    <p id="position"></p>
+    <div id="myDiv" style="width:100%;height:400px;"></div>
 
-                            // Try HTML5 geolocation.
-                            if (navigator.geolocation) {
-                                navigator.geolocation.getCurrentPosition(function (position) {
-                                    var pos = {
-                                        lat: position.coords.latitude,
-                                        lng: position.coords.longitude
-
-                                        
-                                    };
-                                    $('#position').text(pos.latitude);
-                                    //document.getElementById("position").innerHTML = pos.latitude;
-                                    infoWindow.setPosition(pos);
-                                    infoWindow.setContent('Location found.');
-                                    map.setCenter(pos);
-                                }, function () {
-                                    handleLocationError(true, infoWindow, map.getCenter());
-                                });
-                            } else {
-                                // Browser doesn't support Geolocation
-                                handleLocationError(false, infoWindow, map.getCenter());
-                            }
-
-                            function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-                                infoWindow.setPosition(pos);
-                                infoWindow.setContent(browserHasGeolocation ?
-                                    'Error: The Geolocation service failed.' :
-                                    'Error: Your browser doesn\'t support geolocation.');
-                            }
-                        }
-
-        </script>
-        </body>
+</body>
 

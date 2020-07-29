@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Home.CategoryStoresHome"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackLayout>
+        <CollectionView
+            Margin="5"
+            EmptyView="Not Store Found."
+            ItemsSource="{Binding Stores}"
+            SelectedItem="{Binding SelectedStore}"
+            SelectionMode="Single">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout
+                    HorizontalItemSpacing="5"
+                    Orientation="Vertical"
+                    Span="1"
+                    VerticalItemSpacing="5" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <ContentView Margin="3">
+
+                        <Frame
+                            Margin="8"
+                            Padding="0"
+                            BorderColor="LightGray"
+                            CornerRadius="10"
+                            HasShadow="True">
+
+                            <StackLayout BackgroundColor="White">
+
+                                <Frame
+                                    Padding="0"
+                                    HeightRequest="200"
+                                    HorizontalOptions="Fill"
+                                    IsClippedToBounds="True">
+                                    <Image Aspect="Fill" Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />
+                                </Frame>
+                                <Label
+                                    FontSize="Title"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding StoreName}"
+                                    TextColor="Black" />
+                                <BoxView
+                                    Margin="4"
+                                    BackgroundColor="Black"
+                                    HeightRequest="0.1"
+                                    HorizontalOptions="Fill" />
+
+                                <Label
+                                    FontSize="Body"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding StoreType, StringFormat='Store Type: {0}'}" />
+                                <StackLayout Margin="4">
+
+
+                                    <Label
+                                        FontSize="Body"
+                                        HorizontalOptions="Start"
+                                        Text="About Store" />
+
+                                    <Label FontSize="Caption" Text="{Binding StoreDescription}" />
+                                </StackLayout>
+
+                                <button:SfButton
+                                    Margin="15"
+                                    BackgroundColor="DodgerBlue"
+                                    Command="{Binding GoHomeStoreCommand}"
+                                    CornerRadius="5"
+                                    FontAttributes="Bold"
+                                    HasShadow="True"
+                                    Text="Shop"
+                                    TextColor="Black" />
+
+                            </StackLayout>
+                        </Frame>
+                    </ContentView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+
+
+</ContentPage>

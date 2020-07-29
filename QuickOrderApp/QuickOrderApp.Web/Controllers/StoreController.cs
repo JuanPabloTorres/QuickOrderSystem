@@ -1,12 +1,11 @@
-﻿ using System;
+﻿using Library.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using QuickOrderApp.Web.Context;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Library.Models;
-using QuickOrderApp.Web.Context;
 
 namespace QuickOrderApp.Web.Controllers
 {
@@ -32,14 +31,14 @@ namespace QuickOrderApp.Web.Controllers
         [HttpGet("[action]/{userid}")]
         public async Task<ActionResult<IEnumerable<Store>>> GetStoresFromUser(Guid userid)
         {
-            return await _context.Stores.Where(s=>s.UserId == userid).ToListAsync();
+            return await _context.Stores.Where(s => s.UserId == userid).ToListAsync();
         }
 
         // GET: api/Store/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Store>> GetStore(Guid id)
         {
-            var store =  _context.Stores.Where(s=>s.StoreId == id).Include(p=>p.Products).Include(w=>w.WorkHours).FirstOrDefault();
+            var store = _context.Stores.Where(s => s.StoreId == id).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefault();
 
             if (store == null)
             {

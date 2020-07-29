@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Library.DTO;
+using Library.Models;
+using Library.Services;
+using Plugin.SharedTransitions;
+using QuickOrderApp.Views.Login;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using QuickOrderApp.Services;
-using QuickOrderApp.Views;
-using Library.Services;
-using QuickOrderApp.Views.Login;
-using Library.Models;
-using Library.Services.Interface;
 
 namespace QuickOrderApp
 {
@@ -20,34 +17,43 @@ namespace QuickOrderApp
             DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5000" : "http://localhost:5000";
 
         public static string LocalBackendUrl =
-        DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.1.132:5000/api" : "http://192.168.1.132:5000/api";
+        DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.56.1:5000/api" : "http://192.168.56.1:5000/api";
 
         public static bool UseMockDataStore = true;
         public static User LogUser;
         public static Store CurrentStore;
+        public static TokenDTO TokenDto{ get; set; }
         public App()
         {
             InitializeComponent();
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjY0MTU4QDMxMzgyZTMxMmUzMEx6QkJ4RjEvcHl6V2VaMFF3TENBa0tUU1c1RWpKWlh3bDNUdXduc3J6Q2c9");
-            if (UseMockDataStore)
-            {
-                Dependencies();
 
-            }
-            else
-                DependencyService.Register<AzureDataStore>();
+            Dependencies();
 
-            MainPage = new NavigationPage( new LoginPage());
+
+
+            // MainPage = new NavigationPage(new PaymentPage());
+            //MainPage = new NavigationPage(new LoginPage());
+            MainPage = new SharedTransitionNavigationPage(new LoginPage());
+
+            //SharedTransitionNavigationPage
         }
 
         void Dependencies()
         {
-            DependencyService.Register<MockDataStore>();
+            //DependencyService.Register<MockDataStore>();
             DependencyService.Register<ProductDataStore>();
             DependencyService.Register<UserDataStore>();
             DependencyService.Register<StoreDataStore>();
             DependencyService.Register<OrderProductDataStore>();
             DependencyService.Register<OrderDataStore>();
+            DependencyService.Register<RequestDataStore>();
+            DependencyService.Register<EmployeeDataStore>();
+            DependencyService.Register<StoreLicenceDataStore>();
+            DependencyService.Register<WorkHourDataStore>();
+            DependencyService.Register<EmployeeWorkHourDataStore>();
+            DependencyService.Register<CardDataStore>();
+
         }
 
         protected override void OnStart()

@@ -1,0 +1,128 @@
+﻿@model Library.Models.Order
+
+@{
+    ViewData["Title"] = "OrderDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+    <div>
+       
+        @Html.ActionLink("Complete", "Complete", "Store", new { OrderId = Model.OrderId }, new { @class = "btn btn-warning btn-block" })
+
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.OrderId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.OrderId)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.OrderDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BuyerId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.BuyerId)
+            </dd>
+            @*<dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.StoreId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.StoreId)
+            </dd>*@
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.OrderType)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.OrderType)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.OrderStatus)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.OrderStatus)
+            </dd>
+        </dl>
+    </div>
+
+@{
+    double total = 0;
+
+} 
+@*@foreach (var item in Model.OrderProducts)
+{
+    <div class="container">
+        <img src="data:image;base64,@System.Convert.ToBase64String(item.ProductImage)" width="100" height="100" class="rounded-circle" />
+        <label>@item.ProductName</label>
+        <label>@item.Price</label>
+        <label>@item.Quantity</label>
+        @{ 
+
+        total = @item.Price * @item.Quantity;
+        }
+        <label>@total</label>
+    </div>
+}*@
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                <label>Order Product</label>
+            </th>
+            <th>
+                <label>Product Name</label>
+            </th>
+            <th>
+                <label>Price</label>
+
+            </th>
+            <th>
+                <label>Quantity</label>
+            </th>
+            <th>
+                <label>Total</label>
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderProducts)
+        {
+        <tr>
+            <td>
+                <img src="data:image;base64,@System.Convert.ToBase64String(item.ProductImage)" width="100" height="100" class="rounded-circle" />
+            </td>
+            <td>
+               <label>@item.ProductName</label>
+            </td>
+            <td>
+                @*@Html.DisplayFor(modelItem => item.Price).ToString("C", System.Globalization.CultureInfo.CurrentCulture)*@
+                <label>@item.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</label>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @{
+
+                    total = @item.Price * @item.Quantity;
+
+
+                }
+                <label>@total.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</label>
+            </td>
+
+
+        </tr>
+        }
+    </tbody>
+</table>

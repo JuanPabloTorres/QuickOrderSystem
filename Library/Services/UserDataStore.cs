@@ -1,10 +1,9 @@
-﻿using Library.Interface;
+﻿using Library.DTO;
+using Library.Interface;
 using Library.Models;
 using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Library.Services
 {
@@ -31,6 +30,14 @@ namespace Library.Services
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(ForgotCodeSend)}/{email}");
             var response = HttpClient.GetStringAsync(FullAPIUri);
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response.Result);
+            return deserializeObject;
+        }
+
+        public TokenDTO LoginCredential(string username, string password)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(LoginCredential)}/{username}/{password}");
+            var response = HttpClient.GetStringAsync(FullAPIUri);
+            TokenDTO deserializeObject = JsonConvert.DeserializeObject<TokenDTO>(response.Result);
             return deserializeObject;
         }
     }

@@ -1,0 +1,119 @@
+﻿@model QuickOrderAdmin.Models.EmployeeDetailViewModel
+
+@{
+    ViewData["Title"] = "DetailEmployee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div>
+    <h4>Detail Employee</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+          <label>ID</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmployeeId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Gender)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Gender)
+        </dd>
+
+        <dt class="col-sm-2">
+           <label>Position</label>
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.EmpType)
+        </dd>
+
+
+    </dl>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    <label>Day</label>
+                </th>
+                <th>
+                    <label>Start</label>
+                </th>
+                <th>
+                    <label>End</label>
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.EmployeeWorkHours)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Day)
+                    </td>
+                    <td>
+
+                      @{ 
+                          string opentimeformat = item.OpenTime.ToString("hh:mm tt");
+
+
+
+                      }
+                        <label style="color:green">@opentimeformat</label>
+
+                        @*@Html.DisplayFor(modelItem => item.OpenTime.ToString("hh:mm tt"))*@
+                    </td>
+                    <td>
+                        @{
+                            string closetimeformat = item.CloseTime.ToString("hh:mm tt");
+
+
+
+                        }
+                        <label style="color:red">@closetimeformat</label>
+
+                        @*@Html.DisplayFor(modelItem => item.CloseTime.ToString("hh:mm tt"))*@
+                    </td>
+
+                    
+                </tr>
+                            }
+        </tbody>
+    </table>
+
+</div>
+<div>
+    @*@Html.ActionLink("Edit", "EditEmployee", "Employee", new { id = Model.EmployeeId },)*@
+
+    <a class="btn btn-warning" asp-action="EditEmployee" asp-controller="Employee" asp-route-id="@Model.EmployeeId">Edit Employee</a>
+</div>

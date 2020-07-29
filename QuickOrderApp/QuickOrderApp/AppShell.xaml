@@ -1,82 +1,91 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Shell xmlns="http://xamarin.com/schemas/2014/forms" 
-       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-       mc:Ignorable="d"
-       xmlns:store="clr-namespace:QuickOrderApp.Views.Store"
-       xmlns:local="clr-namespace:QuickOrderApp.Views"
-       xmlns:login="clr-namespace:QuickOrderApp.Views.Login"
-      xmlns:home="clr-namespace:QuickOrderApp.Views.Home"
-       Title="QuickOrderApp"
-       x:Class="QuickOrderApp.AppShell">
+<?xml version="1.0" encoding="UTF-8" ?>
+<sharedTransitions:SharedTransitionShell
+    x:Class="QuickOrderApp.AppShell"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:home="clr-namespace:QuickOrderApp.Views.Home"
+    xmlns:inbox="clr-namespace:QuickOrderApp.Views.Inbox"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:setting="clr-namespace:QuickOrderApp.Views.Settings"
+    xmlns:sharedTransitions="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
+    xmlns:store="clr-namespace:QuickOrderApp.Views.Store"
+    Title="QuickOrderApp"
+    mc:Ignorable="d">
 
-    <!-- 
-        Styles and Resources 
+    <!--
+        Styles and Resources
     -->
     <Shell.Resources>
         <ResourceDictionary>
             <Color x:Key="NavigationPrimary">Orange</Color>
             <Style x:Key="BaseStyle" TargetType="Element">
                 <Setter Property="Shell.BackgroundColor" Value="{StaticResource NavigationPrimary}" />
-                <Setter Property="Shell.ForegroundColor" Value="White" />
+                <Setter Property="Shell.ForegroundColor" Value="Black" />
                 <Setter Property="Shell.TitleColor" Value="Black" />
                 <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
                 <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
                 <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
-                <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
-                <Setter Property="Shell.TabBarTitleColor" Value="Black"/>
+                <Setter Property="Shell.TabBarForegroundColor" Value="White" />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF" />
+                <Setter Property="Shell.TabBarTitleColor" Value="Black" />
             </Style>
-            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
+            <Style BasedOn="{StaticResource BaseStyle}" TargetType="TabBar" />
         </ResourceDictionary>
     </Shell.Resources>
 
-    <!-- Your Pages -->
-    <TabBar >
-      
-        <Tab Title="Home" Icon="tab_about.png" >
+    <!--  Your Pages  -->
+    <TabBar>
+
+        <Tab Title="Home" Icon="home.png">
             <ShellContent ContentTemplate="{DataTemplate home:HomePage}" />
         </Tab>
-        <Tab Title="Orders" Icon="tab_about.png" >
+        <Tab Title="Inbox" Icon="inbox.png">
+            <ShellContent ContentTemplate="{DataTemplate inbox:InboxPage}" />
+        </Tab>
+        <Tab Title="Orders" Icon="bag.png">
             <ShellContent ContentTemplate="{DataTemplate store:StoreOrders}" />
         </Tab>
-        <Tab Title="Settings" Icon="tab_about.png">
-            <ShellContent ContentTemplate="{DataTemplate home:HomePage}" />
+        <Tab Title="Settings" Icon="settings.png">
+            <ShellContent ContentTemplate="{DataTemplate setting:Settings}" />
         </Tab>
         <!--<Tab Title="Login" Icon="tab_about.png">
         <ShellContent ContentTemplate="{DataTemplate login:LoginPage}" />
         </Tab>-->
     </TabBar>
 
-     <!--Optional Templates 
-    // These may be provided inline as below or as separate classes.
-
-    // This header appears at the top of the Flyout.-->
+    <!--
+        Optional Templates
+        // These may be provided inline as below or as separate classes.
+        
+        // This header appears at the top of the Flyout.
+    -->
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>
-            <Grid><!--ContentHere--></Grid>
+            <Grid>
+                <!--  ContentHere  -->
+            </Grid>
         </DataTemplate>
     </Shell.FlyoutHeaderTemplate>
 
-    <!--// ItemTemplate is for ShellItems as displayed in a Flyout-->
+    <!--  // ItemTemplate is for ShellItems as displayed in a Flyout  -->
     <Shell.ItemTemplate>
         <DataTemplate>
             <ContentView>
-                <!--Bindable Properties: Title, Icon-->
+                <!--  Bindable Properties: Title, Icon  -->
             </ContentView>
         </DataTemplate>
     </Shell.ItemTemplate>
 
-    <!--// MenuItemTemplate is for MenuItems as displayed in a Flyout-->
+    <!--  // MenuItemTemplate is for MenuItems as displayed in a Flyout  -->
     <Shell.MenuItemTemplate>
         <DataTemplate>
             <ContentView>
-                <!--Bindable Properties: Text, Icon-->
+                <!--  Bindable Properties: Text, Icon  -->
             </ContentView>
         </DataTemplate>
     </Shell.MenuItemTemplate>
 
-    
 
-</Shell>
+
+</sharedTransitions:SharedTransitionShell>

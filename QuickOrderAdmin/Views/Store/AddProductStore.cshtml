@@ -48,21 +48,26 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
 
-                <img  id="img" class="rounded mx-auto d-block" height="150" width="150" alt="Piture" />
+                <img id="img" class="rounded mx-auto d-block" height="150" width="150" alt="Piture" />
             </div>
 
             <div class="form-group">
 
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile" asp-for="File" onclick="">
-                <label class="custom-file-label" for="customFile" id="filelabel">Choose file</label>
-            </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" asp-for="File" onclick="">
+                    <label class="custom-file-label" for="customFile" id="filelabel">Choose file</label>
+                </div>
             </div>
 
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
                 <input asp-for="ProductName" class="form-control" />
                 <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductDescription" class="control-label"></label>
+                <input  asp-for="ProductDescription" class="form-control" />
+                <span asp-validation-for="ProductDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductPrice" class="control-label"></label>

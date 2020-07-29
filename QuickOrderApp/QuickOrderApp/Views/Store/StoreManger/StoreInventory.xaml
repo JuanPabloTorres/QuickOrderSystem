@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Routing.Route="InventoryRoute"
+             x:Class="QuickOrderApp.Views.Store.StoreManger.StoreInventory">
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView ItemsSource="{Binding StoreInventory}" EmptyView="Empty Inventory">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Span="2" Orientation="Vertical"  />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <ContentView>
+                            <Frame Margin="8" HasShadow="True" CornerRadius="10" Padding="0" BorderColor="LightGray">
+
+                                <StackLayout >
+                                    <Frame  
+                                HorizontalOptions="Fill"
+                                HeightRequest="130"       
+                                Padding="0"
+                                IsClippedToBounds="True">
+                                        <Image Source="{Binding ProductImage,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill" HeightRequest="200"/>
+                                    </Frame>
+
+                                    <Label Text="{Binding ProductName}" FontSize="Title" HorizontalOptions="Center"></Label>
+                                    <BoxView HeightRequest="0.1" HorizontalOptions="Fill" Margin="4" BackgroundColor="Black"/>
+                                    <Label Text="{Binding Price,StringFormat='{0:C}'}" FontSize="20" HorizontalOptions="Center"></Label>
+                                    <Label Text="{Binding InventoryQuantity,StringFormat='Quantity:{0}'}"  FontSize="20" HorizontalOptions="Center"/>
+                                </StackLayout>
+                            </Frame>
+                        </ContentView>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

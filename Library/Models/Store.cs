@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Library.Models
 {
@@ -18,7 +17,11 @@ namespace Library.Models
 
         public byte[] StoreImage { get; set; }
 
-       public ICollection<Product> Products { get; set; }
+        public string StoreDescription { get; set; }
+
+        public ICollection<Product> Products { get; set; }
+
+        public ICollection<Employee> Employees { get; set; }
 
         public ICollection<WorkHour> WorkHours { get; set; }
 
@@ -28,6 +31,22 @@ namespace Library.Models
 
         [ForeignKey("StoreRegisterLicenseId")]
         public StoreLicense UserStoreLicense { get; set; }
+
+        public StoreType StoreType { get; set; }
+
+    }
+
+    public enum StoreType
+    {
+        None,
+        Store,
+        Grocery,
+        BarberShop,
+        Farming,
+        Restaurant,
+        Service,
+        AutorParts,
+        ClothingStore,
 
     }
 }

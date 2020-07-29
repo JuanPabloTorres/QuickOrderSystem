@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Library.Models
 {
@@ -14,6 +13,12 @@ namespace Library.Models
         public string Name { get; set; }
         public string Email { get; set; }
 
+        public string Address { get; set; }
+
+        public string Phone { get; set; }
+
+        public Gender Gender { get; set; }
+
         public Guid LoginId { get; set; }
 
         [ForeignKey("LoginId")]
@@ -21,6 +26,10 @@ namespace Library.Models
 
         public ICollection<Store> Stores { get; set; }
 
+        public ICollection<Employee> Employees { get; set; }
+
+
+        public ICollection<PaymentCard> PaymentCards { get; set; }
         //public Guid StoreRegisterLicenseId { get; set; }
 
         //[ForeignKey("StoreRegisterLicenseId")]
@@ -28,5 +37,11 @@ namespace Library.Models
 
 
 
+    }
+
+    public enum Gender
+    {
+        Male,
+        Female
     }
 }

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Settings.RegisterCardPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="RegisterCardRoute"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="CenterAndExpand">
+            <Label
+                FontAttributes="Bold"
+                FontSize="Title"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="Register a card to start make payments." />
+            <Frame
+                Margin="8"
+                BorderColor="LightGray"
+                CornerRadius="5"
+                IsClippedToBounds="True"
+                VerticalOptions="Center">
+
+                <StackLayout VerticalOptions="Center">
+                    <StackLayout>
+                        <Entry Placeholder="Card Holder Name" Text="{Binding HolderName}" />
+                        <Entry Placeholder="Card Number" Text="{Binding CardNumber}" />
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Exp" />
+                            <Entry Placeholder="Month" Text="{Binding Month}" />
+                            <Entry Placeholder="Year" Text="{Binding Year}" />
+                        </StackLayout>
+                        <Entry Placeholder="CVC" Text="{Binding CVC}" />
+
+
+                    </StackLayout>
+                    <button:SfButton Command="{Binding CompleteRegisterCardCommand}" Text="Complete" />
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

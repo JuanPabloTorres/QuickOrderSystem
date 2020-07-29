@@ -1,15 +1,16 @@
 ﻿using Library.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Library.Services.Interface
 {
-    public interface IOrderDataStore:IDataStore<Order>
+    public interface IOrderDataStore : IDataStore<Order>
     {
-        Order HaveOrder(Guid userid, Guid storeid);
+        Order HaveOrderOfSpecificStore(Guid userid, Guid storeid);
         IEnumerable<Order> GetUserOrders(Guid userid);
 
         IEnumerable<Order> GetStoreOrders(Guid storeId);
+
+        IEnumerable<Order> GetUserOrdersWithToken(Guid userid, string token);
     }
 }

@@ -3,18 +3,18 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Library.Interface
 {
-    public class DataStoreService<T>: IDataStore<T> where T: class
+    public class DataStoreService<T> : IDataStore<T> where T : class
     {
         protected readonly HttpClient HttpClient;
         protected readonly Uri BaseAPIUri;
         //protected readonly INetworkService NetworkService;
 
-        public static string LocalBackendUrl = "http://192.168.1.132:5000/api";
+        public static string LocalBackendUrl = "http://192.168.56.1:5000/api";
+        //public static string LocalBackendUrl = "https://192.168.1.132:5001/api";
 
         protected Uri FullAPIUri { get; set; }
 
@@ -26,7 +26,7 @@ namespace Library.Interface
             FullAPIUri = BaseAPIUri;
         }
 
-        public async  Task<bool> AddItemAsync(T item)
+        public async Task<bool> AddItemAsync(T item)
         {
             var serializeObj = JsonConvert
                 .SerializeObject(item, Formatting.Indented, new JsonSerializerSettings
@@ -50,7 +50,7 @@ namespace Library.Interface
             return false;
         }
 
-        public async  Task<bool> DeleteItemAsync(string id)
+        public async Task<bool> DeleteItemAsync(string id)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{id}");
             var response = HttpClient.DeleteAsync(FullAPIUri);

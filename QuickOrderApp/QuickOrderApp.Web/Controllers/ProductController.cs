@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Library.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using QuickOrderApp.Web.Context;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Library.Models;
-using QuickOrderApp.Web.Context;
 
 namespace QuickOrderApp.Web.Controllers
 {
@@ -42,36 +41,38 @@ namespace QuickOrderApp.Web.Controllers
             return product;
         }
 
+        [HttpGet("[action]/{StoreId}")]
+        public IEnumerable<Product> GetProductFromStore(Guid StoreId)
+        {
+            var result = _context.Products.Where(p => p.StoreId == StoreId);
+
+            return result;
+        }
+
         // PUT: api/Product/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(Guid id, Product product)
+        [HttpPut]
+        public async Task<bool> PutProduct(Product product)
         {
-            if (id != product.ProductId)
-            {
-                return BadRequest();
-            }
+            var oldproducts = _context.Products.Where(p => p.ProductId == product.ProductId).FirstOrDefault();
 
-            _context.Entry(product).State = EntityState.Modified;
-
-            try
+            if (oldproducts != null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                _context.Products.Remove(oldproducts);
 
-            return NoContent();
+                _context.SaveChanges();
+
+                _context.Products.Add(product);
+
+                _context.SaveChanges();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         // POST: api/Product
@@ -100,6 +101,35 @@ namespace QuickOrderApp.Web.Controllers
             await _context.SaveChangesAsync();
 
             return product;
+        }
+
+        public async Task<bool> UpdateInventoryFromOrderSubmited(Guid productId, int quantity)
+        {
+            var product = _context.Products.Where(p => p.ProductId == productId).FirstOrDefault();
+
+
+            if (product != null)
+            {
+
+                _context.Products.Remove(product);
+
+                _context.SaveChanges();
+
+                product.InventoryQuantity -= quantity;
+
+                _context.Products.Add(product);
+
+                _context.SaveChanges();
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+
+
         }
 
         private bool ProductExists(Guid id)

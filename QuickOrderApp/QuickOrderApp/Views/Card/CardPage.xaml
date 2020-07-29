@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Card.CardPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+    xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Routing.Route="CardRoute"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <StackLayout>
+            <Entry Placeholder="Card Number" />
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Exp" />
+
+            </StackLayout>
+            <Entry Placeholder="CVC" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

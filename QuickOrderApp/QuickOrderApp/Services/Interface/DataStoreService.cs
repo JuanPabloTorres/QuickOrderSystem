@@ -2,12 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace QuickOrderApp.Services.Interface
 {
-    public class DataStoreService<T>: IDataStore<T> where T: class
+    public class DataStoreService<T> : IDataStore<T> where T : class
     {
         protected readonly HttpClient HttpClient;
         protected readonly Uri BaseAPIUri;
@@ -22,7 +21,7 @@ namespace QuickOrderApp.Services.Interface
             FullAPIUri = BaseAPIUri;
         }
 
-        public async  Task<bool> AddItemAsync(T item)
+        public async Task<bool> AddItemAsync(T item)
         {
             var serializeObj = JsonConvert
                 .SerializeObject(item, Formatting.Indented, new JsonSerializerSettings
@@ -46,7 +45,7 @@ namespace QuickOrderApp.Services.Interface
             return false;
         }
 
-        public async  Task<bool> DeleteItemAsync(string id)
+        public async Task<bool> DeleteItemAsync(string id)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{id}");
             var response = HttpClient.DeleteAsync(FullAPIUri);

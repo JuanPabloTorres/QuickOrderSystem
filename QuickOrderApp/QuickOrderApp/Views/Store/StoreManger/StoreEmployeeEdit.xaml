@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+xmlns:ListCollection="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Title="{Binding EmpDetail.EmployeeUser.Name}"
+             Routing.Route="StoreEmployeeEditRoute"
+             x:Class="QuickOrderApp.Views.Store.StoreManger.StoreEmployeeEdit">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="{Binding EmpDetail.EmployeeId,StringFormat='Employee #{0}'}"/>
+          
+            <Label Text="{Binding EmpDetail.Type,StringFormat='Current Position: {0}'}"/>
+            <BoxView HorizontalOptions="Fill" HeightRequest="0.1" BackgroundColor="Black"/>
+            <StackLayout Margin="5">
+                <combobox:SfComboBox Text="Positions"  DataSource="{Binding Positions}" SelectedItem="{Binding SelectedPosisition}" ClearButtonColor="Black" BorderColor="LightGray"  />
+
+
+            </StackLayout>
+            <CollectionView ItemsSource="{Binding WorkHourPresenters}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Span="1" Orientation="Vertical" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Label Text="{Binding Day}" FontSize="Title" HorizontalOptions="Center"/>
+                            <BoxView HorizontalOptions="FillAndExpand" HeightRequest="0.1" BackgroundColor="Black"/>
+                            <StackLayout Orientation="Vertical">
+
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                                    <Label Text="Open" VerticalOptions="Center"/>
+                                    <TimePicker   Time="{Binding Open}" Format="hh:mm:tt" HorizontalOptions="FillAndExpand"/>
+
+                                    <Label Text="Close" VerticalOptions="Center"/>
+                                    <TimePicker   Time="{Binding Close}" Format="hh:mm:tt" HorizontalOptions="FillAndExpand"/>
+                                </StackLayout>
+
+                            </StackLayout>
+                            <BoxView HorizontalOptions="FillAndExpand" HeightRequest="0.1" BackgroundColor="Black"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <button:SfButton Text="Edit Employee" Command="{Binding CompleteEditCommand}" Margin="8" BackgroundColor="DodgerBlue" CornerRadius="5" HasShadow="True"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

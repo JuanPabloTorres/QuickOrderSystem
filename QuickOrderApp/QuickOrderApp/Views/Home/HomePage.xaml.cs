@@ -1,9 +1,4 @@
-﻿using QuickOrderApp.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using QuickOrderApp.ViewModels.HomeVM;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -13,10 +8,17 @@ namespace QuickOrderApp.Views.Home
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class HomePage : ContentPage
     {
+        HomeViewModel HomeViewModel;
         public HomePage()
         {
             InitializeComponent();
-            BindingContext = new HomeViewModel();
+            BindingContext = HomeViewModel = new HomeViewModel();
+        }
+
+        protected async override void OnAppearing()
+        {
+            base.OnAppearing();
+            //MessagingCenter.Send<object>(null, "Update");
         }
     }
 }
