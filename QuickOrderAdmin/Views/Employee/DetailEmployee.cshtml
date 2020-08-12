@@ -77,6 +77,10 @@
         <tbody>
             @foreach (var item in Model.EmployeeWorkHours)
             {
+
+                @if (item.WillWork)
+                {
+
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.Day)
@@ -107,6 +111,7 @@
 
                     
                 </tr>
+                }
                             }
         </tbody>
     </table>

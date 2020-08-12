@@ -20,5 +20,10 @@ namespace QuickOrderApp.Views.Home
             base.OnAppearing();
             //MessagingCenter.Send<object>(null, "Update");
         }
+
+        //protected override bool OnBackButtonPressed()
+        //{
+        //    return false;
+        //}
     }
 }

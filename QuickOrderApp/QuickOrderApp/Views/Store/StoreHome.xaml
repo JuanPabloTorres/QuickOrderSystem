@@ -20,6 +20,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
 
 
         </Grid.RowDefinitions>
@@ -32,7 +33,7 @@
             Grid.ColumnSpan="2"
             Padding="0"
             HasShadow="True"
-            HeightRequest="200"
+            HeightRequest="150"
             HorizontalOptions="Fill"
             IsClippedToBounds="True">
 
@@ -65,7 +66,7 @@
             CornerRadius="5"
             FontAttributes="Bold"
             HasShadow="True"
-            Text="Buy"
+            Text="Check All Products"
             TextColor="Black" />
 
 
@@ -111,6 +112,34 @@
                 <Label FontSize="Caption" Text="{Binding StoreDescription}" />
             </StackLayout>
         </ScrollView>
+
+        <CollectionView
+            Grid.Row="5"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            Header="Check Product By Category Available"
+            ItemsSource="{Binding ProductCategoryPresenters}"
+            SelectedItem="{Binding}"
+            SelectionMode="Single">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <ContentView Margin="3">
+
+                        <button:SfButton
+                            BackgroundColor="Tomato"
+                            Command="{Binding GoInventoryCommand}"
+                            CommandParameter="{Binding Category}"
+                            CornerRadius="5"
+                            HasShadow="True"
+                            Text="{Binding Category}" />
+
+                    </ContentView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
 
 

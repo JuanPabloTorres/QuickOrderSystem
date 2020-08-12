@@ -2,6 +2,7 @@
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
@@ -35,20 +36,24 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 OnPropertyChanged();
                 Guid id = new Guid(storeId);
 
-                var orderData = orderDataStore.GetStoreOrders(id);
+                var orderData = orderDataStore.GetStoreOrders(id,App.TokenDto.Token);
+
+                var orderssubmited = orderData.Where(o => o.OrderStatus == Status.Submited).OrderByDescending(date=>date.OrderDate);
 
                 StoreOrderPresenters.Clear();
-                foreach (var item in orderData)
+                foreach (var item in orderssubmited)
                 {
+                    var detailOrderPresenter = new StoreOrderPresenter(item);
+                      StoreOrderPresenters.Add(detailOrderPresenter);
 
-                    if (item.OrderStatus != Status.NotSubmited || item.OrderStatus != Status.Completed)
-                    {
+                    //if (item.OrderStatus != Status.NotSubmited || item.OrderStatus != Status.Completed)
+                    //{
+                    //    var detailOrderPresenter = new StoreOrderPresenter(item);
 
-                        var detailOrderPresenter = new StoreOrderPresenter(item);
 
+                    //    StoreOrderPresenters.Add(detailOrderPresenter);
 
-                        StoreOrderPresenters.Add(detailOrderPresenter);
-                    }
+                    //}
                 }
 
             }

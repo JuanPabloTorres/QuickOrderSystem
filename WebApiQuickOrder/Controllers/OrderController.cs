@@ -14,7 +14,7 @@ namespace WebApiQuickOrder.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class OrderController : ControllerBase
     {
         private readonly QOContext _context;
@@ -44,6 +44,41 @@ namespace WebApiQuickOrder.Controllers
             }
 
             return order;
+        }
+
+        // GET: api/Order/5
+        [HttpGet("[action]/{userid}/{storeid}/{status}")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfStoreOfUserWithSpecifiStatus(Guid userid, Guid storeid,Status status)
+        {
+            var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == status).Include(op => op.OrderProducts).ToListAsync();
+            return _completeOrders;
+        }
+
+        // GET: api/Order/5
+        [HttpGet("[action]/{userid}/{status}")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status)
+        {
+            var _completeOrders = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status).Include(op => op.OrderProducts).ToListAsync();
+            return _completeOrders;
+        }
+
+
+
+        // GET: api/Order/5
+        [HttpGet("[action]/{userid}/{storeid}")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetSubmitedOrderOfStoreSpecificUser(Guid userid, Guid storeid)
+        {
+            var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == Status.Submited).Include(op => op.OrderProducts).ToListAsync();
+            return _completeOrders;
+
+        }
+
+        [HttpGet("[action]/{userid}/{storeid}")]
+        public async Task<ActionResult<IEnumerable<Order>>> GetNotSubmitedOrderOfStoreSpecificUser(Guid userid, Guid storeid)
+        {
+            var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == Status.NotSubmited).Include(op => op.OrderProducts).ToListAsync();
+            return _completeOrders;
+
         }
 
         // PUT: api/Order/5
@@ -171,6 +206,7 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{userid}/{storeid}")]
+        [Authorize(Policy = Policies.User)]
         public Order HaveOrderOfSpecificStore(Guid userid, Guid storeid)
         {
             return _context.Orders.Where(e => e.BuyerId == userid && e.StoreId == storeid).FirstOrDefault();
@@ -182,6 +218,12 @@ namespace WebApiQuickOrder.Controllers
             return _context.Orders.Where(e => e.BuyerId == userid).Include(o => o.OrderProducts).ToList();
         }
 
+        [HttpGet("[action]/{userid}/{storeid}")]
+        public IEnumerable<Order> GetUserOrdersOfStore(Guid userid,Guid storeid)
+        {
+            return _context.Orders.Where(e => e.BuyerId == userid && e.StoreId == storeid).Include(o => o.OrderProducts).ToList();
+        }
+
         [HttpGet("[action]/{userid}")]
         [Authorize(Policy = Policies.User)]
         public IEnumerable<Order> GetUserOrdersWithToken(Guid userid)
@@ -190,6 +232,7 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{storeId}")]
+        [Authorize(Policy = Policies.User)]
         public IEnumerable<Order> GetStoreOrders(Guid storeId)
         {
             return _context.Orders.Where(e => e.StoreId == storeId).Include(o => o.OrderProducts).ToList();

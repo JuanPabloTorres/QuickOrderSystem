@@ -1,4 +1,6 @@
-﻿using QuickOrderApp.Utilities.Presenters;
+﻿using Library.Models;
+using QuickOrderApp.Utilities.Presenters;
+using QuickOrderApp.Views.Store;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -8,16 +10,19 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.OrderVM
 {
-    [QueryProperty("OrderId", "Id")]
+    [QueryProperty("OrderStatus", "status")]
     public class OrderViewModel : BaseViewModel
     {
         public ObservableCollection<OrderPresenter> UserOrders { get; set; }
 
         public ObservableCollection<ProductPresenter> ProductPresenters { get; set; }
 
-        public Command LoadItemsCommand { get; set; }
+        //public Command LoadItemsCommand { get; set; }
 
-        public ICommand CheckoutCommand { get; set; }
+        //public ICommand CheckoutCommand { get; set; }
+
+        public ICommand GetOrdersCommand { get; set; }
+        //public ICommand GetOrdersCommand { get; set; }
 
         private string orderId;
 
@@ -32,8 +37,18 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
+        private string orderstatus;
 
+        public string OrderStatus
+        {
+            get { return orderstatus; }
+            set { orderstatus = value;
+                OnPropertyChanged();
 
+                SetUserOrderStatus(OrderStatus);
+               
+            }
+        }
 
         private bool checkoutEnable;
 
@@ -50,12 +65,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
         public OrderViewModel()
         {
 
-
             UserOrders = new ObservableCollection<OrderPresenter>();
-
-
-
-
 
             MessagingCenter.Subscribe<OrderPresenter, OrderPresenter>(this, "Refresh", (sender, arg) =>
              {
@@ -64,13 +74,16 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 //LoadItemsCommand.Execute(null);
             });
 
-            MessagingCenter.Subscribe<ProductPresenter, ProductPresenter>(this, "RemoveOrderProduct", (sender, arg) =>
+            //LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
+
+
+            GetOrdersCommand = new Command<string>(async (arg) =>
             {
 
+                await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}");
+              
 
             });
-
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
         }
 
         async Task SetOrders()
@@ -88,36 +101,52 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
         }
 
-        public async Task ExecuteLoadItemsCommand()
+        async Task SetUserOrderStatus(string value)
         {
-            IsBusy = true;
+            Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
+            var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue);
 
-              
-            try
+            UserOrders.Clear();
+
+            foreach (var item in orderData)
             {
-                UserOrders.Clear();
-                //var userOrderData = orderDataStore.GetUserOrders(App.LogUser.UserId);
-                var userorderwithToken = orderDataStore.GetUserOrdersWithToken(App.LogUser.UserId, App.TokenDto.Token);
+                item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                var presenter = new OrderPresenter(item);
 
-                foreach (var item in userorderwithToken)
-                {
-                    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-
-                    var presenter = new OrderPresenter(item);
-
-                    UserOrders.Add(presenter);
-                }
-                //UserOrders = new ObservableCollection<Order>(userOrderData);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
+                UserOrders.Add(presenter);
             }
         }
+
+        //public async Task ExecuteLoadItemsCommand()
+        //{
+        //    IsBusy = true;
+
+              
+        //    try
+        //    {
+        //        UserOrders.Clear();
+        //        //var userOrderData = orderDataStore.GetUserOrders(App.LogUser.UserId);
+        //        var userorderwithToken = orderDataStore.GetUserOrdersWithToken(App.LogUser.UserId, App.TokenDto.Token);
+
+        //        foreach (var item in userorderwithToken)
+        //        {
+        //            item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+
+        //            var presenter = new OrderPresenter(item);
+
+        //            UserOrders.Add(presenter);
+        //        }
+        //        //UserOrders = new ObservableCollection<Order>(userOrderData);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine(ex);
+        //    }
+        //    finally
+        //    {
+        //        IsBusy = false;
+        //    }
+        //}
 
 
     }

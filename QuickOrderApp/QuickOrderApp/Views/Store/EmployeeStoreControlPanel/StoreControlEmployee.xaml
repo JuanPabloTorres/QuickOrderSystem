@@ -40,46 +40,57 @@
                 Text="{Binding Store.StoreName}" />
             <BoxView
                 Grid.Row="2"
-                Margin="8,0,8,0"
+                Margin="10,0,10,0"
                 BackgroundColor="LightGray"
                 HeightRequest="0.1"
                 HorizontalOptions="Fill" />
 
-            <!--<button:SfButton Text="Check Inventory" Grid.Row="3" CornerRadius="5" HasShadow="True" Margin="3" BackgroundColor="DodgerBlue" FontAttributes="Bold" Command="{Binding GoAddProduct}"/>-->
             <button:SfButton
                 Grid.Row="4"
-                Margin="3"
-                BackgroundColor="DodgerBlue"
+                Margin="10"
+                BackgroundColor="Tomato"
                 Command="{Binding GoOrdersEmployeeCommand}"
                 CornerRadius="5"
                 FontAttributes="Bold"
+                FontSize="Body"
                 HasShadow="True"
                 Text="Orders Check And Preparer" />
+            <StackLayout Grid.Row="5" Orientation="Horizontal">
+                <Label
+                    Grid.Row="5"
+                    FontSize="Title"
+                    HorizontalOptions="Center"
+                    Text="Position:" />
+                <Label
+                    Grid.Row="5"
+                    FontAttributes="Bold"
+                    FontSize="Title"
+                    Text="{Binding StoreEmployee.Type, StringFormat='{0}'}"
+                    TextColor="Orange" />
+            </StackLayout>
 
-            <Label
-                Grid.Row="5"
-                FontSize="Title"
-                HorizontalOptions="Center"
-                Text="{Binding StoreEmployee.Type, StringFormat='Employee Position: {0}'}" />
-            <!--<button:SfButton Text="Take Order" Grid.Row="5" CornerRadius="5" HasShadow="True" Margin="3" BackgroundColor="DodgerBlue" FontAttributes="Bold" Command="{Binding GoOrdersCommand}"/>-->
-            <CollectionView Grid.Row="6" ItemsSource="{Binding EmpWorkHour}">
+
+            <CollectionView
+                Grid.Row="6"
+                EmptyView="No Work Hours Register"
+                ItemsSource="{Binding EmpWorkHour}">
                 <CollectionView.Header>
                     <StackLayout>
                         <Label
                             FontSize="Title"
-                            HorizontalOptions="Start"
+                            HorizontalOptions="Center"
                             Text="Work Schedule" />
                     </StackLayout>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="1" />
+                    <GridItemsLayout Orientation="Vertical" Span="2" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout>
 
                             <BoxView
-                                Margin="8,0,8,0"
+                                Margin="15,0,15,0"
                                 BackgroundColor="LightGray"
                                 HeightRequest="0.1"
                                 HorizontalOptions="FillAndExpand" />
@@ -90,7 +101,7 @@
                                     Text="{Binding Day}" />
                                 <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
                                     <Label
-                                        FontSize="Body"
+                                        FontSize="14"
                                         Text="Open"
                                         VerticalOptions="Center" />
                                     <Label
@@ -99,7 +110,7 @@
                                         VerticalOptions="Center" />
 
                                     <Label
-                                        FontSize="Body"
+                                        FontSize="14"
                                         Text="Close"
                                         VerticalOptions="Center" />
                                     <Label
@@ -109,10 +120,7 @@
                                 </StackLayout>
 
                             </StackLayout>
-                            <!--<BoxView
-                                BackgroundColor="Black"
-                                HeightRequest="0.1"
-                                HorizontalOptions="FillAndExpand" />-->
+
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

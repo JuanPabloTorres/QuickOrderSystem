@@ -1,5 +1,6 @@
 ﻿using Plugin.SharedTransitions;
 using QuickOrderApp.Views.Home;
+using QuickOrderApp.Views.Login;
 using QuickOrderApp.Views.Settings;
 using QuickOrderApp.Views.Store;
 using QuickOrderApp.Views.Store.EmployeeStoreControlPanel;
@@ -9,12 +10,15 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp
 {
-    public partial class AppShell : SharedTransitionShell
+    public partial class AppShell : Xamarin.Forms.Shell
+
     {
         public AppShell()
         {
             InitializeComponent();
             RegistersRoutes();
+
+           
         }
 
         void RegistersRoutes()
@@ -41,6 +45,11 @@ namespace QuickOrderApp
             Routing.RegisterRoute("StoreLicenseRoute", typeof(GetStoreLicensePage));
             Routing.RegisterRoute("categoryhomeRoute", typeof(CategoryHomePage));
             Routing.RegisterRoute(CategoryStoresHome.Route, typeof(CategoryStoresHome));
+            Routing.RegisterRoute(YourStoresPage.Route, typeof(YourStoresPage));
+            Routing.RegisterRoute(EditProductPage.Route, typeof(EditProductPage));
+            Routing.RegisterRoute(UserOrdersWithStatus.Route, typeof(UserOrdersWithStatus));
+            Routing.RegisterRoute(LoginPage.Route, typeof(LoginPage));
+            Routing.RegisterRoute(SearchEmployeePage.Route, typeof(SearchEmployeePage));
 
 
         }

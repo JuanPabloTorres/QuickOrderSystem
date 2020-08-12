@@ -4,23 +4,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+<h2 class="text-center text-uppercase">Here you can search for employees to start work on your store.</h2>
+<p class="text-center">For search for an employee type the username given to it. If your dont know your can ask the register person.</p>
 <div class="container">
     <div class="row">
-        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto ">
             <div class="card card-signin my-5">
-                <div class="card-body">
+                <div class="card-body shadow">
                     <form class="form-signin" asp-action="SearchEmployee">
                         <div class="form-group">
 
-                            <label class="control-label" asp-for="Search">Search Employee By Username</label>
+                            <label class="control-label" asp-for="Search"><b>Search Employee Here</b></label>
                             <input class="form-control" asp-for="Search" />
                             <span asp-validation-for="Search" class="text-danger"></span>
 
                         </div>
 
 
-                        <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Search</button>
+                        <button class="btn btn-lg btn-primary btn-block text-uppercase shadow" type="submit">Search</button>
 
 
                     </form>

@@ -1,43 +1,97 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             Title="Employee Control Panel"
-             Routing.Route="EmployeeControlPanelRoute"
-             x:Class="QuickOrderApp.Views.Store.EmployeeStoreControlPanel.EmployeeControlPanel">
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.EmployeeStoreControlPanel.EmployeeControlPanel"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Employee Control Panel"
+    Routing.Route="EmployeeControlPanelRoute"
+    mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="{Binding Username,StringFormat='Welcome, {0}'}" HorizontalOptions="Center" FontSize="Title"/>
+            <Label
+                FontSize="Title"
+                HorizontalOptions="Center"
+                Text="{Binding Username, StringFormat='Welcome, {0}'}" />
+
+            <BoxView
+                Grid.Row="1"
+                Margin="8,0,8,0"
+                BackgroundColor="Gray"
+                HeightRequest="0.1"
+                HorizontalOptions="Fill" />
+
             <Grid Grid.Row="2">
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Label Text="User Employee Stores" FontSize="Body" Grid.Row="0"/>
-                <BoxView HeightRequest="0.1" BackgroundColor="Black" HorizontalOptions="Fill" Grid.Row="1"/>
+                <Label
+                    Grid.Row="0"
+                    FontAttributes="Bold"
+                    FontSize="Body"
+                    Text="Employee Stores" />
+                <BoxView
+                    Grid.Row="1"
+                    BackgroundColor="LightGray"
+                    HeightRequest="0.1"
+                    HorizontalOptions="Fill" />
 
-                <CollectionView VerticalOptions="Center" EmptyView="Employee Control Empty" 
-                                ItemsSource="{Binding UserStoreEmployee}" Grid.Row="3" Margin="5" SelectedItem="{Binding EmployeeSelectedStore}"
-                                SelectionMode="Single">
+                <CollectionView
+                    Grid.Row="3"
+                    Margin="5"
+                    EmptyView="Employee Control Empty"
+                    ItemsSource="{Binding StorePresenters}"
+                    SelectionMode="Single"
+                    VerticalOptions="Center">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
 
+                            <StackLayout>
 
-                            <StackLayout  BackgroundColor="White" Orientation="Horizontal" Padding="5" Spacing="5">
-                                <Frame IsClippedToBounds="True" CornerRadius="5" Padding="0">
+                                <StackLayout
+                                    Padding="5"
+                                    BackgroundColor="White"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                                    <Frame
+                                        Padding="0"
+                                        CornerRadius="5"
+                                        IsClippedToBounds="True">
 
-                                    <Image Source="{Binding StoreImage,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill" HeightRequest="80" WidthRequest="80"/>
-                                </Frame>
+                                        <Image
+                                            Aspect="Fill"
+                                            HeightRequest="100"
+                                            Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}"
+                                            WidthRequest="100" />
+                                    </Frame>
 
-                                <Label Text="{Binding StoreName}" FontSize="Title" TextColor="Black" HorizontalOptions="Center" VerticalOptions="Center"></Label>
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Title"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding StoreName}"
+                                        TextColor="Gray"
+                                        VerticalOptions="Center" />
 
+
+                                </StackLayout>
+                                <button:SfButton
+                                    Margin="10"
+                                    BackgroundColor="Tomato"
+                                    Command="{Binding GoSelectedEmployeeStoreCommand}"
+                                    CornerRadius="4"
+                                    FontAttributes="Bold"
+                                    FontSize="Body"
+                                    HasShadow="True"
+                                    HorizontalOptions="End"
+                                    Text="View" />
                             </StackLayout>
 
                         </DataTemplate>
@@ -46,25 +100,14 @@ xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Button
                 </CollectionView>
 
             </Grid>
-            <!--<Grid Margin="5">
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-           
-
-            <button:SfButton Text="Orders" Grid.Row="0" Grid.Column="0" CornerRadius="5" HasShadow="True" BackgroundColor="DodgerBlue"/>
-            <button:SfButton Text="Take Order" Grid.Row="1" Grid.Column="0" CornerRadius="5" HasShadow="True" BackgroundColor="DodgerBlue"/>
-            <button:SfButton Text="Work Schedule" Grid.Row="2" Grid.Column="0" CornerRadius="5" HasShadow="True" BackgroundColor="DodgerBlue"/>
-            <button:SfButton Text="Sign Out" Grid.Row="3" Grid.Column="0" CornerRadius="5" HasShadow="True" BackgroundColor="DodgerBlue"/>
-
-        </Grid>
-
-            <Label Text="{Binding ,StringFormat='Start: {0}'}"/>
-            <Label Text="{Binding ,StringFormat='End: {0}'}"/>-->
+            <button:SfButton
+                Margin="10"
+                BackgroundColor="DodgerBlue"
+                Command="{Binding SignOutCommand}"
+                CornerRadius="4"
+                FontAttributes="Bold"
+                HasShadow="True"
+                Text="Sign Out" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

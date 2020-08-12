@@ -1,5 +1,6 @@
 ﻿using Library.DTO;
 using Library.Models;
+using Library.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,43 @@ namespace WebApiQuickOrder.Controllers
 
             return user;
         }
+
+        // GET: api/User/5
+        [HttpGet("[action]/{name}")]
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserWithName(string name)
+        {
+            var _users = await _context.Users.Where(user=>user.Name == name).ToListAsync();
+
+            if (_users == null)
+            {
+                return NotFound();
+            }
+
+            List<UserDTO> userDTOs = new List<UserDTO>();
+
+            foreach (var item in _users)
+            {
+                var userDTO = new UserDTO()
+                {
+                    UserId = item.UserId,
+                    Name = item.Name,
+                    Address = item.Address,
+                    Email = item.Email,
+                    Gender = item.Gender,
+                    Phone = item.Phone
+                };
+
+                userDTOs.Add(userDTO);
+
+            }
+
+
+
+            return userDTOs;
+        }
+
+
+
 
         // PUT: api/User/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
@@ -142,6 +180,8 @@ namespace WebApiQuickOrder.Controllers
             return user;
         }
 
+        //Genera token de seguridad para los distintos action a los que se tendra acceso.
+        //===========================================================================================
         string GenerateJWTToken(User userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
@@ -170,16 +210,25 @@ namespace WebApiQuickOrder.Controllers
         {
             var loginOfUser = _context.Logins.Where(c => c.Username == username && c.Password == password).FirstOrDefault();
 
-            if (_context.Users.Count() > 0)
-            {
-                var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).FirstOrDefault();
 
-                return user;
+            if (loginOfUser != null)
+            {
+                if (_context.Users.Count() > 0)
+                {
+                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).FirstOrDefault();
+
+                    return user;
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
                 return null;
             }
+           
 
         }
 
@@ -200,16 +249,17 @@ namespace WebApiQuickOrder.Controllers
                 var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).FirstOrDefault();
 
 
-                Login authloging = AuthenticateUser(loginOfUser);
+                //Login authloging = AuthenticateUser(loginOfUser);
 
 
                 var tokenString = GenerateJWTToken(user);
 
-
+                   //SecurityToken securityToken = tokenString;
                     TokenDTO tokenDTO = new TokenDTO()
                     {
                         Token = tokenString,
                         UserDetail = user,
+                        
                     };
 
 
@@ -324,6 +374,12 @@ namespace WebApiQuickOrder.Controllers
             {
                 return false;
             }
+        }
+
+        [HttpGet("[action]/{username}/{password}")]
+        public async Task<bool> CheckIfUsernameAndPasswordExist(string username, string password)
+        {
+            return await _context.Logins.AnyAsync(l => l.Username == username && l.Password == password);
         }
 
         private bool UserExists(Guid id)

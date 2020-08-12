@@ -6,6 +6,8 @@
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:zxcm="clr-namespace:ZXing.Common;assembly=zxing.portable"
+    xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
     Title="{Binding OrderDetail.StoreOrder.StoreName, StringFormat='Order Detail of {0}'}"
     Routing.Route="DetailOrderRoute"
     mc:Ignorable="d">
@@ -15,6 +17,18 @@
             <StackLayout>
 
                 <StackLayout>
+
+                    <zxing:ZXingBarcodeImageView
+                        BarcodeFormat="QR_CODE"
+                        BarcodeValue="{Binding OrderDetail.OrderId}"
+                        HeightRequest="150"
+                        WidthRequest="150">
+
+                        <zxing:ZXingBarcodeImageView.BarcodeOptions>
+                            <zxcm:EncodingOptions Width="300" Height="300" />
+                        </zxing:ZXingBarcodeImageView.BarcodeOptions>
+
+                    </zxing:ZXingBarcodeImageView>
 
                     <Label
                         FontAttributes="Bold"
@@ -30,13 +44,13 @@
                         TextColor="Black" />
                     <Label
                         FontAttributes="Bold"
-                        Text="{Binding OrderDetail.OrderProducts.Count, StringFormat='Items:{0}'}"
+                        Text="{Binding OrderQuantity, StringFormat='Items:{0}'}"
                         TextColor="Black" />
                 </StackLayout>
-                <!--<Label Text="{Binding OrderDetail.StoreOrder.StoreName}" TextColor="Black" HorizontalOptions="Center"/>-->
+
                 <CollectionView
                     Margin="5"
-                    HeightRequest="250"
+                    HeightRequest="300"
                     ItemsSource="{Binding ProductPresenters}">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical" Span="1" />
@@ -88,8 +102,13 @@
                                                 Text="{Binding Quantity, StringFormat='Items: {0}'}"
                                                 TextColor="Black" />
 
-                                            <!--<button:SfButton Command="{Binding RemoveFromCartCommand}" Text="Remove" />-->
                                         </StackLayout>
+                                        <button:SfButton
+                                            Margin="10"
+                                            Command="{Binding RemoveFromCartCommand}"
+                                            CornerRadius="5"
+                                            HasShadow="True"
+                                            Text="Remove" />
 
                                     </StackLayout>
                                 </Frame>
@@ -100,10 +119,6 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-
-
-
-
 
                 <Frame
                     Margin="5"
@@ -140,11 +155,23 @@
                         TextColor="Black" />
                     <Label
                         FontAttributes="Bold"
+                        Text="{Binding TotalTax, StringFormat='Tax {0:C}'}"
+                        TextColor="Black" />
+                    <Label
+                        FontAttributes="Bold"
                         Text="App Fees $0.02"
                         TextColor="Black" />
                     <Label
                         FontAttributes="Bold"
                         Text="Online Payment Fee 2.9%"
+                        TextColor="Black" />
+                    <Label
+                        FontAttributes="Bold"
+                        Text="Stripe Comision Fee $0.30"
+                        TextColor="Black" />
+                    <Label
+                        FontAttributes="Bold"
+                        Text="{Binding StripeFee, StringFormat='Total Fee{0:C}'}"
                         TextColor="Black" />
                     <Label
                         FontAttributes="Bold"

@@ -4,6 +4,7 @@ using Plugin.Media.Abstractions;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.Views.Login;
+using QuickOrderApp.Views.Settings;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +17,24 @@ namespace QuickOrderApp.ViewModels.SettingVM
 {
     public class SettingViewModel : BaseViewModel
     {
+
+        //private Store selectedStore;
+
+        //public Store SelectedStore
+        //{
+        //    get { return selectedStore; }
+        //    set
+        //    {
+        //        selectedStore = value;
+        //        OnPropertyChanged();
+
+        //        if (!(SelectedStore.StoreId == Guid.Empty))
+        //        {
+
+        //            Shell.Current.GoToAsync($"StoreControlPanelRoute?Id={SelectedStore.StoreId.ToString()}", animate: true);
+        //        }
+        //    }
+        //}
 
         private User userinformation;
 
@@ -201,6 +220,9 @@ namespace QuickOrderApp.ViewModels.SettingVM
         public ICommand GoRegisterCardCommand { get; set; }
 
         public ICommand GoGetLicenseCommand { get; set; }
+        public ICommand GoCheckYourStores { get; set; }
+
+        public ICommand TapCommand => new Command<string>(OpenBrowser);
 
         #endregion
 
@@ -208,23 +230,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
 
 
-        private Store selectedStore;
 
-        public Store SelectedStore
-        {
-            get { return selectedStore; }
-            set
-            {
-                selectedStore = value;
-                OnPropertyChanged();
-
-                if (!(selectedStore.StoreId == Guid.Empty))
-                {
-
-                    Shell.Current.GoToAsync($"StoreControlPanelRoute?Id={SelectedStore.StoreId.ToString()}", animate: true);
-                }
-            }
-        }
 
 
         public ObservableCollection<WorkHourPresenter> WorkHourPresenters { get; set; }
@@ -256,7 +262,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
             StoreImage = ImageSource.FromFile("imgPlaceholder.jpg");
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
             StoreTypes = new List<string>(Enum.GetNames(typeof(StoreType)).ToList());
-            SelectedStore = new Store();
+            //SelectedStore = new Store();
             GoUserInformationCommand = new Command(async () =>
             {
 
@@ -407,7 +413,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
             LogOutCommand = new Command(() =>
             {
 
-                App.Current.MainPage = new NavigationPage(new LoginPage());
+                Shell.Current.GoToAsync("../LoginRoute");
 
             });
 
@@ -426,6 +432,16 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
 
             });
+
+            GoCheckYourStores = new Command(async () => 
+            {
+                await Shell.Current.GoToAsync($"{YourStoresPage.Route}");
+            });
+        }
+
+        void OpenBrowser(string url)
+        {
+            Device.OpenUri(new Uri(url));
         }
 
         byte[] ConvertToByteArray(Stream value)

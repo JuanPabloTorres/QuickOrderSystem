@@ -40,6 +40,18 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+        private Guid toUser;
+
+        public Guid ToUser
+        {
+            get { return toUser; }
+            set {
+                toUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
 
         public ICommand RequestAnswerCommand { get; set; }

@@ -18,6 +18,14 @@ namespace Library.Services
             return deserializeObject;
         }
 
+        public async Task<string> GetStoreDestinationPaymentKey(Guid storeId)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoreDestinationPaymentKey)}/{storeId}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            string deserializeObject = response;
+            return deserializeObject;
+        }
+
         public IEnumerable<Store> GetStoresFromUser(Guid userid)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoresFromUser)}/{userid}");

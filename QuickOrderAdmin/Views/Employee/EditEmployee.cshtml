@@ -5,12 +5,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-    <h1 class="text-center">Edit Employee @Model.EmployeeInformation.EmployeeUser.Name</h1>
+<h1 class="text-center">Employee @Model.EmployeeInformation.EmployeeUser.Name</h1>
 
 
 <hr />
 <div class="row">
-    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+    <div class="col-xl ">
         <form asp-action="EditEmployeeForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -20,95 +20,277 @@
                 <span asp-validation-for="EmployeeInformation.EmployeeId" class="text-danger"></span>
             </div>
 
+            <div class="container">
+                <div class="row ">
+                    <div class="col-xl">
+                        <div class="container">
 
-            <div class="form-group">
-                <label asp-for="MOpenTime" class="control-label"></label>
-                <input asp-for="MOpenTime" class="form-control" />
-                <span asp-validation-for="MOpenTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MCloseTime" class="control-label"></label>
-                <input asp-for="MCloseTime" class="form-control" />
-                <span asp-validation-for="MCloseTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TOpenTime" class="control-label"></label>
-                <input asp-for="TOpenTime" class="form-control" />
-                <span asp-validation-for="TOpenTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TCloseTime" class="control-label"></label>
-                <input asp-for="TCloseTime" class="form-control" />
-                <span asp-validation-for="TCloseTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WOpenTime" class="control-label"></label>
-                <input asp-for="WOpenTime" class="form-control" />
-                <span asp-validation-for="WOpenTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WCloseTime" class="control-label"></label>
-                <input asp-for="WCloseTime" class="form-control" />
-                <span asp-validation-for="WCloseTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ThOpenTime" class="control-label"></label>
-                <input asp-for="ThOpenTime" class="form-control" />
-                <span asp-validation-for="ThOpenTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ThCloseTime" class="control-label"></label>
-                <input asp-for="ThCloseTime" class="form-control" />
-                <span asp-validation-for="ThCloseTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FOpenTime" class="control-label"></label>
-                <input asp-for="FOpenTime" class="form-control" />
-                <span asp-validation-for="FOpenTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FCloseTime" class="control-label"></label>
-                <input asp-for="FCloseTime" class="form-control" />
-                <span asp-validation-for="FCloseTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SOpenTime" class="control-label"></label>
-                <input asp-for="SOpenTime" class="form-control" />
-                <span asp-validation-for="SOpenTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SCloseTime" class="control-label"></label>
-                <input asp-for="SCloseTime" class="form-control" />
-                <span asp-validation-for="SCloseTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SuOpenTime" class="control-label"></label>
-                <input asp-for="SuOpenTime" class="form-control" />
-                <span asp-validation-for="SuOpenTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SuCloseTime" class="control-label"></label>
-                <input asp-for="SuCloseTime" class="form-control" />
-                <span asp-validation-for="SuCloseTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @Html.DropDownList("Position",
-                    new SelectList(Enum.GetValues(typeof(Library.Models.EmployeeType))),
-                    "Select Posistion",
-                    new { @class = "form-control" })
+                            <div class="form-group">
+                                <label asp-for="MOpenTime" class="control-label"></label>
+                                <input asp-for="MOpenTime" class="form-control" />
+                                <span asp-validation-for="MOpenTime" class="text-danger"></span>
+                            </div>
 
-                @*<label asp-for="Position" class="control-label"></label>
-            <input asp-for="Position" class="form-control" />
-            <span asp-validation-for="Position" class="text-danger"></span>*@
+                            <div class="form-group">
+                                <label asp-for="MCloseTime" class="control-label"></label>
+                                <input asp-for="MCloseTime" class="form-control" />
+                                <span asp-validation-for="MCloseTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-sm">
+                                            <label class="control-label text-center">Will Work </label>
+                                           
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="checkbox" class="form-check-input" asp-for="WillWorkMonday" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                               
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl">
+                        <div class="container">
+
+                            <div class="form-group">
+                                <label asp-for="TOpenTime" class="control-label"></label>
+                                <input asp-for="TOpenTime" class="form-control" />
+                                <span asp-validation-for="TOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="TCloseTime" class="control-label"></label>
+                                <input asp-for="TCloseTime" class="form-control" />
+                                <span asp-validation-for="TCloseTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-sm">
+                                            <label class="control-label text-center">Will Work </label>
+
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="checkbox" class="form-check-input" asp-for="WillWorkTuesday" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl">
+                        <div class="container">
+
+                            <div class="form-group">
+                                <label asp-for="WOpenTime" class="control-label"></label>
+                                <input asp-for="WOpenTime" class="form-control" />
+                                <span asp-validation-for="WOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="WCloseTime" class="control-label"></label>
+                                <input asp-for="WCloseTime" class="form-control" />
+                                <span asp-validation-for="WCloseTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-sm">
+                                            <label class="control-label text-center">Will Work </label>
+
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="checkbox" class="form-check-input" asp-for="WillWorkWednesday" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xl">
+                       
+
+                        <div class="container">
+
+                            <div class="form-group">
+                                <label asp-for="ThOpenTime" class="control-label"></label>
+                                <input asp-for="ThOpenTime" class="form-control" />
+                                <span asp-validation-for="ThOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ThCloseTime" class="control-label"></label>
+                                <input asp-for="ThCloseTime" class="form-control" />
+                                <span asp-validation-for="ThCloseTime" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-sm">
+                                            <label class="control-label text-center">Will Work </label>
+
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="checkbox" class="form-check-input" asp-for="WillWorkThursday" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                    <div class="col-xl">
+                        <div class="container">
+
+                            <div class="form-group">
+                                <label asp-for="FOpenTime" class="control-label"></label>
+                                <input asp-for="FOpenTime" class="form-control" />
+                                <span asp-validation-for="FOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="FCloseTime" class="control-label"></label>
+                                <input asp-for="FCloseTime" class="form-control" />
+                                <span asp-validation-for="FCloseTime" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-sm">
+                                            <label class="control-label text-center">Will Work </label>
+
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="checkbox" class="form-check-input" asp-for="WillWorkFriday" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-xl">
+                        <div class="container">
+
+                            <div class="form-group">
+                                <label asp-for="SOpenTime" class="control-label"></label>
+                                <input asp-for="SOpenTime" class="form-control" />
+                                <span asp-validation-for="SOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SCloseTime" class="control-label"></label>
+                                <input asp-for="SCloseTime" class="form-control" />
+                                <span asp-validation-for="SCloseTime" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-sm">
+                                            <label class="control-label text-center">Will Work </label>
+
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="checkbox" class="form-check-input" asp-for="WillWorkSaturday" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                   
+
+                </div>
+
+                <div class="row">
+                    <div class="col-xl">
+                        <div class="container">
+
+                            <div class="form-group">
+                                <label asp-for="SuOpenTime" class="control-label"></label>
+                                <input asp-for="SuOpenTime" class="form-control" />
+                                <span asp-validation-for="SuOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SuCloseTime" class="control-label"></label>
+                                <input asp-for="SuCloseTime" class="form-control" />
+                                <span asp-validation-for="SuCloseTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+
+                                        <div class="col-sm">
+                                            <label class="control-label text-center">Will Work </label>
+
+                                        </div>
+                                        <div class="col-sm">
+                                            <input type="checkbox" class="form-check-input" asp-for="WillWorkSunday" />
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl">
+                        <div class="form-group">
+                            <label class="control-label">Select Employee Role</label>
+                            @Html.DropDownList("Position",
+                                new SelectList(Enum.GetValues(typeof(Library.Models.EmployeeType))),
+                                "Select Posistion",
+                                new { @class = "form-control" })
+
+
+                        </div>
+                    </div>
+                    @*<div class="col-xl">
+
+                    </div>*@
+                </div>
+               
+
+
             </div>
+
+          
             <div class="form-group">
-                <input type="submit" value="Edit" class="btn btn-primary btn-block" />
+                <input type="submit" value="Edit" class="btn btn-warning btn-block text-uppercase" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="ShowEmployees" asp-controller="Employee">Back to List</a>
 </div>
 

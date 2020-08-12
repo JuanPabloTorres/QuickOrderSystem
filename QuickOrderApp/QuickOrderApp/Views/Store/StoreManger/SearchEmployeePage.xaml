@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.StoreManger.SearchEmployeePage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Routing.Route="SearchEmpRoute"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label
+                HorizontalOptions="CenterAndExpand"
+                Text="Get a employee for the store"
+                VerticalOptions="Start" />
+
+            <Frame
+                Margin="4"
+                BorderColor="LightGray"
+                CornerRadius="4"
+                HasShadow="True">
+
+                <StackLayout>
+                    <Entry Placeholder="Username" Text="{Binding ToSearch}" />
+                    <button:SfButton
+                        BackgroundColor="DodgerBlue"
+                        Command="{Binding SearchEmployeeCommand}"
+                        CornerRadius="5"
+                        HasShadow="True"
+                        Text="Send Code" />
+
+                </StackLayout>
+
+            </Frame>
+
+            <CollectionView ItemsSource="{Binding Users}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="1" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView>
+                            <StackLayout>
+                                <Label
+                                    FontSize="Title"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Name}" />
+                                <Label
+                                    FontSize="Body"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding UserId}" />
+                                <Label
+                                    FontSize="Body"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Phone}" />
+                                <Label
+                                    FontSize="Body"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Email}" />
+                                <Label
+                                    FontSize="Body"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding Gender}" />
+
+                                <button:SfButton
+                                    Margin="10"
+                                    BackgroundColor="DodgerBlue"
+                                    Command="{Binding SendRequestCommand}"
+                                    CornerRadius="5"
+                                    HasShadow="True"
+                                    Text="Send Request" />
+                            </StackLayout>
+                        </ContentView>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

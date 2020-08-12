@@ -19,12 +19,12 @@ namespace QuickOrderApp.Views.Store
 
         }
 
-        protected async override void OnAppearing()
-        {
-            base.OnAppearing();
-            await StoreViewModel.GetStoreInformation(App.CurrentStore.StoreId.ToString());
+        //protected async override void OnAppearing()
+        //{
+        //    base.OnAppearing();
+        //    await StoreViewModel.GetStoreInformation(App.CurrentStore.StoreId.ToString());
 
-        }
+        //}
 
 
     }

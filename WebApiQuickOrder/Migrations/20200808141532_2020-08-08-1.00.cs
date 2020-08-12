@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _2020_17_07_100 : Migration
+    public partial class _20200808100 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,6 +61,18 @@ namespace WebApiQuickOrder.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "usersConnecteds",
+                columns: table => new
+                {
+                    HubConnectionID = table.Column<string>(nullable: false),
+                    UserID = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_usersConnecteds", x => x.HubConnectionID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -90,9 +102,10 @@ namespace WebApiQuickOrder.Migrations
                     PaymentCardId = table.Column<Guid>(nullable: false),
                     HolderName = table.Column<string>(nullable: true),
                     CardNumber = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
                     Cvc = table.Column<string>(nullable: true),
-                    Exp = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: true)
+                    Month = table.Column<string>(nullable: true),
+                    Year = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -102,7 +115,7 @@ namespace WebApiQuickOrder.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,7 +127,8 @@ namespace WebApiQuickOrder.Migrations
                     UserId = table.Column<Guid>(nullable: true),
                     StoreImage = table.Column<byte[]>(nullable: true),
                     StoreDescription = table.Column<string>(nullable: true),
-                    StoreRegisterLicenseId = table.Column<Guid>(nullable: false)
+                    StoreRegisterLicenseId = table.Column<Guid>(nullable: false),
+                    StoreType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -169,7 +183,8 @@ namespace WebApiQuickOrder.Migrations
                     ProductDescription = table.Column<string>(nullable: true),
                     Price = table.Column<double>(nullable: false),
                     InventoryQuantity = table.Column<int>(nullable: false),
-                    StoreId = table.Column<Guid>(nullable: false)
+                    StoreId = table.Column<Guid>(nullable: false),
+                    Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -211,7 +226,8 @@ namespace WebApiQuickOrder.Migrations
                     OpenTime = table.Column<DateTime>(nullable: false),
                     CloseTime = table.Column<DateTime>(nullable: false),
                     EmpId = table.Column<Guid>(nullable: false),
-                    Day = table.Column<string>(nullable: true)
+                    Day = table.Column<string>(nullable: true),
+                    WillWork = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -221,7 +237,7 @@ namespace WebApiQuickOrder.Migrations
                         column: x => x.EmpId,
                         principalTable: "Employees",
                         principalColumn: "EmployeeId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -264,7 +280,8 @@ namespace WebApiQuickOrder.Migrations
                     BuyerId = table.Column<Guid>(nullable: false),
                     StoreId = table.Column<Guid>(nullable: false),
                     OrderId = table.Column<Guid>(nullable: false),
-                    ProductImage = table.Column<byte[]>(nullable: true)
+                    ProductImage = table.Column<byte[]>(nullable: true),
+                    Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -360,6 +377,9 @@ namespace WebApiQuickOrder.Migrations
 
             migrationBuilder.DropTable(
                 name: "StoresWorkHours");
+
+            migrationBuilder.DropTable(
+                name: "usersConnecteds");
 
             migrationBuilder.DropTable(
                 name: "Orders");

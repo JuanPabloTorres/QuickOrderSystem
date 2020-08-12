@@ -20,5 +20,9 @@ namespace Library.Models
         public Employee Employee { get; set; }
 
         public string Day { get; set; }
+
+        public bool WillWork { get; set; }
     }
+
+   
 }

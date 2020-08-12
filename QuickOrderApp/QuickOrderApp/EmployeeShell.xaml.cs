@@ -1,4 +1,5 @@
-﻿using QuickOrderApp.Views.Store;
+﻿using QuickOrderApp.Views.Login;
+using QuickOrderApp.Views.Store;
 using QuickOrderApp.Views.Store.EmployeeStoreControlPanel;
 using QuickOrderApp.Views.Store.StoreManger;
 
@@ -22,6 +23,7 @@ namespace QuickOrderApp
             Routing.RegisterRoute("StoreDetailOrderRoute", typeof(StoreOrderDetailPage));
             Routing.RegisterRoute("EmployeeOrderControl", typeof(EmployeeOrdersControl));
             Routing.RegisterRoute("InventoryRoute", typeof(StoreInventory));
+            Routing.RegisterRoute(LoginPage.Route, typeof(LoginPage));
 
         }
     }

@@ -12,40 +12,59 @@
     BackgroundColor="White"
     Routing.Route="HomePageRoute"
     Shell.BackgroundColor="White"
+    Shell.NavBarIsVisible="True"
     Shell.TabBarForegroundColor="Orange"
+    Shell.TabBarIsVisible="True"
     Shell.TabBarTitleColor="Black"
     Shell.TitleColor="Black"
     mc:Ignorable="d">
+
+    <NavigationPage.TitleView>
+        <StackLayout
+            Orientation="Horizontal"
+            Spacing="10"
+            VerticalOptions="Center">
+            <Image Aspect="AspectFit" Source="Icon.png" />
+            <Label
+                FontSize="18"
+                Text="Quick Order"
+                TextColor="White"
+                VerticalTextAlignment="Center" />
+        </StackLayout>
+    </NavigationPage.TitleView>
+
+    <!--<Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" />
+    </Shell.BackButtonBehavior>-->
+
     <ContentPage.Content>
+
+
         <StackLayout>
 
 
 
-            <StackLayout>
-                <Frame
-                    Margin="8"
-                    Padding="0"
-                    CornerRadius="5"
-                    HasShadow="True">
+            <!--<StackLayout>
+                <Frame Padding="0" HasShadow="True">
 
                     <Entry
                         FontAttributes="Bold"
                         FontSize="Large"
                         HorizontalOptions="Fill"
+                        HorizontalTextAlignment="Start"
                         Placeholder="Search Store"
                         Text="{Binding SearchText}"
                         VerticalOptions="Fill" />
                 </Frame>
                 <button:SfButton
-                    Margin="15,0,15,0"
-                    BackgroundColor="Yellow"
+                    Margin="20,0,20,0"
+                    BackgroundColor="DodgerBlue"
                     Command="{Binding SearchStoreCommand}"
                     CornerRadius="5"
                     FontAttributes="Bold"
                     HasShadow="True"
-                    Text="Search"
-                    TextColor="Black" />
-            </StackLayout>
+                    Text="Search" />
+            </StackLayout>-->
 
 
 

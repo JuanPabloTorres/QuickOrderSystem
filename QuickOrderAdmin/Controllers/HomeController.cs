@@ -1,4 +1,5 @@
-﻿using Library.Services.Interface;
+﻿using Library.Models;
+using Library.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using QuickOrderAdmin.Models;
@@ -13,10 +14,13 @@ namespace QuickOrderAdmin.Controllers
 
         public IProductDataStore productDataStore;
 
+      
+
         public HomeController(ILogger<HomeController> logger, IProductDataStore productData)
         {
             _logger = logger;
             productDataStore = productData;
+           
         }
 
         public IActionResult Index()

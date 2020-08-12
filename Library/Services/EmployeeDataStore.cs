@@ -34,5 +34,13 @@ namespace Library.Services
             IEnumerable<Employee> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Employee>>(response.Result);
             return deserializeObject;
         }
+
+        public async Task<bool> IsEmployeeFromStore(Guid storeId, Guid userId)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(IsEmployeeFromStore)}/{storeId}/{userId}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+            return deserializeObject;
+        }
     }
 }

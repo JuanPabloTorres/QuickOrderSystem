@@ -1,6 +1,8 @@
 ﻿using Library.Models;
 using QuickOrderApp.Utilities.Presenters;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +12,27 @@ using Xamarin.Forms;
 namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 {
     [QueryProperty("StoreId", "Id")]
+    [QueryProperty("SelectedProductType", "type")]
     class StoreViewModel : BaseViewModel
     {
         #region Properties
+
+        private string selectedproductType;
+
+        public string SelectedProductType
+        {
+            get { return selectedproductType; }
+            set
+            {
+                selectedproductType = value;
+                OnPropertyChanged();
+
+                Title = $"Categories:{SelectedProductType}";
+                LoadInventory(SelectedProductType);
+            }
+        }
+
+
         private string storeid;
 
         public string StoreId
@@ -25,6 +45,8 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
                 GetStoreInformation(StoreId);
 
+
+                GroupByProductCategory(StoreProducts);
 
             }
         }
@@ -40,6 +62,18 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 OnPropertyChanged();
             }
         }
+
+
+        private string title;
+
+        public string Title
+        {
+            get { return title; }
+            set { title = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         private byte[] storeimg;
 
@@ -66,14 +100,11 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             }
         }
 
-
-
-
-
         public ObservableCollection<ProductPresenter> StoreProducts { get; set; }
         public ObservableCollection<WorkHour> StoreWorkoutHours { get; set; }
         public ObservableCollection<OrderProduct> OrderProducts { get; set; }
 
+        public ObservableCollection<ProductCategoryPresenter> ProductCategoryPresenters { get; set; }
 
 
         private WorkHour workhour;
@@ -98,6 +129,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             StoreProducts = new ObservableCollection<ProductPresenter>();
             StoreWorkoutHours = new ObservableCollection<WorkHour>();
             OrderProducts = new ObservableCollection<OrderProduct>();
+            ProductCategoryPresenters = new ObservableCollection<ProductCategoryPresenter>();
 
             GoShowCommand = new Command(async () =>
             {
@@ -106,18 +138,51 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             });
         }
 
+        async Task LoadInventory(string selectedproductType)
+        {
+           
+            StoreProducts.Clear();
 
-        // async Task GetStoreProducts(ICollection<Product>)
-        //{
-        //    var storeproductData = await productDataStore.GetItemsAsync();
-        //    StoreProducts = new ObservableCollection<ProductPresenter>(storeproductData);
-        //}
+            ProductType _productType = (ProductType)Enum.Parse(typeof(ProductType), selectedproductType);
 
+            //Guid guidStoreId = Guid.Parse(StoreId);
+
+            var data = await productDataStore.GetSpecificProductTypeFromStore(App.CurrentStore.StoreId, _productType);
+
+            foreach (var item in data)
+            {
+
+                var productPresenter = new ProductPresenter(item);
+                StoreProducts.Add(productPresenter);
+            }
+
+
+        }
+
+
+        public void GroupByProductCategory(IList<ProductPresenter> products)
+        {
+
+            if (ProductCategoryPresenters.Count() > 0)
+            {
+                ProductCategoryPresenters.Clear();
+            }
+            var group = products.GroupBy(p => p.ProductType);
+
+            foreach (var item in group)
+            {
+                var _productCategory = new ProductCategoryPresenter(item.Key.ToString());
+
+                ProductCategoryPresenters.Add(_productCategory);
+            }
+        }
+       
         public async Task GetStoreInformation(string id)
         {
             var store = await StoreDataStore.GetItemAsync(StoreId);
             StoreImg = store.StoreImage;
             StoreName = store.StoreName;
+            Title = store.StoreName;
             StoreDescription = store.StoreDescription;
 
             if (StoreProducts.Count > 0)
@@ -148,8 +213,6 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                     StoreWorkoutHours.Add(workhour);
                 }
             }
-
-
 
         }
 

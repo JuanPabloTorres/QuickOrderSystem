@@ -10,8 +10,8 @@ using WebApiQuickOrder.Context;
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    [Migration("20200725164037_2020_07_25_1.00")]
-    partial class _2020_07_25_100
+    [Migration("20200810052736_2020-08-10-1.00")]
+    partial class _20200810100
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,9 @@ namespace WebApiQuickOrder.Migrations
 
                     b.Property<DateTime>("OpenTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("WillWork")
+                        .HasColumnType("bit");
 
                     b.HasKey("WorkHourId");
 
@@ -163,6 +166,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("OrderProductId");
 
                     b.HasIndex("OrderId");
@@ -225,6 +231,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("ProductId");
 
                     b.HasIndex("StoreId");
@@ -237,6 +246,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("StoreId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PaymentDestinationKey")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StoreDescription")
                         .HasColumnType("nvarchar(max)");
@@ -333,6 +345,19 @@ namespace WebApiQuickOrder.Migrations
                     b.ToTable("Requests");
                 });
 
+            modelBuilder.Entity("Library.Models.UsersConnected", b =>
+                {
+                    b.Property<string>("HubConnectionID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("HubConnectionID");
+
+                    b.ToTable("usersConnecteds");
+                });
+
             modelBuilder.Entity("Library.Models.WorkHour", b =>
                 {
                     b.Property<Guid>("WorkHourId")
@@ -378,7 +403,7 @@ namespace WebApiQuickOrder.Migrations
                     b.HasOne("Library.Models.Employee", "Employee")
                         .WithMany("EmployeeWorkHours")
                         .HasForeignKey("EmpId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

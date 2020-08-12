@@ -31,10 +31,22 @@ namespace QuickOrderApp.Utilities.Shopping
 
         public static async Task<bool> OrderManger(ProductPresenter product)
         {
-            var orderOfuser = orderDataStore.HaveOrderOfSpecificStore(App.LogUser.UserId, App.CurrentStore.StoreId);
+            //var orderOfuser = orderDataStore.HaveOrderOfSpecificStore(App.LogUser.UserId, App.CurrentStore.StoreId,App.TokenDto.Token);
 
+
+            var ordersOfuser = orderDataStore.GetUserOrdersOfStore(App.LogUser.UserId, App.CurrentStore.StoreId);
+            //bool _haveNotSubmitedOrder = false;
+
+
+            Order orderOfuser= ordersOfuser.Where(o => o.OrderStatus == Status.NotSubmited).FirstOrDefault();
+
+
+            //_haveNotSubmitedOrder = ordersOfuser.Any(o => o.OrderStatus == Status.NotSubmited);
+
+           
+           
             //Crear por primera vez la orden
-            if (orderOfuser == null || orderOfuser.OrderStatus == Status.Submited)
+            if (orderOfuser == null)
             {
                 //Create a new order
                 Order order = new Order()

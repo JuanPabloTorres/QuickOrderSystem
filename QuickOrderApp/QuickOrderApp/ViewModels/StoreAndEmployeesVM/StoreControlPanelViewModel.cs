@@ -2,6 +2,7 @@
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using QuickOrderApp.Utilities.Static;
+using QuickOrderApp.Views.Store.StoreManger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -167,22 +168,49 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             }
         }
 
+        public List<string> ProductTypes { get; set; }
+        private string selectedtype;
+
+        public string SelectedType
+        {
+            get { return selectedtype; }
+            set { selectedtype = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         #endregion
+
+        #region Commandos
 
         public ICommand GoAddProduct { get; set; }
         public ICommand GoInventory { get; set; }
         public ICommand GoOrdersCommand { get; set; }
 
+        public ICommand GoSearchEmployeeCommand { get; set; }
         public ICommand GoOrdersEmployeeCommand { get; set; }
 
         public ICommand GoEmployeesCommand { get; set; }
         public ICommand IPickPhotoCommand { get; set; }
         public ICommand CompleteCommand { get; set; }
 
+        #endregion
+
+
 
         public StoreControlPanelViewModel()
         {
+            var types = Enum.GetValues(typeof(ProductType));
+
+            ProductTypes = new List<string>();
+
+            foreach (var item in types)
+            {
+                ProductTypes.Add(item.ToString());
+            }
+
+
             EmpWorkHour = new ObservableCollection<EmployeeWorkHour>();
             Store = new Store();
             ProductImg = ImageSource.FromFile("imgPlaceholder.jpg");
@@ -232,6 +260,9 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
                 if (GlobalValidator.CheckNullOrEmptyPropertiesOfListValues(Values))
                 {
+
+                    ProductType _productType = (ProductType)Enum.Parse(typeof(ProductType), SelectedType);
+
                     var newStoreProduct = new Product()
                     {
                         ProductId = Guid.NewGuid(),
@@ -239,6 +270,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                         Price = Convert.ToDouble(ProductPrice),
                         ProductImage = ImgArray,
                         ProductName = ProductName,
+                        Type = _productType,
                         StoreId = YourSelectedStore.StoreId,
                         ProductDescription = ProductDescription
                     };
@@ -265,7 +297,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             GoOrdersEmployeeCommand = new Command(async () =>
             {
-                await Shell.Current.GoToAsync($"EmployeeOrderControl?Id={Store.StoreId.ToString()}", animate: true);
+                await EmployeeShell.Current.GoToAsync($"EmployeeOrderControl?Id={Store.StoreId.ToString()}", animate: true);
                 //await Shell.Current.GoToAsync($"OrderPageRoute", animate: true);
 
             });
@@ -280,6 +312,11 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             GoInventory = new Command(async () =>
             {
                 await Shell.Current.GoToAsync($"InventoryRoute", animate: true);
+            });
+
+            GoSearchEmployeeCommand = new Command(async () =>
+            {
+                await Shell.Current.GoToAsync($"{SearchEmployeePage.Route}?id={StoreId}", animate: true);
             });
 
         }
@@ -314,10 +351,24 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             empWorkHour = OrderingEmpWorkHour(empWorkHour.ToList());
 
-            EmpWorkHour.Clear();
-            foreach (var item in empWorkHour)
+
+            if (empWorkHour.Count() > 0)
             {
-                EmpWorkHour.Add(item);
+                EmpWorkHour.Clear();
+                foreach (var item in empWorkHour)
+                {
+
+                    if (item != null)
+                    {
+                        if (item.WillWork)
+                        {
+                            EmpWorkHour.Add(item);
+
+                        }
+
+                    }
+                }
+
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using Library.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Library.Services.Interface
 {
@@ -8,5 +9,7 @@ namespace Library.Services.Interface
     {
         IEnumerable<Product> GetProductFromStore(Guid StoreId);
         IEnumerable<Product> GetProductWithLowQuantity(Guid storeid, int lowquantity);
+
+        Task<IEnumerable<Product>>GetSpecificProductTypeFromStore(Guid storeId, ProductType type);
     }
 }

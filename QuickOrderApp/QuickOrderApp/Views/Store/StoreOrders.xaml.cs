@@ -15,10 +15,10 @@ namespace QuickOrderApp.Views.Store
             BindingContext = orderVm = new OrderViewModel();
         }
 
-        protected override void OnAppearing()
-        {
-            orderVm.ExecuteLoadItemsCommand();
-        }
+        //protected override void OnAppearing()
+        //{
+        //    orderVm.ExecuteLoadItemsCommand();
+        //}
 
 
     }

@@ -74,6 +74,11 @@ namespace QuickOrderApp.Utilities.Presenters
 
         public ICommand GoHomeStoreCommand { get; set; }
 
+        public ICommand GoSelectedEmployeeStoreCommand => new Command(() =>
+            {
+                EmployeeShell.Current.GoToAsync($"StoreControlEmployee?EmpStoreId={StoreId.ToString()}", animate: true);
+            });
+
         public StorePresenters(Store store)
         {
 

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<sharedTransitions:SharedTransitionShell
+<Shell
     x:Class="QuickOrderApp.AppShell"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:home="clr-namespace:QuickOrderApp.Views.Home"
     xmlns:inbox="clr-namespace:QuickOrderApp.Views.Inbox"
+    xmlns:login="clr-namespace:QuickOrderApp.Views.Login"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:setting="clr-namespace:QuickOrderApp.Views.Settings"
-    xmlns:sharedTransitions="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
     xmlns:store="clr-namespace:QuickOrderApp.Views.Store"
     Title="QuickOrderApp"
     mc:Ignorable="d">
 
-    <!--
-        Styles and Resources
-    -->
+
+
+
     <Shell.Resources>
         <ResourceDictionary>
             <Color x:Key="NavigationPrimary">Orange</Color>
@@ -34,8 +34,15 @@
         </ResourceDictionary>
     </Shell.Resources>
 
+
+
+
+    <!--<ShellItem Route="LoginRoute">
+        <ShellContent ContentTemplate="{DataTemplate login:LoginPage}" />
+    </ShellItem>-->
     <!--  Your Pages  -->
     <TabBar>
+
 
         <Tab Title="Home" Icon="home.png">
             <ShellContent ContentTemplate="{DataTemplate home:HomePage}" />
@@ -49,10 +56,10 @@
         <Tab Title="Settings" Icon="settings.png">
             <ShellContent ContentTemplate="{DataTemplate setting:Settings}" />
         </Tab>
-        <!--<Tab Title="Login" Icon="tab_about.png">
-        <ShellContent ContentTemplate="{DataTemplate login:LoginPage}" />
-        </Tab>-->
+
     </TabBar>
+
+
 
     <!--
         Optional Templates
@@ -70,11 +77,7 @@
 
     <!--  // ItemTemplate is for ShellItems as displayed in a Flyout  -->
     <Shell.ItemTemplate>
-        <DataTemplate>
-            <ContentView>
-                <!--  Bindable Properties: Title, Icon  -->
-            </ContentView>
-        </DataTemplate>
+        <DataTemplate />
     </Shell.ItemTemplate>
 
     <!--  // MenuItemTemplate is for MenuItems as displayed in a Flyout  -->
@@ -88,4 +91,4 @@
 
 
 
-</sharedTransitions:SharedTransitionShell>
+</Shell>

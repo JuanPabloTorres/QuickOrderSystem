@@ -4,6 +4,7 @@ using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Library.Services
 {
@@ -21,6 +22,14 @@ namespace Library.Services
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetProductWithLowQuantity)}/{storeid}/{lowquantity}");
             var response = HttpClient.GetStringAsync(FullAPIUri);
+            IEnumerable<Product> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Product>>(response.Result);
+            return deserializeObject;
+        }
+
+        public async Task<IEnumerable<Product>> GetSpecificProductTypeFromStore(Guid storeId, ProductType type)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetSpecificProductTypeFromStore)}/{storeId}/{type}");
+            var response =  HttpClient.GetStringAsync(FullAPIUri);
             IEnumerable<Product> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Product>>(response.Result);
             return deserializeObject;
         }

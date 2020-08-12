@@ -24,6 +24,9 @@ namespace WebApiQuickOrder.Context
 
         public DbSet<PaymentCard> PaymentCards { get; set; }
 
+        public DbSet<UsersConnected> usersConnecteds { get; set; }
+
+
 
         public QOContext(DbContextOptions options) : base(options)
         {
@@ -32,7 +35,7 @@ namespace WebApiQuickOrder.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().HasMany(w => w.EmployeeWorkHours).WithOne(s => s.Employee).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Employee>().HasMany(w => w.EmployeeWorkHours).WithOne(s => s.Employee).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

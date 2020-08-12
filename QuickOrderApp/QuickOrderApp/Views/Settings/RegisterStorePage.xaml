@@ -88,7 +88,27 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            <StackLayout>
+                <Label FontSize="Title" Text=" Usa Stripe para cobrar tus compras. " />
 
+                <Label>
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="If you dont have account click the link and start make your account once finish. Copy the Key into the entry. " />
+                            <Span
+                                Text="Stripe Register"
+                                TextColor="Blue"
+                                TextDecorations="Underline">
+                                <Span.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding TapCommand}" CommandParameter="https://dashboard.stripe.com/register" />
+                                </Span.GestureRecognizers>
+                            </Span>
+                            <Span Text="." />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Entry Placeholder="Stripe Key" Text="{Binding}" />
+            </StackLayout>
 
             <StackLayout>
                 <!--<Label Text="Licensen Code" FontSize="Title"/>-->

@@ -86,6 +86,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                         OpenTime = Convert.ToDateTime(item.Open.ToString()),
                         WorkHourId = Guid.NewGuid(),
                         EmpId = empDetail.EmployeeId,
+                        WillWork = item.WillWork
 
                     };
                     employeeWorkHour.Add(workhour);

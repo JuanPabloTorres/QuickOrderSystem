@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.DTO;
+using Library.Models;
 
 namespace QuickOrderAdmin.Utilities
 {
@@ -7,6 +8,8 @@ namespace QuickOrderAdmin.Utilities
 
 
         public static User LoginUser { get; set; }
+
+        public static TokenDTO Token { get; set; }
 
     }
 }

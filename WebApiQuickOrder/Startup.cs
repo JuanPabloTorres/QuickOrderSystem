@@ -28,21 +28,7 @@ namespace WebApiQuickOrder
         {
             services.AddDbContext<QOContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:DevelopmentDBLocal"]));
             services.AddSignalR();
-            //services.AddMvc();
-            //Microsoft.AspNetCore.Authentication.AuthenticationBuilder authenticationBuilder = services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //       .AddJwtBearer(options =>
-            //        options.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            ValidateIssuer = true,
-            //            ValidateAudience = true,
-            //            ValidateLifetime = true,
-            //            ValidateIssuerSigningKey = true,
-            //            ValidIssuer = "yourdomain.com",
-            //            ValidAudience = "yourdomain.com",
-            //            IssuerSigningKey = new SymmetricSecurityKey(
-            //           Encoding.UTF8.GetBytes(Configuration["Llave_super_secreta"])),
-            //            ClockSkew = TimeSpan.Zero
-            //        });
+       
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

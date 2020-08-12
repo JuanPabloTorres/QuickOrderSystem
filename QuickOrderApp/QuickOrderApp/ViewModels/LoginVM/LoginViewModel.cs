@@ -1,9 +1,13 @@
 ﻿using Library.Models;
+using Library.Services;
+using Library.Services.Interface;
+using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.Views.Login;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Essentials;
@@ -48,8 +52,23 @@ namespace QuickOrderApp.ViewModels.LoginVM
         {
             Navigation = _navigation;
 
-            Username = "pola94";
+            Username = "Jose1";
             Password = "123";
+
+            #region Instaciando Validadores
+            UsernameValidator = new Validator();
+            PhoneValidator = new Validator();
+            EmailValidator = new Validator();
+            AddressValidator = new Validator();
+            PasswordValidator = new Validator();
+            ConfirmPasswordValidator = new Validator();
+            GenderValidator = new Validator();
+            ConfirmAndPasswordValidator = new Validator();
+            #endregion
+
+
+
+            App.ComunicationService = new ComunicationService();
 
 
             IsLoading = false;
@@ -74,24 +93,36 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                     if (current == NetworkAccess.Internet)
                     {
-                    var loginresult = userDataStore.CheckUserCredential(Username, Password);
+                        var loginresult = userDataStore.CheckUserCredential(Username, Password);
 
-                    App.TokenDto = userDataStore.LoginCredential(Username, Password);
+                        App.TokenDto = userDataStore.LoginCredential(Username, Password);
+                        
+                        if (loginresult != null)
+                        {
+                            App.LogUser = loginresult;
 
-                    if (loginresult != null)
-                    {
 
-                        App.LogUser = loginresult;
-                        App.Current.MainPage = new AppShell();
 
-                        await Shell.Current.GoToAsync("HomePageRoute");
-                        IsLoading = false;
-                    }
-                    else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login.", "OK");
+                            App.UsersConnected = new UsersConnected()
+                            {
+                                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                UserID = App.LogUser.UserId
+                            };
 
-                    }
+
+                           var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+
+                            App.Current.MainPage = new AppShell();
+
+                            //await Shell.Current.GoToAsync("HomePageRoute");
+                            IsLoading = false;
+                            //await App.ComunicationService.SendMessage("Jose", "Hola Jose");
+                        }
+                        else
+                        {
+                            await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login.", "OK");
+
+                        }
 
                     }
                 }
@@ -109,13 +140,14 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 {
 
                     var loginresult = userDataStore.CheckUserCredential(Username, Password);
+                    App.TokenDto = userDataStore.LoginCredential(Username, Password);
 
                     if (loginresult != null)
                     {
                         var userEmployees = await EmployeeDataStore.GetUserEmployees(loginresult.UserId.ToString());
                         App.LogUser = loginresult;
                         App.Current.MainPage = new EmployeeShell();
-                        await Shell.Current.GoToAsync("EmployeeControlPanelRoute");
+                        //await Shell.Current.GoToAsync("EmployeeControlPanelRoute");
 
                     }
                     else
@@ -144,53 +176,73 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             DoneCommand = new Command(async () =>
             {
+                UsernameValidator = ValidatorRules.EmptyOrNullValueRule(Username);
+                FullNameValidator = ValidatorRules.EmptyOrNullValueRule(Fullname);
+                PhoneValidator = ValidatorRules.EmptyOrNullValueRule(Phone);
+                AddressValidator = ValidatorRules.EmptyOrNullValueRule(Address);
+                PasswordValidator = ValidatorRules.EmptyOrNullValueRule(Password);
+                ConfirmPasswordValidator = ValidatorRules.EmptyOrNullValueRule(ConfirmPassword);
+                EmailValidator = ValidatorRules.EmailPatternRule(Email);
+                GenderValidator = ValidatorRules.EmptyOrNullValueRule(GenderSelected);
 
-                if (CheckNullOrEmptyProperties(Fullname, Email, Username, Password, ConfirmPassword, Phone, Address, GenderSelected))
+                if (!UsernameValidator.HasError && !FullNameValidator.HasError && !PhoneValidator.HasError && !AddressValidator.HasError && !PasswordValidator.HasError && !ConfirmPasswordValidator.HasError && !EmailValidator.HasError && !GenderValidator.HasError )
                 {
 
-                    var userlogin = new Login()
+                    ConfirmAndPasswordValidator = ValidatorRules.PasswordAndConfirmPasswordEquals(Password, ConfirmPassword);
+                    if (!ConfirmAndPasswordValidator.HasError)
                     {
-                        LoginId = Guid.NewGuid(),
-                        IsConnected = false,
-                        Password = Password,
-                        Username = Username
-                    };
+                        if (!await userDataStore.CheckIfUsernameAndPasswordExist(Username, Password))
+                        {
+                            var userlogin = new Login()
+                            {
+                                LoginId = Guid.NewGuid(),
+                                IsConnected = false,
+                                Password = Password,
+                                Username = Username
+                            };
 
-                    Gender value;
-                    Enum.TryParse(GenderSelected, out value);
-                    var newUser = new User()
-                    {
-                        UserId = Guid.NewGuid(),
-                        Email = Email,
-                        Name = Fullname,
-                        LoginId = userlogin.LoginId,
-                        Phone = Phone,
-                        Address = Address,
-                        Gender = value,
+                            Gender value;
+                            Enum.TryParse(GenderSelected, out value);
+                            var newUser = new User()
+                            {
+                                UserId = Guid.NewGuid(),
+                                Email = Email,
+                                Name = Fullname,
+                                LoginId = userlogin.LoginId,
+                                Phone = Phone,
+                                Address = Address,
+                                Gender = value,
 
-                        UserLogin = userlogin,
-                    };
+                                UserLogin = userlogin,
+                            };
 
+                            var result = await userDataStore.AddItemAsync(newUser);
 
-                    var result = await userDataStore.AddItemAsync(newUser);
+                            var getCredential = userDataStore.CheckUserCredential(Username, Password);
 
-                    var getCredential = userDataStore.CheckUserCredential(Username, Password);
+                            if (result)
+                            {
+                                await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
+                                App.LogUser = getCredential;
+                                App.Current.MainPage = new AppShell();
+                                //await Shell.Current.GoToAsync("HomePageRoute");
 
-
-                    if (result)
-                    {
-                        await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
-                        App.LogUser = getCredential;
-                        App.Current.MainPage = new AppShell();
-                        await Shell.Current.GoToAsync("HomePageRoute");
-
+                            }
+                        }
+                        else
+                        {
+                            await App.Current.MainPage.DisplayAlert("Notification", "Username or password exist try to change to other one.", "OK");
+                        }
                     }
+
+
 
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Notification", "Some fields are empty", "OK");
+                    await App.Current.MainPage.DisplayAlert("Notification", "Some fields are empty.", "OK");
                 }
+              
 
 
             });
@@ -241,11 +293,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
             get { return _fullname; }
             set
             {
-                if (_fullname != value)
-                {
+               
                     _fullname = value;
                     OnPropertyChanged();
-                }
+                
             }
         }
 
@@ -294,11 +345,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
             get { return _username; }
             set
             {
-                if (_username != value)
-                {
+               
                     _username = value;
                     OnPropertyChanged();
-                }
+                
             }
         }
 
@@ -308,11 +358,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
             get { return _confirmpassword; }
             set
             {
-                if (_confirmpassword != value)
-                {
+                
                     _confirmpassword = value;
                     OnPropertyChanged();
-                }
+                
             }
         }
 
@@ -324,6 +373,109 @@ namespace QuickOrderApp.ViewModels.LoginVM
             get { return _isShowCancel; }
             set { /*SetPropertyValue(ref _isShowCancel, value);*/ }
         }
+
+        private Validator usernameValidator;
+
+        public Validator UsernameValidator
+        {
+            get { return usernameValidator; }
+            set
+            {
+                usernameValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator emailValidator;
+
+        public Validator EmailValidator
+        {
+            get { return usernameValidator; }
+            set
+            {
+                usernameValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator fullnameValidator;
+
+        public Validator FullNameValidator
+        {
+            get { return fullnameValidator; }
+            set
+            {
+                fullnameValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator phoneValidator;
+
+        public Validator PhoneValidator
+        {
+            get { return phoneValidator; }
+            set
+            {
+                phoneValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator passwordValidator;
+
+        public Validator PasswordValidator
+        {
+            get { return passwordValidator; }
+            set
+            {
+                passwordValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator confirmpasswordValidator;
+
+        public Validator ConfirmPasswordValidator
+        {
+            get { return passwordValidator; }
+            set
+            {
+                passwordValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator addressValidator;
+
+        public Validator AddressValidator
+        {
+            get { return addressValidator; }
+            set { addressValidator = value; }
+        }
+
+        private Validator genderValidator;
+
+        public Validator GenderValidator
+        {
+            get { return genderValidator; }
+            set { genderValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator confirmAndpasswordValidator;
+
+        public Validator ConfirmAndPasswordValidator
+        {
+            get { return confirmAndpasswordValidator; }
+            set { confirmAndpasswordValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
 
         #endregion
 
@@ -371,6 +523,21 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 return false;
             }
 
+        }
+
+        bool CheckEmailPatter(string emailValue)
+        {
+            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            Match match = regex.Match(emailValue);
+
+            if (match.Success)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         bool CanLoginAction()

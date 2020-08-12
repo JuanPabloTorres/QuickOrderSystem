@@ -52,6 +52,14 @@ namespace WebApiQuickOrder.Controllers
         }
 
         // GET: api/Employee/5
+        [HttpGet("[action]/{storeId}/{userId}")]
+        public async Task<ActionResult<bool>> IsEmployeeFromStore(Guid storeId,Guid userId)
+        {
+            var result = _context.Employees.Any(emp => emp.StoreId == storeId && emp.UserId == userId);
+            return result;
+        }
+
+        // GET: api/Employee/5
         [HttpGet("[action]/{userId}/{StoreId}")]
         public async Task<Employee> GetSpecificStoreEmployee(Guid userId, Guid StoreId)
         {
@@ -82,8 +90,10 @@ namespace WebApiQuickOrder.Controllers
             {
                 try
                 {
-                    _context.Employees.Remove(oldemp);
 
+                    //_context.EmployeeWorkHours.RemoveRange(oldemp.EmployeeWorkHours);
+                    _context.Employees.Remove(oldemp);
+                   
                     _context.SaveChanges();
 
                     _context.Employees.Add(employee);
@@ -134,6 +144,8 @@ namespace WebApiQuickOrder.Controllers
             if (toremoveEmp != null)
             {
                 _context.Employees.Remove(toremoveEmp);
+
+                _context.Requests.Remove(_context.Requests.Where(r => r.ToUser == toremoveEmp.UserId).FirstOrDefault());
 
                 await _context.SaveChangesAsync();
 

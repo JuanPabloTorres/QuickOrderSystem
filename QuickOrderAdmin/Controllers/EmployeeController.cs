@@ -76,6 +76,7 @@ namespace QuickOrderAdmin.Controllers
                 EmpId = editEmployee.EmployeeId,
                 Day = DayOfWeek.Monday.ToString(),
                 WorkHourId = Guid.NewGuid(),
+                WillWork=employeeViewModel.WillWorkMonday,
                 CloseTime = employeeViewModel.MCloseTime,
                 OpenTime = employeeViewModel.MOpenTime
 
@@ -85,6 +86,7 @@ namespace QuickOrderAdmin.Controllers
                 EmpId = editEmployee.EmployeeId,
                 Day = DayOfWeek.Tuesday.ToString(),
                 WorkHourId = Guid.NewGuid(),
+                WillWork = employeeViewModel.WillWorkTuesday,
                 CloseTime = employeeViewModel.TCloseTime,
                 OpenTime = employeeViewModel.TOpenTime
 
@@ -94,6 +96,7 @@ namespace QuickOrderAdmin.Controllers
                 EmpId = editEmployee.EmployeeId,
                 Day = DayOfWeek.Wednesday.ToString(),
                 WorkHourId = Guid.NewGuid(),
+                WillWork = employeeViewModel.WillWorkWednesday,
                 CloseTime = employeeViewModel.WCloseTime,
                 OpenTime = employeeViewModel.WOpenTime
 
@@ -103,6 +106,7 @@ namespace QuickOrderAdmin.Controllers
                 EmpId = editEmployee.EmployeeId,
                 Day = DayOfWeek.Thursday.ToString(),
                 WorkHourId = Guid.NewGuid(),
+                WillWork = employeeViewModel.WillWorkThursday,
                 CloseTime = employeeViewModel.ThCloseTime,
                 OpenTime = employeeViewModel.ThOpenTime
 
@@ -112,6 +116,7 @@ namespace QuickOrderAdmin.Controllers
                 EmpId = editEmployee.EmployeeId,
                 Day = DayOfWeek.Friday.ToString(),
                 WorkHourId = Guid.NewGuid(),
+                WillWork = employeeViewModel.WillWorkFriday,
                 CloseTime = employeeViewModel.FCloseTime,
                 OpenTime = employeeViewModel.FOpenTime
 
@@ -121,6 +126,7 @@ namespace QuickOrderAdmin.Controllers
                 EmpId = editEmployee.EmployeeId,
                 Day = DayOfWeek.Saturday.ToString(),
                 WorkHourId = Guid.NewGuid(),
+                WillWork = employeeViewModel.WillWorkSaturday,
                 CloseTime = employeeViewModel.SCloseTime,
                 OpenTime = employeeViewModel.SOpenTime
 
@@ -130,6 +136,7 @@ namespace QuickOrderAdmin.Controllers
                 EmpId = editEmployee.EmployeeId,
                 Day = DayOfWeek.Sunday.ToString(),
                 WorkHourId = Guid.NewGuid(),
+                WillWork = employeeViewModel.WillWorkSunday,
                 CloseTime = employeeViewModel.SuCloseTime,
                 OpenTime = employeeViewModel.SuOpenTime
 
@@ -145,7 +152,7 @@ namespace QuickOrderAdmin.Controllers
 
             var result = await employeeDataStore.UpdateItemAsync(editEmployee);
 
-            if (result)
+             if (result)
             {
                 return RedirectToAction("ShowEmployees");
             }

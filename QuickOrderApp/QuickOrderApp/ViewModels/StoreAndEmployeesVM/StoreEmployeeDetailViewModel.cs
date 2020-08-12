@@ -1,4 +1,6 @@
 ﻿using Library.Models;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -7,6 +9,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 {
     public class StoreEmployeeDetailViewModel : BaseViewModel
     {
+       public ObservableCollection<EmployeeWorkHour> EmployeeWorkHours { get; set; }
 
         private Employee empDetail;
 
@@ -24,7 +27,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         public StoreEmployeeDetailViewModel()
         {
-
+            EmployeeWorkHours = new ObservableCollection<EmployeeWorkHour>();
             MessagingCenter.Subscribe<Employee>(this, "EmpDetail", (sender) =>
             {
                 GetEmployeeInformation(sender);
@@ -46,32 +49,15 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             EmployeeDetail = sender;
 
             var empUserInfo = await userDataStore.GetItemAsync(EmployeeDetail.UserId.ToString());
-
-
-            //EmployeeWorkHour[] orderTempWorkHour = new Library.Models.EmployeeWorkHour[Enum.GetValues(typeof(DayOfWeek)).Length];
-
-            //foreach (var item in EmployeeDetail.EmployeeWorkHours)
-            //{
-            //    DayOfWeek day;
-            //    Enum.TryParse(item.Day, out day);
-
-            //    int valueint;
-            //    if ((int)day == 0)
-            //    {
-            //        valueint = Enum.GetValues(typeof(DayOfWeek)).Length - 1;
-            //    }
-            //    else
-            //    {
-            //         valueint = (int)day - 1;
-
-            //    }
-            //    orderTempWorkHour[valueint] = item;
-
-            //}
-
-
-            //EmployeeDetail.EmployeeWorkHours = orderTempWorkHour.ToList();
             EmployeeDetail.EmployeeUser = empUserInfo;
+
+            var workHours = EmployeeDetail.EmployeeWorkHours.Where(wh => wh.WillWork == true).ToList();
+
+            foreach (var item in workHours)
+            {
+                EmployeeWorkHours.Add(item);
+
+            }
         }
     }
 }

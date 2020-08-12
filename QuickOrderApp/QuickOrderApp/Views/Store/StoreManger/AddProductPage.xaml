@@ -1,29 +1,73 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             mc:Ignorable="d"
-             Title="Add Product"
-             Routing.Route="AddProductRoute"
-             x:Class="QuickOrderApp.Views.Store.StoreManger.AddProductPage">
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.StoreManger.AddProductPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Add Product"
+    Routing.Route="AddProductRoute"
+    mc:Ignorable="d">
     <ContentPage.Content>
         <ScrollView>
-            
-        <StackLayout>
-                <Image Source="{Binding ProductImg}" WidthRequest="100" HeightRequest="200" Aspect="Fill" x:Name="logo" Margin="5"></Image>
-            <button:SfButton Text="Choose Image" HasShadow="True" CornerRadius="5" Margin="10" BackgroundColor="DodgerBlue" Command="{Binding IPickPhotoCommand}" />
-            <Label Text="Product Information" FontSize="Body"/>
-            <BoxView HorizontalOptions="Fill" HeightRequest="0.1" BackgroundColor="Black" Grid.Row="2"/>
 
-                <Entry Placeholder="Product Name" Text="{Binding ProductName}"/>
+            <StackLayout>
+                <Image
+                    x:Name="logo"
+                    Margin="5"
+                    Aspect="Fill"
+                    HeightRequest="200"
+                    Source="{Binding ProductImg}"
+                    WidthRequest="100" />
+                <button:SfButton
+                    Margin="10"
+                    BackgroundColor="DodgerBlue"
+                    Command="{Binding IPickPhotoCommand}"
+                    CornerRadius="5"
+                    HasShadow="True"
+                    Text="Choose Image" />
+                <Label FontSize="Body" Text="Product Information" />
+                <BoxView
+                    Grid.Row="2"
+                    BackgroundColor="Black"
+                    HeightRequest="0.1"
+                    HorizontalOptions="Fill" />
+
+                <Entry Placeholder="Product Name" Text="{Binding ProductName}" />
 
 
-                <Editor MinimumHeightRequest="120" Placeholder="Product Description" Text="{Binding ProductDescription}"/>
-                <Entry Placeholder="Product Price" Keyboard="Numeric" Text="{Binding ProductPrice}"/>
-                <Entry Placeholder="Inventory Quantiy" Keyboard="Numeric" Text="{Binding ProductQuantity}"/>
-                <button:SfButton Text="Complete" HasShadow="True" CornerRadius="5" Margin="10" BackgroundColor="DodgerBlue" Command="{Binding CompleteCommand}" FontSize="Body"/>
-        </StackLayout>
+                <Editor
+                    MinimumHeightRequest="120"
+                    Placeholder="Product Description"
+                    Text="{Binding Description}" />
+                <Entry
+                    Keyboard="Numeric"
+                    Placeholder="Product Price"
+                    Text="{Binding ProductPrice}" />
+                <Entry
+                    Keyboard="Numeric"
+                    Placeholder="Inventory Quantiy"
+                    Text="{Binding ProductQuantity}" />
+                <StackLayout>
+
+                    <combobox:SfComboBox
+                        DataSource="{Binding ProductTypes}"
+                        HeightRequest="40"
+                        Text="--Selecte Product Type--" 
+                        SelectedItem="{Binding SelectedType}"/>
+                </StackLayout>
+                <button:SfButton
+                    Margin="10"
+                    BackgroundColor="DodgerBlue"
+                    Command="{Binding CompleteCommand}"
+                    CornerRadius="5"
+                    FontSize="Body"
+                    HasShadow="True"
+                    Text="Complete" />
+
+            </StackLayout>
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>

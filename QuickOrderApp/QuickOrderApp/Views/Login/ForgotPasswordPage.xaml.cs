@@ -1,4 +1,5 @@
 ﻿
+using QuickOrderApp.ViewModels.LoginVM;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -10,6 +11,8 @@ namespace QuickOrderApp.Views.Login
         public ForgotPasswordPage()
         {
             InitializeComponent();
+
+            BindingContext = new ForgotPasswordViewModel();
         }
     }
 }

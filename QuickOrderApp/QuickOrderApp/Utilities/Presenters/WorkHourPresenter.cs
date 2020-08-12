@@ -41,6 +41,17 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+        private bool willWork;
+
+        public bool WillWork
+        {
+            get { return willWork; }
+            set { willWork = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public WorkHourPresenter(string day)
         {
             Day = day;

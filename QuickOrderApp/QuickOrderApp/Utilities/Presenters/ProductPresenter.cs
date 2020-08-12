@@ -1,6 +1,7 @@
 ﻿using Library.Models;
 using QuickOrderApp.Utilities.Shopping;
 using QuickOrderApp.ViewModels;
+using QuickOrderApp.Views.Store.StoreManger;
 using System;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -94,10 +95,22 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+        private string producttype;
+
+        public string ProductType
+        {
+            get { return producttype; }
+            set { producttype = value;
+                OnPropertyChanged();
+            }
+        }
+
 
 
         public ICommand AddToCartCommand { get; set; }
         public ICommand RemoveFromCartCommand { get; set; }
+        public ICommand DeleteCommand { get; set; }
+        public ICommand EditCommand { get; set; }
 
         public ProductPresenter(Product product)
         {
@@ -106,6 +119,7 @@ namespace QuickOrderApp.Utilities.Presenters
             ProductId = product.ProductId;
             ProductPrice = product.Price;
             ItemLeft = product.InventoryQuantity;
+            ProductType = product.Type.ToString();
             ProductDescription = product.ProductDescription;
 
             Quantity = 0;
@@ -248,17 +262,45 @@ namespace QuickOrderApp.Utilities.Presenters
 
             });
 
-            RemoveFromCartCommand = new Command(async () =>
+            //RemoveFromCartCommand = new Command(async () =>
+            //{
+
+            //    var orderProductRemovedResult = await orderProductDataStore.DeleteItemAsync(productid.ToString());
+
+            //    if (orderProductRemovedResult)
+            //    {
+            //        await Shell.Current.DisplayAlert("Notification", "Product Removed succefully.", "OK");
+
+            //        MessagingCenter.Send<ProductPresenter, ProductPresenter>(this, "RemoveOrderProduct", this);
+            //    }
+
+            //});
+
+            DeleteCommand = new Command(async() => 
             {
 
-                var orderProductRemovedResult = await orderProductDataStore.DeleteItemAsync(productid.ToString());
+                var answer =await Shell.Current.DisplayAlert("Notification", "Are you sure that you want to delete this item?", "Yes", "No");
 
-                if (orderProductRemovedResult)
+                if (answer)
                 {
-                    await Shell.Current.DisplayAlert("Notification", "Product Removed succefully.", "OK");
+                    var result = await productDataStore.DeleteItemAsync(this.ProductId.ToString());
 
-                    MessagingCenter.Send<ProductPresenter, ProductPresenter>(this, "RemoveOrderProduct", this);
+                    if (result)
+                    {
+                        MessagingCenter.Send<ProductPresenter>(this, "DeleteProductInventory");
+                    }
+
                 }
+
+            
+
+            });
+
+            EditCommand = new Command(async () =>
+            {
+
+
+               await Shell.Current.GoToAsync($"{EditProductPage.Route}?pId={ProductId.ToString()}", animate: true);
 
             });
 
@@ -270,23 +312,21 @@ namespace QuickOrderApp.Utilities.Presenters
             ProductImg = product.ProductImage;
             ProductId = product.OrderProductId;
             ProductPrice = product.Price;
-
-            //ProductDescription = product.ProductDescription;
-
             Quantity = product.Quantity;
 
+            //ProductDescription = product.ProductDescription;
 
 
             RemoveFromCartCommand = new Command(async () =>
             {
 
-                var orderProductRemovedResult = await orderProductDataStore.DeleteItemAsync(productid.ToString());
+                var orderProductRemovedResult = await orderProductDataStore.DeleteItemAsync(ProductId.ToString());
 
                 if (orderProductRemovedResult)
                 {
                     await Shell.Current.DisplayAlert("Notification", "Product Removed succefully.", "OK");
 
-                    MessagingCenter.Send<ProductPresenter, ProductPresenter>(this, "RemoveOrderProduct", this);
+                    MessagingCenter.Send<ProductPresenter>(this,"RemoveOrderProduct");
                 }
 
             });

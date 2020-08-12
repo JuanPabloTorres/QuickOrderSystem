@@ -32,6 +32,8 @@ namespace Library.Models
         [ForeignKey("StoreRegisterLicenseId")]
         public StoreLicense UserStoreLicense { get; set; }
 
+        public string PaymentDestinationKey { get; set; }
+
         public StoreType StoreType { get; set; }
 
     }

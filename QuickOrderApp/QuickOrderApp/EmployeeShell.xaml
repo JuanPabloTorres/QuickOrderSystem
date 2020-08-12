@@ -1,14 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Shell xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-        xmlns:store="clr-namespace:QuickOrderApp.Views.Store"
-     xmlns:emphome="clr-namespace:QuickOrderApp.Views.Store.EmployeeStoreControlPanel"
-       xmlns:inbox="clr-namespace:QuickOrderApp.Views.Inbox"
-       xmlns:setting="clr-namespace:QuickOrderApp.Views.Settings"
-             x:Class="QuickOrderApp.EmployeeShell">
+<Shell
+    x:Class="QuickOrderApp.EmployeeShell"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:emphome="clr-namespace:QuickOrderApp.Views.Store.EmployeeStoreControlPanel"
+    xmlns:inbox="clr-namespace:QuickOrderApp.Views.Inbox"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:setting="clr-namespace:QuickOrderApp.Views.Settings"
+    xmlns:store="clr-namespace:QuickOrderApp.Views.Store"
+    mc:Ignorable="d">
 
 
     <Shell.Resources>
@@ -21,19 +22,19 @@
                 <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
                 <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
                 <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
-                <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
-                <Setter Property="Shell.TabBarTitleColor" Value="Black"/>
+                <Setter Property="Shell.TabBarForegroundColor" Value="White" />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF" />
+                <Setter Property="Shell.TabBarTitleColor" Value="Black" />
             </Style>
-            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
+            <Style BasedOn="{StaticResource BaseStyle}" TargetType="TabBar" />
         </ResourceDictionary>
     </Shell.Resources>
 
 
 
-    <TabBar >
+    <TabBar>
 
-        <Tab Title="Home" Icon="tab_about.png" >
+        <Tab Title="Home" Icon="tab_about.png">
             <ShellContent ContentTemplate="{DataTemplate emphome:EmployeeControlPanel}" />
         </Tab>
         <!--<Tab Title="Inventory" Icon="tab_about.png" >

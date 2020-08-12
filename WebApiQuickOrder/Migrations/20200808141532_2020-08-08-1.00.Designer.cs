@@ -10,8 +10,8 @@ using WebApiQuickOrder.Context;
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    [Migration("20200718022617_2020_17_07_1.00")]
-    partial class _2020_17_07_100
+    [Migration("20200808141532_2020-08-08-1.00")]
+    partial class _20200808100
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,9 @@ namespace WebApiQuickOrder.Migrations
 
                     b.Property<DateTime>("OpenTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("WillWork")
+                        .HasColumnType("bit");
 
                     b.HasKey("WorkHourId");
 
@@ -163,6 +166,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("OrderProductId");
 
                     b.HasIndex("OrderId");
@@ -182,14 +188,17 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<string>("Cvc")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Exp")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("HolderName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserId")
+                    b.Property<string>("Month")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Year")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PaymentCardId");
 
@@ -222,6 +231,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("ProductId");
 
                     b.HasIndex("StoreId");
@@ -246,6 +258,9 @@ namespace WebApiQuickOrder.Migrations
 
                     b.Property<Guid>("StoreRegisterLicenseId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("StoreType")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -327,6 +342,19 @@ namespace WebApiQuickOrder.Migrations
                     b.ToTable("Requests");
                 });
 
+            modelBuilder.Entity("Library.Models.UsersConnected", b =>
+                {
+                    b.Property<string>("HubConnectionID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("HubConnectionID");
+
+                    b.ToTable("usersConnecteds");
+                });
+
             modelBuilder.Entity("Library.Models.WorkHour", b =>
                 {
                     b.Property<Guid>("WorkHourId")
@@ -372,7 +400,7 @@ namespace WebApiQuickOrder.Migrations
                     b.HasOne("Library.Models.Employee", "Employee")
                         .WithMany("EmployeeWorkHours")
                         .HasForeignKey("EmpId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -402,7 +430,9 @@ namespace WebApiQuickOrder.Migrations
                 {
                     b.HasOne("Library.Models.User", null)
                         .WithMany("PaymentCards")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Library.Models.Product", b =>

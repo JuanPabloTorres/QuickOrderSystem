@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.StoreManger.EditProductPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Routing.Route="EditProductRoute"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <ScrollView>
+
+            <StackLayout>
+                <Image
+                    x:Name="logo"
+                    Margin="5"
+                    Aspect="Fill"
+                    HeightRequest="200"
+                    Source="{Binding ProductImg}"
+                    WidthRequest="100" />
+                <button:SfButton
+                    Margin="10"
+                    BackgroundColor="DodgerBlue"
+                    Command="{Binding IPickPhotoCommand}"
+                    CornerRadius="5"
+                    HasShadow="True"
+                    Text="Choose Image" />
+                <Label FontSize="Body" Text="Product Information" />
+                <BoxView
+                    Grid.Row="2"
+                    BackgroundColor="Black"
+                    HeightRequest="0.1"
+                    HorizontalOptions="Fill" />
+
+                <Entry Placeholder="Product Name" Text="{Binding ProductName}" />
+
+
+                <Editor
+                    MinimumHeightRequest="120"
+                    Placeholder="Product Description"
+                    Text="{Binding ProductDescription}" />
+                <Entry
+                    Keyboard="Numeric"
+                    Placeholder="Product Price"
+                    Text="{Binding ProductPrice}" />
+                <Entry
+                    Keyboard="Numeric"
+                    Placeholder="Inventory Quantiy"
+                    Text="{Binding ProductQuantity}" />
+                <StackLayout>
+
+                    <combobox:SfComboBox
+                        DataSource="{Binding ProductTypes}"
+                        HeightRequest="40"
+                        SelectedItem="{Binding SelectedType}"
+                        Text="--Selecte Product Type--" />
+                </StackLayout>
+                <button:SfButton
+                    Margin="10"
+                    BackgroundColor="DodgerBlue"
+                    Command="{Binding UpdateCommand}"
+                    CornerRadius="5"
+                    FontSize="Body"
+                    HasShadow="True"
+                    Text="Complete" />
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

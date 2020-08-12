@@ -7,7 +7,7 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:numericupdown="clr-namespace:Syncfusion.SfNumericUpDown.XForms;assembly=Syncfusion.SfNumericUpDown.XForms"
-    Title="{Binding StoreName}"
+    Title="{Binding Title}"
     Routing.Route="ProductRoute"
     mc:Ignorable="d">
     <CollectionView EmptyView="Store does not have inventory." ItemsSource="{Binding StoreProducts}">
@@ -62,6 +62,11 @@
                                 FontSize="20"
                                 HorizontalOptions="Start"
                                 Text="{Binding ItemLeft, StringFormat='Item left: {0}'}" />
+                            <Label
+                                Margin="8,0,8,0"
+                                FontSize="20"
+                                HorizontalOptions="Start"
+                                Text="{Binding ProductType, StringFormat='Type: {0}'}" />
 
 
                             <StackLayout Margin="4">
@@ -105,7 +110,7 @@
                                 HasShadow="True"
                                 Text="Add To Cart"
                                 TextColor="Black" />
-                            <!--<Button Text="Show" Command="{Binding AddToCartCommand}"/>-->
+
                         </StackLayout>
                     </Frame>
                 </ContentView>
@@ -115,41 +120,4 @@
     </CollectionView>
 
 
-    <!--<CollectionView
-      ItemsSource="{Binding StoreProducts}"
-
-    >
-
-    -->
-    <!--  Built in Cells  -->
-    <!--
-        <CollectionView.ItemTemplate>
-            <DataTemplate>
-                <ViewCell>
-
-
-                </ViewCell>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
-
-    -->
-    <!--  Custom View Cells  -->
-    <!--
-    <ListView.ItemTemplate>
-      <DataTemplate>
-        <ViewCell>
-          <StackLayout>
-            <Label Text="{Binding Text}"
-                   d:Text="{Binding .}"
-                   Style="{DynamicResource ListItemTextStyle}" />
-            <Label Text="{Binding Detail}"
-                   d:Text="Detail"
-                   Style="{DynamicResource ListItemDetailTextStyle}"/>
-          </StackLayout>
-        </ViewCell>
-      </DataTemplate>
-    </ListView.ItemTemplate>
-    -->
-    <!--
-    </CollectionView>-->
 </ContentPage>

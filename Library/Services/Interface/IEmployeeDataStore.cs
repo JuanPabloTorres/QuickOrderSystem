@@ -10,5 +10,6 @@ namespace Library.Services.Interface
         Task<IEnumerable<Employee>> GetEmployeesOfStore(Guid storeId);
         Task<IEnumerable<Employee>> GetUserEmployees(string userId);
         Task<Employee> GetSpecificStoreEmployee(Guid userId, Guid StoreId);
+        Task<bool> IsEmployeeFromStore(Guid storeId, Guid userId);
     }
 }

@@ -4,11 +4,21 @@ using Library.Models;
 using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Library.Services
 {
     public class UserDataStore : DataStoreService<User>, IUserDataStore
     {
+        public async Task<bool> CheckIfUsernameAndPasswordExist(string username, string password)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CheckIfUsernameAndPasswordExist)}/{username}/{password}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+            return deserializeObject;
+        }
+
         public User CheckUserCredential(string username, string password)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CheckUserCredential)}/{username}/{password}");
@@ -30,6 +40,14 @@ namespace Library.Services
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(ForgotCodeSend)}/{email}");
             var response = HttpClient.GetStringAsync(FullAPIUri);
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response.Result);
+            return deserializeObject;
+        }
+
+        public async Task<IEnumerable<UserDTO>> GetUserWithName(string name)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetUserWithName)}/{name}");
+            var response =await  HttpClient.GetStringAsync(FullAPIUri);
+            IEnumerable<UserDTO> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<UserDTO>>(response);
             return deserializeObject;
         }
 

@@ -26,6 +26,9 @@ namespace QuickOrderApp.ViewModels
         public IEmployeeWorkHourDataStore EmployeeWorkHour => DependencyService.Get<IEmployeeWorkHourDataStore>();
 
         public ICardDataStore CardDataStore => DependencyService.Get<ICardDataStore>();
+        public IUserConnectedDataStore userConnectedDataStore => DependencyService.Get<IUserConnectedDataStore>();
+
+        public IRequestDataStore RequestDataStore => DependencyService.Get<IRequestDataStore>();
 
         bool isBusy = false;
         public bool IsBusy

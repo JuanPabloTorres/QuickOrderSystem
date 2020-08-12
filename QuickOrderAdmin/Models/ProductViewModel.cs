@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Library.Models;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,6 +25,24 @@ namespace QuickOrderAdmin.Models
         public string ProductDescription { get; set; }
 
         public int InventoryQuantity { get; set; }
+
+
+        public string Type { get; set; }
+
+        List<string> ProductTypes;
+
+        public ProductViewModel()
+        {
+            ProductTypes = new List<string>();
+            var types = Enum.GetValues(typeof(ProductType));
+            foreach (var item in types)
+            {
+                ProductTypes.Add(item.ToString());
+            }
+
+        }
+
+
 
     }
 }

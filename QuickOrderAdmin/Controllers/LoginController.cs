@@ -3,30 +3,54 @@ using Library.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using QuickOrderAdmin.Models;
 using QuickOrderAdmin.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace QuickOrderAdmin.Controllers
 {
     public class LoginController : Controller
     {
         IUserDataStore userDataStore;
-        public LoginController(IUserDataStore userData)
+        IUserConnectedDataStore userConnectedDataStore;
+
+        UsersConnected UsersConnected;
+        ComunicationService ComunicationService;
+        public LoginController(IUserDataStore userData,IUserConnectedDataStore userConnectedData,UsersConnected usersConnected,ComunicationService comunication)
         {
             userDataStore = userData;
+            userConnectedDataStore = userConnectedData;
+            UsersConnected = usersConnected;
+            ComunicationService = comunication;
+
+            
         }
 
         //Sign In Action
-        public IActionResult Index(LoginViewModel loginViewModel)
+        public async Task<IActionResult> Index(LoginViewModel loginViewModel)
         {
             if (LoginInfoNotNullOrEmpty(loginViewModel))
             {
                 var result = userDataStore.CheckUserCredential(loginViewModel.Username, loginViewModel.Password);
 
+                LogUser.Token = userDataStore.LoginCredential(loginViewModel.Username, loginViewModel.Password);
+
                 if (result != null)
                 {
                     LogUser.LoginUser = result;
 
+
+                    this.UsersConnected = new UsersConnected()
+                    {
+                        HubConnectionID = ComunicationService.hubConnection.ConnectionId,
+                        UserID = result.UserId
+                    };
+
+                   var hub_connection_result = await userConnectedDataStore.AddItemAsync(this.UsersConnected);
+
+                   
+                     
                     var stores = new List<Store>(result.Stores);
 
                     if (stores.Count() > 0)
@@ -45,6 +69,7 @@ namespace QuickOrderAdmin.Controllers
                 }
                 else
                 {
+                    ViewBag.ErrorMsg = "Error";
                     return View();
                 }
 

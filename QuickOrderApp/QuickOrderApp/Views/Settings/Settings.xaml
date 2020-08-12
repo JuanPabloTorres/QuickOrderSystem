@@ -14,211 +14,138 @@
     mc:Ignorable="d">
     <ContentPage.Content>
 
+        <StackLayout>
 
-        <Grid VerticalOptions="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            <Label
+                FontAttributes="Bold"
+                FontSize="Title"
+                HorizontalOptions="Center"
+                Text="Quick Order Settings" />
 
+            <BoxView
+                Margin="8,0,8,0"
+                BackgroundColor="LightGray"
+                HeightRequest="0.1"
+                HorizontalOptions="Fill" />
 
-
-            <StackLayout Grid.Row="0">
-                <Label FontSize="Body" Text="Personal Information" />
-                <BoxView
-                    BackgroundColor="Black"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
-                <button:SfButton
-                    BackgroundColor="DodgerBlue"
-                    Command="{Binding GoUserInformationCommand}"
-                    HorizontalTextAlignment="Center"
-                    Text="Your Information"
-                    TextColor="Black" />
-
-
-            </StackLayout>
-
-
-
-            <Grid Grid.Row="1">
-
+            <Grid VerticalOptions="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Label
-                    Grid.Row="0"
-                    FontSize="Body"
-                    Text="Store Control" />
-                <BoxView
-                    Grid.Row="1"
-                    BackgroundColor="Black"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
-                <button:SfButton
-                    Grid.Row="2"
-                    BackgroundColor="DodgerBlue"
-                    Command="{Binding RegisterStoreCommand}"
-                    HorizontalTextAlignment="Center"
-                    Text="Register Store"
-                    TextColor="Black" />
-
-                <CollectionView
-                    Grid.Row="3"
-                    Margin="5"
-                    EmptyView="Not Register Store"
-                    ItemsSource="{Binding UserInformation.Stores}"
-                    SelectedItem="{Binding SelectedStore}"
-                    SelectionMode="Single"
-                    VerticalOptions="Center">
-
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
+                <StackLayout Grid.Row="0">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="Body"
+                        Text="Personal Information" />
+                    <BoxView
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <button:SfButton
+                        BackgroundColor="LimeGreen"
+                        Command="{Binding GoUserInformationCommand}"
+                        HasShadow="True"
+                        HorizontalTextAlignment="Center"
+                        Text="Your Information"
+                        TextColor="Black" />
 
 
-                            <StackLayout
-                                Padding="5"
-                                BackgroundColor="White"
-                                Orientation="Horizontal"
-                                Spacing="5">
-                                <Frame
-                                    Padding="0"
-                                    CornerRadius="5"
-                                    IsClippedToBounds="True">
+                </StackLayout>
 
-                                    <Image
-                                        Aspect="Fill"
-                                        HeightRequest="50"
-                                        Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}"
-                                        WidthRequest="50" />
-                                </Frame>
+                <Grid Grid.Row="1">
 
-                                <Label
-                                    FontSize="Title"
-                                    HorizontalOptions="Center"
-                                    Text="{Binding StoreName}"
-                                    TextColor="Black"
-                                    VerticalOptions="Center" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
 
-                            </StackLayout>
+                    </Grid.RowDefinitions>
 
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
+                    <Label
+                        Grid.Row="0"
+                        FontAttributes="Bold"
+                        FontSize="Body"
+                        Text="Store Control" />
+                    <BoxView
+                        Grid.Row="1"
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <button:SfButton
+                        Grid.Row="2"
+                        BackgroundColor="LightYellow"
+                        Command="{Binding RegisterStoreCommand}"
+                        HasShadow="True"
+                        HorizontalTextAlignment="Center"
+                        Text="Register Store"
+                        TextColor="Black" />
 
-                </CollectionView>
+                    <button:SfButton
+                        Grid.Row="3"
+                        BackgroundColor="LightYellow"
+                        Command="{Binding GoCheckYourStores}"
+                        HasShadow="True"
+                        HorizontalTextAlignment="Center"
+                        Text="Check Your Stores"
+                        TextColor="Black" />
+
+
+
+                </Grid>
+
+                <StackLayout Grid.Row="2">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="Body"
+                        Text="About Us" />
+                    <BoxView
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <button:SfButton
+                        BackgroundColor="DodgerBlue"
+                        Command="{Binding}"
+                        HasShadow="True"
+                        HorizontalTextAlignment="Center"
+                        Text="Policies"
+                        TextColor="Black" />
+                    <button:SfButton
+                        BackgroundColor="DodgerBlue"
+                        Command="{Binding}"
+                        HasShadow="True"
+                        HorizontalTextAlignment="Center"
+                        Text="Terms And Conditions"
+                        TextColor="Black" />
+
+
+                </StackLayout>
+                <StackLayout Grid.Row="3">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="Body"
+                        Text="Sing Out" />
+                    <BoxView
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <button:SfButton
+                        BackgroundColor="Tomato"
+                        Command="{Binding LogOutCommand}"
+                        HasShadow="True"
+                        HorizontalTextAlignment="Center"
+                        Text="Sign Out"
+                        TextColor="Black" />
+
+                </StackLayout>
 
             </Grid>
-
-            <!--<Grid Grid.Row="2">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <Label
-                    Grid.Row="0"
-                    FontSize="Body"
-                    Text="Employee Control" />
-                <BoxView
-                    Grid.Row="1"
-                    BackgroundColor="Black"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
-
-            -->
-            <!--<CollectionView
-                    Grid.Row="3"
-                    Margin="5"
-                    EmptyView="Employee Control Empty"
-                    ItemsSource="{Binding UserInformation.Stores}"
-                    SelectedItem="{Binding SelectedStore}"
-                    SelectionMode="Single"
-                    VerticalOptions="Center">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-
-
-                            <StackLayout
-                                Padding="5"
-                                BackgroundColor="White"
-                                Orientation="Horizontal"
-                                Spacing="5">
-                                <Frame
-                                    Padding="0"
-                                    CornerRadius="5"
-                                    IsClippedToBounds="True">
-
-                                    <Image
-                                        Aspect="Fill"
-                                        HeightRequest="80"
-                                        Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}"
-                                        WidthRequest="80" />
-                                </Frame>
-
-                                <Label
-                                    FontSize="Title"
-                                    HorizontalOptions="Center"
-                                    Text="{Binding StoreName}"
-                                    TextColor="Black"
-                                    VerticalOptions="Center" />
-
-                            </StackLayout>
-
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-
-                </CollectionView>-->
-            <!--
-
-            </Grid>-->
-
-            <StackLayout Grid.Row="2">
-                <Label FontSize="Body" Text="About Us" />
-                <BoxView
-                    BackgroundColor="Black"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
-                <button:SfButton
-                    BackgroundColor="DodgerBlue"
-                    Command="{Binding GoUserInformationCommand}"
-                    HorizontalTextAlignment="Center"
-                    Text="Policies"
-                    TextColor="Black" />
-                <button:SfButton
-                    BackgroundColor="DodgerBlue"
-                    Command="{Binding GoUserInformationCommand}"
-                    HorizontalTextAlignment="Center"
-                    Text="Terms And Conditions"
-                    TextColor="Black" />
-
-
-            </StackLayout>
-            <StackLayout Grid.Row="3">
-                <Label FontSize="Body" Text="Sing Out" />
-                <BoxView
-                    BackgroundColor="Black"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
-                <button:SfButton
-                    BackgroundColor="DodgerBlue"
-                    Command="{Binding LogOutCommand}"
-                    HorizontalTextAlignment="Center"
-                    Text="Sign Out"
-                    TextColor="Black" />
-
-            </StackLayout>
-
-        </Grid>
+        </StackLayout>
 
 
     </ContentPage.Content>

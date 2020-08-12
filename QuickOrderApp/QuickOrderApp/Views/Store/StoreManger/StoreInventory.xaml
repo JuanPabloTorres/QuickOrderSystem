@@ -1,36 +1,85 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             Routing.Route="InventoryRoute"
-             x:Class="QuickOrderApp.Views.Store.StoreManger.StoreInventory">
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.StoreManger.StoreInventory"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Store Inventory"
+    Routing.Route="InventoryRoute"
+    mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
-            <CollectionView ItemsSource="{Binding StoreInventory}" EmptyView="Empty Inventory">
+            <CollectionView EmptyView="Empty Inventory" ItemsSource="{Binding StoreInventory}">
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Span="2" Orientation="Vertical"  />
+                    <GridItemsLayout Orientation="Vertical" Span="1" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
                         <ContentView>
-                            <Frame Margin="8" HasShadow="True" CornerRadius="10" Padding="0" BorderColor="LightGray">
-
-                                <StackLayout >
-                                    <Frame  
-                                HorizontalOptions="Fill"
-                                HeightRequest="130"       
+                            <Frame
+                                Margin="8"
                                 Padding="0"
-                                IsClippedToBounds="True">
-                                        <Image Source="{Binding ProductImage,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill" HeightRequest="200"/>
+                                BorderColor="LightGray"
+                                CornerRadius="10"
+                                HasShadow="True">
+
+                                <StackLayout>
+                                    <Frame
+                                        Padding="0"
+                                        HeightRequest="130"
+                                        HorizontalOptions="Fill"
+                                        IsClippedToBounds="True">
+                                        <Image
+                                            Aspect="Fill"
+                                            HeightRequest="200"
+                                            Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}" />
                                     </Frame>
 
-                                    <Label Text="{Binding ProductName}" FontSize="Title" HorizontalOptions="Center"></Label>
-                                    <BoxView HeightRequest="0.1" HorizontalOptions="Fill" Margin="4" BackgroundColor="Black"/>
-                                    <Label Text="{Binding Price,StringFormat='{0:C}'}" FontSize="20" HorizontalOptions="Center"></Label>
-                                    <Label Text="{Binding InventoryQuantity,StringFormat='Quantity:{0}'}"  FontSize="20" HorizontalOptions="Center"/>
+                                    <Label
+                                        FontSize="Title"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding ProductName}" />
+                                    <BoxView
+                                        Margin="10,0,10,0"
+                                        BackgroundColor="LightGray"
+                                        HeightRequest="0.1"
+                                        HorizontalOptions="Fill" />
+                                    <Label
+                                        FontSize="20"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding ProductPrice, StringFormat='{0:C}'}" />
+                                    <Label
+                                        FontSize="20"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding ItemLeft, StringFormat='Quantity:{0}'}" />
+
+                                    <Label
+                                        FontSize="20"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding ProductType, StringFormat='Type:{0}'}" />
+
+
+
+                                    <button:SfButton
+                                        Margin="5"
+                                        BackgroundColor="DodgerBlue"
+                                        Command="{Binding EditCommand}"
+                                        CornerRadius="5"
+                                        FontSize="Body"
+                                        HasShadow="True"
+                                        Text="Edit" />
+                                    <button:SfButton
+                                        Margin="5"
+                                        BackgroundColor="Red"
+                                        Command="{Binding DeleteCommand}"
+                                        CornerRadius="5"
+                                        FontSize="Body"
+                                        HasShadow="True"
+                                        Text="Delete" />
+
                                 </StackLayout>
                             </Frame>
                         </ContentView>

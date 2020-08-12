@@ -10,18 +10,18 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <img src="data:image;base64,@System.Convert.ToBase64String(Model.StoreImage)" width="100" height="100" class="rounded-circle" />
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.StoreImage)" width="100" height="100" class="rounded shadow" />
         </div>
         <div class="col">
-            <h3>@Model.StoreName</h3>
+            <h2><b>@Model.StoreName</b></h2>
         </div>
         <div class="col">
-            <div class="list-group list-group-horizontal">
+            <div class="list-group list-group-horizontal ">
                 @Html.ActionLink("Add Product", "AddProductStore", "Store", new { id = Model.StoreId, viewname = "Add" }, new { @class = "list-group-item list-group-item-action" })
                 @Html.ActionLink("Check Orders", "StoreOrders", "Store", new { id = Model.StoreId, viewname = "Orders" }, new { @class = "list-group-item list-group-item-action" })
                 @Html.ActionLink("Store Employees", "ShowEmployees", "Employee", null, new { @class = "list-group-item list-group-item-action" })
-                @Html.ActionLink("Dashboards", "ShowEmployees", "Employee", null, new { @class = "list-group-item list-group-item-action" })
-                @Html.ActionLink("Remove Store", "StoreOrders", "Store", new { id = Model.StoreId, viewname = "Orders" }, new { @class = "list-group-item list-group-item-action" })
+                @Html.ActionLink("Dashboards", "Index", "Dashboards", null, new { @class = "list-group-item list-group-item-action" })
+            
                 @*@Html.ActionLink("Store Location", "ShowMap", "Store", new { id = Model.StoreId, viewname = "Employees" }, new { @class = "list-group-item list-group-item-action" })*@
 
             </div>
@@ -30,26 +30,29 @@
 </div>
 
 <div class="container">
-<h1 class="text-center"> Low Quantity Inventory</h1>
+<h4 class="text-center"> <b>Low Inventory</b></h4>
 <table class="table table-hover">
     <thead>
         <tr>
 
             <th>
-                <label>Product Image</label>
+                <label>Image</label>
                 @*@Html.DisplayNameFor(model => model.ProductImage)*@
             </th>
             <th>
-                <label>Product Name</label>
+                <label>Product</label>
                 @*@Html.DisplayNameFor(model => model.ProductName)*@
             </th>
             <th>
-                <label>Product Price</label>
+                <label>Product</label>
                 @*@Html.DisplayNameFor(model => model.Price)*@
             </th>
             <th>
-                <label>Inventory Quantity</label>
+                <label>Inventory</label>
                 @*@Html.DisplayNameFor(model => model.InventoryQuantity)*@
+            </th>
+            <th>
+                <label>Type</label>
             </th>
 
             <th></th>
@@ -58,33 +61,39 @@
     <tbody>
         @foreach (var item in ViewBag.Result)
         {
-            <tr>
+        <tr >
 
-                <td>
-                    <img src="data:image;base64,@System.Convert.ToBase64String(item.ProductImage)" width="100" height="100" class="rounded-circle" />
-                </td>
-                <td>
-                    <label>@item.ProductName</label>
-                    @*@Html.DisplayFor(modelItem => item.ProductName)*@
-                </td>
-                <td>
-                    <label>@item.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</label>
-                </td>
-                <td>
-                    <label>@item.InventoryQuantity</label>
-                    @*@Html.DisplayFor(modelItem => item.InventoryQuantity)*@
-                </td>
+            <td>
+                <img src="data:image;base64,@System.Convert.ToBase64String(item.ProductImage)" width="80" height="80" class="rounded" />
+            </td>
+            <td>
+                <label>@item.ProductName</label>
+                @*@Html.DisplayFor(modelItem => item.ProductName)*@
+            </td>
+            <td>
+                <label>@item.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</label>
+            </td>
+            <td>
+                <label style="color:red"><b>@item.InventoryQuantity</b></label>
+                @*@Html.DisplayFor(modelItem => item.InventoryQuantity)*@
+            </td>
+            <td>
+                <label>@item.Type</label>
+                @*@Html.DisplayFor(modelItem => item.InventoryQuantity)*@
+            </td>
 
-                @*<td>
-                        @Html.ActionLink("Edit", "EditProduct", new { id = item.ProductId }) |
-                        @Html.ActionLink("Details", "DetailProdut", new { id = item.ProductId }) |
-                        @Html.ActionLink("Delete", "DeleteProduct", new { id = item.ProductId })
-                    </td>*@
-            </tr>
+            @*<td>
+            @Html.ActionLink("Edit", "EditProduct", new { id = item.ProductId }) |
+            @Html.ActionLink("Details", "DetailProdut", new { id = item.ProductId }) |
+            @Html.ActionLink("Delete", "DeleteProduct", new { id = item.ProductId })
+        </td>*@
+        </tr>
         }
     </tbody>
 </table>
 
 </div>
+
+
 
 

@@ -11,6 +11,14 @@ namespace QuickOrderAdmin.Models
 
         public Employee EmployeeInformation { get; set; }
 
+        public bool WillWorkMonday { get; set; }
+        public bool WillWorkTuesday { get; set; }
+        public bool WillWorkWednesday { get; set; }
+        public bool WillWorkThursday { get; set; }
+        public bool WillWorkFriday { get; set; }
+        public bool WillWorkSaturday { get; set; }
+        public bool WillWorkSunday { get; set; }
+
         [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{0:hh:mm tt}")]
         [DisplayName("Monday Open Time")]
@@ -83,6 +91,8 @@ namespace QuickOrderAdmin.Models
         public string Position { get; set; }
 
         List<string> EmployeePositions;
+
+
 
 
         public EditEmployeeViewModel()

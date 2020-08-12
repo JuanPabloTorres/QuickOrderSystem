@@ -55,6 +55,22 @@ namespace WebApiQuickOrder.Controllers
             return store;
         }
 
+        // GET: api/Store/5
+        [HttpGet("[action]/{storeId}")]
+        public async Task<ActionResult<string>> GetStoreDestinationPaymentKey(Guid storeId)
+        {
+            var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().PaymentDestinationKey;
+
+            if (keyResult == null)
+            {
+                return NotFound();
+            }
+
+            return keyResult;
+        }
+
+
+
         // PUT: api/Store/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.

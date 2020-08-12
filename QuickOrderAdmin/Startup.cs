@@ -1,3 +1,4 @@
+using Library.Models;
 using Library.Services;
 using Library.Services.Interface;
 using Microsoft.AspNetCore.Builder;
@@ -5,14 +6,20 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using QuickOrderAdmin.Utilities;
 
 namespace QuickOrderAdmin
 {
     public class Startup
     {
+
+        //public static ComunicationService ComunicationService { get; set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            //ComunicationService = new ComunicationService();
         }
 
         public IConfiguration Configuration { get; }
@@ -21,7 +28,8 @@ namespace QuickOrderAdmin
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            services.AddSingleton<ComunicationService>();
+            services.AddSingleton<UsersConnected>();
             services.AddSingleton<IStoreLicenseDataStore, StoreLicenceDataStore>();
             services.AddSingleton<IStoreDataStore, StoreDataStore>();
             services.AddSingleton<IUserDataStore, UserDataStore>();
@@ -30,6 +38,7 @@ namespace QuickOrderAdmin
             services.AddSingleton<IEmployeeDataStore, EmployeeDataStore>();
             services.AddSingleton<IRequestDataStore, RequestDataStore>();
             services.AddSingleton<IEmployeeWorkHourDataStore, EmployeeWorkHourDataStore>();
+            services.AddSingleton<IUserConnectedDataStore, UserConnectedDataStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,7 +65,7 @@ namespace QuickOrderAdmin
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=License}/{action=Index}/{id?}");
+                    pattern: "{controller=StoreHome}/{action=Index}/{id?}");
             });
         }
     }

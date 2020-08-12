@@ -2,21 +2,20 @@
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _2020_07_21_100 : Migration
+    public partial class _20200808101 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "StoreType",
+            migrationBuilder.AddColumn<string>(
+                name: "PaymentDestinationKey",
                 table: "Stores",
-                nullable: false,
-                defaultValue: 0);
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "StoreType",
+                name: "PaymentDestinationKey",
                 table: "Stores");
         }
     }

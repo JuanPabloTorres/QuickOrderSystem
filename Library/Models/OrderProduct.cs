@@ -21,6 +21,8 @@ namespace Library.Models
 
         public byte[] ProductImage { get; set; }
 
+        public ProductType Type { get; set; }
+
 
     }
 }

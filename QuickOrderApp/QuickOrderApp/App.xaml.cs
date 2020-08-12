@@ -2,6 +2,7 @@
 using Library.Models;
 using Library.Services;
 using Plugin.SharedTransitions;
+using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Views.Login;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -22,7 +23,10 @@ namespace QuickOrderApp
         public static bool UseMockDataStore = true;
         public static User LogUser;
         public static Store CurrentStore;
-        public static TokenDTO TokenDto{ get; set; }
+        public static TokenDTO TokenDto { get; set; }
+        public static ComunicationService ComunicationService { get; set; }
+
+        public static UsersConnected UsersConnected { get; set; }
         public App()
         {
             InitializeComponent();
@@ -34,7 +38,17 @@ namespace QuickOrderApp
 
             // MainPage = new NavigationPage(new PaymentPage());
             //MainPage = new NavigationPage(new LoginPage());
-            MainPage = new SharedTransitionNavigationPage(new LoginPage());
+            MainPage = new AppShell();
+
+            bool islogged = false;
+            if (!islogged)
+            {
+                Shell.Current.GoToAsync("LoginRoute");
+            }
+            else
+            {
+
+            }
 
             //SharedTransitionNavigationPage
         }
@@ -53,6 +67,8 @@ namespace QuickOrderApp
             DependencyService.Register<WorkHourDataStore>();
             DependencyService.Register<EmployeeWorkHourDataStore>();
             DependencyService.Register<CardDataStore>();
+            DependencyService.Register<UserConnectedDataStore>();
+            DependencyService.Register<RequestDataStore>();
 
         }
 

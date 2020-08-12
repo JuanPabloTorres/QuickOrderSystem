@@ -1,8 +1,11 @@
 ﻿using Library.Models;
+using Microsoft.AspNetCore.SignalR.Client;
+using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -16,11 +19,19 @@ namespace QuickOrderApp.ViewModels.InboxVM
         {
             UserRequests = new ObservableCollection<RequestPresenter>();
 
+            ExecuteLoadItemsCommand();
+
             MessagingCenter.Subscribe<RequestPresenter>(this, "RefreshInbox", (sender) =>
             {
-
                 UserRequests.Remove(sender);
                 //LoadItemsCommand.Execute(null);
+            });
+       
+
+            App.ComunicationService.hubConnection.On<UserRequest>("ReceiveMessage", (message) =>
+            {
+                var requestPresenter = new RequestPresenter(message);
+                UserRequests.Add(requestPresenter);
             });
         }
 

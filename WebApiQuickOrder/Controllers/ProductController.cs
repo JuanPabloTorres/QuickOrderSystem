@@ -48,6 +48,14 @@ namespace WebApiQuickOrder.Controllers
             return result;
         }
 
+        [HttpGet("[action]/{storeId}/{type}")]
+        public async Task<IEnumerable<Product>> GetSpecificProductTypeFromStore(Guid storeId,ProductType type)
+        {
+            var result =  _context.Products.Where(p => p.Type == type && p.StoreId == storeId).ToList();
+
+            return result;
+        }
+
         [HttpGet("[action]/{storeid}/{lowquantity}")]
         public IEnumerable<Product> GetProductWithLowQuantity(Guid storeid, int lowquantity)
         {

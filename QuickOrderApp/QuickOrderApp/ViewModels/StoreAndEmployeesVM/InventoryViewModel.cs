@@ -1,16 +1,25 @@
 ﻿using Library.Models;
+using QuickOrderApp.Utilities.Presenters;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 {
     public class InventoryViewModel : BaseViewModel
     {
-        public ObservableCollection<Product> StoreInventory { get; set; }
+        public ObservableCollection<ProductPresenter> StoreInventory { get; set; }
         public InventoryViewModel()
         {
-            StoreInventory = new ObservableCollection<Product>();
+            StoreInventory = new ObservableCollection<ProductPresenter>();
             LoadInventory();
+
+            MessagingCenter.Subscribe<ProductPresenter>(this, "DeleteProductInventory", (obj) => 
+            {
+
+                StoreInventory.Remove(obj);
+            
+            });
         }
 
         async Task LoadInventory()
@@ -21,7 +30,9 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             foreach (var item in data)
             {
-                StoreInventory.Add(item);
+
+                var productPresenter = new ProductPresenter(item);
+                StoreInventory.Add(productPresenter);
             }
 
 

@@ -1,5 +1,7 @@
 ﻿using Library.DTO;
 using Library.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Library.Services.Interface
 {
@@ -10,5 +12,8 @@ namespace Library.Services.Interface
         bool ConfirmCode(string code);
 
         TokenDTO LoginCredential(string username, string password);
+        Task<IEnumerable<UserDTO>> GetUserWithName(string name);
+
+        Task<bool> CheckIfUsernameAndPasswordExist(string username, string password);
     }
 }
