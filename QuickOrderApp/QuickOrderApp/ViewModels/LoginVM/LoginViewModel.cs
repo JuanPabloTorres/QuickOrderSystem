@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.DTO;
+using Library.Models;
 using Library.Services;
 using Library.Services.Interface;
 using QuickOrderApp.Services.HubService;
@@ -111,18 +112,11 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                 var data = App.LogUser.PaymentCards;
                                 var card = new List<PaymentCard>(data);
 
-                              
 
-                                var customerService = new CustomerService();
+                                var userCardTokenId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, card[0].StripeCardId);
 
-                                var cardService = new CardService();
 
-                                var service = new CardService();
-
-                                var customerToken = customerService.Get(App.LogUser.StripeUserId);
-                                var UserCardToken = service.Get(customerToken.Id, card[0].StripeCardId);
-
-                                App.CardPaymentToken.CardTokenId = UserCardToken.Id;
+                                App.CardPaymentToken.CardTokenId = userCardTokenId;
                                
                             }
 
@@ -234,27 +228,26 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                 UserLogin = userlogin,
                             };
 
+
+
                             try
                             {
 
-                                
-                                var optionsCustomers = new CustomerCreateOptions
+                                var optionsCustomers = new UserDTO
                                 {
-                                    Description = "New Customer From Quick Order",
+
                                     Name = Fullname,
                                     Email = Email,
                                     Phone = Phone,
-                                    Address=new AddressOptions() {  Line1 = Address} 
-
+                                    Address = Address
 
                                 };
 
-                                var customerservice = new CustomerService();
-                                var customertoken = customerservice.Create(optionsCustomers);
+                                var customertokenId = await stripeServiceDS.CreateStripeCustomer(optionsCustomers);
 
-                                if (!string.IsNullOrEmpty(customertoken.Id))
+                                if (!string.IsNullOrEmpty(customertokenId))
                                 {
-                                    newUser.StripeUserId = customertoken.Id;
+                                    newUser.StripeUserId = customertokenId;
                                     var result = await userDataStore.AddItemAsync(newUser);
 
                                     var getCredential = userDataStore.CheckUserCredential(Username, Password);

@@ -35,11 +35,6 @@
             Text="Quick Order"
             TextColor="Black"
             VerticalOptions="Start" />
-        <!--<BoxView
-            Margin="10"
-            BackgroundColor="LightGray"
-            HeightRequest="0.1"
-            HorizontalOptions="Fill" />-->
 
         <Frame
             Margin="8"
@@ -73,7 +68,7 @@
                         TextColor="Black" />
                     <button:SfButton
                         Margin="10,4,10,0"
-                        BackgroundColor="LightSalmon"
+                        BackgroundColor="Tomato"
                         Command="{Binding LoginEmployeeCommand}"
                         CornerRadius="5"
                         FontAttributes="Bold"
@@ -81,27 +76,25 @@
                         HasShadow="True"
                         Text="Log In As Employee"
                         TextColor="Black" />
-                    <Grid HorizontalOptions="Fill">
+                    <Grid HorizontalOptions="Center">
 
                         <button:SfButton
                             Grid.Row="0"
-                            Margin="5"
                             BackgroundColor="Transparent"
                             Command="{Binding RegisterCommand}"
                             CornerRadius="5"
                             FontAttributes="Bold"
                             Text="Register"
-                            TextColor="Black" />
+                            TextColor="Blue" />
                         <button:SfButton
                             Grid.Row="0"
                             Grid.Column="1"
-                            Margin="5"
                             BackgroundColor="Transparent"
                             Command="{Binding GoForgotPasswordCommand}"
                             CornerRadius="5"
                             FontAttributes="Bold"
                             Text="Forgot Password"
-                            TextColor="Black" />
+                            TextColor="Blue" />
 
 
                     </Grid>

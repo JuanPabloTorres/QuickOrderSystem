@@ -8,56 +8,61 @@
 
     <div class="container">
 
-        <div class="row mb-4">
-            <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-4">User Registration</h1>
-                <p class="lead mb-0">Fill all informaton to register.</p>
-                @*<p class="lead">Snippet by <a href="https://bootstrapious.com/snippets">Bootstrapious</a></p>*@
-            </div>
-        </div>
+       
+         
+                <h1 class="display-4 text-center">User Registration</h1>
+                <p class="lead mb-0 text-center">Fill all informaton to register.</p>
+               
         <hr />
         <div class="row">
-            <div class="col-lg-7 mx-auto">
+            <div class="col-xl">
                 <form asp-action="UserRegistration">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="Name" class="control-label"></label>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Email" class="control-label"></label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Username" class="control-label"></label>
-                        <input asp-for="Username" class="form-control" />
-                        <span asp-validation-for="Username" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Password" class="control-label"></label>
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="ConfirmPassword" class="control-label"></label>
-                        <input asp-for="ConfirmPassword" class="form-control" />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
-                    @*<div class="form-group">
-                        <label asp-for="StoreLicence" class="control-label"></label>
-                        <input asp-for="StoreLicence" class="form-control" />
-                        <span asp-validation-for="StoreLicence" class="text-danger"></span>
 
-                        @if (!string.IsNullOrEmpty(ViewBag.LicenseError))
-                        {
-                            <span class="text-danger">@ViewBag.LicenseError</span>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-xl">
+                                <div class="form-group">
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <input asp-for="Name" class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl">
+                                <div class="form-group">
+                                    <label asp-for="Email" class="control-label"></label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl">
+                                <div class="form-group">
+                                    <label asp-for="Username" class="control-label"></label>
+                                    <input asp-for="Username" class="form-control" />
+                                    <span asp-validation-for="Username" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl">
+                                <div class="form-group">
+                                    <label asp-for="Password" class="control-label"></label>
+                                    <input asp-for="Password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-xl">
+                                <div class="form-group">
+                                    <label asp-for="ConfirmPassword" class="control-label"></label>
+                                    <input asp-for="ConfirmPassword" class="form-control" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
 
-                        }
-                    </div>*@
+                    </div>
                     <div class="form-group">
-                        <input type="submit" value="Create" class="btn btn-warning btn-block" />
+                        <input type="submit" value="Complete" class="btn btn-warning btn-block" />
                     </div>
                 </form>
             </div>

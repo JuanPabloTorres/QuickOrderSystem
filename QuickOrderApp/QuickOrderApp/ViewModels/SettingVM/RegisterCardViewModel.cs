@@ -168,49 +168,30 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
                     var newCard = new PaymentCard()
                     {
-                       PaymentCardId = Guid.NewGuid(),
-                       UserId = App.LogUser.UserId,
-                      
+                        PaymentCardId = Guid.NewGuid(),
+                        UserId = App.LogUser.UserId,
                        
                     };
-                  
+
 
                     try
                     {
 
-
-                        var tokenoptions = new TokenCreateOptions()
+                        var cardData = new PaymentCard()
                         {
-                            Card = new CreditCardOptions()
-                            {
-                                Number = CardNumber,
-                                ExpYear = long.Parse(Year),
-                                ExpMonth = long.Parse(Month),
-                                Cvc = CVC,
-                                Name = HolderName,
-                             
-                            },
+                            CardNumber = CardNumber,
+                            Cvc = CVC,
+                            HolderName = HolderName,
+                            Month = Month,
+                            Year = Year,
                         };
 
 
-                        var tokenService = new TokenService();
+                        var cardservicetokenId = await stripeServiceDS.InsertStripeCardToCustomer(cardData, App.LogUser.StripeUserId);
 
-                        var stripeToken = tokenService.Create(tokenoptions);
-
-
-                        var CardCreateoptions = new CardCreateOptions
+                        if (!string.IsNullOrEmpty(cardservicetokenId))
                         {
-                            Source = stripeToken.Id,
-                        };
-
-
-
-                        var cardservice = new CardService();
-                        var cardserviceToken = cardservice.Create(App.LogUser.StripeUserId, CardCreateoptions);
-
-                        if (!string.IsNullOrEmpty(cardserviceToken.Id))
-                        {
-                            newCard.StripeCardId = cardserviceToken.Id;
+                            newCard.StripeCardId = cardservicetokenId;
                             var result = await CardDataStore.AddItemAsync(newCard);
 
                             if (result)

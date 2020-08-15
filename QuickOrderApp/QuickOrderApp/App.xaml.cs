@@ -74,6 +74,7 @@ namespace QuickOrderApp
             DependencyService.Register<CardDataStore>();
             DependencyService.Register<UserConnectedDataStore>();
             DependencyService.Register<RequestDataStore>();
+            DependencyService.Register<StripeServiceDS>();
 
         }
 

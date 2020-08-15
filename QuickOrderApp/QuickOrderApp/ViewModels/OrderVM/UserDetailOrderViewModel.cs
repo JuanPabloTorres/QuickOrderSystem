@@ -191,14 +191,8 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                         List<PaymentCard> paymentCards = new List<PaymentCard>(usercards);
 
-                        //SetPayment(paymentCards[0].CardNumber, paymentCards[0].HolderName, paymentCards[0].Year, paymentCards[0].Month, paymentCards[0].Cvc, App.LogUser);
 
-                        //var token = CreateToken(paymentCards[0]);
-
-                        //if (token != null)
-                        //{
-                            var isTransactionSuccess =await MakePayment();
-
+                        var isTransactionSuccess = await stripeServiceDS.MakePayment(OrderDetail.StoreId, Total, App.LogUser.StripeUserId, OrderDetail.OrderId.ToString());
                             if (isTransactionSuccess)
                             {
                                 var orderUpdate = await orderDataStore.UpdateItemAsync(OrderDetail);
@@ -261,7 +255,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
         public Token stripeToken;
         public TokenService tokenService;
-       
+        //public string PublicApiKey = "pk_live_51GOwkJJDC8jrm2WeofpT5zqRgAKZ0LkaQEh64CHvZVcqSvCCBFE7LRV7ZSxjD3pZiTemSKhbe7XBVLX1Q57v2yKc00BW4iat88";
+      
+         //public string TestApiKey = "pk_test_51GOwkJJDC8jrm2We0q0lyl2DRkIOjqJ6psQaHWdbrc1gbfQyDYQhdWwcv9SX6ulQr2yaQjXnsSCpnhaMJfwKf52900Orbmba9I";
          public string TestApiKey = "pk_test_51GOwkJJDC8jrm2We0q0lyl2DRkIOjqJ6psQaHWdbrc1gbfQyDYQhdWwcv9SX6ulQr2yaQjXnsSCpnhaMJfwKf52900Orbmba9I";
          async void SetPayment(string cardnumber, string holdername, string year, string month, string cvc, User user)
         {

@@ -518,23 +518,7 @@ namespace QuickOrderAdmin.Controllers
         }
 
 
-        public void CallStoreOrder()
-        {
-
-            //List<Order> orders = new List<Order>();
-            //ComunicationService.hubConnection.On<Order>("ReceivedOrder", (message) =>
-            //{
-            //    var order = message;
-            //    orders.Add(order);
-
-            //    //StoreOrders();
-            //});
-
-            //ComunicationService.hubConnection.On<Order>("ReceivedOrder", (message) =>
-            //{
-            //    StoreOrders();
-            //});
-        }
+     
 
         public async Task<IActionResult> OrderDetail(Guid id)
         {

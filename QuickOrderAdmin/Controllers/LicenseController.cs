@@ -24,11 +24,17 @@ namespace QuickOrderAdmin.Controllers
         {
             return View();
         }
-
-        public async Task<IActionResult> GetLicencePro(string username, string cardNumber, int MM, int YY, int CVV, string email)
+     
+        public async Task<IActionResult> GetLicencePro(CardViewModel cardViewModel)
         {
-            if (CreditCardNotNullOrEmpty(username, cardNumber, MM, YY, CVV))
+            if (CreditCardNotNullOrEmpty(cardViewModel.Holdername, cardViewModel.cardNumber, cardViewModel.MM, cardViewModel.YY, cardViewModel.CVc))
             {
+
+                if (cardViewModel.cardNumber.Length == 16)
+                {
+                    ViewBag.CardError = "Card format is incorrect.";
+                    return View();
+                }
                 bool cardconfirm = true;
 
                 if (cardconfirm)
@@ -45,7 +51,7 @@ namespace QuickOrderAdmin.Controllers
                     if (result)
                     {
                         var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
-                        var receiverEmail = new MailAddress(email, "Juan Torres");
+                        var receiverEmail = new MailAddress(cardViewModel.Email, "Juan Torres");
 
                         var sub = "Quick Order Lincense Code";
                         var body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
@@ -80,12 +86,11 @@ namespace QuickOrderAdmin.Controllers
             }
             else
             {
-
                 return View();
             }
         }
 
-        bool CreditCardNotNullOrEmpty(string username, string cardNumber, int MM, int YY, int CVV)
+        bool CreditCardNotNullOrEmpty(string username, string cardNumber, string MM, string YY, string CVV)
         {
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(cardNumber) && !string.IsNullOrEmpty(MM.ToString()) && !string.IsNullOrEmpty(YY.ToString())
                && !string.IsNullOrEmpty(CVV.ToString()))
