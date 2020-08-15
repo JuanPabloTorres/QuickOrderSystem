@@ -111,7 +111,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                 var data = App.LogUser.PaymentCards;
                                 var card = new List<PaymentCard>(data);
 
-                                StripeConfiguration.ApiKey = "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";
+                              
 
                                 var customerService = new CustomerService();
 
@@ -231,16 +231,13 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                 Phone = Phone,
                                 Address = Address,
                                 Gender = value,
-
                                 UserLogin = userlogin,
                             };
-
-
 
                             try
                             {
 
-                                StripeConfiguration.ApiKey = "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";
+                                
                                 var optionsCustomers = new CustomerCreateOptions
                                 {
                                     Description = "New Customer From Quick Order",
@@ -267,8 +264,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                         await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
                                         App.LogUser = getCredential;
                                         App.Current.MainPage = new AppShell();
-
-
                                     }
                                 }
                             }

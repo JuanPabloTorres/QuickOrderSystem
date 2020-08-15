@@ -178,7 +178,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                     try
                     {
 
-                        StripeConfiguration.ApiKey = "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";
+                       
                         var tokenoptions = new TokenCreateOptions()
                         {
                             Card = new CreditCardOptions()

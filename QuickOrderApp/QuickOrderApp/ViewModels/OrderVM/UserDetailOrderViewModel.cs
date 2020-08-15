@@ -261,9 +261,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
         public Token stripeToken;
         public TokenService tokenService;
-        //public string PublicApiKey = "pk_live_51GOwkJJDC8jrm2WeofpT5zqRgAKZ0LkaQEh64CHvZVcqSvCCBFE7LRV7ZSxjD3pZiTemSKhbe7XBVLX1Q57v2yKc00BW4iat88";
-      
-         //public string TestApiKey = "pk_test_51GOwkJJDC8jrm2We0q0lyl2DRkIOjqJ6psQaHWdbrc1gbfQyDYQhdWwcv9SX6ulQr2yaQjXnsSCpnhaMJfwKf52900Orbmba9I";
+       
          public string TestApiKey = "pk_test_51GOwkJJDC8jrm2We0q0lyl2DRkIOjqJ6psQaHWdbrc1gbfQyDYQhdWwcv9SX6ulQr2yaQjXnsSCpnhaMJfwKf52900Orbmba9I";
          async void SetPayment(string cardnumber, string holdername, string year, string month, string cvc, User user)
         {
