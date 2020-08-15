@@ -178,7 +178,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                     try
                     {
 
-                       
+
                         var tokenoptions = new TokenCreateOptions()
                         {
                             Card = new CreditCardOptions()
