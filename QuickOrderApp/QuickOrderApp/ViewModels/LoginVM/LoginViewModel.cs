@@ -236,8 +236,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                             try
                             {
+                                StripeConfiguration.ApiKey = "sk_test_51HGFkGG5r03dPhLQzwSyX2iydSixRtsn5s0lX0T1yDMs1pw874oJNe69pXuZ7qCtGQCoArkh7a04BVfRHHvfq6lX00A67Rj967";
+                         
 
-                                
                                 var optionsCustomers = new CustomerCreateOptions
                                 {
                                     Description = "New Customer From Quick Order",
@@ -245,7 +246,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                     Email = Email,
                                     Phone = Phone,
                                     Address=new AddressOptions() {  Line1 = Address} 
-
+                                    
 
                                 };
 
