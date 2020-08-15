@@ -11,5 +11,7 @@ namespace Library.Services.Interface
         Task<IEnumerable<Store>> SearchStore(string searchStore);
         Task<IEnumerable<Store>> GetSpecificStoreCategory(string category);
         Task<string> GetStoreDestinationPaymentKey(Guid storeId);
+
+        Task<string> GetStoreDestinationPublicPaymentKey(Guid storeId);
     }
 }

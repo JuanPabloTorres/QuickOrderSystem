@@ -97,26 +97,36 @@
 
                                     <Frame
                                         Padding="0"
-                                        HeightRequest="200"
+                                        HeightRequest="150"
                                         HorizontalOptions="Fill"
                                         IsClippedToBounds="True">
                                         <Image Aspect="Fill" Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />
                                     </Frame>
                                     <Label
+                                        FontAttributes="Bold"
                                         FontSize="Title"
                                         HorizontalOptions="Center"
                                         Text="{Binding StoreName}"
                                         TextColor="Black" />
                                     <BoxView
-                                        Margin="4"
-                                        BackgroundColor="Black"
+                                        Margin="8,0,8,0"
+                                        BackgroundColor="Gray"
                                         HeightRequest="0.1"
                                         HorizontalOptions="Fill" />
 
-                                    <Label
-                                        FontSize="Body"
+                                    <StackLayout
+                                        Margin="0,0,10,0"
                                         HorizontalOptions="Center"
-                                        Text="{Binding StoreType, StringFormat='Store Type: {0}'}" />
+                                        Orientation="Horizontal">
+                                        <Label
+                                            Margin="0,0,10,0"
+                                            FontSize="Body"
+                                            Text="Type:" />
+                                        <Label
+                                            FontSize="Body"
+                                            Text="{Binding StoreType}"
+                                            TextColor="Orange" />
+                                    </StackLayout>
                                     <StackLayout Margin="4">
 
 
@@ -130,12 +140,13 @@
 
                                     <button:SfButton
                                         Margin="15"
-                                        BackgroundColor="DodgerBlue"
+                                        BackgroundColor="Tomato"
                                         Command="{Binding GoHomeStoreCommand}"
                                         CornerRadius="5"
                                         FontAttributes="Bold"
+                                        FontSize="Body"
                                         HasShadow="True"
-                                        Text="Shop"
+                                        Text="View"
                                         TextColor="Black" />
 
                                 </StackLayout>

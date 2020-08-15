@@ -15,10 +15,20 @@ namespace QuickOrderApp.Views.Settings
     {
 
         public static string Route = "YourStoreRoute";
+
+
+        YourStoresViewModel YourStores;
         public YourStoresPage()
         {
             InitializeComponent();
-            BindingContext = new YourStoresViewModel();
+            BindingContext = YourStores=new YourStoresViewModel();
+        }
+
+        protected async override void OnAppearing()
+        {
+            base.OnAppearing();
+
+           await  YourStores.ExecuteLoadItems();
         }
     }
 }

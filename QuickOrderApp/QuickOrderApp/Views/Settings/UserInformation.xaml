@@ -14,7 +14,7 @@
     Shell.TitleColor="Black"
     mc:Ignorable="d">
     <ContentPage.Content>
-        <Grid VerticalOptions="Center">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -24,35 +24,25 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <sfavatar:SfAvatarView
+            <Label
                 Grid.Row="0"
-                AvatarName="{Binding UserInformation.Name}"
-                BackgroundColor="DodgerBlue"
-                BorderWidth="0"
-                ContentType="Initials"
-                CornerRadius="25"
                 FontAttributes="Bold"
-                HasShadow="True"
-                HeightRequest="100"
+                FontSize="Title"
                 HorizontalOptions="Center"
-                InitialsColor="Black"
-                InitialsType="DoubleCharacter"
-                WidthRequest="100" />
-            <StackLayout
-                Grid.Row="1"
-                Margin="5"
-                HorizontalOptions="Center"
-                VerticalOptions="Fill">
-                <BoxView
-                    BackgroundColor="Black"
-                    HeightRequest="0.2"
-                    HorizontalOptions="Fill" />
-                <StackLayout>
+                Text="{Binding Fullname, StringFormat='{0}'}"
+                VerticalOptions="Center" />
+            <StackLayout Grid.Row="1" Margin="5">
 
+                <StackLayout>
                     <Label
-                        FontSize="Large"
-                        Text="{Binding Fullname, StringFormat='Name: {0}'}"
-                        VerticalOptions="Center" />
+                        FontAttributes="Bold"
+                        FontSize="Body"
+                        HorizontalOptions="Start"
+                        Text="User Information" />
+                    <BoxView
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
                     <Label
                         FontSize="Large"
                         Text="{Binding Email, StringFormat='Email: {0}'}"
@@ -68,13 +58,13 @@
                     <Label
                         FontSize="Large"
                         HorizontalOptions="Start"
-                        Text="{Binding Phone, StringFormat='Phone: {0}'}" />
+                        Text="{Binding Phone, StringFormat='Phone: {0:(###) ###-####}'}" />
                 </StackLayout>
             </StackLayout>
             <button:SfButton
                 Grid.Row="2"
                 Margin="10"
-                BackgroundColor="Orange"
+                BackgroundColor="Tomato"
                 Command="{Binding UpdateProfileCommand}"
                 CornerRadius="4"
                 FontAttributes="Bold"
@@ -86,7 +76,7 @@
             <button:SfButton
                 Grid.Row="3"
                 Margin="10"
-                BackgroundColor="Orange"
+                BackgroundColor="Tomato"
                 Command="{Binding GoRegisterCardCommand}"
                 CornerRadius="4"
                 FontAttributes="Bold"

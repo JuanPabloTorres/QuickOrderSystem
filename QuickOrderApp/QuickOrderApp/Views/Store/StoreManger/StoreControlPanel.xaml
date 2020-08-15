@@ -34,64 +34,87 @@
             </Frame>
             <Label
                 Grid.Row="1"
+                FontAttributes="Bold"
                 FontSize="Title"
                 HorizontalOptions="Center"
                 Text="{Binding Store.StoreName}"
                 TextColor="Black" />
             <BoxView
                 Grid.Row="2"
-                BackgroundColor="Black"
+                Margin="8,0,8,0"
+                BackgroundColor="LightGray"
                 HeightRequest="0.1"
                 HorizontalOptions="Fill" />
 
-            <StackLayout Grid.Row="3" VerticalOptions="Center">
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
                 <button:SfButton
-                    Grid.Row="3"
+                    Grid.Row="0"
+                    Grid.Column="0"
                     Margin="3"
-                    BackgroundColor="DodgerBlue"
+                    BackgroundColor="Tomato"
                     Command="{Binding GoInventory}"
                     CornerRadius="5"
                     FontAttributes="Bold"
                     HasShadow="True"
                     Text="Inventory" />
                 <button:SfButton
-                    Grid.Row="4"
+                    Grid.Row="0"
+                    Grid.Column="1"
                     Margin="3"
-                    BackgroundColor="DodgerBlue"
+                    BackgroundColor="Tomato"
                     Command="{Binding GoAddProduct}"
                     CornerRadius="5"
                     FontAttributes="Bold"
                     HasShadow="True"
                     Text="Add Product" />
                 <button:SfButton
-                    Grid.Row="5"
+                    Grid.Row="1"
+                    Grid.Column="0"
                     Margin="3"
-                    BackgroundColor="DodgerBlue"
+                    BackgroundColor="Tomato"
                     Command="{Binding GoOrdersCommand}"
                     CornerRadius="5"
                     FontAttributes="Bold"
                     HasShadow="True"
                     Text="Orders" />
                 <button:SfButton
-                    Grid.Row="6"
+                    Grid.Row="1"
+                    Grid.Column="1"
                     Margin="3"
-                    BackgroundColor="DodgerBlue"
+                    BackgroundColor="Tomato"
                     Command="{Binding GoEmployeesCommand}"
                     CornerRadius="5"
                     FontAttributes="Bold"
                     HasShadow="True"
                     Text="Employees" />
                 <button:SfButton
-                    Grid.Row="7"
+                    Grid.Row="2"
+                    Grid.Column="0"
                     Margin="3"
-                    BackgroundColor="DodgerBlue"
+                    BackgroundColor="Tomato"
                     Command="{Binding GoSearchEmployeeCommand}"
                     CornerRadius="5"
                     FontAttributes="Bold"
                     HasShadow="True"
                     Text="Search Employee" />
-            </StackLayout>
+                <button:SfButton
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Margin="3"
+                    BackgroundColor="Tomato"
+                    Command="{Binding GoSearchEmployeeCommand}"
+                    CornerRadius="5"
+                    FontAttributes="Bold"
+                    HasShadow="True"
+                    Text="Dashboards" />
+            </Grid>
         </Grid>
 
 

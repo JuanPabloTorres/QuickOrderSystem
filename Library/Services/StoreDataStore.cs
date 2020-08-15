@@ -26,6 +26,11 @@ namespace Library.Services
             return deserializeObject;
         }
 
+        public Task<string> GetStoreDestinationPublicPaymentKey(Guid storeId)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Store> GetStoresFromUser(Guid userid)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoresFromUser)}/{userid}");

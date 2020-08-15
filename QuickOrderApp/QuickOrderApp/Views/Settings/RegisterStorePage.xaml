@@ -8,6 +8,7 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sfTimePicker="clr-namespace:Syncfusion.XForms.Pickers;assembly=Syncfusion.SfPicker.XForms"
+    Title="New Store"
     Routing.Route="RegisterStoreRoute"
     mc:Ignorable="d">
 
@@ -89,12 +90,12 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
             <StackLayout>
-                <Label FontSize="Title" Text=" Usa Stripe para cobrar tus compras. " />
+                <Label FontSize="Title" Text="Use Stripe to get your pay from orders. " />
 
                 <Label>
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="If you dont have account click the link and start make your account once finish. Copy the Key into the entry. " />
+                            <Span FontSize="Body" Text="If you dont have account click the link and start make your account once finish. Copy the Keys into the textbox. " />
                             <Span
                                 Text="Stripe Register"
                                 TextColor="Blue"
@@ -107,7 +108,11 @@
                         </FormattedString>
                     </Label.FormattedText>
                 </Label>
-                <Entry Placeholder="Stripe Key" Text="{Binding}" />
+                <Entry
+                    IsPassword="True"
+                    Placeholder="Stripe  Secret Key"
+                    Text="{Binding StripeSecretKey}" />
+                <Entry Placeholder="Stripe  Public Key" Text="{Binding StripePublicKey}" />
             </StackLayout>
 
             <StackLayout>

@@ -55,7 +55,17 @@
                 FontSize="Body"
                 HasShadow="True"
                 Text="Orders Check And Preparer" />
-            <StackLayout Grid.Row="5" Orientation="Horizontal">
+            <button:SfButton
+                Grid.Row="5"
+                Margin="10"
+                BackgroundColor="Tomato"
+                Command="{Binding GoOrderScanner}"
+                CornerRadius="5"
+                FontAttributes="Bold"
+                FontSize="Body"
+                HasShadow="True"
+                Text="Order Scanner" />
+            <StackLayout Grid.Row="6" Orientation="Horizontal">
                 <Label
                     Grid.Row="5"
                     FontSize="Title"
@@ -71,7 +81,7 @@
 
 
             <CollectionView
-                Grid.Row="6"
+                Grid.Row="7"
                 EmptyView="No Work Hours Register"
                 ItemsSource="{Binding EmpWorkHour}">
                 <CollectionView.Header>

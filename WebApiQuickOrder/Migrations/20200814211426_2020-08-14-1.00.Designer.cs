@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiQuickOrder.Context;
 
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    partial class QOContextModelSnapshot : ModelSnapshot
+    [Migration("20200814211426_2020-08-14-1.00")]
+    partial class _20200814100
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,9 +192,6 @@ namespace WebApiQuickOrder.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Month")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StripeCardId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")

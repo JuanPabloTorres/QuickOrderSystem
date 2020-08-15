@@ -18,23 +18,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
     public class SettingViewModel : BaseViewModel
     {
 
-        //private Store selectedStore;
-
-        //public Store SelectedStore
-        //{
-        //    get { return selectedStore; }
-        //    set
-        //    {
-        //        selectedStore = value;
-        //        OnPropertyChanged();
-
-        //        if (!(SelectedStore.StoreId == Guid.Empty))
-        //        {
-
-        //            Shell.Current.GoToAsync($"StoreControlPanelRoute?Id={SelectedStore.StoreId.ToString()}", animate: true);
-        //        }
-        //    }
-        //}
+       
 
         private User userinformation;
 
@@ -199,6 +183,28 @@ namespace QuickOrderApp.ViewModels.SettingVM
         public List<string> Genders { get; set; }
 
         public List<string> StoreTypes { get; set; }
+
+        private string stripepublickey;
+
+        public string StripePublicKey
+        {
+            get { return stripepublickey; }
+            set { stripepublickey = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private string stripesecretkey;
+
+        public string StripeSecretKey
+        {
+            get { return stripesecretkey; }
+            set { stripesecretkey = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Commands

@@ -24,7 +24,7 @@ namespace QuickOrderApp
             Routing.RegisterRoute("EmployeeOrderControl", typeof(EmployeeOrdersControl));
             Routing.RegisterRoute("InventoryRoute", typeof(StoreInventory));
             Routing.RegisterRoute(LoginPage.Route, typeof(LoginPage));
-
+            Routing.RegisterRoute(OrderScannerPage.Route, typeof(OrderScannerPage));
         }
     }
 }

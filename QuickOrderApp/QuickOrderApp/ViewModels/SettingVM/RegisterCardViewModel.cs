@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using QuickOrderApp.Utilities.Static;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
@@ -71,16 +72,58 @@ namespace QuickOrderApp.ViewModels.SettingVM
             }
         }
 
+        private Validator holdernameValidator;
 
-        //private string exp;
+        public Validator HolderNameValidator
+        {
+            get { return holdernameValidator; }
+            set { holdernameValidator = value;
+                OnPropertyChanged();
+            }
+        }
 
-        //public string Exp
-        //{
-        //	get { return exp; }
-        //	set { exp = value;
-        //		OnPropertyChanged();
-        //	}
-        //}
+        private Validator cardnumberValidator;
+
+        public Validator CardNumberValidator
+        {
+            get { return cardnumberValidator; }
+            set { cardnumberValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator yearValidator;
+
+        public Validator YearValidator
+        {
+            get { return yearValidator; }
+            set { yearValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator monthValidator;
+
+        public Validator MonthVaidator
+        {
+            get { return monthValidator; }
+            set {
+                monthValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Validator cvcValidator;
+
+        public Validator CVCValidator
+        {
+            get { return cvcValidator; }
+            set { cvcValidator = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
         private DateTime exp;
 
@@ -96,50 +139,97 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
 
 
+
+        
         public ICommand CompleteRegisterCardCommand { get; set; }
 
         public RegisterCardViewModel()
         {
+
+            HolderNameValidator = new Validator();
+            CardNumberValidator = new Validator();
+            CVCValidator = new Validator();
+            YearValidator = new Validator();
+            MonthVaidator = new Validator();
+
+
             CompleteRegisterCardCommand = new Command(async () =>
             {
 
-                List<string> valuestoCheck = new List<string>();
+                HolderNameValidator = ValidatorRules.EmptyOrNullValueRule(HolderName);
+                CardNumberValidator = ValidatorRules.EmptyOrNullValueRule(CardNumber);
+                YearValidator = ValidatorRules.EmptyOrNullValueRule(Year);
+                MonthVaidator = ValidatorRules.EmptyOrNullValueRule(Month);
+                CVCValidator = ValidatorRules.EmptyOrNullValueRule(CVC);
 
 
-                valuestoCheck.Add(HolderName);
-                valuestoCheck.Add(CardNumber);
-                valuestoCheck.Add(CVC);
-                valuestoCheck.Add(Month);
-                valuestoCheck.Add(Year);
-                //valuestoCheck.Add(Exp.ToString());
-
-                if (GlobalValidator.CheckNullOrEmptyPropertiesOfListValues(valuestoCheck))
+                if (!HolderNameValidator.HasError && !CardNumberValidator.HasError && !YearValidator.HasError && !MonthVaidator.HasError && !CVCValidator.HasError)
                 {
 
                     var newCard = new PaymentCard()
                     {
-                        UserId = App.LogUser.UserId,
-                        CardNumber = CardNumber,
-                        Cvc = CVC,
-                        Year = Year,
-                        Month = Month,
-                        HolderName = HolderName,
-                        PaymentCardId = Guid.NewGuid()
+                       PaymentCardId = Guid.NewGuid(),
+                       UserId = App.LogUser.UserId,
+                      
+                       
                     };
+                  
 
-
-
-                    var result = await CardDataStore.AddItemAsync(newCard);
-
-                    if (result)
+                    try
                     {
-                        await Shell.Current.DisplayAlert("Notification", "Card succefully added.", "OK");
+
+                        StripeConfiguration.ApiKey = "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";
+                        var tokenoptions = new TokenCreateOptions()
+                        {
+                            Card = new CreditCardOptions()
+                            {
+                                Number = CardNumber,
+                                ExpYear = long.Parse(Year),
+                                ExpMonth = long.Parse(Month),
+                                Cvc = CVC,
+                                Name = HolderName,
+                             
+                            },
+                        };
+
+
+                        var tokenService = new TokenService();
+
+                        var stripeToken = tokenService.Create(tokenoptions);
+
+
+                        var CardCreateoptions = new CardCreateOptions
+                        {
+                            Source = stripeToken.Id,
+                        };
+
+
+
+                        var cardservice = new CardService();
+                        var cardserviceToken = cardservice.Create(App.LogUser.StripeUserId, CardCreateoptions);
+
+                        if (!string.IsNullOrEmpty(cardserviceToken.Id))
+                        {
+                            newCard.StripeCardId = cardserviceToken.Id;
+                            var result = await CardDataStore.AddItemAsync(newCard);
+
+                            if (result)
+                            {
+                                await Shell.Current.DisplayAlert("Notification", "Card succefully added.", "OK");
+                            }
+                        }
+
+
                     }
+                    catch (Exception e)
+                    {
+
+                        await Shell.Current.DisplayAlert("Notification", e.Message, "OK");
+                    }
+
+
                 }
-                else
-                {
-                    await Shell.Current.DisplayAlert("Notification", "Some or one value is empty.", "OK");
-                }
+               
 
 
 

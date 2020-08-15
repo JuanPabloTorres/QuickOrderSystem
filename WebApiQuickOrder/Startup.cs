@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Stripe;
 using System;
 using System.Text;
 using WebApiQuickOrder.Context;
@@ -19,6 +20,8 @@ namespace WebApiQuickOrder
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+          
+            StripeConfiguration.ApiKey=Configuration.GetSection("Stripe")["SecretKey"];
         }
 
         public IConfiguration Configuration { get; }

@@ -26,17 +26,57 @@
                 <StackLayout VerticalOptions="Center">
                     <StackLayout>
                         <Entry Placeholder="Card Holder Name" Text="{Binding HolderName}" />
-                        <Entry Placeholder="Card Number" Text="{Binding CardNumber}" />
+                        <Label
+                            IsVisible="{Binding HolderNameValidator.HasError}"
+                            Text="{Binding HolderNameValidator.ErrorMessage}"
+                            TextColor="Red" />
+                        <Entry
+                            IsPassword="True"
+                            Keyboard="Numeric"
+                            Placeholder="Card Number"
+                            Text="{Binding CardNumber}" />
+                        <Label
+                            IsVisible="{Binding CardNumberValidator.HasError}"
+                            Text="{Binding CardNumberValidator.ErrorMessage}"
+                            TextColor="Red" />
                         <StackLayout Orientation="Vertical">
                             <Label Text="Exp" />
-                            <Entry Placeholder="Month" Text="{Binding Month}" />
-                            <Entry Placeholder="Year" Text="{Binding Year}" />
+                            <Entry
+                                Keyboard="Numeric"
+                                Placeholder="Month"
+                                Text="{Binding Month}" />
+                            <Label
+                                IsVisible="{Binding MonthVaidator.HasError}"
+                                Text="{Binding MonthVaidator.ErrorMessage}"
+                                TextColor="Red" />
+                            <Entry
+                                Keyboard="Numeric"
+                                Placeholder="Year"
+                                Text="{Binding Year}" />
+                            <Label
+                                IsVisible="{Binding YearValidator.HasError}"
+                                Text="{Binding YearValidator.ErrorMessage}"
+                                TextColor="Red" />
                         </StackLayout>
-                        <Entry Placeholder="CVC" Text="{Binding CVC}" />
+                        <Entry
+                            IsPassword="True"
+                            Keyboard="Numeric"
+                            Placeholder="CVC"
+                            Text="{Binding CVC}" />
+                        <Label
+                            IsVisible="{Binding CVCValidator.HasError}"
+                            Text="{Binding CVCValidator.ErrorMessage}"
+                            TextColor="Red" />
 
 
                     </StackLayout>
-                    <button:SfButton Command="{Binding CompleteRegisterCardCommand}" Text="Complete" />
+                    <button:SfButton
+                        Margin="10"
+                        BackgroundColor="Tomato"
+                        Command="{Binding CompleteRegisterCardCommand}"
+                        CornerRadius="5"
+                        HasShadow="True"
+                        Text="Complete" />
                 </StackLayout>
             </Frame>
         </StackLayout>

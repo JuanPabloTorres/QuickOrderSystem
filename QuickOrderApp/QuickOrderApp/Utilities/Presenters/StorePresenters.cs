@@ -71,7 +71,10 @@ namespace QuickOrderApp.Utilities.Presenters
         }
 
 
-
+        public ICommand GoAdminStoreHomeControl => new Command(async () =>
+            {
+                await Shell.Current.GoToAsync($"StoreControlPanelRoute?Id={StoreId.ToString()}", animate: true);
+            });
         public ICommand GoHomeStoreCommand { get; set; }
 
         public ICommand GoSelectedEmployeeStoreCommand => new Command(() =>

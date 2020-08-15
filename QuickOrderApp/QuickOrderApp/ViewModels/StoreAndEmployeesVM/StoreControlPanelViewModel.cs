@@ -2,6 +2,7 @@
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using QuickOrderApp.Utilities.Static;
+using QuickOrderApp.Views.Store.EmployeeStoreControlPanel;
 using QuickOrderApp.Views.Store.StoreManger;
 using System;
 using System.Collections.Generic;
@@ -195,6 +196,8 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         public ICommand IPickPhotoCommand { get; set; }
         public ICommand CompleteCommand { get; set; }
 
+        public ICommand GoOrderScanner { get; set; }
+
         #endregion
 
 
@@ -317,6 +320,12 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             GoSearchEmployeeCommand = new Command(async () =>
             {
                 await Shell.Current.GoToAsync($"{SearchEmployeePage.Route}?id={StoreId}", animate: true);
+            });
+
+            GoOrderScanner = new Command(async() =>
+            {
+
+                await Shell.Current.GoToAsync($"{OrderScannerPage.Route}");
             });
 
         }

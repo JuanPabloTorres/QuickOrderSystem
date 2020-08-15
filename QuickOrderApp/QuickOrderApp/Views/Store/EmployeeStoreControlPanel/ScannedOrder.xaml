@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.EmployeeStoreControlPanel.ScannedOrder"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="{Binding DetailOrder.OrderId}" />
+            <Label Text="{Binding DetailOrder.OrderDate}" />
+            <Label Text="{Binding DetailOrder.OrderStatus}" />
+
+            <CollectionView
+                Grid.Row="3"
+                Margin="5"
+                EmptyView="Empty"
+                ItemsSource="{Binding DetailOrder.OrderProducts}"
+                SelectionMode="Single"
+                VerticalOptions="Center">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+
+                        <Frame
+                            Margin="5"
+                            BorderColor="Black"
+                            HasShadow="True">
+
+                            <StackLayout
+                                Margin="5"
+                                BackgroundColor="White"
+                                Orientation="Vertical">
+                                <Frame CornerRadius="5" IsClippedToBounds="True">
+
+                                    <Image
+                                        Margin="5"
+                                        Aspect="Fill"
+                                        HeightRequest="200"
+                                        Source="{Binding ProductImage}"
+                                        WidthRequest="100" />
+                                </Frame>
+
+                                <Label Text="{Binding ProductName}" />
+                                <Label Text="{Binding Quantity}" />
+                                <Label Text="{Binding Price, StringFormat='Order Products: {0}'}" />
+
+                            </StackLayout>
+                        </Frame>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

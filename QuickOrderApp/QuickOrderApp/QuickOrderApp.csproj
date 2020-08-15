@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <UserSecretsId>d6af3ac0-acf7-4b7a-8ba8-12630aa12687</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +18,7 @@
     <PackageReference Include="Syncfusion.Xamarin.SfNumericUpDown" Version="18.1.0.54" />
     <PackageReference Include="Syncfusion.Xamarin.SfPicker" Version="18.1.0.54" />
     <PackageReference Include="Xam.Plugin.Media" Version="5.0.1" />
+    <PackageReference Include="Xam.Plugins.Notifier" Version="3.0.1" />
     <PackageReference Include="Xamarin.Forms" Version="4.7.0.1142" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -37,9 +39,6 @@
 
   <ItemGroup>
     <EmbeddedResource Update="EmployeeShell.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Views\Card\CardPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Views\Home\CategoryHomePage.xaml">
@@ -99,6 +98,12 @@
     <EmbeddedResource Update="Views\Store\EmployeeStoreControlPanel\EmployeeOrdersControl.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Views\Store\EmployeeStoreControlPanel\OrderScannerPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\Store\EmployeeStoreControlPanel\ScannedOrder.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\Store\EmployeeStoreControlPanel\StoreControlEmployee.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -150,5 +155,9 @@
     <EmbeddedResource Update="Views\Store\UserOrdersWithStatus.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Card\" />
   </ItemGroup>
 </Project>

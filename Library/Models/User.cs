@@ -28,8 +28,10 @@ namespace Library.Models
 
         public ICollection<Employee> Employees { get; set; }
 
-
         public ICollection<PaymentCard> PaymentCards { get; set; }
+
+        public string StripeUserId { get; set; }
+
         //public Guid StoreRegisterLicenseId { get; set; }
 
         //[ForeignKey("StoreRegisterLicenseId")]

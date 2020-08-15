@@ -3,6 +3,7 @@
     x:Class="QuickOrderApp.Views.Settings.YourStoresPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Your Stores"
@@ -14,39 +15,51 @@
                 Grid.Row="3"
                 Margin="5"
                 EmptyView="Not Register Store"
-                ItemsSource="{Binding UserInformation.Stores}"
-                SelectedItem="{Binding SelectedStore}"
+                ItemsSource="{Binding StorePresenters}"
                 SelectionMode="Single"
                 VerticalOptions="Center">
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
+                        <StackLayout>
+                            <StackLayout
+                                Padding="5"
+                                BackgroundColor="White"
+                                Orientation="Horizontal"
+                                Spacing="5">
+                                <Frame
+                                    Padding="0"
+                                    CornerRadius="5"
+                                    HasShadow="True"
+                                    IsClippedToBounds="True">
 
-                        <StackLayout
-                            Padding="5"
-                            BackgroundColor="White"
-                            Orientation="Horizontal"
-                            Spacing="5">
-                            <Frame
-                                Padding="0"
-                                CornerRadius="5"
-                                IsClippedToBounds="True">
+                                    <Image
+                                        Aspect="Fill"
+                                        HeightRequest="100"
+                                        Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}"
+                                        WidthRequest="100" />
+                                </Frame>
 
-                                <Image
-                                    Aspect="Fill"
-                                    HeightRequest="100"
-                                    Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}"
-                                    WidthRequest="100" />
-                            </Frame>
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="Title"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding StoreName}"
+                                    TextColor="Black"
+                                    VerticalOptions="Center" />
 
-                            <Label
-                                FontSize="Title"
-                                HorizontalOptions="Center"
-                                Text="{Binding StoreName}"
-                                TextColor="Black"
-                                VerticalOptions="Center" />
-
+                            </StackLayout>
+                            <button:SfButton
+                                Margin="10"
+                                BackgroundColor="Tomato"
+                                Command="{Binding GoAdminStoreHomeControl}"
+                                CornerRadius="4"
+                                FontAttributes="Bold"
+                                FontSize="Body"
+                                HasShadow="True"
+                                HorizontalOptions="End"
+                                Text="View" />
                         </StackLayout>
 
                     </DataTemplate>

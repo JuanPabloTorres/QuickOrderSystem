@@ -57,7 +57,7 @@
                 HorizontalOptions="Fill" />
         </StackLayout>
 
-        <button:SfButton
+        <!--<button:SfButton
             Grid.Row="2"
             Grid.ColumnSpan="2"
             Margin="15"
@@ -67,11 +67,11 @@
             FontAttributes="Bold"
             HasShadow="True"
             Text="Check All Products"
-            TextColor="Black" />
+            TextColor="Black" />-->
 
 
         <Frame
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.ColumnSpan="2"
             Margin="5"
             Padding="4"
@@ -79,6 +79,7 @@
             HasShadow="True"
             IsClippedToBounds="True"
             VerticalOptions="Center">
+
 
             <StackLayout
                 Grid.Row="2"
@@ -97,7 +98,7 @@
 
         </Frame>
 
-        <ScrollView Grid.Row="4" Grid.ColumnSpan="2">
+        <ScrollView Grid.Row="3" Grid.ColumnSpan="2">
             <StackLayout
                 Grid.Row="3"
                 Grid.ColumnSpan="2"
@@ -114,10 +115,10 @@
         </ScrollView>
 
         <CollectionView
-            Grid.Row="5"
+            Grid.Row="4"
             Grid.ColumnSpan="2"
             Margin="5"
-            Header="Check Product By Category Available"
+            Header="Product Category Available"
             ItemsSource="{Binding ProductCategoryPresenters}"
             SelectedItem="{Binding}"
             SelectionMode="Single">
@@ -129,10 +130,12 @@
                     <ContentView Margin="3">
 
                         <button:SfButton
+                            Margin="5"
                             BackgroundColor="Tomato"
                             Command="{Binding GoInventoryCommand}"
                             CommandParameter="{Binding Category}"
                             CornerRadius="5"
+                            FontAttributes="Bold"
                             HasShadow="True"
                             Text="{Binding Category}" />
 

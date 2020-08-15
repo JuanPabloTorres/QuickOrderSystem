@@ -73,7 +73,7 @@
                                         Text="Edit" />
                                     <button:SfButton
                                         Margin="5"
-                                        BackgroundColor="Red"
+                                        BackgroundColor="Tomato"
                                         Command="{Binding DeleteCommand}"
                                         CornerRadius="5"
                                         FontSize="Body"

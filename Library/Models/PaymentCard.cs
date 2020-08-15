@@ -18,5 +18,7 @@ namespace Library.Models
 
         public string Year { get; set; }
 
+        public string StripeCardId { get; set; }
+
     }
 }

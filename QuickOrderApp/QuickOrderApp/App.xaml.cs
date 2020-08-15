@@ -2,6 +2,7 @@
 using Library.Models;
 using Library.Services;
 using Plugin.SharedTransitions;
+using QuickOrderApp.ConfigPayment;
 using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Views.Login;
 using Xamarin.Essentials;
@@ -27,6 +28,10 @@ namespace QuickOrderApp
         public static ComunicationService ComunicationService { get; set; }
 
         public static UsersConnected UsersConnected { get; set; }
+
+        public static CardPaymentToken CardPaymentToken { get; set; } = new CardPaymentToken();
+
+        
         public App()
         {
             InitializeComponent();

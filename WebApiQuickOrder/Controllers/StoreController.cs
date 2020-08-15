@@ -59,7 +59,22 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{storeId}")]
         public async Task<ActionResult<string>> GetStoreDestinationPaymentKey(Guid storeId)
         {
-            var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().PaymentDestinationKey;
+            var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().SKKey;
+
+            if (keyResult == null)
+            {
+                return NotFound();
+            }
+
+            return keyResult;
+        }
+
+
+        // GET: api/Store/5
+        [HttpGet("[action]/{storeId}")]
+        public async Task<ActionResult<string>> GetStoreDestinationPublicPaymentKey(Guid storeId)
+        {
+            var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().PBKey;
 
             if (keyResult == null)
             {

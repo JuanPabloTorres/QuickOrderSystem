@@ -7,15 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickOrderApp.Android", "Qu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickOrderApp.iOS", "QuickOrderApp\QuickOrderApp.iOS\QuickOrderApp.iOS.csproj", "{C12DDE4F-FB07-4908-91CB-56F5333C8627}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickOrderApp.Web", "QuickOrderApp\QuickOrderApp.Web\QuickOrderApp.Web.csproj", "{ADDFC212-030B-48B7-A44E-0AE8F83616D8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickOrderApp", "QuickOrderApp\QuickOrderApp\QuickOrderApp.csproj", "{E8A8BECB-B9F6-4429-AC40-D240893A67A6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library", "Library\Library.csproj", "{F6161530-D22B-4AF0-9AD7-0F11FC70814D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickOrderAdmin", "QuickOrderAdmin\QuickOrderAdmin.csproj", "{7F4A78E0-F25A-4178-9D61-87545448D2CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiQuickOrder", "WebApiQuickOrder\WebApiQuickOrder.csproj", "{27BC67E7-C078-4405-A53C-26C1F385E806}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiQuickOrder", "WebApiQuickOrder\WebApiQuickOrder.csproj", "{27BC67E7-C078-4405-A53C-26C1F385E806}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,18 +53,6 @@ Global
 		{C12DDE4F-FB07-4908-91CB-56F5333C8627}.Release|iPhone.Build.0 = Release|iPhone
 		{C12DDE4F-FB07-4908-91CB-56F5333C8627}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
 		{C12DDE4F-FB07-4908-91CB-56F5333C8627}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Debug|iPhone.ActiveCfg = Debug|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Debug|iPhone.Build.0 = Debug|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Release|iPhone.ActiveCfg = Release|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Release|iPhone.Build.0 = Release|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
-		{ADDFC212-030B-48B7-A44E-0AE8F83616D8}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 		{E8A8BECB-B9F6-4429-AC40-D240893A67A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E8A8BECB-B9F6-4429-AC40-D240893A67A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8A8BECB-B9F6-4429-AC40-D240893A67A6}.Debug|iPhone.ActiveCfg = Debug|Any CPU

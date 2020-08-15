@@ -63,6 +63,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
         public HomeViewModel()
         {
             StoreCategories = new ObservableCollection<StoreCategory>();
+            Stores = new ObservableCollection<StorePresenters>();
             GetQuickOrderStores();
 
 
@@ -86,11 +87,17 @@ namespace QuickOrderApp.ViewModels.HomeVM
             });
         }
 
-        async Task GetQuickOrderStores()
+       public async Task GetQuickOrderStores()
         {
             var storeData = await StoreDataStore.GetItemsAsync();
 
-            Stores = new ObservableCollection<StorePresenters>();
+            if (Stores.Count > 0)
+            {
+
+                Stores.Clear();
+            }
+
+
 
             foreach (var store in storeData)
             {

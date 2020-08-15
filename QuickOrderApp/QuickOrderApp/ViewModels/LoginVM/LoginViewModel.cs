@@ -4,6 +4,7 @@ using Library.Services.Interface;
 using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.Views.Login;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
         {
             Navigation = _navigation;
 
-            Username = "Jose1";
+            Username = "r02";
             Password = "123";
 
             #region Instaciando Validadores
@@ -88,35 +89,53 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                 if (areValid)
                 {
-
+                    //Verifica si el telefono tiene acceso a internet
                     var current = Connectivity.NetworkAccess;
 
                     if (current == NetworkAccess.Internet)
                     {
+                        //Obtine los credenciales del usuario
                         var loginresult = userDataStore.CheckUserCredential(Username, Password);
-
+                        //Obtiene el token de acceso 
                         App.TokenDto = userDataStore.LoginCredential(Username, Password);
-                        
+
+
+                        //Verifica si el resultado del login no es vacio. 
                         if (loginresult != null)
                         {
                             App.LogUser = loginresult;
 
+                            //Verfico si hay tarjetas registradas con el usuario
+                            if (App.LogUser.PaymentCards.Count() > 0)
+                            {
+                                var data = App.LogUser.PaymentCards;
+                                var card = new List<PaymentCard>(data);
 
+                                StripeConfiguration.ApiKey = "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";
+
+                                var customerService = new CustomerService();
+
+                                var cardService = new CardService();
+
+                                var service = new CardService();
+
+                                var customerToken = customerService.Get(App.LogUser.StripeUserId);
+                                var UserCardToken = service.Get(customerToken.Id, card[0].StripeCardId);
+
+                                App.CardPaymentToken.CardTokenId = UserCardToken.Id;
+                               
+                            }
 
                             App.UsersConnected = new UsersConnected()
                             {
                                 HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
                                 UserID = App.LogUser.UserId
                             };
+                            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
 
-
-                           var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-
-                            App.Current.MainPage = new AppShell();
-
-                            //await Shell.Current.GoToAsync("HomePageRoute");
+                            App.Current.MainPage = new AppShell();                          
                             IsLoading = false;
-                            //await App.ComunicationService.SendMessage("Jose", "Hola Jose");
+                           
                         }
                         else
                         {
@@ -185,7 +204,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 EmailValidator = ValidatorRules.EmailPatternRule(Email);
                 GenderValidator = ValidatorRules.EmptyOrNullValueRule(GenderSelected);
 
-                if (!UsernameValidator.HasError && !FullNameValidator.HasError && !PhoneValidator.HasError && !AddressValidator.HasError && !PasswordValidator.HasError && !ConfirmPasswordValidator.HasError && !EmailValidator.HasError && !GenderValidator.HasError )
+                if (!UsernameValidator.HasError && !FullNameValidator.HasError && !PhoneValidator.HasError && !AddressValidator.HasError && !PasswordValidator.HasError && !ConfirmPasswordValidator.HasError && !EmailValidator.HasError && !GenderValidator.HasError)
                 {
 
                     ConfirmAndPasswordValidator = ValidatorRules.PasswordAndConfirmPasswordEquals(Password, ConfirmPassword);
@@ -216,18 +235,50 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                 UserLogin = userlogin,
                             };
 
-                            var result = await userDataStore.AddItemAsync(newUser);
 
-                            var getCredential = userDataStore.CheckUserCredential(Username, Password);
 
-                            if (result)
+                            try
                             {
-                                await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
-                                App.LogUser = getCredential;
-                                App.Current.MainPage = new AppShell();
-                                //await Shell.Current.GoToAsync("HomePageRoute");
 
+                                StripeConfiguration.ApiKey = "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";
+                                var optionsCustomers = new CustomerCreateOptions
+                                {
+                                    Description = "New Customer From Quick Order",
+                                    Name = Fullname,
+                                    Email = Email,
+                                    Phone = Phone,
+                                    Address=new AddressOptions() {  Line1 = Address} 
+
+
+                                };
+
+                                var customerservice = new CustomerService();
+                                var customertoken = customerservice.Create(optionsCustomers);
+
+                                if (!string.IsNullOrEmpty(customertoken.Id))
+                                {
+                                    newUser.StripeUserId = customertoken.Id;
+                                    var result = await userDataStore.AddItemAsync(newUser);
+
+                                    var getCredential = userDataStore.CheckUserCredential(Username, Password);
+
+                                    if (result)
+                                    {
+                                        await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
+                                        App.LogUser = getCredential;
+                                        App.Current.MainPage = new AppShell();
+
+
+                                    }
+                                }
                             }
+                            catch (Exception e)
+                            {
+
+                                await App.Current.MainPage.DisplayAlert("Notification", e.Message, "OK");
+                            }
+
+
                         }
                         else
                         {
@@ -242,7 +293,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 {
                     await App.Current.MainPage.DisplayAlert("Notification", "Some fields are empty.", "OK");
                 }
-              
+
 
 
             });
@@ -293,10 +344,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
             get { return _fullname; }
             set
             {
-               
-                    _fullname = value;
-                    OnPropertyChanged();
-                
+
+                _fullname = value;
+                OnPropertyChanged();
+
             }
         }
 
@@ -345,10 +396,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
             get { return _username; }
             set
             {
-               
-                    _username = value;
-                    OnPropertyChanged();
-                
+
+                _username = value;
+                OnPropertyChanged();
+
             }
         }
 
@@ -358,10 +409,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
             get { return _confirmpassword; }
             set
             {
-                
-                    _confirmpassword = value;
-                    OnPropertyChanged();
-                
+
+                _confirmpassword = value;
+                OnPropertyChanged();
+
             }
         }
 
@@ -459,7 +510,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
         public Validator GenderValidator
         {
             get { return genderValidator; }
-            set { genderValidator = value;
+            set
+            {
+                genderValidator = value;
                 OnPropertyChanged();
             }
         }
@@ -469,7 +522,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
         public Validator ConfirmAndPasswordValidator
         {
             get { return confirmAndpasswordValidator; }
-            set { confirmAndpasswordValidator = value;
+            set
+            {
+                confirmAndpasswordValidator = value;
                 OnPropertyChanged();
             }
         }

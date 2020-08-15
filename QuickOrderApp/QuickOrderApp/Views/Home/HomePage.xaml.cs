@@ -18,6 +18,8 @@ namespace QuickOrderApp.Views.Home
         protected async override void OnAppearing()
         {
             base.OnAppearing();
+
+            HomeViewModel.GetQuickOrderStores();
             //MessagingCenter.Send<object>(null, "Update");
         }
 

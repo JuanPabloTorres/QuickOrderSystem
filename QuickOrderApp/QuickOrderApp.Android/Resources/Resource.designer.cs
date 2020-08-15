@@ -2634,6 +2634,7 @@ namespace QuickOrderApp.Droid
 			global::Lottie.Forms.Resource.Styleable.ViewStubCompat_android_id = global::QuickOrderApp.Droid.Resource.Styleable.ViewStubCompat_android_id;
 			global::Lottie.Forms.Resource.Styleable.ViewStubCompat_android_inflatedId = global::QuickOrderApp.Droid.Resource.Styleable.ViewStubCompat_android_inflatedId;
 			global::Lottie.Forms.Resource.Styleable.ViewStubCompat_android_layout = global::QuickOrderApp.Droid.Resource.Styleable.ViewStubCompat_android_layout;
+			global::Plugin.LocalNotifications.Resource.Drawable.plugin_lc_smallicon = global::QuickOrderApp.Droid.Resource.Drawable.plugin_lc_smallicon;
 			global::Plugin.Media.Resource.Attribute.alpha = global::QuickOrderApp.Droid.Resource.Attribute.alpha;
 			global::Plugin.Media.Resource.Attribute.coordinatorLayoutStyle = global::QuickOrderApp.Droid.Resource.Attribute.coordinatorLayoutStyle;
 			global::Plugin.Media.Resource.Attribute.font = global::QuickOrderApp.Droid.Resource.Attribute.font;
@@ -16900,37 +16901,40 @@ namespace QuickOrderApp.Droid
 			public const int partnership = 2131165355;
 			
 			// aapt resource value: 0x7F0700AC
-			public const int QOBackground = 2131165356;
+			public const int plugin_lc_smallicon = 2131165356;
 			
 			// aapt resource value: 0x7F0700AD
-			public const int settings = 2131165357;
+			public const int QOBackground = 2131165357;
 			
 			// aapt resource value: 0x7F0700AE
-			public const int supermarket = 2131165358;
+			public const int settings = 2131165358;
 			
 			// aapt resource value: 0x7F0700AF
-			public const int support = 2131165359;
+			public const int supermarket = 2131165359;
 			
 			// aapt resource value: 0x7F0700B0
-			public const int tab_about = 2131165360;
+			public const int support = 2131165360;
 			
 			// aapt resource value: 0x7F0700B1
-			public const int tab_feed = 2131165361;
+			public const int tab_about = 2131165361;
 			
 			// aapt resource value: 0x7F0700B2
-			public const int tag = 2131165362;
+			public const int tab_feed = 2131165362;
 			
 			// aapt resource value: 0x7F0700B3
-			public const int tooltip_frame_dark = 2131165363;
+			public const int tag = 2131165363;
 			
 			// aapt resource value: 0x7F0700B4
-			public const int tooltip_frame_light = 2131165364;
+			public const int tooltip_frame_dark = 2131165364;
 			
 			// aapt resource value: 0x7F0700B5
-			public const int UpButton = 2131165365;
+			public const int tooltip_frame_light = 2131165365;
 			
 			// aapt resource value: 0x7F0700B6
-			public const int xamarin_logo = 2131165366;
+			public const int UpButton = 2131165366;
+			
+			// aapt resource value: 0x7F0700B7
+			public const int xamarin_logo = 2131165367;
 			
 			static Drawable()
 			{
