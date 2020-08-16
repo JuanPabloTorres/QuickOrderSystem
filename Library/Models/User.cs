@@ -32,14 +32,14 @@ namespace Library.Models
 
         public string StripeUserId { get; set; }
 
-        //public Guid StoreRegisterLicenseId { get; set; }
+		//public Guid StoreRegisterLicenseId { get; set; }
 
-        //[ForeignKey("StoreRegisterLicenseId")]
-        //public StoreLicense UserStoreLicense { get; set; }
+		//[ForeignKey("StoreRegisterLicenseId")]
+		//public StoreLicense UserStoreLicense { get; set; }
 
+		public bool IsVerified { get; set; }
 
-
-    }
+	}
 
     public enum Gender
     {

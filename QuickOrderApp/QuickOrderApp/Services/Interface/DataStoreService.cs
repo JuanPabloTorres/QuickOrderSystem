@@ -13,11 +13,11 @@ namespace QuickOrderApp.Services.Interface
         //protected readonly INetworkService NetworkService;
         protected Uri FullAPIUri { get; set; }
 
-        public DataStoreService()
+        public DataStoreService(IHttpClientFactory httpClientFactory)
         {
 
-            HttpClient = new HttpClient();
-            BaseAPIUri = new Uri($"{App.LocalBackendUrl}/{typeof(T).Name}/");
+            HttpClient = httpClientFactory.CreateClient("MyHttpClient");
+            BaseAPIUri = new Uri($"{HttpClient.BaseAddress}/{typeof(T).Name}/");
             FullAPIUri = BaseAPIUri;
         }
 

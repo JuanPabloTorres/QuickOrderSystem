@@ -1,5 +1,6 @@
 ﻿//using QuickOrderApp.Models;
 using Library.Services.Interface;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,24 +12,22 @@ namespace QuickOrderApp.ViewModels
     public class BaseViewModel : INotifyPropertyChanged
     {
         //public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
-        public IProductDataStore productDataStore => DependencyService.Get<IProductDataStore>();
-        public IUserDataStore userDataStore => DependencyService.Get<IUserDataStore>();
-        public IOrderProductDataStore orderProductDataStore => DependencyService.Get<IOrderProductDataStore>();
-        public IStoreDataStore StoreDataStore => DependencyService.Get<IStoreDataStore>();
+        public IProductDataStore productDataStore => Startup.ServiceProvider.GetService<IProductDataStore>();
+        public IUserDataStore userDataStore => Startup.ServiceProvider.GetService<IUserDataStore>();
+        public IOrderProductDataStore orderProductDataStore => Startup.ServiceProvider.GetService<IOrderProductDataStore>();
+        public IStoreDataStore StoreDataStore => Startup.ServiceProvider.GetService<IStoreDataStore>();
 
-        public IStoreLicenseDataStore storeLicenseDataStore => DependencyService.Get<IStoreLicenseDataStore>();
-        public IRequestDataStore requestDataStore => DependencyService.Get<IRequestDataStore>();
-        public IOrderDataStore orderDataStore => DependencyService.Get<IOrderDataStore>();
+        public IStoreLicenseDataStore storeLicenseDataStore => Startup.ServiceProvider.GetService<IStoreLicenseDataStore>();
+        public IRequestDataStore RequestDataStore => Startup.ServiceProvider.GetService<IRequestDataStore>();
+        public IOrderDataStore orderDataStore => Startup.ServiceProvider.GetService<IOrderDataStore>();
 
-        public IEmployeeDataStore EmployeeDataStore => DependencyService.Get<IEmployeeDataStore>();
-        public IWorkHourDataStore WorkHourDataStore => DependencyService.Get<IWorkHourDataStore>();
+        public IEmployeeDataStore EmployeeDataStore => Startup.ServiceProvider.GetService<IEmployeeDataStore>();
+        public IWorkHourDataStore WorkHourDataStore => Startup.ServiceProvider.GetService<IWorkHourDataStore>();
 
-        public IEmployeeWorkHourDataStore EmployeeWorkHour => DependencyService.Get<IEmployeeWorkHourDataStore>();
+        public IEmployeeWorkHourDataStore EmployeeWorkHour => Startup.ServiceProvider.GetService<IEmployeeWorkHourDataStore>();
 
-        public ICardDataStore CardDataStore => DependencyService.Get<ICardDataStore>();
-        public IUserConnectedDataStore userConnectedDataStore => DependencyService.Get<IUserConnectedDataStore>();
-
-        public IRequestDataStore RequestDataStore => DependencyService.Get<IRequestDataStore>();
+        public ICardDataStore CardDataStore => Startup.ServiceProvider.GetService<ICardDataStore>();
+        public IUserConnectedDataStore userConnectedDataStore => Startup.ServiceProvider.GetService<IUserConnectedDataStore>();
 
         bool isBusy = false;
         public bool IsBusy

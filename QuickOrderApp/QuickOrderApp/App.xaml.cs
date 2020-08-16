@@ -1,6 +1,7 @@
 ﻿using Library.DTO;
 using Library.Models;
 using Library.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Plugin.SharedTransitions;
 using QuickOrderApp.ConfigPayment;
 using QuickOrderApp.Services.HubService;
@@ -15,11 +16,11 @@ namespace QuickOrderApp
         //TODO: Replace with *.azurewebsites.net url after deploying backend to Azure
         //To debug on Android emulators run the web backend against .NET Core not IIS
         //If using other emulators besides stock Google images you may need to adjust the IP address
-        public static string AzureBackendUrl =
-            DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5000" : "http://localhost:5000";
+        //public static string AzureBackendUrl =
+        //    DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5000" : "http://localhost:5000";
 
-        public static string LocalBackendUrl =
-        DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.56.1:5000/api" : "http://192.168.56.1:5000/api";
+        //public static string LocalBackendUrl =
+        //DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.56.1:5000/api" : "http://192.168.56.1:5000/api";
 
         public static bool UseMockDataStore = true;
         public static User LogUser;
@@ -35,15 +36,8 @@ namespace QuickOrderApp
         public App()
         {
             InitializeComponent();
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjY0MTU4QDMxMzgyZTMxMmUzMEx6QkJ4RjEvcHl6V2VaMFF3TENBa0tUU1c1RWpKWlh3bDNUdXduc3J6Q2c9");
-
-            Dependencies();
-
-
-
-            // MainPage = new NavigationPage(new PaymentPage());
-            //MainPage = new NavigationPage(new LoginPage());
-            MainPage = new AppShell();
+       
+            MainPage = Startup.ServiceProvider.GetService<AppShell>();
 
             bool islogged = false;
             if (!islogged)

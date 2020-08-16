@@ -1,7 +1,11 @@
 using Foundation;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Syncfusion.SfNumericUpDown.XForms.iOS;
+using Syncfusion.SfPicker.XForms.iOS;
 using Syncfusion.XForms.iOS.Buttons;
 using Syncfusion.XForms.iOS.ComboBox;
+using Syncfusion.XForms.iOS.PopupLayout;
 using UIKit;
 
 namespace QuickOrderApp.iOS
@@ -28,9 +32,14 @@ namespace QuickOrderApp.iOS
             SfRadioButtonRenderer.Init();
             SfButtonRenderer.Init();
             SfNumericUpDownRenderer.Init();
-            LoadApplication(new App());
+			SfPopupLayoutRenderer.Init();
+            LoadApplication(Startup.Init(ConfigureServices));
 
             return base.FinishedLaunching(app, options);
+        }
+
+        private void ConfigureServices(HostBuilderContext ctx, IServiceCollection services)
+        {
         }
     }
 }

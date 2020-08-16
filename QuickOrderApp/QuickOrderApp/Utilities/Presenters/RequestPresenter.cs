@@ -73,7 +73,7 @@ namespace QuickOrderApp.Utilities.Presenters
                 {
 
                     userRequest.RequestAnswer = Answer.Accept;
-                    var requestUpdated = await requestDataStore.UpdateItemAsync(userRequest);
+                    var requestUpdated = await RequestDataStore.UpdateItemAsync(userRequest);
 
                     if (requestUpdated)
                     {
@@ -98,7 +98,7 @@ namespace QuickOrderApp.Utilities.Presenters
                     //userRequest.RequestAnswer = Answer.Decline;
                     //var requestUpdated = await requestDataStore.UpdateItemAsync(userRequest);
                     //MessagingCenter.Send<RequestPresenter>(this, "RefreshInbox");
-                    var deleted = await requestDataStore.DeleteItemAsync(RequestId.ToString());
+                    var deleted = await RequestDataStore.DeleteItemAsync(RequestId.ToString());
 
                     MessagingCenter.Send<RequestPresenter>(this, "RefreshInbox");
                 }

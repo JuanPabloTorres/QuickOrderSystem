@@ -4,6 +4,9 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Lottie.Forms.Droid;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 namespace QuickOrderApp.Droid
 {
     [Activity(Label = "QuickOrderApp", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
@@ -24,15 +27,22 @@ namespace QuickOrderApp.Droid
             //AnimationViewRenderer.Init();
             AnimationViewRenderer.Init();
 
+            Syncfusion.XForms.Android.PopupLayout.SfPopupLayoutRenderer.Init();
 
 
-            LoadApplication(new App());
+            LoadApplication(Startup.Init(ConfigureServices));
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        private void ConfigureServices(HostBuilderContext ctx, IServiceCollection services)
+        {
+            //services.AddSingleton<ISoftwareKeyboardService, SoftwareKeyboardService>();
+            // services.AddSingleton<Activity,MainActivity>();
         }
     }
 }
