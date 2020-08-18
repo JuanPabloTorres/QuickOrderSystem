@@ -4,11 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
-    [Table("StoreLicences")]
+    [Table("Licences")]
     public class StoreLicense
     {
         [Key]
         public Guid LicenseId { get; set; }
         public DateTime StartDate { get; set; }
+        public Guid LicenseHolderUserId { get; set; } 
     }
 }

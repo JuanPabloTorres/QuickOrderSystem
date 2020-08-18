@@ -50,6 +50,7 @@ namespace QuickOrderApp
             Routing.RegisterRoute(UserOrdersWithStatus.Route, typeof(UserOrdersWithStatus));
             Routing.RegisterRoute(LoginPage.Route, typeof(LoginPage));
             Routing.RegisterRoute(SearchEmployeePage.Route, typeof(SearchEmployeePage));
+            Routing.RegisterRoute(YourCardsPage.Route, typeof(YourCardsPage));
 
 
         }

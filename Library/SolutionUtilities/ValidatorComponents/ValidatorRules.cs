@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Library.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ZXing;
 
-namespace QuickOrderApp.Utilities.Static
+namespace Library.SolutionUtilities.ValidatorComponents
 {
     public static class ValidatorRules
     {
@@ -15,7 +14,7 @@ namespace QuickOrderApp.Utilities.Static
             if (!String.IsNullOrEmpty(emailValue))
             {
 
-                Regex regex = new Regex(@"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z");
+                Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
                 Match match = regex.Match(emailValue);
 
                 if (match.Success)
@@ -99,13 +98,35 @@ namespace QuickOrderApp.Utilities.Static
             }
         }
 
-
-        public static bool ValidationsHaveErrors(IList<Validator> validators)
+        public static Validator CreditCardCheckerRule(PaymentCard paymentCard)
         {
-            bool result = validators.Any(v => v.HasError == true);
+            if (!string.IsNullOrEmpty(paymentCard.HolderName)&& !string.IsNullOrEmpty(paymentCard.CardNumber) && !string.IsNullOrEmpty(paymentCard.Month) && !string.IsNullOrEmpty(paymentCard.Year) && !string.IsNullOrEmpty(paymentCard.Cvc))
+            {
 
-            return result;
-          
+                if (paymentCard.CardNumber.Length >= 15 && paymentCard.CardNumber.Length <= 16)
+                {
+                    if ((paymentCard.CardNumber.Length == 16 && paymentCard.Cvc.Length == 3) || (paymentCard.CardNumber.Length == 15 && paymentCard.Cvc.Length == 4))
+                    {
+                        return new Validator();
+                       
+
+                    }
+                    else
+                    {
+                        return new Validator() { HasError = true, ErrorMessage = "Card Number is in incorrect format check the card digits or the CVC , to continue." };
+                    }
+
+                }
+                else
+                {
+                    return new Validator() { HasError = true, ErrorMessage = "Card number are invalid. Check again." };
+                }
+
+            }
+            else
+            {
+                return new Validator() { HasError = true, ErrorMessage = "Values are empty." };
+            }
         }
 
     }

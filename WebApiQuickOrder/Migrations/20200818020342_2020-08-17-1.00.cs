@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _20200808100 : Migration
+    public partial class _20200817100 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -20,13 +20,27 @@ namespace WebApiQuickOrder.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Licences",
+                columns: table => new
+                {
+                    LicenseId = table.Column<Guid>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: false),
+                    LicenseHolderUserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Licences", x => x.LicenseId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Logins",
                 columns: table => new
                 {
                     LoginId = table.Column<Guid>(nullable: false),
                     Username = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
-                    IsConnected = table.Column<bool>(nullable: false)
+                    IsConnected = table.Column<bool>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,18 +60,6 @@ namespace WebApiQuickOrder.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Requests", x => x.RequestId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StoreLicences",
-                columns: table => new
-                {
-                    LicenseId = table.Column<Guid>(nullable: false),
-                    StartDate = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StoreLicences", x => x.LicenseId);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,7 +84,8 @@ namespace WebApiQuickOrder.Migrations
                     Address = table.Column<string>(nullable: true),
                     Phone = table.Column<string>(nullable: true),
                     Gender = table.Column<int>(nullable: false),
-                    LoginId = table.Column<Guid>(nullable: false)
+                    LoginId = table.Column<Guid>(nullable: false),
+                    StripeUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -105,7 +108,8 @@ namespace WebApiQuickOrder.Migrations
                     UserId = table.Column<Guid>(nullable: false),
                     Cvc = table.Column<string>(nullable: true),
                     Month = table.Column<string>(nullable: true),
-                    Year = table.Column<string>(nullable: true)
+                    Year = table.Column<string>(nullable: true),
+                    StripeCardId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,15 +132,18 @@ namespace WebApiQuickOrder.Migrations
                     StoreImage = table.Column<byte[]>(nullable: true),
                     StoreDescription = table.Column<string>(nullable: true),
                     StoreRegisterLicenseId = table.Column<Guid>(nullable: false),
-                    StoreType = table.Column<int>(nullable: false)
+                    SKKey = table.Column<string>(nullable: true),
+                    PBKey = table.Column<string>(nullable: true),
+                    StoreType = table.Column<int>(nullable: false),
+                    StoreLicenceId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Stores", x => x.StoreId);
                     table.ForeignKey(
-                        name: "FK_Stores_StoreLicences_StoreRegisterLicenseId",
+                        name: "FK_Stores_Licences_StoreRegisterLicenseId",
                         column: x => x.StoreRegisterLicenseId,
-                        principalTable: "StoreLicences",
+                        principalTable: "Licences",
                         principalColumn: "LicenseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -391,7 +398,7 @@ namespace WebApiQuickOrder.Migrations
                 name: "Stores");
 
             migrationBuilder.DropTable(
-                name: "StoreLicences");
+                name: "Licences");
 
             migrationBuilder.DropTable(
                 name: "Users");

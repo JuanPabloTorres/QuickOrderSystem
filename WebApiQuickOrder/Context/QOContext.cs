@@ -36,6 +36,7 @@ namespace WebApiQuickOrder.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().HasMany(w => w.EmployeeWorkHours).WithOne(s => s.Employee).OnDelete(DeleteBehavior.Cascade);
+            //modelBuilder.Entity<User>().HasOne(l => l.UserLogin).WithOne(u => u.UserLoginOwner).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

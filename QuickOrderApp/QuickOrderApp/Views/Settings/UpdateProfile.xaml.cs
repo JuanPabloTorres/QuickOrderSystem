@@ -11,7 +11,7 @@ namespace QuickOrderApp.Views.Settings
         public UpdateProfile()
         {
             InitializeComponent();
-            BindingContext = new SettingViewModel();
+            BindingContext = new UpdateProfileViewModel();
         }
     }
 }

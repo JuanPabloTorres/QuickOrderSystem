@@ -58,6 +58,10 @@
                             IsVisible="{Binding EmailValidator.HasError}"
                             Text="{Binding EmailValidator.ErrorMessage}"
                             TextColor="Red" />
+                        <Label
+                            IsVisible="{Binding EmailPatternValidator.HasError}"
+                            Text="{Binding EmailPatternValidator.ErrorMessage}"
+                            TextColor="Red" />
                         <Entry Placeholder=" Adress" Text="{Binding Address}" />
                         <Label
                             IsVisible="{Binding AddressValidator.HasError}"

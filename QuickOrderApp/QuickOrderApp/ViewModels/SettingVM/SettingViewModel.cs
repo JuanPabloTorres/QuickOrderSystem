@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.SettingVM
@@ -79,8 +80,6 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
 
         byte[] ImgArray;
-
-
 
         private string _email;
         public string Email
@@ -212,7 +211,8 @@ namespace QuickOrderApp.ViewModels.SettingVM
         public ICommand LogOutCommand { get; set; }
         public ICommand GoUserInformationCommand { get; set; }
         public ICommand UpdateProfileCommand { get; set; }
-        public ICommand DoneCommand { get; set; }
+     
+        public ICommand GoPaymentCardCommand { get; set; }
 
         public ICommand AlreadyHaveLicenseCommand { get; set; }
 
@@ -282,29 +282,12 @@ namespace QuickOrderApp.ViewModels.SettingVM
                await Shell.Current.GoToAsync("UpdateProfileRoute", true);
            });
 
-            DoneCommand = new Command(async () =>
+            GoPaymentCardCommand = new Command(async () =>
             {
-
-                var userUpdated = App.LogUser;
-
-                userUpdated.Name = Fullname;
-                userUpdated.Address = Address;
-                userUpdated.Phone = Phone;
-                userUpdated.Email = Email;
-
-
-                Gender value;
-                Enum.TryParse(GenderSelected, out value);
-                userUpdated.Gender = value;
-
-                var result = await userDataStore.UpdateItemAsync(userUpdated);
-
-                if (result)
-                {
-                    App.LogUser = userUpdated;
-                }
+                await Shell.Current.GoToAsync($"{YourCardsPage.Route}", true);
 
             });
+
 
             RegisterStoreCommand = new Command(async () =>
             {
@@ -445,9 +428,9 @@ namespace QuickOrderApp.ViewModels.SettingVM
             });
         }
 
-        void OpenBrowser(string url)
+       async  void OpenBrowser(string url)
         {
-            Device.OpenUri(new Uri(url));
+           await  Launcher.OpenAsync(new Uri(url));
         }
 
         byte[] ConvertToByteArray(Stream value)

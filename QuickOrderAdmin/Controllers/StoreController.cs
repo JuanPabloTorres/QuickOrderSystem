@@ -135,7 +135,9 @@ namespace QuickOrderAdmin.Controllers
                             StoreRegisterLicenseId = registerStoreViewModel.StoreLicence,
                             UserId = LogUser.LoginUser.UserId,
                             StoreType = registerStoreViewModel.SelectedStoreType,
-                            StoreDescription = registerStoreViewModel.StoreDescription
+                            StoreDescription = registerStoreViewModel.StoreDescription,
+                            SKKey = registerStoreViewModel.StripeSecretKey,
+                            PBKey = registerStoreViewModel.StripePublicKey
                         };
 
                         var newStoreAddedResult = await StoreDataStore.AddItemAsync(newStore);
@@ -174,6 +176,7 @@ namespace QuickOrderAdmin.Controllers
         }
         public async Task<IActionResult> RegisterStore(RegisterStoreViewModel registerStoreViewModel)
         {
+            
             if (!(registerStoreViewModel.StoreLicence == Guid.Empty))
             {
                 var LicenseValid = storeLicenseDataStore.StoreLicenseExists(registerStoreViewModel.StoreLicence);
@@ -256,7 +259,10 @@ namespace QuickOrderAdmin.Controllers
                             StoreRegisterLicenseId = registerStoreViewModel.StoreLicence,
                             UserId = LogUser.LoginUser.UserId,
                             StoreType = registerStoreViewModel.SelectedStoreType,
-                            StoreDescription = registerStoreViewModel.StoreDescription
+                            StoreDescription = registerStoreViewModel.StoreDescription,
+                            SKKey = registerStoreViewModel.StripeSecretKey,
+                            PBKey = registerStoreViewModel.StripePublicKey,
+                            StoreLicenceId = registerStoreViewModel.StoreLicence
                         };
 
                         var newStoreAddedResult = await StoreDataStore.AddItemAsync(newStore);
@@ -264,9 +270,15 @@ namespace QuickOrderAdmin.Controllers
                         var result = userDataStore.CheckUserCredential(LogUser.LoginUser.UserLogin.Username, LogUser.LoginUser.UserLogin.Password);
                         LogUser.LoginUser = result;
 
+                        if (LogUser.Token == null )
+                        {
+                            LogUser.Token = userDataStore.LoginCredential(LogUser.LoginUser.UserLogin.Username, LogUser.LoginUser.UserLogin.Password);
+                        }
+
                         if (newStoreAddedResult)
                         {
-                            return RedirectToAction("Index", "Login", new { loginViewModel = new LoginViewModel() });
+                            return RedirectToAction("HomeStore", new { StoreId = newStore.StoreId });
+                            //return RedirectToAction("Index", "Login", new { loginViewModel = new LoginViewModel() });
                         }
                         else
                         {
@@ -298,9 +310,9 @@ namespace QuickOrderAdmin.Controllers
         {
             if (!(registerStoreViewModel.StoreLicence == Guid.Empty))
             {
-                var LicenseValid = storeLicenseDataStore.StoreLicenseExists(registerStoreViewModel.StoreLicence);
+                var IsLicenseValid = storeLicenseDataStore.StoreLicenseExists(registerStoreViewModel.StoreLicence);
 
-                if (LicenseValid)
+                if (IsLicenseValid)
                 {
 
                     if (registerStoreViewModel.File != null)
@@ -370,18 +382,26 @@ namespace QuickOrderAdmin.Controllers
 
                         var newStore = new Store()
                         {
-                            StoreId = StoreId,
-                            /////////////////////////CHANGE Dev///////////////////////
+                            StoreId = StoreId,                         
                             StoreName = registerStoreViewModel.StoreName,
                             WorkHours = listWorkHour,
                             StoreImage = ImgToBty,
                             StoreRegisterLicenseId = registerStoreViewModel.StoreLicence,
                             UserId = LogUser.LoginUser.UserId,
                             StoreType = registerStoreViewModel.SelectedStoreType,
-                            StoreDescription = registerStoreViewModel.StoreDescription
+                            StoreDescription = registerStoreViewModel.StoreDescription,
+                            SKKey = registerStoreViewModel.StripeSecretKey,
+                            PBKey = registerStoreViewModel.StripePublicKey,
+                            StoreLicenceId = registerStoreViewModel.StoreLicence
+
                         };
 
                         var newStoreAddedResult = await StoreDataStore.AddItemAsync(newStore);
+
+                        if (LogUser.Token == null)
+                        {
+                            LogUser.Token = userDataStore.LoginCredential(LogUser.LoginUser.UserLogin.Username, LogUser.LoginUser.UserLogin.Password);
+                        }
 
                         if (newStoreAddedResult)
                         {

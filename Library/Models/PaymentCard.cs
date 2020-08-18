@@ -20,5 +20,26 @@ namespace Library.Models
 
         public string StripeCardId { get; set; }
 
+
+        public PaymentCard()
+        {
+
+        }
+
+        public PaymentCard(Guid paymentcardId, string holdername,string cardnumber, Guid userid, string cvc,string expmonth,string expyear,string stripecardId)
+        {
+
+            this.PaymentCardId = paymentcardId;
+            this.HolderName = holdername;
+            this.CardNumber = cardnumber;
+            this.UserId = userid;
+            this.Cvc = cvc;
+            this.Month = expmonth;
+            this.Year = expyear;
+            this.StripeCardId = stripecardId;
+
+
+        }
+
     }
 }

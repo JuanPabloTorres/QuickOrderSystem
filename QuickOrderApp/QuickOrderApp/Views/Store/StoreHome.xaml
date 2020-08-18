@@ -118,6 +118,7 @@
             Grid.Row="4"
             Grid.ColumnSpan="2"
             Margin="5"
+            EmptyView="Not Category Available"
             Header="Product Category Available"
             ItemsSource="{Binding ProductCategoryPresenters}"
             SelectedItem="{Binding}"

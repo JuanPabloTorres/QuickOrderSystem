@@ -12,5 +12,8 @@ namespace Library.Models
 
 
         public bool IsConnected { get; set; }
+
+        public Guid UserId { get; set; }
+       
     }
 }

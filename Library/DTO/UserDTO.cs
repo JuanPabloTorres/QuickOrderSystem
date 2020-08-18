@@ -17,5 +17,7 @@ namespace Library.DTO
         public string Phone { get; set; }
 
         public Gender Gender { get; set; }
+
+        public string StripeCustomerId { get; set; }
     }
 }

@@ -23,6 +23,7 @@ namespace QuickOrderApp
 
         public static bool UseMockDataStore = true;
         public static User LogUser;
+
         public static Store CurrentStore;
         public static TokenDTO TokenDto { get; set; }
         public static ComunicationService ComunicationService { get; set; }
@@ -38,7 +39,6 @@ namespace QuickOrderApp
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjY0MTU4QDMxMzgyZTMxMmUzMEx6QkJ4RjEvcHl6V2VaMFF3TENBa0tUU1c1RWpKWlh3bDNUdXduc3J6Q2c9");
 
             Dependencies();
-
 
 
             // MainPage = new NavigationPage(new PaymentPage());

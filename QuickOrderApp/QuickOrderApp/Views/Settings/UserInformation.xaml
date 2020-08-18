@@ -14,77 +14,102 @@
     Shell.TitleColor="Black"
     mc:Ignorable="d">
     <ContentPage.Content>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Label
-                Grid.Row="0"
-                FontAttributes="Bold"
-                FontSize="Title"
-                HorizontalOptions="Center"
-                Text="{Binding Fullname, StringFormat='{0}'}"
-                VerticalOptions="Center" />
-            <StackLayout Grid.Row="1" Margin="5">
 
-                <StackLayout>
-                    <Label
-                        FontAttributes="Bold"
-                        FontSize="Body"
-                        HorizontalOptions="Start"
-                        Text="User Information" />
-                    <BoxView
-                        BackgroundColor="LightGray"
-                        HeightRequest="0.1"
-                        HorizontalOptions="Fill" />
-                    <Label
-                        FontSize="Large"
-                        Text="{Binding Email, StringFormat='Email: {0}'}"
-                        VerticalOptions="Center" />
-                    <Label
-                        FontSize="Large"
-                        HorizontalOptions="Start"
-                        Text="{Binding Address, StringFormat='Address: {0}'}" />
-                    <Label
-                        FontSize="Large"
-                        HorizontalOptions="Start"
-                        Text="{Binding GenderSelected, StringFormat='Gender: {0}'}" />
-                    <Label
-                        FontSize="Large"
-                        HorizontalOptions="Start"
-                        Text="{Binding Phone, StringFormat='Phone: {0:(###) ###-####}'}" />
+        <Frame
+            Margin="8"
+            Padding="10"
+            BorderColor="LightGray"
+            CornerRadius="5"
+            HasShadow="True"
+            IsClippedToBounds="True"
+            VerticalOptions="Center">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Row="0"
+                    FontAttributes="Bold"
+                    FontSize="Title"
+                    HorizontalOptions="Center"
+                    Text="{Binding Fullname, StringFormat='{0}'}"
+                    VerticalOptions="Center" />
+                <StackLayout Grid.Row="1" Margin="5">
+
+                    <StackLayout>
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="Body"
+                            HorizontalOptions="Start"
+                            Text="User Information" />
+                        <BoxView
+                            BackgroundColor="LightGray"
+                            HeightRequest="0.1"
+                            HorizontalOptions="Fill" />
+                        <Label
+                            FontSize="Large"
+                            Text="{Binding Email, StringFormat='Email: {0}'}"
+                            VerticalOptions="Center" />
+                        <Label
+                            FontSize="Large"
+                            HorizontalOptions="Start"
+                            Text="{Binding Address, StringFormat='Address: {0}'}" />
+                        <Label
+                            FontSize="Large"
+                            HorizontalOptions="Start"
+                            Text="{Binding GenderSelected, StringFormat='Gender: {0}'}" />
+                        <Label
+                            FontSize="Large"
+                            HorizontalOptions="Start"
+                            Text="{Binding Phone, StringFormat='Phone: {0:(###) ###-####}'}" />
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
-            <button:SfButton
-                Grid.Row="2"
-                Margin="10"
-                BackgroundColor="Tomato"
-                Command="{Binding UpdateProfileCommand}"
-                CornerRadius="4"
-                FontAttributes="Bold"
-                HasShadow="True"
-                HorizontalOptions="Fill"
-                Text="Update Profile"
-                TextColor="Black"
-                VerticalOptions="End" />
-            <button:SfButton
-                Grid.Row="3"
-                Margin="10"
-                BackgroundColor="Tomato"
-                Command="{Binding GoRegisterCardCommand}"
-                CornerRadius="4"
-                FontAttributes="Bold"
-                HasShadow="True"
-                HorizontalOptions="Fill"
-                Text="Register Card "
-                TextColor="Black"
-                VerticalOptions="End" />
-        </Grid>
+                <button:SfButton
+                    Grid.Row="2"
+                    Margin="10"
+                    BackgroundColor="Tomato"
+                    Command="{Binding UpdateProfileCommand}"
+                    CornerRadius="4"
+                    FontAttributes="Bold"
+                    HasShadow="True"
+                    HorizontalOptions="Fill"
+                    Text="Update Profile"
+                    TextColor="Black"
+                    VerticalOptions="End" />
+                <button:SfButton
+                    Grid.Row="3"
+                    Margin="10"
+                    BackgroundColor="Tomato"
+                    Command="{Binding GoPaymentCardCommand}"
+                    CornerRadius="4"
+                    FontAttributes="Bold"
+                    HasShadow="True"
+                    HorizontalOptions="Fill"
+                    Text="Your Cards"
+                    TextColor="Black"
+                    VerticalOptions="End" />
+                <button:SfButton
+                    Grid.Row="4"
+                    Margin="10"
+                    BackgroundColor="Tomato"
+                    Command="{Binding GoRegisterCardCommand}"
+                    CornerRadius="4"
+                    FontAttributes="Bold"
+                    HasShadow="True"
+                    HorizontalOptions="Fill"
+                    Text="Register Card "
+                    TextColor="Black"
+                    VerticalOptions="End" />
+            </Grid>
+
+        </Frame>
     </ContentPage.Content>
 </ContentPage>

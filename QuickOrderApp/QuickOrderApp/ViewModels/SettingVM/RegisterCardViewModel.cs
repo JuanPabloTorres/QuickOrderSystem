@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.Utilities.Factories;
 using QuickOrderApp.Utilities.Static;
 using Stripe;
 using System;
@@ -124,33 +125,13 @@ namespace QuickOrderApp.ViewModels.SettingVM
         }
 
 
-
-        private DateTime exp;
-
-        public DateTime Exp
-        {
-            get { return exp; }
-            set
-            {
-                exp = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-
-
         
         public ICommand CompleteRegisterCardCommand { get; set; }
 
         public RegisterCardViewModel()
         {
 
-            HolderNameValidator = new Validator();
-            CardNumberValidator = new Validator();
-            CVCValidator = new Validator();
-            YearValidator = new Validator();
-            MonthVaidator = new Validator();
+            PropertiesInitializer();
 
 
             CompleteRegisterCardCommand = new Command(async () =>
@@ -166,14 +147,6 @@ namespace QuickOrderApp.ViewModels.SettingVM
                 if (!HolderNameValidator.HasError && !CardNumberValidator.HasError && !YearValidator.HasError && !MonthVaidator.HasError && !CVCValidator.HasError)
                 {
 
-                    var newCard = new PaymentCard()
-                    {
-                        PaymentCardId = Guid.NewGuid(),
-                        UserId = App.LogUser.UserId,
-                       
-                    };
-
-
                     try
                     {
 
@@ -184,20 +157,25 @@ namespace QuickOrderApp.ViewModels.SettingVM
                             HolderName = HolderName,
                             Month = Month,
                             Year = Year,
+                            PaymentCardId = Guid.NewGuid(),
+                            UserId = App.LogUser.UserId
                         };
 
+                        var cardserviceResult = await stripeServiceDS.InsertStripeCardToStripeUser(cardData, App.LogUser.StripeUserId);
 
-                        var cardservicetokenId = await stripeServiceDS.InsertStripeCardToCustomer(cardData, App.LogUser.StripeUserId);
-
-                        if (!string.IsNullOrEmpty(cardservicetokenId))
+                        if (!cardserviceResult.HasError)
                         {
-                            newCard.StripeCardId = cardservicetokenId;
-                            var result = await CardDataStore.AddItemAsync(newCard);
+                            cardData.StripeCardId = cardserviceResult.TokenId;
+                            var result = await CardDataStore.AddItemAsync(cardData);
 
                             if (result)
                             {
                                 await Shell.Current.DisplayAlert("Notification", "Card succefully added.", "OK");
                             }
+                        }
+                        else
+                        {
+                            await Shell.Current.DisplayAlert("Notification", cardserviceResult.ErrorMsg, "OK");
                         }
 
 
@@ -217,9 +195,14 @@ namespace QuickOrderApp.ViewModels.SettingVM
             });
         }
 
-
-
-
+        void PropertiesInitializer()
+        {
+            HolderNameValidator = new Validator();
+            CardNumberValidator = new Validator();
+            CVCValidator = new Validator();
+            YearValidator = new Validator();
+            MonthVaidator = new Validator();
+        }
 
     }
 }

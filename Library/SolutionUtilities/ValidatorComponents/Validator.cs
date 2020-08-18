@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace QuickOrderApp.Utilities.Static
+namespace Library.SolutionUtilities.ValidatorComponents
 {
    public  class Validator
     {

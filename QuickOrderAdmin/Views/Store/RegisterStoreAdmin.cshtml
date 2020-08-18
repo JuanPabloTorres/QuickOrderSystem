@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile" asp-for="File">
+                    <input type="file" class="custom-file-input" id="customFile" asp-for="File" required>
                     <label class="custom-file-label" for="customFile" id="filelabel">Choose Image</label>
                 </div>
 
@@ -62,7 +62,7 @@
                         <div class="col-xl">
                             <div class="form-group">
                                 <label asp-for="StoreName" class="control-label"></label>
-                                <input asp-for="StoreName" class="form-control" />
+                                <input asp-for="StoreName" class="form-control" required />
                                 <span asp-validation-for="StoreName" class="text-danger"></span>
                             </div>
                         </div>
@@ -182,13 +182,13 @@
                             </div>
                         </div>
                         <div class="col-xl">
-                           
+
                         </div>
 
                         <div class="col-xl">
 
                         </div>
-                      
+
 
                     </div>
 
@@ -196,7 +196,7 @@
                         <div class="col-xl">
                             <div class="form-group">
                                 <label asp-for="StoreLicence" class="control-label"></label>
-                                <input asp-for="StoreLicence" class="form-control" />
+                                <input asp-for="StoreLicence" class="form-control" required/>
                                 <span asp-validation-for="StoreLicence" class="text-danger"></span>
 
                                 @if (!string.IsNullOrEmpty(ViewBag.LicenseError))
@@ -204,6 +204,29 @@
                                     <span class="text-danger">@ViewBag.LicenseError</span>
 
                                 }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label asp-for="StripePublicKey" class="control-label"></label>
+                                    <input asp-for="StripePublicKey" class="form-control" required />
+                                    <span asp-validation-for="StripePublicKey" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label asp-for="StripeSecretKey" class="control-label"></label>
+                                    <input asp-for="StripeSecretKey" class="form-control" type="password" required />
+                                    <span asp-validation-for="StripeSecretKey" class="text-danger"></span>
+                                </div>
                             </div>
                         </div>
                     </div>

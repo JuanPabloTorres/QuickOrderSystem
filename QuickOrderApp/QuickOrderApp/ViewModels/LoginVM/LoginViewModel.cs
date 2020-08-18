@@ -53,29 +53,16 @@ namespace QuickOrderApp.ViewModels.LoginVM
         public LoginViewModel(INavigation _navigation)
         {
             Navigation = _navigation;
+           
 
-            Username = "r02";
-            Password = "123";
-
-            #region Instaciando Validadores
-            UsernameValidator = new Validator();
-            PhoneValidator = new Validator();
-            EmailValidator = new Validator();
-            AddressValidator = new Validator();
-            PasswordValidator = new Validator();
-            ConfirmPasswordValidator = new Validator();
-            GenderValidator = new Validator();
-            ConfirmAndPasswordValidator = new Validator();
-            #endregion
-
-
+            ValidatorsInitializer();
 
             App.ComunicationService = new ComunicationService();
-
-
+            Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
             IsLoading = false;
 
-            Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
+
+
 
             LoginCommand = new Command(async () =>
             {
@@ -146,6 +133,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 }
 
             });
+
             LoginEmployeeCommand = new Command(async () =>
             {
 
@@ -177,8 +165,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             });
 
-
-
             RegisterCommand = new Command(async () =>
             {
 
@@ -195,15 +181,25 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 AddressValidator = ValidatorRules.EmptyOrNullValueRule(Address);
                 PasswordValidator = ValidatorRules.EmptyOrNullValueRule(Password);
                 ConfirmPasswordValidator = ValidatorRules.EmptyOrNullValueRule(ConfirmPassword);
-                EmailValidator = ValidatorRules.EmailPatternRule(Email);
+                EmailValidator = ValidatorRules.EmptyOrNullValueRule(Email);
+
+                if (!EmailValidator.HasError)
+                {
+                EmailPatternValidator = ValidatorRules.EmptyOrNullValueRule(Email);
+
+                }
                 GenderValidator = ValidatorRules.EmptyOrNullValueRule(GenderSelected);
 
-                if (!UsernameValidator.HasError && !FullNameValidator.HasError && !PhoneValidator.HasError && !AddressValidator.HasError && !PasswordValidator.HasError && !ConfirmPasswordValidator.HasError && !EmailValidator.HasError && !GenderValidator.HasError)
+
+                //Verficamos que las propiedades esten de con la informacion correcta y llenas.
+                if (!UsernameValidator.HasError && !FullNameValidator.HasError && !PhoneValidator.HasError && !AddressValidator.HasError && !PasswordValidator.HasError && !ConfirmPasswordValidator.HasError && !EmailValidator.HasError && !GenderValidator.HasError && !EmailPatternValidator.HasError)
                 {
 
                     ConfirmAndPasswordValidator = ValidatorRules.PasswordAndConfirmPasswordEquals(Password, ConfirmPassword);
+                    //Verificamos que el password y el confirmpassword matcheen
                     if (!ConfirmAndPasswordValidator.HasError)
                     {
+                        //Si el username y password existen tendra que reinsertar esa informacion
                         if (!await userDataStore.CheckIfUsernameAndPasswordExist(Username, Password))
                         {
                             var userlogin = new Login()
@@ -228,11 +224,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                 UserLogin = userlogin,
                             };
 
-
+                           userlogin.UserId = newUser.UserId;
 
                             try
                             {
-
                                 var optionsCustomers = new UserDTO
                                 {
 
@@ -243,19 +238,22 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                                 };
 
+
+                                //Create Customer
                                 var customertokenId = await stripeServiceDS.CreateStripeCustomer(optionsCustomers);
+
 
                                 if (!string.IsNullOrEmpty(customertokenId))
                                 {
                                     newUser.StripeUserId = customertokenId;
                                     var result = await userDataStore.AddItemAsync(newUser);
 
-                                    var getCredential = userDataStore.CheckUserCredential(Username, Password);
+                                    var credentialsResult = userDataStore.CheckUserCredential(Username, Password);
 
                                     if (result)
                                     {
                                         await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
-                                        App.LogUser = getCredential;
+                                        App.LogUser = credentialsResult;
                                         App.Current.MainPage = new AppShell();
                                     }
                                 }
@@ -279,7 +277,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Notification", "Some fields are empty.", "OK");
+                    await App.Current.MainPage.DisplayAlert("Notification", "Some error ocurred check the information.", "OK");
                 }
 
 
@@ -294,6 +292,21 @@ namespace QuickOrderApp.ViewModels.LoginVM
             });
 
 
+        }
+
+        void ValidatorsInitializer()
+        {
+            #region Instaciando Validadores
+            UsernameValidator = new Validator();
+            PhoneValidator = new Validator();
+            EmailValidator = new Validator();
+            AddressValidator = new Validator();
+            PasswordValidator = new Validator();
+            ConfirmPasswordValidator = new Validator();
+            GenderValidator = new Validator();
+            ConfirmAndPasswordValidator = new Validator();
+            EmailPatternValidator = new Validator();
+            #endregion
         }
 
         #region Properties
@@ -406,12 +419,12 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
 
-        private bool _isShowCancel;
-        public bool IsShowCancel
-        {
-            get { return _isShowCancel; }
-            set { /*SetPropertyValue(ref _isShowCancel, value);*/ }
-        }
+        //private bool _isShowCancel;
+        //public bool IsShowCancel
+        //{
+        //    get { return _isShowCancel; }
+        //    set { /*SetPropertyValue(ref _isShowCancel, value);*/ }
+        //}
 
         private Validator usernameValidator;
 
@@ -429,10 +442,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
         public Validator EmailValidator
         {
-            get { return usernameValidator; }
+            get { return emailValidator; }
             set
             {
-                usernameValidator = value;
+                emailValidator = value;
                 OnPropertyChanged();
             }
         }
@@ -477,10 +490,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
         public Validator ConfirmPasswordValidator
         {
-            get { return passwordValidator; }
+            get { return confirmpasswordValidator; }
             set
             {
-                passwordValidator = value;
+                confirmpasswordValidator = value;
                 OnPropertyChanged();
             }
         }
@@ -517,115 +530,25 @@ namespace QuickOrderApp.ViewModels.LoginVM
             }
         }
 
+        private Validator emailPatternValidator;
+
+        public Validator EmailPatternValidator
+        {
+            get { return emailPatternValidator; }
+            set { emailPatternValidator = value;
+                OnPropertyChanged();
+            }
+        }
 
 
 
         #endregion
 
 
-        #region Commands
-
-        private ICommand _loginCommand;
-        //public ICommand LoginCommand
-        //{
-        //    get { return _loginCommand = _loginCommand ?? new Command(LoginAction, CanLoginAction); }
-        //}
-
-        private ICommand _cancelLoginCommand;
-        public ICommand CancelLoginCommand
-        {
-            get { return _cancelLoginCommand = _cancelLoginCommand ?? new Command(CancelLoginAction); }
-        }
-
-        private ICommand _forgotPasswordCommand;
-        public ICommand ForgotPasswordCommand
-        {
-            get { return _forgotPasswordCommand = _forgotPasswordCommand ?? new Command(ForgotPasswordAction); }
-        }
-
-        private ICommand _newAccountCommand;
-        public ICommand NewAccountCommand
-        {
-            get { return _newAccountCommand = _newAccountCommand ?? new Command(NewAccountAction); }
-        }
-
-        #endregion
 
 
-        #region Methods
 
-        bool CheckNullOrEmptyProperties(string fullname, string email, string username, string password, string confirmpassword, string phone, string adress, string gender)
-        {
 
-            if (!string.IsNullOrEmpty(fullname) && !string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(adress) && !string.IsNullOrEmpty(gender) && !string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(confirmpassword) && password == confirmpassword)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
 
-        }
-
-        bool CheckEmailPatter(string emailValue)
-        {
-            Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            Match match = regex.Match(emailValue);
-
-            if (match.Success)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        bool CanLoginAction()
-        {
-            //Perform your "Can Login?" logic here...
-
-            if (string.IsNullOrWhiteSpace(this.Email) || string.IsNullOrWhiteSpace(this.Password))
-                return false;
-
-            return true;
-        }
-
-        async void LoginAction()
-        {
-            IsBusy = true;
-
-            //TODO - perform your login action + navigate to the next page
-
-            //Simulate an API call to show busy/progress indicator            
-            Task.Delay(20000).ContinueWith((t) => IsBusy = false);
-
-            //Show the Cancel button after X seconds
-            Task.Delay(5000).ContinueWith((t) => IsShowCancel = true);
-        }
-
-        void CancelLoginAction()
-        {
-            //TODO - perform cancellation logic
-
-            IsBusy = false;
-            IsShowCancel = false;
-        }
-
-        void ForgotPasswordAction()
-        {
-            //TODO - navigate to your forgotten password page
-            //Navigation.PushAsync(XXX);
-        }
-
-        void NewAccountAction()
-        {
-            //TODO - navigate to your registration page
-            //Navigation.PushAsync(XXX);
-        }
-
-        #endregion
     }
 }

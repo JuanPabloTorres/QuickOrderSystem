@@ -21,15 +21,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Notification</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
+                </button>*@
             </div>
             <div class="modal-body">
-                <label class="text-center " style="text-decoration-color:red">@ViewBag.CardError </label>
+                <p class="text-center" style="text-decoration-color:red">@ViewBag.CardError </p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
                 @*<button type="button" class="btn btn-primary">Save changes</button>*@
             </div>
         </div>
@@ -54,7 +54,7 @@
         <div class="col-lg-7 mx-auto">
             <div class="bg-white rounded-lg shadow-sm p-5">
 
-                <div class="tab-content">                      
+                                
 
                         <form role="form" asp-action="GetLicencePro">
 
@@ -64,7 +64,7 @@
                                     <div class="col-xl">
                                         <div class="form-group">
                                             <label>Full name (on the card)</label>
-                                            <input type="text" asp-for="Holdername"  placeholder="Cardholder name" class="form-control">
+                                            <input type="text" asp-for="Holdername"  placeholder="Cardholder name" required class="form-control">
                                             <span asp-validation-for="Holdername" class="text-danger"></span>
                                         </div>
 
@@ -76,7 +76,7 @@
                                         <div class="form-group">
                                             <label>Card number</label>
 
-                                            <input type="number" asp-for="cardNumber" placeholder="Card number"   class="form-control">
+                                            <input type="number" asp-for="cardNumber" placeholder="Card number" pattern="[1-9]{16}" title="Invalid Pattern must be 16 digits" required  class="form-control">
                                             <span asp-validation-for="cardNumber" class="text-danger"></span>
 
                                         </div>
@@ -91,7 +91,7 @@
                                         <div class="form-group">
 
                                           
-                                                <input type="number" placeholder="MM" asp-for="MM" class="form-control">
+                                                <input type="number" placeholder="MM" asp-for="MM" required class="form-control" pattern="[1-9]{2}" title="Invalid Pattern must be 2 digits">
                                                 <span asp-validation-for="MM" class="text-danger"></span>
 
                                            
@@ -105,7 +105,7 @@
                                            
                                           
 
-                                                <input type="number" placeholder="YY" asp-for="YY" class="form-control">
+                                                <input type="number" placeholder="YY" asp-for="YY" size="2 " required class="form-control" pattern="[1-9]{2}" title="Invalid Pattern must be 2 digits">
                                                 <span asp-validation-for="YY" class="text-danger"></span>
                                            
                                         </div>
@@ -115,13 +115,13 @@
                                 <div class="row">
                                     <div class="col-xl">
                                         <div class="form-group">
-                                            <input type="number" class="form-control" placeholder="CVV" asp-for="CVc">
+                                            <input type="number" class="form-control" placeholder="CVV" required asp-for="CVc" pattern="[1-9]{3}" title="Invalid Pattern must be 3 digits">
                                             <span asp-validation-for="CVc" class="text-danger"></span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                @*<div class="row">
                                     <div class="col-xl">
                                         <div class="form-group">
                                             <label>Enter Email To Send License Code</label>
@@ -129,7 +129,7 @@
                                             <span asp-validation-for="Email" class="text-danger"></span>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*@
 
 
                             </div>
@@ -139,8 +139,7 @@
                         </form>
                     
 
-                </div>
-                <!-- End -->
+              
 
             </div>
         </div>

@@ -1,5 +1,7 @@
-﻿using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
-
+﻿using Library.Models;
+using QuickOrderApp.Utilities.Presenters;
+using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -8,23 +10,37 @@ namespace QuickOrderApp.Views.Store
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Products : ContentPage
     {
-        StoreViewModel StoreViewModel;
+         StoreViewModel _StoreViewModel;
 
         public Products()
         {
             InitializeComponent();
 
-            BindingContext = StoreViewModel = new StoreViewModel();
+            BindingContext = _StoreViewModel = new StoreViewModel();
 
 
         }
 
-        //protected async override void OnAppearing()
-        //{
-        //    base.OnAppearing();
-        //    await StoreViewModel.GetStoreInformation(App.CurrentStore.StoreId.ToString());
+        protected async override void OnAppearing()
+        {
+            base.OnAppearing();
 
-        //}
+            _StoreViewModel.StoreProducts.Clear();
+
+            ProductType _productType = (ProductType)Enum.Parse(typeof(ProductType), _StoreViewModel.SelectedProductType);
+
+            //Guid guidStoreId = Guid.Parse(StoreId);
+
+            var data = await _StoreViewModel.productDataStore.GetSpecificProductTypeFromStore(App.CurrentStore.StoreId, _productType);
+
+            foreach (var item in data)
+            {
+
+                var productPresenter = new ProductPresenter(item);
+                _StoreViewModel.StoreProducts.Add(productPresenter);
+            }
+
+        }
 
 
     }

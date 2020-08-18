@@ -14,5 +14,11 @@ namespace QuickOrderApp.Views.Settings
             InitializeComponent();
             BindingContext = SettingViewModel = new SettingViewModel();
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            BindingContext = SettingViewModel = new SettingViewModel();
+        }
     }
 }

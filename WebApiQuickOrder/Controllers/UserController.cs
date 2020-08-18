@@ -101,22 +101,20 @@ namespace WebApiQuickOrder.Controllers
 
             if (oldUser != null)
             {
-                _context.Users.Remove(oldUser);
-
-                _context.Users.Add(user);
-                _context.Attach(user.UserLogin);
-
-                if (user.Stores.Count > 0)
-                {
-                    foreach (var item in user.Stores)
-                    {
-                        _context.Attach(item);
-                    }
-                }
-
-
                 try
                 {
+                    _context.Users.Remove(oldUser);
+
+                    _context.Users.Add(user);
+                    _context.Attach(user.UserLogin);
+
+                    if (user.Stores.Count > 0)
+                    {
+                        foreach (var item in user.Stores)
+                        {
+                            _context.Attach(item);
+                        }
+                    }
 
                     _context.SaveChanges();
                 }
