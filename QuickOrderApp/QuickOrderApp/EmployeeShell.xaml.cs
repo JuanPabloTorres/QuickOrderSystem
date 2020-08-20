@@ -17,14 +17,14 @@ namespace QuickOrderApp
 
             Routing.RegisterRoute("EmployeeControlPanelRoute", typeof(EmployeeControlPanel));
             Routing.RegisterRoute("StoreControlPanelRoute", typeof(StoreControlPanel));
-            Routing.RegisterRoute("StoreControlEmployee", typeof(StoreControlEmployee));
-            Routing.RegisterRoute("OrderPageRoute", typeof(OrdersPage));
-            Routing.RegisterRoute("DetailOrderRoute", typeof(DetailOrder));
-            Routing.RegisterRoute("StoreDetailOrderRoute", typeof(StoreOrderDetailPage));
+            Routing.RegisterRoute("StoreControlEmployee", typeof(StoreControlEmployee));           
+            Routing.RegisterRoute("DetailOrderRoute", typeof(DetailOrder));          
             Routing.RegisterRoute("EmployeeOrderControl", typeof(EmployeeOrdersControl));
             Routing.RegisterRoute("InventoryRoute", typeof(StoreInventory));
             Routing.RegisterRoute(LoginPage.Route, typeof(LoginPage));
             Routing.RegisterRoute(OrderScannerPage.Route, typeof(OrderScannerPage));
+            Routing.RegisterRoute(StoreOrderDetailPage.Route, typeof(StoreOrderDetailPage));
+
         }
     }
 }

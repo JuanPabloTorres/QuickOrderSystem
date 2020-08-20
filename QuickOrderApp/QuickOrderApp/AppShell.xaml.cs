@@ -34,7 +34,7 @@ namespace QuickOrderApp
             Routing.RegisterRoute("RegisterStoreRoute", typeof(RegisterStorePage));
             Routing.RegisterRoute("StoreControlPanelRoute", typeof(StoreControlPanel));
             Routing.RegisterRoute("AddProductRoute", typeof(AddProductPage));
-            Routing.RegisterRoute("OrderPageRoute", typeof(OrdersPage));
+           
             Routing.RegisterRoute("StoreDetailOrderRoute", typeof(StoreOrderDetailPage));
             Routing.RegisterRoute("StoreEmployeeRoute", typeof(StoreEmployeesPage));
             Routing.RegisterRoute("StoreEmployeeEditRoute", typeof(StoreEmployeeEdit));
@@ -44,6 +44,7 @@ namespace QuickOrderApp
             Routing.RegisterRoute("RegisterCardRoute", typeof(RegisterCardPage));
             Routing.RegisterRoute("StoreLicenseRoute", typeof(GetStoreLicensePage));
             Routing.RegisterRoute("categoryhomeRoute", typeof(CategoryHomePage));
+            Routing.RegisterRoute("EmployeeOrderControl", typeof(EmployeeOrdersControl));
             Routing.RegisterRoute(CategoryStoresHome.Route, typeof(CategoryStoresHome));
             Routing.RegisterRoute(YourStoresPage.Route, typeof(YourStoresPage));
             Routing.RegisterRoute(EditProductPage.Route, typeof(EditProductPage));
@@ -51,6 +52,7 @@ namespace QuickOrderApp
             Routing.RegisterRoute(LoginPage.Route, typeof(LoginPage));
             Routing.RegisterRoute(SearchEmployeePage.Route, typeof(SearchEmployeePage));
             Routing.RegisterRoute(YourCardsPage.Route, typeof(YourCardsPage));
+            Routing.RegisterRoute(StoreOrderDetailPage.Route, typeof(StoreOrderDetailPage));
 
 
         }

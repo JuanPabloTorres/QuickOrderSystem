@@ -9,7 +9,7 @@ namespace WebApiQuickOrder.Hubs
     public class ComunicationHub : Hub
     {
 
-        public async Task SenRequestToUser(string connectionId,UserRequest message)
+        public async Task SenRequestToUser(string connectionId,string message)
         {
             await Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
         }

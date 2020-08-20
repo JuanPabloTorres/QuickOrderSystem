@@ -373,6 +373,40 @@ namespace WebApiQuickOrder.Controllers
         }
 
 
+        //[HttpPost("[action]")]
+        //public async Task<StripePaymentCardResult> GetAccount(PaymentCard paymentCard)
+        //{
+        //    try
+        //    {
+        //        StripeConfiguration.ApiKey = "{{PLATFORM_SECRET_KEY}}";
+        //        var customerOptions = new CustomerCreateOptions
+        //        {
+        //            Email = "person@example.edu",
+                     
+        //        };
+        //        var requestOptions = new RequestOptions();
+        //        requestOptions.StripeAccount = "{{CONNECTED_ACCOUNT_ID}}";
+        //        var customerService = new CustomerService();
+        //        Customer customer = customerService.Create(customerOptions, requestOptions);
+
+        //        // Fetching an account just needs the ID as a parameter
+        //        var accountService = new AccountService();
+        //        Account account = accountService.Get("{{CONNECTED_STRIPE_ACCOUNT_ID}}");
+        //    }
+        //    catch (Exception e)
+        //    {
+
+        //        var result = new StripePaymentCardResult(true, e.Message);
+
+        //        return result;
+        //    }
+
+        //}
+
+      
+
+
+
         [HttpPost("[action]")]
         public async Task<StripePaymentCardResult> CreateCardToken(PaymentCard paymentCard)
         {
@@ -569,6 +603,8 @@ namespace WebApiQuickOrder.Controllers
                 return string.Empty;
             }
         }
+
+
 
         //[HttpPost("[action]")]
         //public async Task<StripePaymentCardResult> CreateBankToken(PaymentCard paymentCard)

@@ -6,7 +6,7 @@
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="Employee Order Control"
+    Title="Orders Control"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
@@ -15,8 +15,6 @@
                 Margin="5"
                 EmptyView="Orders Empty"
                 ItemsSource="{Binding StoreOrderPresenters}"
-                SelectedItem="{Binding SelectedOrder}"
-                SelectionMode="Single"
                 VerticalOptions="Center">
 
                 <CollectionView.ItemTemplate>
@@ -27,7 +25,8 @@
 
 
                         <Frame
-                            Padding="1"
+                            Margin="8"
+                            Padding="4"
                             BorderColor="LightGray"
                             HasShadow="True"
                             IsClippedToBounds="True">
@@ -35,23 +34,80 @@
                             <StackLayout
                                 Margin="5"
                                 BackgroundColor="White"
-                                Orientation="Vertical">
-                                <Label Text="{Binding DetailOrder.OrderId}" />
-                                <Label Text="{Binding DetailOrder.OrderDate, StringFormat='Order Date: {0:MM/dd/yyyy}'}" />
-                                <Label Text="{Binding DetailOrder.OrderStatus, StringFormat='Status:{0}'}" />
-                                <Label Text="{Binding DetailOrder.OrderProducts.Count, StringFormat='Order Products: {0}'}" />
-                                <Label Text="{Binding DetailOrder.OrderType, StringFormat='Type: {0}'}" />
+                                Orientation="Vertical"
+                                VerticalOptions="Center">
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="Title"
+                                    HorizontalOptions="Center"
+                                    Text="Order"
+                                    TextColor="DarkSlateGray" />
                                 <BoxView
-                                    Margin="5"
+                                    BackgroundColor="LightGray"
+                                    HeightRequest="0.1"
+                                    HorizontalOptions="Fill" />
+                                <Label
+                                    FontSize="Body"
+                                    Text="{Binding DetailOrder.OrderId, StringFormat='#{0}'}"
+                                    TextColor="DarkSlateGray" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Body"
+                                        Text="Date: " />
+                                    <Label FontSize="Body" Text="{Binding DetailOrder.OrderDate, StringFormat='{0:MM/dd/yyyy}'}" />
+                                </StackLayout>
+
+                                <StackLayout Orientation="Horizontal">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Body"
+                                        Text="Status: " />
+
+                                    <Label
+                                        FontSize="Body"
+                                        Text="{Binding DetailOrder.OrderStatus}"
+                                        TextColor="Green" />
+                                </StackLayout>
+
+                                <StackLayout Orientation="Horizontal">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Body"
+                                        Text="Items: " />
+
+                                    <Label
+                                        FontSize="Body"
+                                        Text="{Binding DetailOrder.OrderProducts.Count}"
+                                        TextColor="Red" />
+                                </StackLayout>
+
+
+                                <StackLayout Orientation="Horizontal">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Body"
+                                        Text="Type: " />
+
+                                    <Label
+                                        FontSize="Body"
+                                        Text="{Binding DetailOrder.OrderType}"
+                                        TextColor="Orange" />
+                                </StackLayout>
+
+                                <BoxView
+                                    Margin="8,0,8,0"
                                     BackgroundColor="LightGray"
                                     HeightRequest="0.1"
                                     HorizontalOptions="Fill" />
                                 <button:SfButton
-                                    BackgroundColor="SeaGreen"
+                                    Margin="10,0,10,0"
+                                    BackgroundColor="Tomato"
                                     Command="{Binding DetailEmployeeOrderCommand}"
                                     CornerRadius="5"
                                     HasShadow="True"
-                                    Text="Detail" />
+                                    Text="Detail"
+                                    VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
 

@@ -26,9 +26,9 @@ namespace QuickOrderApp
 
         public static Store CurrentStore;
         public static TokenDTO TokenDto { get; set; }
-        public static ComunicationService ComunicationService { get; set; }
+        public static ComunicationService ComunicationService { get; set; } 
 
-        public static UsersConnected UsersConnected { get; set; }
+        public static UsersConnected UsersConnected { get; set; } 
 
         public static CardPaymentToken CardPaymentToken { get; set; } = new CardPaymentToken();
 
@@ -46,6 +46,7 @@ namespace QuickOrderApp
             MainPage = new AppShell();
 
             bool islogged = false;
+
             if (!islogged)
             {
                 Shell.Current.GoToAsync("LoginRoute");
@@ -80,14 +81,39 @@ namespace QuickOrderApp
 
         protected override void OnStart()
         {
+
         }
 
-        protected override void OnSleep()
+        protected async override void OnSleep()
         {
+
+            await App.ComunicationService.Disconnect();
+
+            UserConnectedDataStore userConnectedDataStore = new UserConnectedDataStore();
+
+            var result = await userConnectedDataStore.DeleteItemAsync(App.UsersConnected.HubConnectionID);
+
+            if (result)
+            {
+                UsersConnected = null;
+            }
+
         }
 
         protected override void OnResume()
         {
+
+            MainPage = new AppShell();
+
+            bool islogged = false;
+            if (!islogged)
+            {
+                Shell.Current.GoToAsync("LoginRoute");
+            }
+            else
+            {
+
+            }
         }
     }
 }

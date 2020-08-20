@@ -48,7 +48,6 @@ namespace QuickOrderAdmin.Controllers
                     };
 
                    var hub_connection_result = await userConnectedDataStore.AddItemAsync(this.UsersConnected);
-
                    
                      
                     var stores = new List<Store>(result.Stores);
@@ -65,7 +64,7 @@ namespace QuickOrderAdmin.Controllers
                     }
 
                     return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.StoreId });
-                    //return RedirectToAction("Index", "Home");
+                   
                 }
                 else
                 {
@@ -143,8 +142,19 @@ namespace QuickOrderAdmin.Controllers
 
         }
 
-        public IActionResult SignOut()
+        public async Task<IActionResult> SignOut()
         {
+
+            string hubconnectionId = ComunicationService.hubConnection.ConnectionId;
+            await this.ComunicationService.Disconnect();
+
+            bool result = await userConnectedDataStore.DeleteItemAsync(hubconnectionId);
+
+            if (result)
+            {
+
+            }
+
             return RedirectToAction("Index", new { loginViewModel = new LoginViewModel() });
         }
     }

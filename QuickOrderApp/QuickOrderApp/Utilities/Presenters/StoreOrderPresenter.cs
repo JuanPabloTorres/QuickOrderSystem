@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.Views.Store.StoreManger;
 using System;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -22,6 +23,9 @@ namespace QuickOrderApp.Utilities.Presenters
 
         public StoreOrderPresenter(Order order)
         {
+
+            DetailOrder = order;
+
             DetailCommand = new Command(async () =>
             {
 
@@ -44,19 +48,22 @@ namespace QuickOrderApp.Utilities.Presenters
 
                 try
                 {
-                    await EmployeeShell.Current.GoToAsync($"StoreDetailOrderRoute", animate: true);
-                    MessagingCenter.Send<Order>(DetailOrder, "Detail");
-                    //await Shell.Current.GoToAsync($"StoreDetailOrderRoute?Id={DetailOrder.StoreId.ToString()}", animate: true);
+                    await EmployeeShell.Current.GoToAsync($"{StoreOrderDetailPage.Route}", animate: true);
+
+                    EmployeeOrderPresenter employeeOrderPresenter = new EmployeeOrderPresenter(order);
+
+                    MessagingCenter.Send<EmployeeOrderPresenter>(employeeOrderPresenter, "OrderDetail");
+                   
                 }
                 catch (Exception e)
                 {
 
                     Console.WriteLine(e);
                 }
-                //await Shell.Current.GoToAsync("OrderDetailRoute",true);
+              
             });
 
-            DetailOrder = order;
+           
         }
 
     }

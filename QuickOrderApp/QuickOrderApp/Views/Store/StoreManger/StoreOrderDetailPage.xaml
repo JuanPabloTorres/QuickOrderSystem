@@ -1,60 +1,127 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
-             mc:Ignorable="d"
-             Title="Detail Order"
-             x:Class="QuickOrderApp.Views.Store.StoreManger.StoreOrderDetailPage">
+<ContentPage
+    x:Class="QuickOrderApp.Views.Store.StoreManger.StoreOrderDetailPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Detail Order"
+    Routing.Route="StoreOrderDetailRoute"
+    mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
             <StackLayout Margin="2">
-                
-            <Label Text="{Binding DetailOrder.OrderId,StringFormat='#{0}'}" FontSize="Body" TextColor="Black"/>
-            <Label Text="{Binding DetailOrder.OrderDate,StringFormat='Date:{0:MM/dd/yyyy}'}" FontSize="Body" TextColor="Black"/>
-            <Label Text="{Binding DetailOrder.OrderStatus,StringFormat='Status:{0}'}" FontSize="Body" TextColor="Black"/>
-            <Label Text="{Binding DetailOrder.OrderType,StringFormat='Type:{0}'}" FontSize="Body" TextColor="Black"/>
+
+                <Label
+                    FontSize="Body"
+                    Text="{Binding EmployeeOrderPresenter.OrderId, StringFormat='#{0}'}"
+                    TextColor="Gray" />
+                <Label
+                    FontSize="Body"
+                    Text="{Binding EmployeeOrderPresenter.OrderDate, StringFormat='Date:{0:MM/dd/yyyy}'}"
+                    TextColor="Gray" />
+                <Label
+                    FontSize="Body"
+                    Text="{Binding EmployeeOrderPresenter.OStatus, StringFormat='Status:{0}'}"
+                    TextColor="Gray" />
+                <Label
+                    FontSize="Body"
+                    Text="{Binding EmployeeOrderPresenter.OrderType, StringFormat='Type:{0}'}"
+                    TextColor="Gray" />
+
+                <BoxView
+                    Margin="8,0,8,0"
+                    BackgroundColor="LightGray"
+                    HeightRequest="0.1"
+                    HorizontalOptions="Fill" />
             </StackLayout>
-           
-            <CollectionView VerticalOptions="Center" EmptyView="Empty" 
-                           
-                                ItemsSource="{Binding DetailOrder.OrderProducts}" Grid.Row="3" Margin="5" SelectedItem="{Binding SelectedOrder}"
-                                SelectionMode="Single">
+
+            <CollectionView
+                Grid.Row="3"
+                Margin="5"
+                EmptyView="Empty"
+                ItemsSource="{Binding EmployeeOrderPresenter.OrderProductsPresenter}"
+                VerticalOptions="Center">
                 <CollectionView.Header>
                     <StackLayout>
-                        <Label Text="Order Products" FontSize="Title"  HorizontalOptions="Center" TextColor="Gray"/>
-                        <!--<BoxView HeightRequest="0.1" HorizontalOptions="Fill" BackgroundColor="Black"/>-->
+                        <Label
+                            FontSize="Title"
+                            HorizontalOptions="Center"
+                            Text="Order Products"
+                            TextColor="Gray" />
+
                     </StackLayout>
                 </CollectionView.Header>
+
                 <CollectionView.ItemTemplate>
-                    
-                    <DataTemplate >
 
-                      
-                            <StackLayout Orientation="Vertical" Margin="5">
+                    <DataTemplate>
 
-                            <Frame IsClippedToBounds="True" CornerRadius="5" Padding="0">
-                                <Image Source="{Binding ProductImage, Converter={StaticResource BytesToImgConverter}}" WidthRequest="80" HeightRequest="80" Aspect="Fill" ></Image>
-                              
-                            </Frame>
-                          
-                            <BoxView HeightRequest="0.1" HorizontalOptions="FillAndExpand" BackgroundColor="Black"/>
-                            <Label Text="{Binding ProductName}"  HorizontalOptions="Center" FontSize="Title" />
-                            <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
-                                
-                                <Label Text="{Binding Quantity,StringFormat='Quantity:{0}'}" FontSize="Body"/>
-                                <Label Text="{Binding Price,StringFormat='{0:C}'}" FontSize="Body"/>
+
+                        <StackLayout Orientation="Vertical">
+                            <StackLayout Orientation="Horizontal">
+
+                                <Frame
+                                    Padding="0"
+                                    CornerRadius="5"
+                                    HasShadow="True"
+                                    IsClippedToBounds="True">
+                                    <Image
+                                        Aspect="Fill"
+                                        HeightRequest="130"
+                                        Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}"
+                                        WidthRequest="130" />
+
+                                </Frame>
+                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Label
+                                        FontSize="Title"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding ProductName}" />
+
+
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding Quantity, StringFormat='Quantity:{0}'}" />
+                                    <Label
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding Price, StringFormat='{0:C}'}" />
+
+
+
+                                </StackLayout>
+                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                    <button:SfCheckBox
+                                        CheckedColor="LimeGreen"
+                                        ControlSize="100"
+                                        IsChecked="{Binding IsComplete}"
+                                        Text="Completed"
+                                        VerticalOptions="Center" />
+                                </StackLayout>
+
+
+
                             </StackLayout>
 
-                            </StackLayout>
-                      
+                        </StackLayout>
+
 
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
 
             </CollectionView>
-           
-            <button:SfButton Text="Complete" HasShadow="True" CornerRadius="5" Margin="10" BackgroundColor="DodgerBlue" Command="{Binding CompleteOrderCommand}" FontSize="Body"/>
+
+            <button:SfButton
+                Margin="10"
+                BackgroundColor="Tomato"
+                Command="{Binding CompleteOrderCommand}"
+                CornerRadius="5"
+                FontSize="Body"
+                HasShadow="True"
+                Text="Complete" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

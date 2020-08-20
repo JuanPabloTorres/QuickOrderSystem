@@ -62,8 +62,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
             IsLoading = false;
 
 
-
-
             LoginCommand = new Command(async () =>
             {
 
@@ -73,9 +71,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 capturecredentialValues.Add(Username);
                 capturecredentialValues.Add(Password);
 
-                bool areValid = GlobalValidator.CheckNullOrEmptyPropertiesOfListValues(capturecredentialValues);
+                bool valuesareValid = GlobalValidator.CheckNullOrEmptyPropertiesOfListValues(capturecredentialValues);
 
-                if (areValid)
+                if (valuesareValid)
                 {
                     //Verifica si el telefono tiene acceso a internet
                     var current = Connectivity.NetworkAccess;
@@ -93,8 +91,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
                         {
                             App.LogUser = loginresult;
 
+                            bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
+
                             //Verfico si hay tarjetas registradas con el usuario
-                            if (App.LogUser.PaymentCards.Count() > 0)
+                            if (hasPaymentCard)
                             {
                                 var data = App.LogUser.PaymentCards;
                                 var card = new List<PaymentCard>(data);
@@ -120,7 +120,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
                         }
                         else
                         {
-                            await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login.", "OK");
+                            IsLoading = false;
+                            await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login...!", "OK");
 
                         }
 
@@ -128,7 +129,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Notification", "Empty inputs.", "OK");
+                    IsLoading = false;
+                    await App.Current.MainPage.DisplayAlert("Notification", "Empty values...!", "OK");
 
                 }
 
@@ -175,21 +177,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             DoneCommand = new Command(async () =>
             {
-                UsernameValidator = ValidatorRules.EmptyOrNullValueRule(Username);
-                FullNameValidator = ValidatorRules.EmptyOrNullValueRule(Fullname);
-                PhoneValidator = ValidatorRules.EmptyOrNullValueRule(Phone);
-                AddressValidator = ValidatorRules.EmptyOrNullValueRule(Address);
-                PasswordValidator = ValidatorRules.EmptyOrNullValueRule(Password);
-                ConfirmPasswordValidator = ValidatorRules.EmptyOrNullValueRule(ConfirmPassword);
-                EmailValidator = ValidatorRules.EmptyOrNullValueRule(Email);
 
-                if (!EmailValidator.HasError)
-                {
-                EmailPatternValidator = ValidatorRules.EmptyOrNullValueRule(Email);
-
-                }
-                GenderValidator = ValidatorRules.EmptyOrNullValueRule(GenderSelected);
-
+                SetValidatorValues();
 
                 //Verficamos que las propiedades esten de con la informacion correcta y llenas.
                 if (!UsernameValidator.HasError && !FullNameValidator.HasError && !PhoneValidator.HasError && !AddressValidator.HasError && !PasswordValidator.HasError && !ConfirmPasswordValidator.HasError && !EmailValidator.HasError && !GenderValidator.HasError && !EmailPatternValidator.HasError)
@@ -307,6 +296,25 @@ namespace QuickOrderApp.ViewModels.LoginVM
             ConfirmAndPasswordValidator = new Validator();
             EmailPatternValidator = new Validator();
             #endregion
+        }
+
+        void SetValidatorValues()
+        {
+            UsernameValidator = ValidatorRules.EmptyOrNullValueRule(Username);
+            FullNameValidator = ValidatorRules.EmptyOrNullValueRule(Fullname);
+            PhoneValidator = ValidatorRules.EmptyOrNullValueRule(Phone);
+            AddressValidator = ValidatorRules.EmptyOrNullValueRule(Address);
+            PasswordValidator = ValidatorRules.EmptyOrNullValueRule(Password);
+            ConfirmPasswordValidator = ValidatorRules.EmptyOrNullValueRule(ConfirmPassword);
+            EmailValidator = ValidatorRules.EmptyOrNullValueRule(Email);
+
+            if (!EmailValidator.HasError)
+            {
+                EmailPatternValidator = ValidatorRules.EmptyOrNullValueRule(Email);
+
+            }
+            GenderValidator = ValidatorRules.EmptyOrNullValueRule(GenderSelected);
+
         }
 
         #region Properties

@@ -57,27 +57,14 @@
                 HorizontalOptions="Fill" />
         </StackLayout>
 
-        <!--<button:SfButton
-            Grid.Row="2"
-            Grid.ColumnSpan="2"
-            Margin="15"
-            BackgroundColor="DodgerBlue"
-            Command="{Binding GoShowCommand}"
-            CornerRadius="5"
-            FontAttributes="Bold"
-            HasShadow="True"
-            Text="Check All Products"
-            TextColor="Black" />-->
 
 
         <Frame
             Grid.Row="2"
             Grid.ColumnSpan="2"
-            Margin="5"
-            Padding="4"
-            CornerRadius="4"
+            Padding="8"
             HasShadow="True"
-            IsClippedToBounds="True"
+            HorizontalOptions="Fill"
             VerticalOptions="Center">
 
 
@@ -89,10 +76,17 @@
 
                 <Label
                     FontAttributes="Bold"
+                    FontSize="Body"
                     Text="{Binding WorkHour.Day}"
-                    TextColor="Black" />
-                <Label Text="{Binding WorkHour.OpenTime, StringFormat='Open:{0:hh:mm tt}'}" TextColor="Green" />
-                <Label Text="{Binding WorkHour.CloseTime, StringFormat='Close:{0:hh:mm tt}'}" TextColor="Red" />
+                    TextColor="DarkSlateGray" />
+                <Label
+                    FontSize="Body"
+                    Text="{Binding WorkHour.OpenTime, StringFormat='Open:{0:hh:mm tt}'}"
+                    TextColor="Green" />
+                <Label
+                    FontSize="Body"
+                    Text="{Binding WorkHour.CloseTime, StringFormat='Close:{0:hh:mm tt}'}"
+                    TextColor="Red" />
 
             </StackLayout>
 
@@ -106,11 +100,12 @@
                 Orientation="Vertical">
 
                 <Label
+                    FontAttributes="Bold"
                     FontSize="Body"
                     HorizontalOptions="Start"
-                    Text="About Store" />
+                    Text="About Store:" />
 
-                <Label FontSize="Caption" Text="{Binding StoreDescription}" />
+                <Label FontSize="Medium" Text="{Binding StoreDescription}" />
             </StackLayout>
         </ScrollView>
 
@@ -120,9 +115,7 @@
             Margin="5"
             EmptyView="Not Category Available"
             Header="Product Category Available"
-            ItemsSource="{Binding ProductCategoryPresenters}"
-            SelectedItem="{Binding}"
-            SelectionMode="Single">
+            ItemsSource="{Binding ProductCategoryPresenters}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="2" />
             </CollectionView.ItemsLayout>

@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Presenters;
 using System;
@@ -24,13 +25,15 @@ namespace QuickOrderApp.ViewModels.InboxVM
             MessagingCenter.Subscribe<RequestPresenter>(this, "RefreshInbox", (sender) =>
             {
                 UserRequests.Remove(sender);
-                //LoadItemsCommand.Execute(null);
+               
             });
        
 
-            App.ComunicationService.hubConnection.On<UserRequest>("ReceiveMessage", (message) =>
+            App.ComunicationService.hubConnection.On<string>("ReceiveMessage", (message) =>
             {
-                var requestPresenter = new RequestPresenter(message);
+
+                UserRequest deseralized = JsonConvert.DeserializeObject<UserRequest>(message);
+                var requestPresenter = new RequestPresenter(deseralized);
                 UserRequests.Add(requestPresenter);
             });
         }
@@ -43,8 +46,9 @@ namespace QuickOrderApp.ViewModels.InboxVM
             try
             {
                 UserRequests.Clear();
-                //
+                
                 var requestData = await requestDataStore.GetRequestOfUser(App.LogUser.UserId);
+
                 foreach (var item in requestData)
                 {
                     if (item.RequestAnswer == Answer.None)
@@ -55,7 +59,7 @@ namespace QuickOrderApp.ViewModels.InboxVM
 
                     }
                 }
-                //UserOrders = new ObservableCollection<Order>(userOrderData);
+               
             }
             catch (Exception ex)
             {

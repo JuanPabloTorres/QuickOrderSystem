@@ -278,7 +278,7 @@ namespace QuickOrderAdmin.Controllers
                         if (newStoreAddedResult)
                         {
                             return RedirectToAction("HomeStore", new { StoreId = newStore.StoreId });
-                            //return RedirectToAction("Index", "Login", new { loginViewModel = new LoginViewModel() });
+                           
                         }
                         else
                         {
@@ -444,7 +444,7 @@ namespace QuickOrderAdmin.Controllers
 
         public IActionResult UserStores(Guid id)
         {
-            //var userStoreData =  StoreDataStore.GetStoresFromUser(LogUser.LoginUser.UserId);
+            
             SelectedStore.CurrentStore = LogUser.LoginUser.Stores.Where(s => s.StoreId == id).FirstOrDefault();
             return RedirectToAction("Index", "Home");
         }
@@ -453,13 +453,11 @@ namespace QuickOrderAdmin.Controllers
         {
 
             SelectedStore.CurrentStore = LogUser.LoginUser.Stores.Where(s => s.StoreId == StoreId).FirstOrDefault();
+
             var result = productDataStore.GetProductWithLowQuantity(SelectedStore.CurrentStore.StoreId, 5);
 
-
             var empresult =await employeeDataStore.GetEmployeesOfStore(SelectedStore.CurrentStore.StoreId);
-
-
-            //ViewBag.EmpResult = empresult.Where(e=>e.EmployeeWorkHours.Where(wh=>wh.OpenTime.))
+           
             ViewBag.Result = result;
             return View(SelectedStore.CurrentStore);
         }
@@ -522,11 +520,7 @@ namespace QuickOrderAdmin.Controllers
 
         }
 
-        public IActionResult ShowMap()
-        {
-            return View();
-        }
-
+       
         public IActionResult StoreOrders()
         {  
 
@@ -596,7 +590,12 @@ namespace QuickOrderAdmin.Controllers
 
                 var userhubconnectionResult =await userConnectedDataStore.GetUserConnectedID(jobRequest.ToUser);
 
+                if (userhubconnectionResult != null)
+                {
+
                 await this.ComunicationService.SendRequestToUser(userhubconnectionResult.HubConnectionID,jobRequest);
+                }
+
 
                
             }  

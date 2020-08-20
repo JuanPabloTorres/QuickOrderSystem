@@ -49,24 +49,40 @@
                                 HeightRequest="0.1"
                                 HorizontalOptions="Fill" />
 
+                            <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
 
-                            <Label
-                                Margin="8,0,8,0"
-                                FontAttributes="Bold"
-                                FontSize="Large"
-                                HorizontalOptions="Start"
-                                Text="{Binding ProductPrice, StringFormat='{0:C}'}" />
+                                <Label
+                                    Margin="8,0,8,0"
+                                    FontAttributes="Bold"
+                                    FontSize="Large"
+                                    HorizontalOptions="Start"
+                                    Text="{Binding ProductPrice, StringFormat='{0:C}'}"
+                                    TextColor="MediumSeaGreen" />
 
-                            <Label
-                                Margin="8,0,8,0"
-                                FontSize="20"
-                                HorizontalOptions="Start"
-                                Text="{Binding ItemLeft, StringFormat='Item left: {0}'}" />
-                            <Label
-                                Margin="8,0,8,0"
-                                FontSize="20"
-                                HorizontalOptions="Start"
-                                Text="{Binding ProductType, StringFormat='Type: {0}'}" />
+
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="20"
+                                    HorizontalOptions="Start"
+                                    Text="Item Left:" />
+                                <Label
+                                    FontSize="20"
+                                    HorizontalOptions="Start"
+                                    Text="{Binding ItemLeft}"
+                                    TextColor="Red" />
+                                <Label
+                                    Margin="8,0,0,0"
+                                    FontAttributes="Bold"
+                                    FontSize="20"
+                                    HorizontalOptions="Start"
+                                    Text="Tag:" />
+
+                                <Label
+                                    FontSize="20"
+                                    HorizontalOptions="Start"
+                                    Text="{Binding ProductType}"
+                                    TextColor="Orange" />
+                            </StackLayout>
 
 
                             <StackLayout Margin="4">
@@ -75,7 +91,7 @@
                                     FontAttributes="Bold"
                                     FontSize="Medium"
                                     HorizontalOptions="Start"
-                                    Text="Detail" />
+                                    Text="Description:" />
 
                                 <ScrollView>
 
@@ -103,7 +119,7 @@
 
                             <button:SfButton
                                 Margin="10"
-                                BackgroundColor="DodgerBlue"
+                                BackgroundColor="Tomato"
                                 Command="{Binding AddToCartCommand}"
                                 CornerRadius="5"
                                 FontAttributes="Bold"

@@ -143,6 +143,17 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
+        private bool arevisible;
+
+        public bool AreVisible
+        {
+            get { return arevisible; }
+            set { arevisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
         private ImageSource qrcodeimg;
 
@@ -156,13 +167,21 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
 
         public UserDetailOrderViewModel()
-        {         
+        {        
 
             ProductPresenters = new ObservableCollection<ProductPresenter>();
             OrderDetail = SelectedOrder.CurrentOrder;
             OrderQuantity = OrderDetail.OrderProducts.Count();
             isDeliveryFeeAdded = false;
-            
+
+            if (OrderDetail.OrderStatus == Status.Submited || OrderDetail.OrderStatus == Status.Completed)
+            {
+                AreVisible = false;
+            }
+            else
+            {
+                AreVisible = true;
+            }
 
             SetProducts();
 
@@ -266,11 +285,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
         public Token stripeToken;
         public TokenService tokenService;
-        //public string PublicApiKey = "pk_live_51GOwkJJDC8jrm2WeofpT5zqRgAKZ0LkaQEh64CHvZVcqSvCCBFE7LRV7ZSxjD3pZiTemSKhbe7XBVLX1Q57v2yKc00BW4iat88";
-      
-       
-      
-
         void SetProducts()
         {
             foreach (var item in OrderDetail.OrderProducts)
@@ -308,7 +322,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                 TotalTax = (Total * 0.115);
                 Total += TotalTax;
-                Total += 0.02;
+                //Total += 0.02;
 
                 StripeFee = (_netTotal * (2.9 / 100)) + 0.3;
                 Total += StripeFee;

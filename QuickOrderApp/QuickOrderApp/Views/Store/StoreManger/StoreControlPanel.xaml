@@ -111,7 +111,7 @@
                     Grid.Column="1"
                     Margin="3"
                     BackgroundColor="Tomato"
-                    Command="{Binding GoSearchEmployeeCommand}"
+                    Command="{Binding GoDashboards}"
                     CornerRadius="5"
                     FontAttributes="Bold"
                     HasShadow="True"
@@ -121,7 +121,6 @@
                     Grid.Row="3"
                     Grid.ColumnSpan="2"
                     Margin="3"
-                  
                     BackgroundColor="Tomato"
                     Command="{Binding}"
                     CornerRadius="5"

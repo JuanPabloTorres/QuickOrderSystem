@@ -31,12 +31,11 @@
 
                                 <StackLayout BackgroundColor="White">
 
-                                    <StackLayout Margin="8,0,0,0">
-
-
+                                    <StackLayout Margin="8,0,8,0">
 
                                         <StackLayout Orientation="Horizontal">
                                             <Label
+                                                FontAttributes="Bold"
                                                 FontSize="Body"
                                                 Text="Holder Name:"
                                                 TextColor="Black" />
@@ -49,6 +48,7 @@
 
                                         <StackLayout Orientation="Horizontal">
                                             <Label
+                                                FontAttributes="Bold"
                                                 FontSize="Body"
                                                 Text="Card:"
                                                 TextColor="Black" />
@@ -56,26 +56,26 @@
                                                 FontAttributes="Bold"
                                                 FontSize="Body"
                                                 Text="{Binding CardNumber}"
-                                                TextColor="Black" />
+                                                TextColor="Gray" />
                                         </StackLayout>
 
 
                                     </StackLayout>
-                                    <Grid HorizontalOptions="Fill">
 
-                                        <button:SfButton
-                                            Grid.Row="0"
-                                            Grid.Column="0"
-                                            Margin="4"
-                                            BackgroundColor="Tomato"
-                                            Command="{Binding}"
-                                            CornerRadius="5"
-                                            FontAttributes="Bold"
-                                            HasShadow="True"
-                                            Text="EDIT"
-                                            TextColor="Black" />
 
-                                    </Grid>
+                                    <button:SfButton
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Margin="8,0,8,0"
+                                        BackgroundColor="Tomato"
+                                        Command="{Binding}"
+                                        CornerRadius="5"
+                                        FontAttributes="Bold"
+                                        HasShadow="True"
+                                        Text="EDIT"
+                                        TextColor="Black" />
+
+
                                 </StackLayout>
                             </Frame>
 

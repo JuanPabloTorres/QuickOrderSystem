@@ -189,6 +189,8 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         public ICommand GoInventory { get; set; }
         public ICommand GoOrdersCommand { get; set; }
 
+        public ICommand GoDashboards { get; set; }
+
         public ICommand GoSearchEmployeeCommand { get; set; }
         public ICommand GoOrdersEmployeeCommand { get; set; }
 
@@ -291,17 +293,24 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 }
             });
 
+            GoDashboards = new Command(async() => 
+            {
+
+                await Shell.Current.DisplayAlert("Notification", "Is not developed yet. Coming Soon.", "OK");
+            
+            });
+
             GoOrdersCommand = new Command(async () =>
             {
-                await Shell.Current.GoToAsync($"OrderPageRoute?Id={YourSelectedStore.StoreId.ToString()}", animate: true);
-                //await Shell.Current.GoToAsync($"OrderPageRoute", animate: true);
+                await Shell.Current.GoToAsync($"EmployeeOrderControl?Id={YourSelectedStore.StoreId.ToString()}", animate: true);
+               
 
             });
 
             GoOrdersEmployeeCommand = new Command(async () =>
             {
                 await EmployeeShell.Current.GoToAsync($"EmployeeOrderControl?Id={Store.StoreId.ToString()}", animate: true);
-                //await Shell.Current.GoToAsync($"OrderPageRoute", animate: true);
+              
 
             });
 

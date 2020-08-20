@@ -3,6 +3,7 @@ using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
@@ -36,25 +37,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 OnPropertyChanged();
                 Guid id = new Guid(storeId);
 
-                var orderData = orderDataStore.GetStoreOrders(id,App.TokenDto.Token);
-
-                var orderssubmited = orderData.Where(o => o.OrderStatus == Status.Submited).OrderByDescending(date=>date.OrderDate);
-
-                StoreOrderPresenters.Clear();
-                foreach (var item in orderssubmited)
-                {
-                    var detailOrderPresenter = new StoreOrderPresenter(item);
-                      StoreOrderPresenters.Add(detailOrderPresenter);
-
-                    //if (item.OrderStatus != Status.NotSubmited || item.OrderStatus != Status.Completed)
-                    //{
-                    //    var detailOrderPresenter = new StoreOrderPresenter(item);
-
-
-                    //    StoreOrderPresenters.Add(detailOrderPresenter);
-
-                    //}
-                }
+                ExecuteLoadItems(id);
 
             }
         }
@@ -68,6 +51,23 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             StoreOrderPresenters = new ObservableCollection<StoreOrderPresenter>();
             Orders = new ObservableCollection<Order>();
 
+        }
+
+        public async Task ExecuteLoadItems(Guid storeId)
+        {
+            var orderData = orderDataStore.GetStoreOrders(storeId, App.TokenDto.Token);
+
+            var orderssubmited = orderData.Where(o => o.OrderStatus == Status.Submited).OrderByDescending(date => date.OrderDate);
+
+            StoreOrderPresenters.Clear();
+
+            foreach (var item in orderssubmited)
+            {
+                var detailOrderPresenter = new StoreOrderPresenter(item);
+                StoreOrderPresenters.Add(detailOrderPresenter);
+
+               
+            }
         }
     }
 }

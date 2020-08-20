@@ -152,7 +152,7 @@ namespace QuickOrderAdmin.Controllers
 
             var result = await employeeDataStore.UpdateItemAsync(editEmployee);
 
-             if (result)
+            if (result)
             {
                 return RedirectToAction("ShowEmployees");
             }
@@ -189,7 +189,7 @@ namespace QuickOrderAdmin.Controllers
 
         public async Task<IActionResult> DeleteEmployee(Guid id)
         {
-            var result = employeeDataStore.DeleteItemAsync(id.ToString());
+            var result = await employeeDataStore.DeleteItemAsync(id.ToString());
 
             return RedirectToAction("ShowEmployees");
 

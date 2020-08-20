@@ -1,17 +1,15 @@
 ﻿using Library.Models;
-using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
-using Xamarin.Forms;
+using System.Linq;
+using System.Text;
 
 namespace QuickOrderApp.Utilities.Presenters
 {
-    public class OrderPresenter : BaseViewModel
+    public class EmployeeOrderPresenter:BaseViewModel
     {
-        public ICommand DetailCommand { get; set; }
-        public ICommand DeleteCommand { get; set; }
 
         private Guid orderid;
 
@@ -44,31 +42,9 @@ namespace QuickOrderApp.Utilities.Presenters
                 buyerid = value;
                 OnPropertyChanged();
             }
-        }
+        }    
 
-        private byte[] storeImage;
-
-        public byte[] StoreImage
-        {
-            get { return storeImage; }
-            set
-            {
-                storeImage = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string storeName;
-
-        public string StoreName
-        {
-            get { return storeName; }
-            set
-            {
-                storeName = value;
-                OnPropertyChanged();
-            }
-        }
+      
 
         private int orderItems;
 
@@ -106,9 +82,10 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+        public ObservableCollection<OrderProductPresenter> OrderProductsPresenter { get; set; }
         public ObservableCollection<OrderProduct> OrderProducts { get; set; }
 
-        
+
         public Status OrderStatus { get; set; }
 
 
@@ -124,41 +101,54 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
-        public OrderPresenter(Order order)
+        private Guid storeId;
+
+        public Guid StoreId
+        {
+            get { return storeId; }
+            set { storeId = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public EmployeeOrderPresenter()
+        {
+
+        }
+
+
+        public EmployeeOrderPresenter(Order order)
         {
             OrderId = order.OrderId;
-            OrderDate = order.OrderDate;
-            StoreImage = order.StoreOrder.StoreImage;
+            OrderDate = order.OrderDate;           
             BuyerId = order.BuyerId;
             OrderItems = order.OrderProducts.Count;
             OStatus = order.OrderStatus;
             OrderType = order.OrderType;
-            StoreName = order.StoreOrder.StoreName;
-
-            OrderProducts = new ObservableCollection<OrderProduct>(order.OrderProducts);
-
-            DetailCommand = new Command(async () =>
+            StoreId = order.StoreId;
+            OrderProducts = new ObservableCollection<OrderProduct>(order.OrderProducts.ToList());
+            OrderProductsPresenter = new ObservableCollection<OrderProductPresenter>();
+            foreach (var item in order.OrderProducts)
             {
-                //await Shell.Current.GoToAsync($"DetailOrderRoute?Id={OrderId.ToString()}", animate: true);
-                SelectedOrder.CurrentOrder = order;
-                await Shell.Current.GoToAsync($"DetailOrderRoute", animate: true);
-
-            });
-
-            DeleteCommand = new Command(async () =>
-            {
-
-                var orderDelete = await orderDataStore.DeleteItemAsync(OrderId.ToString());
-                if (orderDelete)
+                var orderProductPresenter = new OrderProductPresenter()
                 {
+                    IsComplete = false,
+                    ProductId = item.OrderProductId,
+                    ProductImg = item.ProductImage,
+                    ProductName = item.ProductName,
+                    ProductPrice = item.Price,
+                    Quantity = item.Quantity
+                };
 
-                    MessagingCenter.Send<OrderPresenter, OrderPresenter>(this, "Refresh", this);
-                }
+                OrderProductsPresenter.Add(orderProductPresenter);
+            }
 
-                //await Shell.Current.GoToAsync("StoreOrderRoute");
 
-            });
+
         }
+
+
 
     }
 }
