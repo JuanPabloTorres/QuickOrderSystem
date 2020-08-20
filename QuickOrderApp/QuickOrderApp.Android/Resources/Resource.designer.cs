@@ -6466,6 +6466,7 @@ namespace QuickOrderApp.Droid
 			global::Syncfusion.XForms.Android.ComboBox.Resource.Drawable.Avatar9 = global::QuickOrderApp.Droid.Resource.Drawable.Avatar9;
 			global::Syncfusion.XForms.Android.ComboBox.Resource.Drawable.avd_hide_password = global::QuickOrderApp.Droid.Resource.Drawable.avd_hide_password;
 			global::Syncfusion.XForms.Android.ComboBox.Resource.Drawable.avd_show_password = global::QuickOrderApp.Droid.Resource.Drawable.avd_show_password;
+			global::Syncfusion.XForms.Android.ComboBox.Resource.Drawable.clear_button_icon = global::QuickOrderApp.Droid.Resource.Drawable.clear_button_icon;
 			global::Syncfusion.XForms.Android.ComboBox.Resource.Drawable.design_bottom_navigation_item_background = global::QuickOrderApp.Droid.Resource.Drawable.design_bottom_navigation_item_background;
 			global::Syncfusion.XForms.Android.ComboBox.Resource.Drawable.design_fab_background = global::QuickOrderApp.Droid.Resource.Drawable.design_fab_background;
 			global::Syncfusion.XForms.Android.ComboBox.Resource.Drawable.design_ic_visibility = global::QuickOrderApp.Droid.Resource.Drawable.design_ic_visibility;

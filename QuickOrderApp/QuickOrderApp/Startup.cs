@@ -3,6 +3,7 @@ using Library.Services.Interface;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using QuickOrderApp.Manager;
 using System;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -64,6 +65,7 @@ namespace QuickOrderApp
 
 			services.AddSingleton<AppShell>();
 			services.AddSingleton<App>();
+			services.AddSingleton<AppManager>();
 
 			#region ServiceServices
 

@@ -1,246 +1,271 @@
-﻿//using Library.Models;
-//using QuickOrderApp.Utilities.Keys;
-//using System;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Threading.Tasks;
-//using Xamarin.Essentials;
-//using Xamarin.Forms;
+﻿using Library.Models;
+using QuickOrderApp.Utilities.Keys;
+using QuickOrderApp.Views.Login;
+using System;
+using System.Threading.Tasks;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
-//namespace QuickOrderApp.Manager
-//{
-//    public class AppManager
-//    {
+namespace QuickOrderApp.Manager
+{
+	public class AppManager
+	{
+		#region Fields
 
-//        #region Fields
+		private User currentUser;
 
-//        private User currentUser;
-//        //private Store? currentStore;
-//        private Guid currentStoreId;
+		//private Store? currentStore;
+		private Guid currentStoreId;
 
+		#endregion Fields
 
-//        #endregion Fields
+		#region Constructors
 
-//        #region Constructors
+		public AppManager()
+		{
+		}
 
-//        public AppManager()
-//        {
-//        }
+		#endregion Constructors
 
-//        #endregion Constructors
+		#region Properties
 
-//        #region Properties
+		//public User CurrentUser
+		//{
+		//    get => currentUser;
+		//    set
+		//    {
+		//        if (currentUser != value)
+		//        {
+		//            currentUser = value;
 
-//        //public User CurrentUser
-//        //{
-//        //    get => currentUser;
-//        //    set
-//        //    {
-//        //        if (currentUser != value)
-//        //        {
-//        //            currentUser = value;
+		//            if (currentUser is User
+		//                && currentUser.MyStores is object
+		//                && currentUser.HasStore())
+		//            {
+		//                IShellViewModel shellViewModel = Startup.ServiceProvider.GetService<IShellViewModel>();
 
-//        //            if (currentUser is User
-//        //                && currentUser.MyStores is object
-//        //                && currentUser.HasStore())
-//        //            {
+		//                if (CurrenstStoreGuid == Guid.Empty || CurrenstStoreGuid == null)
+		//                {
+		//                    Guid storeGuid;
 
-//        //                IShellViewModel shellViewModel = Startup.ServiceProvider.GetService<IShellViewModel>();
+		//                    if (Guid.TryParse(
+		//                        Preferences.Get(nameof(CurrenstStoreGuid), string.Empty),
+		//                        out storeGuid) && storeGuid != Guid.Empty)
+		//                    {
+		//                        CurrenstStoreGuid = storeGuid;
+		//                    }
+		//                    else
+		//                    {
+		//                        CurrenstStoreGuid = currentUser.MyStores.FirstOrDefault().Id;
+		//                    }
+		//                }
 
-//        //                if (CurrenstStoreGuid == Guid.Empty || CurrenstStoreGuid == null)
-//        //                {
-//        //                    Guid storeGuid;
+		//                shellViewModel.MyStores =
+		//                        new ObservableCollection<Store>(currentUser.MyStores);
 
-//        //                    if (Guid.TryParse(
-//        //                        Preferences.Get(nameof(CurrenstStoreGuid), string.Empty),
-//        //                        out storeGuid) && storeGuid != Guid.Empty)
-//        //                    {
-//        //                        CurrenstStoreGuid = storeGuid;
-//        //                    }
-//        //                    else
-//        //                    {
-//        //                        CurrenstStoreGuid = currentUser.MyStores.FirstOrDefault().Id;
-//        //                    }
-//        //                }
+		//                if (shellViewModel.HeaderContent is null)
+		//                {
+		//                    shellViewModel.CreateHeader();
+		//                }
+		//            }
+		//        }
+		//    }
+		//}
 
-//        //                shellViewModel.MyStores =
-//        //                        new ObservableCollection<Store>(currentUser.MyStores);
+		//public Store? CurrentStore
+		//{
+		//    get => currentStore;
+		//    private set
+		//    {
+		//        if (currentStore != value)
+		//        {
+		//            currentStore = value;
+		//        }
+		//    }
+		//}
 
-//        //                if (shellViewModel.HeaderContent is null)
-//        //                {
-//        //                    shellViewModel.CreateHeader();
-//        //                }
-//        //            }
-//        //        }
-//        //    }
-//        //}
+		//public Guid CurrenstStoreGuid
+		//{
+		//    get => currentStoreId;
+		//    set
+		//    {
+		//        Store? existingStore;
 
-//        //public Store? CurrentStore
-//        //{
-//        //    get => currentStore;
-//        //    private set
-//        //    {
-//        //        if (currentStore != value)
-//        //        {
-//        //            currentStore = value;
-//        //        }
-//        //    }
-//        //}
+		//        if (CurrentUser is User
+		//            && CurrentUser.HasStore())
+		//        {
+		//            existingStore = CurrentUser.MyStores.FirstOrDefault(_ => _.Id == value);
 
-//        //public Guid CurrenstStoreGuid
-//        //{
-//        //    get => currentStoreId;
-//        //    set
-//        //    {
-//        //        Store? existingStore;
+		//            if (existingStore is object)
+		//            {
+		//                CurrentStore = existingStore;
+		//                currentStoreId = value;
+		//                Preferences.Set(nameof(CurrenstStoreGuid), currentStoreId.ToString());
+		//            }
+		//            else
+		//            {
+		//                currentStoreId = Guid.Empty;
+		//                Preferences.Set(nameof(CurrenstStoreGuid), Guid.Empty.ToString());
+		//                existingStore = CurrentUser.MyStores.FirstOrDefault();
+		//                currentStoreId = existingStore.Id;
+		//            }
+		//        }
+		//    }
+		//}
 
-//        //        if (CurrentUser is User
-//        //            && CurrentUser.HasStore())
-//        //        {
-//        //            existingStore = CurrentUser.MyStores.FirstOrDefault(_ => _.Id == value);
+		#endregion Properties
 
-//        //            if (existingStore is object)
-//        //            {
-//        //                CurrentStore = existingStore;
-//        //                currentStoreId = value;
-//        //                Preferences.Set(nameof(CurrenstStoreGuid), currentStoreId.ToString());
-//        //            }
-//        //            else
-//        //            {
-//        //                currentStoreId = Guid.Empty;
-//        //                Preferences.Set(nameof(CurrenstStoreGuid), Guid.Empty.ToString());
-//        //                existingStore = CurrentUser.MyStores.FirstOrDefault();
-//        //                currentStoreId = existingStore.Id;
-//        //            }
-//        //        }
-//        //    }
-//        //}
+		#region Methods
 
-//        #endregion Properties
+		/// <summary>
+		/// Checks if storage has credentials. If does, sets CurrentUserEmail Id for CurrentUser fetching
+		/// </summary>
+		/// <returns></returns>
+		public async Task<bool> HasStorageCredentials()
+		{
+			bool hasCred = false;
+			string email = string.Empty;
+			string pass = string.Empty;
 
-//        #region Methods
+			try
+			{
+				email = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageEmailKey);
+				//pass = await SecureStorage.GetAsync(LocalStorage.SecureStoreagePassKey);
 
-//        /// <summary>
-//        /// Checks if storage has credentials. If does, sets CurrentUserEmail Id for CurrentUser fetching
-//        /// </summary>
-//        /// <returns></returns>
-//        public async Task<bool> HasStorageCredentials()
-//        {
-//            bool hasCred = false;
-//            string email = string.Empty;
-//            string pass = string.Empty;
+				if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(pass)) { hasCred = true; }
+			}
+			catch (Exception)
+			{
+				// Possible that device doesn't support secure storage on device.
+			}
 
-//            try
-//            {
-//                email = await SecureStorage.GetAsync(LocalStorage.SecureStoreageEmailKey);
-//                //pass = await SecureStorage.GetAsync(LocalStorage.SecureStoreagePassKey);
+			return hasCred;
+		}
 
-//                if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(pass)) { hasCred = true; }
-//            }
-//            catch (Exception)
-//            {
-//                // Possible that device doesn't support secure storage on device.
-//            }
+		/// <summary>
+		/// Sets data to SecureStorage
+		/// </summary>
+		/// <param name="email">User email/key</param>
+		/// <param name="pass">User password</param>
+		/// <param name="discriminator">User type</param>
+		/// <returns></returns>
+		public async Task SetCredentialsInStorage(string email = null, string pass = null)
+		{
+			if (string.IsNullOrEmpty(email))
+			{
+				await SecureStorage.SetAsync(LocalStorageKeys.SecureStorageEmailKey, email);
+			}
+			else if (string.IsNullOrEmpty(pass))
+			{
+				//await SecureStorage.SetAsync(LocalStorage.SecureStoreagePassKey, pass);
+			}
+		}
 
-//            return hasCred;
-//        }
+		/// <summary>
+		/// Sets credentials in storage using user data
+		/// </summary>
+		/// <param name="user"></param>
+		/// <returns></returns>
+		public async Task SetCredentialsInStorage(User user)
+		{
+			if (user is object)
+			{
+				if (!string.IsNullOrEmpty(user.Email))
+				{
+					await SecureStorage.SetAsync(LocalStorageKeys.SecureStorageEmailKey, user.Email);
+				}
+			}
+		}
 
-//        /// <summary>
-//        /// Sets data to SecureStorage
-//        /// </summary>
-//        /// <param name="email">User email/key</param>
-//        /// <param name="pass">User password</param>
-//        /// <param name="discriminator">User type</param>
-//        /// <returns></returns>
-//        public async Task SetCredentialsInStorage(string email = null, string pass = null)
-//        {
-//            if (string.IsNullOrEmpty(email))
-//            {
-//                await SecureStorage.SetAsync(LocalStorage.SecureStoreageEmailKey, email);
-//            }
-//            else if (string.IsNullOrEmpty(pass))
-//            {
-//                //await SecureStorage.SetAsync(LocalStorage.SecureStoreagePassKey, pass);
-//            }
-//        }
+		public async Task SaveRegistrationInStorage(User user)
+		{
+			if (user is object)
+			{
+				if (!string.IsNullOrEmpty(user.Email))
+				{
+					await SecureStorage.SetAsync(LocalStorageKeys.SecureStorageEmailKey, user.Email);
+				}
+				else if (!string.IsNullOrEmpty(user.Name))
+				{
+					await SecureStorage.SetAsync(LocalStorageKeys.SecureStorageNameKey, user.Name);
+				}
+				else if (!string.IsNullOrEmpty(user.Address))
+				{
+					await SecureStorage.SetAsync(LocalStorageKeys.SecureStorageAddressKey, user.Address);
+				}
+				else if (!string.IsNullOrEmpty(user.Phone))
+				{
+					await SecureStorage.SetAsync(LocalStorageKeys.SecureStoragePhoneKey, user.Phone);
+				}
+				else
+				{
+					await SecureStorage.SetAsync(LocalStorageKeys.SecureStorageGenderKey, user.Gender.ToString());
+				}
+			}
+		}
+		public async Task<User> GetRegistrationDataInStorage()
+		{
+			return new User
+			{
+				Name = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageNameKey),
+				Email = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageEmailKey),
+				Phone = await SecureStorage.GetAsync(LocalStorageKeys.SecureStoragePhoneKey),
+				Address = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageAddressKey),
+				Gender = (Gender)int.Parse(await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageGenderKey))
+			};
+		}
+		
+		/// <summary>
+		/// Sets CurrentUserData using Secure Storage
+		/// Calls FetchCurrentUser() to set CurrentUserData.CurrentUser and completes CurrentUserData setting
+		/// </summary>
+		/// <returns></returns>
+		//public async Task SetCurrentUserDataFromSecureStorage()
+		//{
+		//	IUserDataStore userDataStore = Startup.ServiceProvider.GetService<IUserDataStore>();
+		//	string email = string.Empty;
+		//	User user = null;
 
-//        /// <summary>
-//        /// Sets credentials in storage using user data
-//        /// </summary>
-//        /// <param name="user"></param>
-//        /// <returns></returns>
-//        public async Task SetCredentialsInStorage(User user)
-//        {
-//            if (user != null)
-//            {
-//                if (!string.IsNullOrEmpty(user.Email))
-//                {
-//                    await SecureStorage.SetAsync(LocalStorage.SecureStoreageEmailKey, user.Email);
-//                }
-//            }
-//        }
+		//	email = await SecureStorage.GetAsync(LocalStorage.SecureStoreageEmailKey);
+		//	user = await userDataStore.GetUserByEmail(email: email);
 
-//        /// <summary>
-//        /// Sets CurrentUserData using Secure Storage
-//        /// Calls FetchCurrentUser() to set CurrentUserData.CurrentUser and completes CurrentUserData setting
-//        /// </summary>
-//        /// <returns></returns>
-//        public async Task SetCurrentUserDataFromSecureStorage()
-//        {
-//            IUserDataStore userDataStore = Startup.ServiceProvider.GetService<IUserDataStore>();
-//            string email = string.Empty;
-//            User user = null;
+		//	if (user != null)
+		//	{
+		//		CurrentUser = user;
+		//	}
+		//	else
+		//	{
+		//		CurrentUser = null;
+		//		SecureStorage.RemoveAll();
+		//	}
 
-//            email = await SecureStorage.GetAsync(LocalStorage.SecureStoreageEmailKey);
-//            user = await userDataStore.GetUserByEmail(email: email);
+		//public bool IsLogged(bool logoutProcedure = false)
+		//{
+		//	bool isLogged = false;
 
-//            if (user != null)
-//            {
-//                CurrentUser = user;
-//            }
-//            else
-//            {
-//                CurrentUser = null;
-//                SecureStorage.RemoveAll();
-//            }
-//        }
+		//	if (CurrentUser is object)
+		//	{
+		//		isLogged = true;
+		//	}
+		//	else if (logoutProcedure)
+		//	{
+		//		isLogged = false;
+		//		Task.Run(() => LogOff());
+		//	}
 
-//        public bool IsLogged(bool logoutProcedure = false)
-//        {
-//            bool isLogged = false;
+		//	return isLogged;
+		//}
 
-//            if (CurrentUser is object)
-//            {
-//                isLogged = true;
-//            }
-//            else if (logoutProcedure)
-//            {
-//                isLogged = false;
-//                Task.Run(() => LogOff());
-//            }
+		public void LogOff()
+		{
+			Device.BeginInvokeOnMainThread(async () =>
+			{
+				await Shell.Current.GoToAsync(LoginPage.Route);
+			});
+			SecureStorage.RemoveAll();
+			Preferences.Clear();
+		}
 
-//            return isLogged;
-//        }
-
-//        public void LogOff()
-//        {
-//			Device.BeginInvokeOnMainThread(async () => {
-//                await Shell.Current.GoToAsync(LoginPage.Route);
-//            });
-//            SecureStorage.RemoveAll();
-//            Preferences.Clear();
-//        }
-
-//        /// <summary>
-//        /// Fetches the User by the discriminator
-//        /// </summary>
-//        //private async Task<User?> FetchCurrentUser(string email)
-//        //{
-//        //    IUserDataStore userDataStore = Startup.ServiceProvider.GetService<IUserDataStore>();
-//        //    User? user = await userDataStore.GetUserByEmail(email: email).ConfigureAwait(false);
-//        //    return user;
-//        //}
-
-//        #endregion Methods
-//    }
-//}
+		#endregion Methods
+	}
+}

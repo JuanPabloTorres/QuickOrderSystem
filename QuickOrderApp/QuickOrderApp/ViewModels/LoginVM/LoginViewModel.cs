@@ -1,4 +1,6 @@
 ﻿using Library.Models;
+using Microsoft.Extensions.DependencyInjection;
+using QuickOrderApp.Manager;
 using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.Views.Login;
@@ -17,6 +19,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 	public class LoginViewModel : BaseViewModel
 	{
 		private readonly INavigation Navigation;
+		readonly AppManager AppManager;
 
 		#region Commandos
 
@@ -51,9 +54,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
 		public LoginViewModel(INavigation _navigation)
 		{
 			Navigation = _navigation;
+			AppManager = Startup.ServiceProvider.GetService<AppManager>();
 
-			Username = "r02";
-			Password = "123";
+
+			LoadRegistrationDataFromStorage();
 
 			#region Instaciando Validadores
 
@@ -540,41 +544,43 @@ namespace QuickOrderApp.ViewModels.LoginVM
 							UserLogin = userlogin,
 						};
 
-						try
-						{
-							StripeConfiguration.ApiKey = "sk_test_51HGFkGG5r03dPhLQzwSyX2iydSixRtsn5s0lX0T1yDMs1pw874oJNe69pXuZ7qCtGQCoArkh7a04BVfRHHvfq6lX00A67Rj967";
+						await this.AppManager.SaveRegistrationInStorage(newUser);
+						//TODO: SEND EMAIL
+						//try
+						//{
+						//	StripeConfiguration.ApiKey = "sk_test_51HGFkGG5r03dPhLQzwSyX2iydSixRtsn5s0lX0T1yDMs1pw874oJNe69pXuZ7qCtGQCoArkh7a04BVfRHHvfq6lX00A67Rj967";
 
-							var optionsCustomers = new CustomerCreateOptions
-							{
-								Description = "New Customer From Quick Order",
-								Name = Fullname,
-								Email = Email,
-								Phone = Phone,
-								Address = new AddressOptions() { Line1 = Address }
-							};
+						//	var optionsCustomers = new CustomerCreateOptions
+						//	{
+						//		Description = "New Customer From Quick Order",
+						//		Name = Fullname,
+						//		Email = Email,
+						//		Phone = Phone,
+						//		Address = new AddressOptions() { Line1 = Address }
+						//	};
 
-							var customerservice = new CustomerService();
-							var customertoken = customerservice.Create(optionsCustomers);
+						//	var customerservice = new CustomerService();
+						//	var customertoken = customerservice.Create(optionsCustomers);
 
-							if (!string.IsNullOrEmpty(customertoken.Id))
-							{
-								newUser.StripeUserId = customertoken.Id;
-								var result = await userDataStore.AddItemAsync(newUser);
+						//	if (!string.IsNullOrEmpty(customertoken.Id))
+						//	{
+						//		newUser.StripeUserId = customertoken.Id;
+						//		var result = await userDataStore.AddItemAsync(newUser);
 
-								var getCredential = userDataStore.CheckUserCredential(Username, Password);
+						//		var getCredential = userDataStore.CheckUserCredential(Username, Password);
 
-								if (result)
-								{
-									await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
-									App.LogUser = getCredential;
-									App.Current.MainPage = new AppShell();
-								}
-							}
-						}
-						catch (Exception e)
-						{
-							await App.Current.MainPage.DisplayAlert("Notification", e.Message, "OK");
-						}
+						//		if (result)
+						//		{
+						//			await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
+						//			App.LogUser = getCredential;
+						//			App.Current.MainPage = new AppShell();
+						//		}
+						//	}
+						//}
+						//catch (Exception e)
+						//{
+						//	await App.Current.MainPage.DisplayAlert("Notification", e.Message, "OK");
+						//}
 					}
 					else
 					{
@@ -588,6 +594,16 @@ namespace QuickOrderApp.ViewModels.LoginVM
 			}
 		}
 		#endregion
+
+		private void LoadRegistrationDataFromStorage()
+		{
+			User userData = Task.Run(async()=>await this.AppManager.GetRegistrationDataInStorage()).GetAwaiter().GetResult();
+			Fullname = userData.Name;
+			Address = userData.Address;
+			Phone = userData.Phone;
+			GenderSelected = userData.Gender.ToString();
+			Email = userData.Email;
+		}
 #endregion Methods
 	}
 }

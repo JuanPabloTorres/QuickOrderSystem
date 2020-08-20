@@ -59,6 +59,8 @@ namespace WebApiQuickOrder
             });
             //services.AddLogging();
             services.AddControllers();
+
+            services.AddScoped<IEmailSettings, EmailSettings>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,6 +84,8 @@ namespace WebApiQuickOrder
             {
                 routes.MapHub<ComunicationHub>("/comunicationhub");
             });
+
+
         }
     }
 }
