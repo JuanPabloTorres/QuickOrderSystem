@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="QuickOrderApp.Views.Settings.YourCardsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Your Cards"
+    Routing.Route="YourCardRoute"
+    mc:Ignorable="d">
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView
+                Margin="5"
+                EmptyView="Not Card Register"
+                ItemsSource="{Binding PaymentCardPresenters}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="1" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <ContentView Margin="5">
+
+                            <Frame
+                                Margin="4"
+                                Padding="10"
+                                BorderColor="LightGray"
+                                CornerRadius="5"
+                                HasShadow="True">
+
+                                <StackLayout BackgroundColor="White">
+
+                                    <StackLayout Margin="8,0,8,0">
+
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="Body"
+                                                Text="Holder Name:"
+                                                TextColor="Black" />
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="Body"
+                                                Text="{Binding HolderName}"
+                                                TextColor="Orange" />
+                                        </StackLayout>
+
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="Body"
+                                                Text="Card:"
+                                                TextColor="Black" />
+                                            <Label
+                                                FontAttributes="Bold"
+                                                FontSize="Body"
+                                                Text="{Binding CardNumber}"
+                                                TextColor="Gray" />
+                                        </StackLayout>
+
+
+                                    </StackLayout>
+
+
+                                    <button:SfButton
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Margin="8,0,8,0"
+                                        BackgroundColor="Tomato"
+                                        Command="{Binding}"
+                                        CornerRadius="5"
+                                        FontAttributes="Bold"
+                                        HasShadow="True"
+                                        Text="EDIT"
+                                        TextColor="Black" />
+
+
+                                </StackLayout>
+                            </Frame>
+
+                        </ContentView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

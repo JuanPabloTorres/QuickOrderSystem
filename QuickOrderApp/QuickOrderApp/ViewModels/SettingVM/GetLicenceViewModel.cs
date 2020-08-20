@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using Stripe;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.SettingVM
@@ -25,15 +26,26 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
                         //Check that the payment was submited.
 
-                        //Send Lincese Code
+                        //Send Lincese Code 
 
+                        var subcriptionToken = await stripeServiceDS.CreateACustomerSubcription(App.LogUser.StripeUserId);
 
-                        var licenseReuslt = await storeLicenseDataStore.PostStoreLicense(App.LogUser.Email, App.LogUser.Name);
-
-                        if (licenseReuslt)
+                        if (!string.IsNullOrEmpty(subcriptionToken))
                         {
-                            await App.Current.MainPage.DisplayAlert("Notification", "License added succefully.", "OK");
+                            var licenseReuslt = await storeLicenseDataStore.PostStoreLicense(App.LogUser.Email, App.LogUser.Name);
+
+                            if (licenseReuslt)
+                            {
+                                await App.Current.MainPage.DisplayAlert("Notification", "License added succefully.", "OK");
+                            }
+
                         }
+                        else
+                        {
+                            await App.Current.MainPage.DisplayAlert("Notification", "The subcription could not be made. Try again.", "OK");
+                        }
+
+
 
                     }
                     else

@@ -108,9 +108,21 @@ namespace QuickOrderApp.Utilities.Presenters
 
         public ObservableCollection<OrderProduct> OrderProducts { get; set; }
 
-        //public Library.Models.Type OrderType { get; set; }
+        
         public Status OrderStatus { get; set; }
 
+
+        private bool iscomplete;
+
+        public bool IsComplete
+        {
+            get { return iscomplete; }
+            set
+            {
+                iscomplete = value;
+                OnPropertyChanged();
+            }
+        }
 
         public OrderPresenter(Order order)
         {

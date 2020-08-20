@@ -24,7 +24,7 @@
             Orientation="Horizontal"
             Spacing="10"
             VerticalOptions="Center">
-            <Image Aspect="AspectFit" Source="Icon.png" />
+
             <Label
                 FontSize="18"
                 Text="Quick Order"
@@ -33,10 +33,6 @@
         </StackLayout>
     </NavigationPage.TitleView>
 
-    <!--<Shell.BackButtonBehavior>
-        <BackButtonBehavior IsEnabled="False" />
-    </Shell.BackButtonBehavior>-->
-
     <ContentPage.Content>
 
 
@@ -44,37 +40,7 @@
 
 
 
-            <!--<StackLayout>
-                <Frame Padding="0" HasShadow="True">
-
-                    <Entry
-                        FontAttributes="Bold"
-                        FontSize="Large"
-                        HorizontalOptions="Fill"
-                        HorizontalTextAlignment="Start"
-                        Placeholder="Search Store"
-                        Text="{Binding SearchText}"
-                        VerticalOptions="Fill" />
-                </Frame>
-                <button:SfButton
-                    Margin="20,0,20,0"
-                    BackgroundColor="DodgerBlue"
-                    Command="{Binding SearchStoreCommand}"
-                    CornerRadius="5"
-                    FontAttributes="Bold"
-                    HasShadow="True"
-                    Text="Search" />
-            </StackLayout>-->
-
-
-
-
-
-            <CollectionView
-                Margin="5"
-                ItemsSource="{Binding Stores}"
-                SelectedItem="{Binding SelectedStore}"
-                SelectionMode="Single">
+            <CollectionView Margin="5" ItemsSource="{Binding Stores}">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout
                         HorizontalItemSpacing="5"
@@ -110,7 +76,7 @@
                                         TextColor="Black" />
                                     <BoxView
                                         Margin="8,0,8,0"
-                                        BackgroundColor="Gray"
+                                        BackgroundColor="LightGray"
                                         HeightRequest="0.1"
                                         HorizontalOptions="Fill" />
 
@@ -118,10 +84,7 @@
                                         Margin="0,0,10,0"
                                         HorizontalOptions="Center"
                                         Orientation="Horizontal">
-                                        <Label
-                                            Margin="0,0,10,0"
-                                            FontSize="Body"
-                                            Text="Type:" />
+                                        <Label FontSize="Body" Text="Type:" />
                                         <Label
                                             FontSize="Body"
                                             Text="{Binding StoreType}"
@@ -131,15 +94,19 @@
 
 
                                         <Label
+                                            FontAttributes="Bold"
                                             FontSize="Body"
                                             HorizontalOptions="Start"
-                                            Text="About Store" />
+                                            Text="About Store:"
+                                            TextColor="DarkSlateGray" />
+                                        <ScrollView>
 
-                                        <Label FontSize="Caption" Text="{Binding StoreDescription}" />
+                                            <Label FontSize="Medium" Text="{Binding StoreDescription}" />
+                                        </ScrollView>
                                     </StackLayout>
 
                                     <button:SfButton
-                                        Margin="15"
+                                        Margin="10,0,10,0"
                                         BackgroundColor="Tomato"
                                         Command="{Binding GoHomeStoreCommand}"
                                         CornerRadius="5"

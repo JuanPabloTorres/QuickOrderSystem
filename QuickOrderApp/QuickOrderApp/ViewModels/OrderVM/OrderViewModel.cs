@@ -16,13 +16,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
         public ObservableCollection<OrderPresenter> UserOrders { get; set; }
 
         public ObservableCollection<ProductPresenter> ProductPresenters { get; set; }
-
-        //public Command LoadItemsCommand { get; set; }
-
-        //public ICommand CheckoutCommand { get; set; }
-
+      
         public ICommand GetOrdersCommand { get; set; }
-        //public ICommand GetOrdersCommand { get; set; }
+      
 
         private string orderId;
 
@@ -42,11 +38,14 @@ namespace QuickOrderApp.ViewModels.OrderVM
         public string OrderStatus
         {
             get { return orderstatus; }
-            set { orderstatus = value;
+            set 
+            {
+                orderstatus = value;
+
                 OnPropertyChanged();
 
-                SetUserOrderStatus(OrderStatus);
-               
+                LoadUserOrderWithStatus(OrderStatus);
+
             }
         }
 
@@ -64,18 +63,14 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
         public OrderViewModel()
         {
-
             UserOrders = new ObservableCollection<OrderPresenter>();
 
             MessagingCenter.Subscribe<OrderPresenter, OrderPresenter>(this, "Refresh", (sender, arg) =>
              {
 
                  UserOrders.Remove(arg);
-                //LoadItemsCommand.Execute(null);
+               
             });
-
-            //LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-
 
             GetOrdersCommand = new Command<string>(async (arg) =>
             {
@@ -97,13 +92,13 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                 UserOrders.Add(presenter);
             }
-            //UserOrders = new ObservableCollection<Order>(userOrderData);
-
+           
         }
 
-        async Task SetUserOrderStatus(string value)
+        async Task LoadUserOrderWithStatus(string value)
         {
             Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
+
             var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue);
 
             UserOrders.Clear();
@@ -116,37 +111,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 UserOrders.Add(presenter);
             }
         }
-
-        //public async Task ExecuteLoadItemsCommand()
-        //{
-        //    IsBusy = true;
-
-              
-        //    try
-        //    {
-        //        UserOrders.Clear();
-        //        //var userOrderData = orderDataStore.GetUserOrders(App.LogUser.UserId);
-        //        var userorderwithToken = orderDataStore.GetUserOrdersWithToken(App.LogUser.UserId, App.TokenDto.Token);
-
-        //        foreach (var item in userorderwithToken)
-        //        {
-        //            item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-
-        //            var presenter = new OrderPresenter(item);
-
-        //            UserOrders.Add(presenter);
-        //        }
-        //        //UserOrders = new ObservableCollection<Order>(userOrderData);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine(ex);
-        //    }
-        //    finally
-        //    {
-        //        IsBusy = false;
-        //    }
-        //}
 
 
     }

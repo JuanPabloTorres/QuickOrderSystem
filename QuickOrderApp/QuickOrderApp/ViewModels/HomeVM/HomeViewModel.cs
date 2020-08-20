@@ -31,21 +31,6 @@ namespace QuickOrderApp.ViewModels.HomeVM
             }
         }
 
-        private StoreCategory selectedcategory;
-
-        public StoreCategory SelectedCategory
-        {
-            get { return selectedcategory; }
-            set
-            {
-                selectedcategory = value;
-                OnPropertyChanged();
-
-                Shell.Current.GoToAsync($"{CategoryStoresHome.Route}?CategoryId={SelectedCategory.Category}", animate: true);
-            }
-        }
-
-
         private string searchText;
 
         public string SearchText
@@ -64,30 +49,13 @@ namespace QuickOrderApp.ViewModels.HomeVM
         {
             StoreCategories = new ObservableCollection<StoreCategory>();
             Stores = new ObservableCollection<StorePresenters>();
-            GetQuickOrderStores();
-
-
-            SetStoreCategories();
+            LoadQuickOrderStores();            
 
             SelectedStore = new Store();
-
-            SearchStoreCommand = new Command(async () =>
-            {
-                var result = await StoreDataStore.SearchStore(SearchText);
-
-                Stores.Clear();
-
-                foreach (var store in result)
-                {
-                    var storepresenter = new StorePresenters(store);
-
-                    Stores.Add(storepresenter);
-                }
-
-            });
+           
         }
 
-       public async Task GetQuickOrderStores()
+       public async Task LoadQuickOrderStores()
         {
             var storeData = await StoreDataStore.GetItemsAsync();
 
@@ -145,11 +113,6 @@ namespace QuickOrderApp.ViewModels.HomeVM
             StoreCategory clothescategory = new StoreCategory(StoreType.ClothingStore.ToString(), "clothes.png");
 
             StoreCategories.Add(clothescategory);
-
-
-
-
-
 
         }
 

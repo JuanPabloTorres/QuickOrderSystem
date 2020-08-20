@@ -21,6 +21,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
 
             </Grid.RowDefinitions>
             <Frame
@@ -65,23 +66,36 @@
                 FontSize="Body"
                 HasShadow="True"
                 Text="Order Scanner" />
-            <StackLayout Grid.Row="6" Orientation="Horizontal">
-                <Label
-                    Grid.Row="5"
-                    FontSize="Title"
-                    HorizontalOptions="Center"
-                    Text="Position:" />
-                <Label
-                    Grid.Row="5"
-                    FontAttributes="Bold"
-                    FontSize="Title"
-                    Text="{Binding StoreEmployee.Type, StringFormat='{0}'}"
-                    TextColor="Orange" />
-            </StackLayout>
+            <Frame
+                Grid.Row="6"
+                Padding="4"
+                BorderColor="LightGray"
+                HasShadow="True"
+                HorizontalOptions="Fill"
+                IsClippedToBounds="True">
 
+
+                <StackLayout
+                    Grid.Row="6"
+                    HorizontalOptions="Center"
+                    Orientation="Horizontal">
+                    <Label
+                        Grid.Row="5"
+                        FontSize="Title"
+                        HorizontalOptions="Center"
+                        Text="Position:" />
+                    <Label
+                        Grid.Row="5"
+                        FontAttributes="Bold"
+                        FontSize="Title"
+                        Text="{Binding StoreEmployee.Type, StringFormat='{0}'}"
+                        TextColor="Orange" />
+                </StackLayout>
+
+            </Frame>
 
             <CollectionView
-                Grid.Row="7"
+                Grid.Row="8"
                 EmptyView="No Work Hours Register"
                 ItemsSource="{Binding EmpWorkHour}">
                 <CollectionView.Header>
@@ -93,7 +107,7 @@
                     </StackLayout>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="2" />
+                    <GridItemsLayout Orientation="Vertical" Span="1" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

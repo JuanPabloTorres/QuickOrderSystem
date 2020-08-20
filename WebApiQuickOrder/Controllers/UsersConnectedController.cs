@@ -102,7 +102,7 @@ namespace WebApiQuickOrder.Controllers
 
         // DELETE: api/UsersConnected/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<UsersConnected>> DeleteUsersConnected(string id)
+        public async Task<ActionResult<bool>> DeleteUsersConnected(string id)
         {
             var usersConnected = await _context.usersConnecteds.FindAsync(id);
             if (usersConnected == null)
@@ -113,7 +113,15 @@ namespace WebApiQuickOrder.Controllers
             _context.usersConnecteds.Remove(usersConnected);
             await _context.SaveChangesAsync();
 
-            return usersConnected;
+            if (_context.usersConnecteds.Any(u=>u.HubConnectionID == id))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
         }
 
         private bool UsersConnectedExists(string id)

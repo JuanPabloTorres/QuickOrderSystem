@@ -8,6 +8,7 @@ namespace QuickOrderApp.Views.Store.StoreManger
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class StoreOrderDetailPage : ContentPage
     {
+        public static string Route = "StoreOrderDetailRoute";
         public StoreOrderDetailPage()
         {
             InitializeComponent();

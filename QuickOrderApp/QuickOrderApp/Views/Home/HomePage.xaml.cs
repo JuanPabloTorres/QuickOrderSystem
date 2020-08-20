@@ -19,13 +19,8 @@ namespace QuickOrderApp.Views.Home
         {
             base.OnAppearing();
 
-            HomeViewModel.GetQuickOrderStores();
-            //MessagingCenter.Send<object>(null, "Update");
+           await HomeViewModel.LoadQuickOrderStores();           
         }
 
-        //protected override bool OnBackButtonPressed()
-        //{
-        //    return false;
-        //}
     }
 }

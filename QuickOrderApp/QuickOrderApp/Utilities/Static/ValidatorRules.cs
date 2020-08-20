@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using ZXing;
 
 namespace QuickOrderApp.Utilities.Static
 {
@@ -13,7 +15,7 @@ namespace QuickOrderApp.Utilities.Static
             if (!String.IsNullOrEmpty(emailValue))
             {
 
-                Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+                Regex regex = new Regex(@"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z");
                 Match match = regex.Match(emailValue);
 
                 if (match.Success)
@@ -95,6 +97,15 @@ namespace QuickOrderApp.Utilities.Static
 
                 return notEqualValidator;
             }
+        }
+
+
+        public static bool ValidationsHaveErrors(IList<Validator> validators)
+        {
+            bool result = validators.Any(v => v.HasError == true);
+
+            return result;
+          
         }
 
     }

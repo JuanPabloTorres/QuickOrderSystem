@@ -44,28 +44,28 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
 		public ICommand SearchEmployeeCommand { get; set; }
 
-		public SearchEmployeeViewModel()
-		{
-			Users = new ObservableCollection<SearchEmployeePresenter>();
-			SearchEmployeeCommand = new Command(async()=>
-			{
-				if (!string.IsNullOrEmpty(ToSearch))
-				{
-				SearchEmployee(ToSearch);
+        public SearchEmployeeViewModel()
+        {
+            Users = new ObservableCollection<SearchEmployeePresenter>();
+            SearchEmployeeCommand = new Command(async () =>
+            {
+                if (!string.IsNullOrEmpty(ToSearch))
+                {
+                    await SearchEmployee(ToSearch);
 
-				}
-				else
-				{
-					await Shell.Current.DisplayAlert("Notification", "Empty Value.", "OK");
-				}
-
-
-			});
-			
-		}
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Notification", "User with that information was not found...!", "OK");
+                }
 
 
-		 async Task SearchEmployee(string value)
+            });
+
+        }
+
+
+        async Task SearchEmployee(string value)
 		{
 			var usersdto = await userDataStore.GetUserWithName(value);
 

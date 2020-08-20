@@ -46,8 +46,8 @@
                                         Text="{Binding StoreName}"
                                         TextColor="Black" />
                                     <BoxView
-                                        Margin="4"
-                                        BackgroundColor="Black"
+                                        Margin="8,0,8,0"
+                                        BackgroundColor="LightGray"
                                         HeightRequest="0.1"
                                         HorizontalOptions="Fill" />
                                     <StackLayout Margin="8,0,0,0">

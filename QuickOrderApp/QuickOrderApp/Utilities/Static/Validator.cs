@@ -16,5 +16,11 @@ namespace QuickOrderApp.Utilities.Static
             HasError = false;
             ErrorMessage = String.Empty;
         }
+
+        public Validator(Validator validator)
+        {
+            HasError = validator.HasError;
+            ErrorMessage = validator.ErrorMessage;
+        }
     }
 }

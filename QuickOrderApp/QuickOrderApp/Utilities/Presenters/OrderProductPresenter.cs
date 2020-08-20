@@ -66,5 +66,19 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+        private bool iscomplete;
+
+        public bool IsComplete
+        {
+            get { return iscomplete; }
+            set
+            {
+                iscomplete = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
     }
 }

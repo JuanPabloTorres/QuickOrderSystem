@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace QuickOrderAdmin.Utilities
@@ -38,7 +39,9 @@ namespace QuickOrderAdmin.Utilities
             try
             {
 
-                await hubConnection.InvokeAsync("SenRequestToUser",connectionId, request);
+               var jsonString = JsonSerializer.Serialize(request);
+
+                await hubConnection.InvokeAsync("SenRequestToUser",connectionId, jsonString);
             }
             catch (Exception)
             {

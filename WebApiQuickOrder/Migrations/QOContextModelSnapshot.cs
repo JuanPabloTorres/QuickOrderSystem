@@ -96,6 +96,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
@@ -260,6 +263,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<byte[]>("StoreImage")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<Guid>("StoreLicenceId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("StoreName")
                         .HasColumnType("nvarchar(max)");
 
@@ -287,12 +293,15 @@ namespace WebApiQuickOrder.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("LicenseHolderUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("LicenseId");
 
-                    b.ToTable("StoreLicences");
+                    b.ToTable("Licences");
                 });
 
             modelBuilder.Entity("Library.Models.User", b =>

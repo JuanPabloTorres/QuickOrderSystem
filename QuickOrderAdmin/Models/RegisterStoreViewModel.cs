@@ -12,9 +12,19 @@ namespace QuickOrderAdmin.Models
         [Required(ErrorMessage = "Please enter store name"), StringLength(50)]
         public string StoreName { get; set; }
 
+        [DisplayName("Store Description")]
+        [Required(ErrorMessage = "Please enter store description"), StringLength(50)]
         public string StoreDescription { get; set; }
 
-        [Required]
+        [DisplayName("Stripe Public Key")]
+        [Required(ErrorMessage = "Please enter stripe public key"), StringLength(150)]
+        public string StripePublicKey { get; set; }
+
+        [DisplayName("Stripe Secret Key")]
+        [Required(ErrorMessage = "Please enter stripe secret key"), StringLength(150)]
+        public string StripeSecretKey { get; set; }
+
+       
         [DisplayName("Store Register License")]
         public Guid StoreLicence { get; set; }
 
@@ -89,7 +99,7 @@ namespace QuickOrderAdmin.Models
 
         public StoreType SelectedStoreType { get; set; }
 
-        //public List<string> StoreTypes { get; set; }
+     
 
         public IFormFile File { get; set; }
 

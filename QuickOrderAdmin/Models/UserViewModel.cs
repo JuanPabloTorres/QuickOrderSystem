@@ -15,6 +15,13 @@ namespace QuickOrderAdmin.Models
 
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Please enter phone number"), StringLength(20)]
+        public string Phone { get; set; }
+
+
+        [Required(ErrorMessage = "Please enter address."), StringLength(50)]
+        public string Address { get; set; }
+
         [Required(ErrorMessage = "Please enter your username"), StringLength(50)]
         public string Username { get; set; }
 
@@ -40,6 +47,8 @@ namespace QuickOrderAdmin.Models
             Password = string.Empty;
             ConfirmPassword = string.Empty;
             StoreLicence = Guid.Empty;
+            Phone = string.Empty;
+            Address = string.Empty;
         }
     }
 }

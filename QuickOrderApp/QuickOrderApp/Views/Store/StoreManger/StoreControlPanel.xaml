@@ -18,6 +18,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+
                 <!--<RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
@@ -49,6 +50,7 @@
             <Grid Grid.Row="3">
                 <Grid.RowDefinitions>
 
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -109,11 +111,22 @@
                     Grid.Column="1"
                     Margin="3"
                     BackgroundColor="Tomato"
-                    Command="{Binding GoSearchEmployeeCommand}"
+                    Command="{Binding GoDashboards}"
                     CornerRadius="5"
                     FontAttributes="Bold"
                     HasShadow="True"
                     Text="Dashboards" />
+
+                <button:SfButton
+                    Grid.Row="3"
+                    Grid.ColumnSpan="2"
+                    Margin="3"
+                    BackgroundColor="Tomato"
+                    Command="{Binding}"
+                    CornerRadius="5"
+                    FontAttributes="Bold"
+                    HasShadow="True"
+                    Text="Store Information" />
             </Grid>
         </Grid>
 

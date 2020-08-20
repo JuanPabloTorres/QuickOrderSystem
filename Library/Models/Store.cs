@@ -38,6 +38,8 @@ namespace Library.Models
 
         public StoreType StoreType { get; set; }
 
+        public Guid  StoreLicenceId { get; set; }
+
     }
 
     public enum StoreType

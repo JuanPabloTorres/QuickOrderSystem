@@ -27,7 +27,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 selectedproductType = value;
                 OnPropertyChanged();
 
-                Title = $"Categories:{SelectedProductType}";
+                Title = $"Category: {SelectedProductType}";
                 LoadInventory(SelectedProductType);
             }
         }
@@ -126,16 +126,18 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         public StoreViewModel()
         {
 
+            PropertiesInitializer();
+         
+           
+        }
+
+        void PropertiesInitializer()
+        {
             StoreProducts = new ObservableCollection<ProductPresenter>();
             StoreWorkoutHours = new ObservableCollection<WorkHour>();
             OrderProducts = new ObservableCollection<OrderProduct>();
             ProductCategoryPresenters = new ObservableCollection<ProductCategoryPresenter>();
 
-            GoShowCommand = new Command(async () =>
-            {
-                await Shell.Current.GoToAsync($"ProductRoute?Id={StoreId.ToString()}", animate: true);
-                //await Shell.Current.GoToAsync("ProductRoute");
-            });
         }
 
         async Task LoadInventory(string selectedproductType)
@@ -167,6 +169,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             {
                 ProductCategoryPresenters.Clear();
             }
+
             var group = products.GroupBy(p => p.ProductType);
 
             foreach (var item in group)
@@ -189,6 +192,8 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             {
                 StoreProducts.Clear();
             }
+
+
             foreach (var product in store.Products)
             {
                 var productPresenter = new ProductPresenter(product);

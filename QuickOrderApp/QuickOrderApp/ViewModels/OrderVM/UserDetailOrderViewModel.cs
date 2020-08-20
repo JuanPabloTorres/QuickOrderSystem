@@ -1,4 +1,6 @@
 ﻿using Library.Models;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using QRCoder;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Static;
@@ -9,6 +11,8 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -139,6 +143,17 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
+        private bool arevisible;
+
+        public bool AreVisible
+        {
+            get { return arevisible; }
+            set { arevisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
         private ImageSource qrcodeimg;
 
@@ -152,12 +167,21 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
 
         public UserDetailOrderViewModel()
-        {
+        {        
+
             ProductPresenters = new ObservableCollection<ProductPresenter>();
             OrderDetail = SelectedOrder.CurrentOrder;
             OrderQuantity = OrderDetail.OrderProducts.Count();
             isDeliveryFeeAdded = false;
-            
+
+            if (OrderDetail.OrderStatus == Status.Submited || OrderDetail.OrderStatus == Status.Completed)
+            {
+                AreVisible = false;
+            }
+            else
+            {
+                AreVisible = true;
+            }
 
             SetProducts();
 
@@ -191,31 +215,29 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                         List<PaymentCard> paymentCards = new List<PaymentCard>(usercards);
 
-                        //SetPayment(paymentCards[0].CardNumber, paymentCards[0].HolderName, paymentCards[0].Year, paymentCards[0].Month, paymentCards[0].Cvc, App.LogUser);
+                        var customercardId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId,paymentCards[0].StripeCardId);
 
-                        //var token = CreateToken(paymentCards[0]);
+                        var isTransactionSuccess = await stripeServiceDS.MakePaymentWithCard(OrderDetail.StoreId, Total, paymentCards[0].PaymentCardId, OrderDetail.OrderId.ToString());
+                        if (isTransactionSuccess)
+                        {
+                            const double fee= 0.02;
 
-                        //if (token != null)
-                        //{
-                            var isTransactionSuccess =await MakePayment();
+                            //var feetransferResult = await stripeServiceDS.TransferQuickOrderFeeFromStore("acct_1HGWePHOvPu5G2cu", fee.ToString(),OrderDetail.StoreId.ToString());
+                            var orderUpdate = await orderDataStore.UpdateItemAsync(OrderDetail);
 
-                            if (isTransactionSuccess)
+                            if (orderUpdate)
                             {
-                                var orderUpdate = await orderDataStore.UpdateItemAsync(OrderDetail);
-
-                                if (orderUpdate)
-                                {
-                                    await Shell.Current.GoToAsync("../StoreOrderRoute");
-                                }
+                                await App.Current.MainPage.DisplayAlert("Notification", "Order was submited...!", "OK");
                             }
-                            else
-                            {
-                                await App.Current.MainPage.DisplayAlert("Notification", "Bad Transaction.", "OK");
-                            }
-
-                        //}
+                        }
+                        else
+                        {
+                            await App.Current.MainPage.DisplayAlert("Notification", "Bad Transaction.", "OK");
+                        }
 
                        
+
+
 
                     }
                     else
@@ -259,184 +281,10 @@ namespace QuickOrderApp.ViewModels.OrderVM
             
         }
 
+     
+
         public Token stripeToken;
         public TokenService tokenService;
-       
-         public string TestApiKey = "pk_test_51GOwkJJDC8jrm2We0q0lyl2DRkIOjqJ6psQaHWdbrc1gbfQyDYQhdWwcv9SX6ulQr2yaQjXnsSCpnhaMJfwKf52900Orbmba9I";
-         async void SetPayment(string cardnumber, string holdername, string year, string month, string cvc, User user)
-        {
-
-            var key = await StoreDataStore.GetStoreDestinationPaymentKey(OrderDetail.StoreId);
-
-            if (!string.IsNullOrEmpty(key))
-            {
-                StripeConfiguration.ApiKey = key;
-
-
-                string mycustomer;
-                string getchargedID;
-                string refundID;
-
-                Stripe.CreditCardOptions stripcard = new Stripe.CreditCardOptions();
-                stripcard.Number = cardnumber;
-                stripcard.ExpYear = (long)Convert.ToInt64(year);
-                stripcard.ExpMonth = (long)Convert.ToInt64(month);
-                stripcard.Cvc = cvc;
-                stripcard.Name = holdername;
-
-                Stripe.TokenCreateOptions token = new Stripe.TokenCreateOptions();
-                token.Card = stripcard;
-                Stripe.TokenService serviceToken = new Stripe.TokenService();
-                Stripe.Token newToken = serviceToken.Create(token);
-
-                var options = new SourceCreateOptions
-                {
-                    Type = SourceType.Card,
-                    Currency = "usd",
-                    Token = newToken.Id,
-
-
-                };
-
-                string valuetotal = Total.ToString("0.00").Replace(".", "");
-
-
-
-                var service = new SourceService();
-
-
-                Source source = service.Create(options);
-
-                //Step 3 : Now generate the customer who is doing the payment
-
-                Stripe.CustomerCreateOptions myCustomer = new Stripe.CustomerCreateOptions()
-                {
-                    Name = user.Name,
-                    Email = user.Email,
-                    Phone = user.Phone,
-                    Address = new AddressOptions() { Line1 = user.Address, Country = "Puerto Rico" },
-                    Description = "Customer for est.juanpablotorres@gmail.com",
-                };
-
-                var customerService = new Stripe.CustomerService();
-                Stripe.Customer stripeCustomer = customerService.Create(myCustomer);
-
-                mycustomer = stripeCustomer.Id; // Not needed
-
-                var chargeoptions = new Stripe.ChargeCreateOptions
-                {
-                    Amount = long.Parse(valuetotal),
-                    //Amount = long.Parse(Total.ToString()),
-                    Currency = "USD",
-                    ReceiptEmail = "est.juanpablotorres@gmail.com",
-                    Customer = stripeCustomer.Id,
-                    Source = source.Id
-
-                };
-
-
-                var service1 = new Stripe.ChargeService();
-                Stripe.Charge charge = service1.Create(chargeoptions); // This will do the Payment
-                getchargedID = charge.Id; // Not needed
-
-                await Shell.Current.DisplayAlert("Notification", charge.ReceiptUrl, "OK");
-            }
-
-            //if (!string.IsNullOrEmpty(key))
-            //{
-            //    StripeConfiguration.ApiKey = key;
-
-
-            //    var options = new PayoutCreateOptions
-            //    {
-            //        Amount = 1100,
-            //        Currency = "usd",
-            //    };
-            //    var service = new PayoutService();
-            //    service.Create(options);
-
-            //}
-
-
-        }
-
-         async Task<bool> MakePayment()
-        {
-            var key = await StoreDataStore.GetStoreDestinationPaymentKey(OrderDetail.StoreId);
-
-            StripeConfiguration.ApiKey = key;
-
-            string valuetotal = Total.ToString("0.00").Replace(".", "");
-
-            var chargeoptions = new Stripe.ChargeCreateOptions
-            {
-                Amount = long.Parse(valuetotal),
-                //Amount = long.Parse(Total.ToString()),
-                Currency = "USD",
-                ReceiptEmail = "est.juanpablotorres@gmail.com",
-                //Source = stripeToken.Id,
-                StatementDescriptor = "Order Id:" + OrderDetail.OrderId.ToString().Substring(0, 6),
-                Capture = true,
-                Customer = App.LogUser.StripeUserId,
-                Description = "Payment of Order" + OrderDetail.ToString()
-
-            };
-
-
-            var service = new ChargeService();
-
-            Charge charge = service.Create(chargeoptions);
-
-            if (charge.Status == "succeeded")
-            {
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-
-        public string CreateToken(PaymentCard paymentCard)
-        {
-
-                StripeConfiguration.ApiKey= TestApiKey;
-
-                var service = new ChargeService();
-
-                var tokenoptions = new TokenCreateOptions()
-                {
-                    Card = new CreditCardOptions()
-                    {
-                        Number = paymentCard.CardNumber,
-                        ExpYear = long.Parse(paymentCard.Year),
-                        ExpMonth = long.Parse(paymentCard.Month),
-                        Cvc = paymentCard.Cvc,
-                        Name = paymentCard.HolderName,
-                        AddressLine1 = "Estancias De Santa Rosa Calle Roble",
-                        AddressLine2 = "",
-                        AddressCity = "Villalba",
-                        AddressState = "United State",
-                        AddressCountry = "Puerto Rico",
-                        AddressZip = "00766",
-                        Currency="usd",
-                        
-                    },
-                     
-                    
-                };
-
-                tokenService = new TokenService();
-           
-
-                stripeToken = tokenService.Create(tokenoptions);
-         
-                return stripeToken.Id;
-           
-        }
-
         void SetProducts()
         {
             foreach (var item in OrderDetail.OrderProducts)
@@ -474,7 +322,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                 TotalTax = (Total * 0.115);
                 Total += TotalTax;
-                Total += 0.02;
+                //Total += 0.02;
 
                 StripeFee = (_netTotal * (2.9 / 100)) + 0.3;
                 Total += StripeFee;

@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.DTO;
+using Library.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,7 +32,43 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{userId}")]
         public async Task<IEnumerable<PaymentCard>> GetCardFromUser(Guid userId)
         {
-            return _context.PaymentCards.Where(c => c.UserId == userId).ToList();
+            return await _context.PaymentCards.Where(c => c.UserId == userId).ToListAsync();
+        }
+
+        // GET: api/PaymentCards
+        [HttpGet("[action]/{userId}")]
+        public async Task<IEnumerable<PaymentCardDTO>> GetCardDTOFromUser(Guid userId)
+        {
+            var cards = await _context.PaymentCards.Where(c => c.UserId == userId).ToListAsync();
+
+            List<PaymentCardDTO> paymentCardDTOs = new List<PaymentCardDTO>();
+
+            foreach (var item in cards)
+            {
+                try
+                {
+
+                    string cardlastfour = item.CardNumber.Substring((item.CardNumber.Length - 4));
+                    var cardDtO = new PaymentCardDTO()
+                    {
+                        CardNumber = "●●●●" + cardlastfour,
+                        HolderName = item.HolderName,
+                        StripeCardId = item.StripeCardId
+                    };
+
+                    paymentCardDTOs.Add(cardDtO);
+                }
+                catch (Exception e)
+                {
+
+                    Console.WriteLine(e.Message);
+                }
+
+               
+            }
+
+            return paymentCardDTOs;
+
         }
 
         // GET: api/PaymentCards/5

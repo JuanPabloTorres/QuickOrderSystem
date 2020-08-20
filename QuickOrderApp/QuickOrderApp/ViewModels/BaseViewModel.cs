@@ -29,6 +29,8 @@ namespace QuickOrderApp.ViewModels
         public ICardDataStore CardDataStore => Startup.ServiceProvider.GetService<ICardDataStore>();
         public IUserConnectedDataStore userConnectedDataStore => Startup.ServiceProvider.GetService<IUserConnectedDataStore>();
 
+        public IStripeServiceDS stripeServiceDS => DependencyService.Get<IStripeServiceDS>();
+
         bool isBusy = false;
         public bool IsBusy
         {

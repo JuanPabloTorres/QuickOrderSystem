@@ -1,4 +1,8 @@
 ﻿using Library.Models;
+using QuickOrderApp.Utilities.Presenters;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -16,6 +20,8 @@ namespace QuickOrderApp.ViewModels.OrderVM
             {
                 detailOrder = value;
                 OnPropertyChanged();
+
+                EmployeeOrderPresenter = new EmployeeOrderPresenter(DetailOrder);
             }
         }
 
@@ -28,41 +34,89 @@ namespace QuickOrderApp.ViewModels.OrderVM
             {
                 orderId = value;
                 OnPropertyChanged();
+
+               
             }
         }
 
         public ICommand CompleteOrderCommand { get; set; }
 
+
+        private EmployeeOrderPresenter employeeOrderPresenter;
+
+        public EmployeeOrderPresenter EmployeeOrderPresenter
+        {
+            get { return employeeOrderPresenter; }
+            set { employeeOrderPresenter = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public OrderDetailViewModel()
         {
+            
+            MessagingCenter.Subscribe<EmployeeOrderPresenter>(this, "OrderDetail", (sender) =>
+            {
+                //DetailOrder = sender;
+                EmployeeOrderPresenter = sender;
+
+
+            });
+
+
+
 
             CompleteOrderCommand = new Command(async () =>
             {
-                if (DetailOrder.OrderStatus != Status.Completed)
+
+
+
+                if (EmployeeOrderPresenter.OrderStatus != Status.Completed)
                 {
+                    if (EmployeeOrderPresenter.OrderProductsPresenter.All(op=>op.IsComplete == true))
+                    {
+                    EmployeeOrderPresenter.OrderStatus = Status.Completed;
+                   
 
-                    DetailOrder.OrderStatus = Status.Completed;
+                    var updateOrder = new Order()
+                    {
+                        BuyerId = EmployeeOrderPresenter.BuyerId,
+                        OrderStatus = EmployeeOrderPresenter.OrderStatus,
+                        OrderDate = EmployeeOrderPresenter.OrderDate,
+                        OrderId = EmployeeOrderPresenter.OrderId,
+                        OrderType = EmployeeOrderPresenter.OrderType,
+                        StoreId = EmployeeOrderPresenter.StoreId,
+                         OrderProducts = EmployeeOrderPresenter.OrderProducts
+                         
 
-                    var orderStatusUpdateResult = await orderDataStore.UpdateItemAsync(DetailOrder);
+                    };
+
+                    var orderStatusUpdateResult = await orderDataStore.UpdateItemAsync(updateOrder);
 
                     if (orderStatusUpdateResult)
                     {
-                        await Shell.Current.DisplayAlert("Notification", "Order Update", "OK");
+                        await Shell.Current.DisplayAlert("Notification", "Order Update...!", "OK");
+                    }
+
+                    }
+                    else
+                    {
+                        await Shell.Current.DisplayAlert("Notification", "Some product are not completed yet..!", "OK");
                     }
                 }
                 else
                 {
-                    await Shell.Current.DisplayAlert("Notification", "Order Completed", "OK");
+                    await Shell.Current.DisplayAlert("Notification", "Order Completed..!", "OK");
                 }
             });
 
-            MessagingCenter.Subscribe<Order>(this, "Detail", (sender) =>
-            {
-                DetailOrder = sender;
-            });
 
-            //MessagingCenter.Subscribe<Order>(null,"Detail",(sender,arg))
+           
         }
+
+
+      
 
     }
 }

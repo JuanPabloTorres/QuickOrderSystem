@@ -34,6 +34,11 @@ namespace QuickOrderApp.Services.HubService
        public async Task Disconnect()
         {
             await hubConnection.StopAsync();
+
+            if (String.IsNullOrEmpty(hubConnection.ConnectionId))
+            {
+
+            }
         }
 
         public async Task SendMessage(string user, string message)
