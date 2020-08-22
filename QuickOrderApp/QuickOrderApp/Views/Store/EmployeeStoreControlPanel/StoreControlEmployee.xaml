@@ -7,7 +7,9 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Employee Store Control"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="StoreControlEmployee"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
 
@@ -69,10 +71,7 @@
             <Frame
                 Grid.Row="6"
                 Padding="4"
-                BorderColor="LightGray"
-                HasShadow="True"
-                HorizontalOptions="Fill"
-                IsClippedToBounds="True">
+                Style="{StaticResource FrameStyle}">
 
 
                 <StackLayout
@@ -96,16 +95,17 @@
 
             <CollectionView
                 Grid.Row="8"
+                BackgroundColor="#fefcff"
                 EmptyView="No Work Hours Register"
                 ItemsSource="{Binding EmpWorkHour}">
-                <CollectionView.Header>
+                <!--<CollectionView.Header>
                     <StackLayout>
                         <Label
                             FontSize="Title"
                             HorizontalOptions="Center"
                             Text="Work Schedule" />
                     </StackLayout>
-                </CollectionView.Header>
+                </CollectionView.Header>-->
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical" Span="1" />
                 </CollectionView.ItemsLayout>
@@ -120,8 +120,8 @@
                                 HorizontalOptions="FillAndExpand" />
                             <StackLayout Orientation="Vertical">
                                 <Label
-                                    FontSize="Title"
                                     HorizontalOptions="Center"
+                                    Style="{StaticResource TitleLabel}"
                                     Text="{Binding Day}" />
                                 <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
                                     <Label
@@ -129,8 +129,9 @@
                                         Text="Open"
                                         VerticalOptions="Center" />
                                     <Label
+                                        Style="{StaticResource DataLabel}"
                                         Text="{Binding OpenTime, StringFormat='{0:hh:mm tt}'}"
-                                        TextColor="Green"
+                                        TextColor="DarkSeaGreen"
                                         VerticalOptions="Center" />
 
                                     <Label
@@ -138,6 +139,7 @@
                                         Text="Close"
                                         VerticalOptions="Center" />
                                     <Label
+                                        Style="{StaticResource DataLabel}"
                                         Text="{Binding CloseTime, StringFormat='{0:hh:mm tt}'}"
                                         TextColor="Red"
                                         VerticalOptions="Center" />

@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Stripe;
 using Stripe.Checkout;
+
 using WebApiQuickOrder.Context;
 
 namespace WebApiQuickOrder.Controllers
@@ -372,6 +373,17 @@ namespace WebApiQuickOrder.Controllers
 
         }
 
+        [HttpGet("[action]/{customerId}/{cardId}")]
+        public async Task<bool> DeleteCardFromCustomer(string customerId, string cardId)
+        {
+            StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
+
+            var service = new Stripe.CardService();
+            var cardToken =await service.DeleteAsync(customerId, cardId);
+
+            return cardToken.Deleted.Value;
+
+        }
 
         //[HttpPost("[action]")]
         //public async Task<StripePaymentCardResult> GetAccount(PaymentCard paymentCard)
@@ -382,7 +394,7 @@ namespace WebApiQuickOrder.Controllers
         //        var customerOptions = new CustomerCreateOptions
         //        {
         //            Email = "person@example.edu",
-                     
+
         //        };
         //        var requestOptions = new RequestOptions();
         //        requestOptions.StripeAccount = "{{CONNECTED_ACCOUNT_ID}}";
@@ -403,7 +415,7 @@ namespace WebApiQuickOrder.Controllers
 
         //}
 
-      
+
 
 
 

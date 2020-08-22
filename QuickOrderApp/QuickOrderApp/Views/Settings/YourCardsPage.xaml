@@ -7,7 +7,9 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Your Cards"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="YourCardRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
@@ -22,41 +24,23 @@
                     <DataTemplate>
                         <ContentView Margin="5">
 
-                            <Frame
-                                Margin="4"
-                                Padding="10"
-                                BorderColor="LightGray"
-                                CornerRadius="5"
-                                HasShadow="True">
+                            <Frame Style="{StaticResource FrameStyle}">
 
                                 <StackLayout BackgroundColor="White">
 
                                     <StackLayout Margin="8,0,8,0">
 
                                         <StackLayout Orientation="Horizontal">
+                                            <Label Style="{StaticResource DataLabel}" Text="Holder Name:" />
                                             <Label
-                                                FontAttributes="Bold"
-                                                FontSize="Body"
-                                                Text="Holder Name:"
-                                                TextColor="Black" />
-                                            <Label
-                                                FontAttributes="Bold"
-                                                FontSize="Body"
+                                                Style="{StaticResource DataLabel}"
                                                 Text="{Binding HolderName}"
                                                 TextColor="Orange" />
                                         </StackLayout>
 
                                         <StackLayout Orientation="Horizontal">
-                                            <Label
-                                                FontAttributes="Bold"
-                                                FontSize="Body"
-                                                Text="Card:"
-                                                TextColor="Black" />
-                                            <Label
-                                                FontAttributes="Bold"
-                                                FontSize="Body"
-                                                Text="{Binding CardNumber}"
-                                                TextColor="Gray" />
+                                            <Label Style="{StaticResource DataLabel}" Text="Card:" />
+                                            <Label Style="{StaticResource DataLabel}" Text="{Binding CardNumber}" />
                                         </StackLayout>
 
 
@@ -68,11 +52,11 @@
                                         Grid.Column="0"
                                         Margin="8,0,8,0"
                                         BackgroundColor="Tomato"
-                                        Command="{Binding}"
+                                        Command="{Binding DeleteCardCommand}"
                                         CornerRadius="5"
                                         FontAttributes="Bold"
                                         HasShadow="True"
-                                        Text="EDIT"
+                                        Text="Delete"
                                         TextColor="Black" />
 
 

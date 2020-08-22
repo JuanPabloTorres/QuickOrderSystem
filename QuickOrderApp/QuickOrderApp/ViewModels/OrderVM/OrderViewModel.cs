@@ -4,6 +4,7 @@ using QuickOrderApp.Views.Store;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -65,6 +66,16 @@ namespace QuickOrderApp.ViewModels.OrderVM
         {
             UserOrders = new ObservableCollection<OrderPresenter>();
 
+            MessagingCenter.Subscribe<Order>(this, "RemoveOrderSubtmitedMsg", (sender) =>
+            {
+
+
+                var order = UserOrders.Where(op => op.OrderId == sender.OrderId).FirstOrDefault();
+
+                UserOrders.Remove(order);
+
+            });
+
             MessagingCenter.Subscribe<OrderPresenter, OrderPresenter>(this, "Refresh", (sender, arg) =>
              {
 
@@ -81,9 +92,11 @@ namespace QuickOrderApp.ViewModels.OrderVM
             });
         }
 
-        async Task SetOrders()
+        public async Task SetOrders()
         {
             var userOrderData = orderDataStore.GetUserOrders(App.LogUser.UserId);
+
+            UserOrders.Clear();
 
             foreach (var item in userOrderData)
             {

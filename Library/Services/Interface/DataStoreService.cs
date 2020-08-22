@@ -53,6 +53,7 @@ namespace Library.Interface
         public async Task<bool> DeleteItemAsync(string id)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{id}");
+
             var response = HttpClient.DeleteAsync(FullAPIUri);
 
             if (response.Result.IsSuccessStatusCode)

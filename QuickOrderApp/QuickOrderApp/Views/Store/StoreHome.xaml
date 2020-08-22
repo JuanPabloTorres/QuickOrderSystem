@@ -8,8 +8,9 @@
     xmlns:maps="clr-namespace:Xamarin.Essentials;assembly=Xamarin.Essentials"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding StoreName}"
-    BackgroundColor="White"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="StoreHomeRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
 
 
@@ -45,16 +46,8 @@
         </Frame>
 
         <StackLayout Grid.Row="1" Grid.ColumnSpan="2">
-            <Label
-                FontAttributes="Bold"
-                FontSize="Title"
-                HorizontalOptions="Center"
-                Text="{Binding StoreName}" />
-            <BoxView
-                Margin="8,0,8,0"
-                BackgroundColor="LightGray"
-                HeightRequest="0.1"
-                HorizontalOptions="Fill" />
+            <Label Style="{StaticResource TitleLabel}" Text="{Binding StoreName}" />
+
         </StackLayout>
 
 
@@ -92,7 +85,7 @@
 
         </Frame>
 
-        <ScrollView Grid.Row="3" Grid.ColumnSpan="2">
+        <!--<ScrollView Grid.Row="3" Grid.ColumnSpan="2">
             <StackLayout
                 Grid.Row="3"
                 Grid.ColumnSpan="2"
@@ -107,12 +100,13 @@
 
                 <Label FontSize="Medium" Text="{Binding StoreDescription}" />
             </StackLayout>
-        </ScrollView>
+        </ScrollView>-->
 
         <CollectionView
             Grid.Row="4"
             Grid.ColumnSpan="2"
             Margin="5"
+            BackgroundColor="#fefcff"
             EmptyView="Not Category Available"
             Header="Product Category Available"
             ItemsSource="{Binding ProductCategoryPresenters}">

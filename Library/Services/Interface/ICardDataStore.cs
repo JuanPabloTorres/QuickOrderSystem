@@ -11,5 +11,7 @@ namespace Library.Services.Interface
         Task<IEnumerable<PaymentCard>> GetCardFromUser(Guid userId);
 
         Task<IEnumerable<PaymentCardDTO>> GetCardDTOFromUser(Guid userId);
+
+        Task<bool> DeletePaymentCard(string cardId);
     }
 }

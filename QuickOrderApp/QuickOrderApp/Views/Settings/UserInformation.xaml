@@ -8,29 +8,22 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms"
     Title="Personal Information"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="UserInformationRoute"
-    Shell.BackgroundColor="White"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     Shell.NavBarHasShadow="True"
     Shell.TitleColor="Black"
     mc:Ignorable="d">
     <ContentPage.Content>
 
-        <Frame
-            Margin="8"
-            Padding="10"
-            BorderColor="LightGray"
-            CornerRadius="5"
-            HasShadow="True"
-            IsClippedToBounds="True"
-            VerticalOptions="Center">
+        <Frame Padding="5" Style="{StaticResource FrameStyle}">
 
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -46,68 +39,67 @@
 
                     <StackLayout>
                         <Label
-                            FontAttributes="Bold"
-                            FontSize="Body"
                             HorizontalOptions="Start"
+                            Style="{StaticResource TitleLabel}"
                             Text="User Information" />
                         <BoxView
                             BackgroundColor="LightGray"
                             HeightRequest="0.1"
                             HorizontalOptions="Fill" />
-                        <Label
-                            FontSize="Large"
-                            Text="{Binding Email, StringFormat='Email: {0}'}"
-                            VerticalOptions="Center" />
-                        <Label
-                            FontSize="Large"
-                            HorizontalOptions="Start"
-                            Text="{Binding Address, StringFormat='Address: {0}'}" />
-                        <Label
-                            FontSize="Large"
-                            HorizontalOptions="Start"
-                            Text="{Binding GenderSelected, StringFormat='Gender: {0}'}" />
-                        <Label
-                            FontSize="Large"
-                            HorizontalOptions="Start"
-                            Text="{Binding Phone, StringFormat='Phone: {0:(###) ###-####}'}" />
+                        <Label Style="{StaticResource DataLabel}" Text="{Binding Email, StringFormat='Email: {0}'}" />
+                        <Label Style="{StaticResource DataLabel}" Text="{Binding Address, StringFormat='Address: {0}'}" />
+                        <Label Style="{StaticResource DataLabel}" Text="{Binding GenderSelected, StringFormat='Gender: {0}'}" />
+                        <Label Style="{StaticResource DataLabel}" Text="{Binding Phone, StringFormat='Phone: {0:(###) ###-####}'}" />
                     </StackLayout>
                 </StackLayout>
-                <button:SfButton
-                    Grid.Row="2"
-                    Margin="10"
-                    BackgroundColor="Tomato"
-                    Command="{Binding UpdateProfileCommand}"
-                    CornerRadius="4"
-                    FontAttributes="Bold"
-                    HasShadow="True"
-                    HorizontalOptions="Fill"
-                    Text="Update Profile"
-                    TextColor="Black"
-                    VerticalOptions="End" />
-                <button:SfButton
-                    Grid.Row="3"
-                    Margin="10"
-                    BackgroundColor="Tomato"
-                    Command="{Binding GoPaymentCardCommand}"
-                    CornerRadius="4"
-                    FontAttributes="Bold"
-                    HasShadow="True"
-                    HorizontalOptions="Fill"
-                    Text="Your Cards"
-                    TextColor="Black"
-                    VerticalOptions="End" />
-                <button:SfButton
-                    Grid.Row="4"
-                    Margin="10"
-                    BackgroundColor="Tomato"
-                    Command="{Binding GoRegisterCardCommand}"
-                    CornerRadius="4"
-                    FontAttributes="Bold"
-                    HasShadow="True"
-                    HorizontalOptions="Fill"
-                    Text="Register Card "
-                    TextColor="Black"
-                    VerticalOptions="End" />
+
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <button:SfButton
+                        Grid.Row="0"
+                        Margin="10"
+                        BackgroundColor="Tomato"
+                        BorderColor="Tomato"
+                        Command="{Binding UpdateProfileCommand}"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        HasShadow="True"
+                        HorizontalOptions="Fill"
+                        Text="Update Profile"
+                        TextColor="Black"
+                        VerticalOptions="End" />
+                    <button:SfButton
+                        Grid.Row="1"
+                        Margin="10"
+                        BackgroundColor="Tomato"
+                        BorderColor="Tomato"
+                        Command="{Binding GoPaymentCardCommand}"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        HasShadow="True"
+                        HorizontalOptions="Fill"
+                        Text="Your Cards"
+                        TextColor="Black"
+                        VerticalOptions="End" />
+                    <button:SfButton
+                        Grid.Row="2"
+                        Margin="10"
+                        BackgroundColor="Tomato"
+                        BorderColor="Tomato"
+                        Command="{Binding GoRegisterCardCommand}"
+                        CornerRadius="10"
+                        FontAttributes="Bold"
+                        HasShadow="True"
+                        HorizontalOptions="Fill"
+                        Text="Register Card "
+                        TextColor="Black"
+                        VerticalOptions="End" />
+                </Grid>
             </Grid>
 
         </Frame>

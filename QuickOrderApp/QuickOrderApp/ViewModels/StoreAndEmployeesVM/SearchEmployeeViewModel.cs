@@ -36,7 +36,13 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 		public string ToSearch
 		{
 			get { return tosearch; }
-			set { tosearch = value;
+			set 
+			{
+				if (tosearch != value)
+				{
+
+				tosearch = value;
+				}
 				OnPropertyChanged();
 			}
 		}
@@ -69,6 +75,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 		{
 			var usersdto = await userDataStore.GetUserWithName(value);
 
+			Users.Clear();
 			foreach (var item in usersdto)
 			{
 

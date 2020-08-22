@@ -7,35 +7,33 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Detail Order"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="StoreOrderDetailRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
-            <StackLayout Margin="2">
+            <Frame Padding="4" Style="{StaticResource FrameStyle}">
 
-                <Label
-                    FontSize="Body"
-                    Text="{Binding EmployeeOrderPresenter.OrderId, StringFormat='#{0}'}"
-                    TextColor="Gray" />
-                <Label
-                    FontSize="Body"
-                    Text="{Binding EmployeeOrderPresenter.OrderDate, StringFormat='Date:{0:MM/dd/yyyy}'}"
-                    TextColor="Gray" />
-                <Label
-                    FontSize="Body"
-                    Text="{Binding EmployeeOrderPresenter.OStatus, StringFormat='Status:{0}'}"
-                    TextColor="Gray" />
-                <Label
-                    FontSize="Body"
-                    Text="{Binding EmployeeOrderPresenter.OrderType, StringFormat='Type:{0}'}"
-                    TextColor="Gray" />
+                <StackLayout Margin="2">
+                    <Label Style="{StaticResource TitleLabel}" Text="Order Information" />
+                    <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeOrderPresenter.OrderId, StringFormat='#{0}'}" />
+                    <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeOrderPresenter.OrderDate, StringFormat='Date:{0:MM/dd/yyyy}'}" />
+                    <Label Style="{StaticResource DataLabel}" Text="{Binding OrderStatus, StringFormat='Status:{0}'}" />
+                    <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeOrderPresenter.OrderType, StringFormat='Type:{0}'}" />
 
-                <BoxView
-                    Margin="8,0,8,0"
-                    BackgroundColor="LightGray"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
-            </StackLayout>
+                </StackLayout>
+            </Frame>
+            <Label
+                FontSize="Title"
+                HorizontalOptions="Center"
+                Text="Order Products"
+                TextColor="Gray" />
+            <BoxView
+                Margin="8,0,8,0"
+                BackgroundColor="LightGray"
+                HeightRequest="0.1"
+                HorizontalOptions="Fill" />
 
             <CollectionView
                 Grid.Row="3"
@@ -43,23 +41,18 @@
                 EmptyView="Empty"
                 ItemsSource="{Binding EmployeeOrderPresenter.OrderProductsPresenter}"
                 VerticalOptions="Center">
-                <CollectionView.Header>
-                    <StackLayout>
-                        <Label
-                            FontSize="Title"
-                            HorizontalOptions="Center"
-                            Text="Order Products"
-                            TextColor="Gray" />
 
-                    </StackLayout>
-                </CollectionView.Header>
 
                 <CollectionView.ItemTemplate>
 
                     <DataTemplate>
 
 
-                        <StackLayout Orientation="Vertical">
+                        <StackLayout  Orientation="Vertical">  
+                            <Label
+                                Style="{StaticResource TitleLabel}"
+                                Text="{Binding ProductName}"
+                                VerticalOptions="Center" />
                             <StackLayout Orientation="Horizontal">
 
                                 <Frame
@@ -69,36 +62,38 @@
                                     IsClippedToBounds="True">
                                     <Image
                                         Aspect="Fill"
-                                        HeightRequest="130"
+                                        HeightRequest="80"
                                         Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}"
-                                        WidthRequest="130" />
+                                        WidthRequest="80" />
 
                                 </Frame>
                                 <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                                    <Label
-                                        FontSize="Title"
-                                        HorizontalOptions="Center"
-                                        Text="{Binding ProductName}" />
 
 
                                     <Label
+                                        Style="{StaticResource DataLabel}"
+                                        Text="{Binding Quantity, StringFormat='Quantity:{0}'}"
+                                        VerticalOptions="Center" />
+                                    <!--<Label
                                         FontSize="Medium"
                                         HorizontalOptions="Center"
-                                        Text="{Binding Quantity, StringFormat='Quantity:{0}'}" />
-                                    <Label
-                                        FontSize="Medium"
-                                        HorizontalOptions="Center"
-                                        Text="{Binding Price, StringFormat='{0:C}'}" />
+                                        Text="{Binding Price, StringFormat='{0:C}'}"
+                                        VerticalOptions="Center" />-->
 
 
 
                                 </StackLayout>
-                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                <StackLayout
+                                    HorizontalOptions="End"
+                                    TranslationX="100"
+                                    VerticalOptions="Center">
                                     <button:SfCheckBox
                                         CheckedColor="LimeGreen"
                                         ControlSize="100"
+                                        FontAttributes="Bold"
                                         IsChecked="{Binding IsComplete}"
                                         Text="Completed"
+                                        TextColor="Gray"
                                         VerticalOptions="Center" />
                                 </StackLayout>
 
@@ -118,7 +113,7 @@
                 Margin="10"
                 BackgroundColor="Tomato"
                 Command="{Binding CompleteOrderCommand}"
-                CornerRadius="5"
+                CornerRadius="10"
                 FontSize="Body"
                 HasShadow="True"
                 Text="Complete" />

@@ -9,7 +9,9 @@
     xmlns:zxcm="clr-namespace:ZXing.Common;assembly=zxing.portable"
     xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
     Title="{Binding OrderDetail.StoreOrder.StoreName, StringFormat='Order Detail of {0}'}"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="DetailOrderRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
         <ScrollView>
@@ -24,12 +26,7 @@
                         <DataTemplate>
                             <ContentView>
 
-                                <Frame
-                                    Margin="8"
-                                    Padding="0"
-                                    BorderColor="LightGray"
-                                    CornerRadius="10"
-                                    HasShadow="True">
+                                <Frame Padding="0" Style="{StaticResource FrameStyle}">
 
                                     <StackLayout>
                                         <Frame
@@ -44,10 +41,7 @@
                                                 WidthRequest="80" />
                                         </Frame>
 
-                                        <Label
-                                            FontSize="Title"
-                                            HorizontalOptions="Center"
-                                            Text="{Binding ProductName}" />
+                                        <Label Style="{StaticResource TitleLabel}" Text="{Binding ProductName}" />
                                         <BoxView
                                             Margin="4"
                                             BackgroundColor="LightGray"
@@ -58,14 +52,8 @@
                                             HorizontalOptions="Center"
                                             Orientation="Horizontal">
 
-                                            <Label
-                                                FontAttributes="Bold"
-                                                Text="{Binding ProductPrice, StringFormat='{0:C}'}"
-                                                TextColor="Gray" />
-                                            <Label
-                                                FontAttributes="Bold"
-                                                Text="{Binding Quantity, StringFormat='Items: {0}'}"
-                                                TextColor="Gray" />
+                                            <Label Style="{StaticResource DataLabel}" Text="{Binding ProductPrice, StringFormat='{0:C}'}" />
+                                            <Label Style="{StaticResource DataLabel}" Text="{Binding Quantity, StringFormat='Items: {0}'}" />
 
                                         </StackLayout>
                                         <button:SfButton
@@ -74,6 +62,7 @@
                                             Command="{Binding RemoveFromCartCommand}"
                                             CornerRadius="5"
                                             HasShadow="True"
+                                            IsVisible="{Binding AreVisible}"
                                             Text="Remove" />
 
                                     </StackLayout>
@@ -87,111 +76,116 @@
                 </CollectionView>
 
                 <Frame
-                    Margin="5,0,5,0"
-                    Padding="1"
-                    BorderColor="LightGray"
-                    CornerRadius="4"
-                    HasShadow="True"
-                    IsVisible="{Binding AreVisible}">
+                    Padding="0"
+                    HorizontalOptions="Fill"
+                    IsVisible="{Binding AreVisible}"
+                    Style="{StaticResource FrameStyle}">
+                    <StackLayout>
+                        <Label Style="{StaticResource TitleLabel}" Text="Select Order Type" />
+                        <button:SfRadioGroup HorizontalOptions="Center" Orientation="Horizontal">
+                            <button:SfRadioButton
+                                CheckedColor="Orange"
+                                FontSize="Medium"
+                                IsChecked="{Binding IspickUp}"
+                                Text="Pick Up" />
+                            <button:SfRadioButton
+                                CheckedColor="Orange"
+                                FontSize="Medium"
+                                IsChecked="{Binding IsDelivery}"
+                                Text="Delivery" />
 
-                    <button:SfRadioGroup HorizontalOptions="Center" Orientation="Horizontal">
-                        <button:SfRadioButton
-                            CheckedColor="Orange"
-                            IsChecked="{Binding IspickUp}"
-                            Text="Pick Up" />
-                        <button:SfRadioButton
-                            CheckedColor="Orange"
-                            IsChecked="{Binding IsDelivery}"
-                            Text="Delivery" />
-
-                    </button:SfRadioGroup>
+                        </button:SfRadioGroup>
+                    </StackLayout>
                 </Frame>
-                <BoxView
-                    Margin="8,0,8,0"
-                    BackgroundColor="LightGray"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
 
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="Title"
-                    HorizontalOptions="Center"
-                    Text="Order Receipt"
-                    TextColor="Gray" />
-                <StackLayout Orientation="Horizontal">
+                <Frame Padding="5" Style="{StaticResource FrameStyle}">
+                    <StackLayout>
 
-                    <StackLayout Margin="4">
+                        <Label Style="{StaticResource TitleLabel}" Text="Order Receipt" />
+                        <BoxView
+                            Margin="8,0,8,0"
+                            BackgroundColor="LightGray"
+                            HeightRequest="0.1"
+                            HorizontalOptions="Fill" />
+                        <StackLayout Orientation="Horizontal">
+
+                            <StackLayout Margin="6,0,0,0">
 
 
-                        <Label
-                            FontAttributes="Bold"
-                            Text="{Binding OrderDetail.OrderId, StringFormat='Order #{0}'}"
-                            TextColor="Gray" />
-                        <Label
-                            FontAttributes="Bold"
-                            Text="{Binding OrderDetail.OrderDate, StringFormat='Date: {0:MM/dd/YYYY}'}"
-                            TextColor="Gray" />
-                        <Label
-                            FontAttributes="Bold"
-                            Text="{Binding OrderDetail.OrderStatus, StringFormat='Items:{0}'}"
-                            TextColor="Gray" />
-                        <Label
-                            FontAttributes="Bold"
-                            Text="{Binding OrderQuantity, StringFormat='Items:{0}'}"
-                            TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding OrderDetail.OrderId, StringFormat='Order #{0}'}"
+                                    TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding OrderDetail.OrderDate, StringFormat='Date: {0:MM/dd/YYYY}'}"
+                                    TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding OrderStatus, StringFormat='Items:{0}'}"
+                                    TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding OrderQuantity, StringFormat='Items:{0}'}"
+                                    TextColor="Gray" />
 
-                        <Label
-                            FontAttributes="Bold"
-                            Text="Tax 11.5%"
-                            TextColor="Gray" />
-                        <Label
-                            FontAttributes="Bold"
-                            Text="{Binding TotalTax, StringFormat='Tax {0:C}'}"
-                            TextColor="Gray" />
-                        <!--<Label
-                        FontAttributes="Bold"
-                        Text="App Fees $0.02"
-                        TextColor="Gray" />-->
-                        <Label
-                            FontAttributes="Bold"
-                            Text="Online Payment Fee 2.9%"
-                            TextColor="Gray" />
-                        <Label
-                            FontAttributes="Bold"
-                            Text="Stripe Comision Fee $0.30"
-                            TextColor="Gray" />
-                        <Label
-                            FontAttributes="Bold"
-                            Text="{Binding StripeFee, StringFormat='Total Fee{0:C}'}"
-                            TextColor="Gray" />
-                        <Label
-                            FontAttributes="Bold"
-                            Text="{Binding OrderTypeFee, StringFormat='Delivery Fee {0:C}'}"
-                            TextColor="Gray" />
-                        <Label
-                            FontAttributes="Bold"
-                            Text="{Binding Total, StringFormat='Total:{0:C}'}"
-                            TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="Tax 11.5%"
+                                    TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding TotalTax, StringFormat='Tax {0:C}'}"
+                                    TextColor="Gray" />
+
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="Online Payment Fee 2.9%"
+                                    TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="Stripe Comision Fee $0.30"
+                                    TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding StripeFee, StringFormat='Total Fee{0:C}'}"
+                                    TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding OrderTypeFee, StringFormat='Delivery Fee {0:C}'}"
+                                    TextColor="Gray" />
+                                <Label
+                                    FontAttributes="Bold"
+                                    Text="{Binding Total, StringFormat='Total:{0:C}'}"
+                                    TextColor="Gray" />
+                            </StackLayout>
+
+
+                            <zxing:ZXingBarcodeImageView
+                                Margin="4,0,4,0"
+                                BackgroundColor="#F0F0F0"
+                                BarcodeFormat="QR_CODE"
+                                BarcodeValue="{Binding OrderDetail.OrderId}"
+                                HeightRequest="150"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                WidthRequest="150">
+
+
+
+                                <zxing:ZXingBarcodeImageView.BarcodeOptions>
+                                    <zxcm:EncodingOptions Width="150" Height="150" />
+                                </zxing:ZXingBarcodeImageView.BarcodeOptions>
+
+                            </zxing:ZXingBarcodeImageView>
+
+
+
+
+                        </StackLayout>
                     </StackLayout>
 
-
-                    <zxing:ZXingBarcodeImageView
-                        BarcodeFormat="QR_CODE"
-                        BarcodeValue="{Binding OrderDetail.OrderId}"
-                        HeightRequest="150"
-                        HorizontalOptions="Center"
-                        VerticalOptions="Center"
-                        WidthRequest="150">
-
-                        <zxing:ZXingBarcodeImageView.BarcodeOptions>
-                            <zxcm:EncodingOptions Width="300" Height="300" />
-                        </zxing:ZXingBarcodeImageView.BarcodeOptions>
-
-                    </zxing:ZXingBarcodeImageView>
-
-
-
-                </StackLayout>
+                </Frame>
 
                 <button:SfButton
                     Margin="15"

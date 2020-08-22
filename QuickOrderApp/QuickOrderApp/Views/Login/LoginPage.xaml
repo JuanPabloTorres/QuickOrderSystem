@@ -36,19 +36,9 @@
             TextColor="White"
             VerticalOptions="Start" />
 
-        <Frame
-            Margin="8"
-            BorderColor="LightGray"
-            CornerRadius="5"
-            HasShadow="True"
-            VerticalOptions="Center">
+        <Frame Style="{x:StaticResource FrameStyle}" VerticalOptions="Center">
             <StackLayout VerticalOptions="Center">
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="Title"
-                    HorizontalOptions="Center"
-                    Text="Sign In"
-                    TextColor="DarkSlateGray" />
+                <Label Style="{StaticResource TitleLabel}" Text="Sign In" />
 
                 <StackLayout Margin="5" VerticalOptions="Center">
                     <Entry Placeholder="Username" Text="{Binding Username}" />
@@ -61,7 +51,7 @@
                         Margin="10,4,10,0"
                         BackgroundColor="Orange"
                         Command="{Binding LoginCommand}"
-                        CornerRadius="5"
+                        CornerRadius="15"
                         FontAttributes="Bold"
                         FontSize="Body"
                         HasShadow="True"
@@ -71,7 +61,7 @@
                         Margin="10,4,10,0"
                         BackgroundColor="Tomato"
                         Command="{Binding LoginEmployeeCommand}"
-                        CornerRadius="5"
+                        CornerRadius="15"
                         FontAttributes="Bold"
                         FontSize="Body"
                         HasShadow="True"
@@ -83,7 +73,6 @@
                             Grid.Row="0"
                             BackgroundColor="Transparent"
                             Command="{Binding RegisterCommand}"
-                            CornerRadius="5"
                             FontAttributes="Bold"
                             Text="Register"
                             TextColor="DodgerBlue" />
@@ -92,7 +81,6 @@
                             Grid.Column="1"
                             BackgroundColor="Transparent"
                             Command="{Binding GoForgotPasswordCommand}"
-                            CornerRadius="5"
                             FontAttributes="Bold"
                             Text="Forgot Password"
                             TextColor="DodgerBlue" />

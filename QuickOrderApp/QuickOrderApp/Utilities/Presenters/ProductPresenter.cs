@@ -105,6 +105,15 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+        private bool areVisible;
+
+        public bool AreVisible
+        {
+            get { return areVisible; }
+            set { areVisible = value;
+                OnPropertyChanged();
+            }
+        }
 
 
         public ICommand AddToCartCommand { get; set; }

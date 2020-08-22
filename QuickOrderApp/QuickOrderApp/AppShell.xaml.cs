@@ -53,6 +53,7 @@ namespace QuickOrderApp
             Routing.RegisterRoute(SearchEmployeePage.Route, typeof(SearchEmployeePage));
             Routing.RegisterRoute(YourCardsPage.Route, typeof(YourCardsPage));
             Routing.RegisterRoute(StoreOrderDetailPage.Route, typeof(StoreOrderDetailPage));
+            Routing.RegisterRoute(EditCardPage.Route, typeof(EditCardPage));
 
 
         }

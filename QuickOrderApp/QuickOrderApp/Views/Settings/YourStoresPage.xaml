@@ -7,7 +7,9 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Your Stores"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="YourStoreRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
@@ -22,13 +24,12 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
+
+
                         <StackLayout>
-                            <StackLayout
-                                Padding="5"
-                                BackgroundColor="White"
-                                Orientation="Horizontal"
-                                Spacing="5">
+                            <StackLayout Orientation="Horizontal">
                                 <Frame
+                                    Margin="4"
                                     Padding="0"
                                     CornerRadius="5"
                                     HasShadow="True"
@@ -51,16 +52,17 @@
 
                             </StackLayout>
                             <button:SfButton
-                                Margin="10"
+                                Margin="10,0,10,0"
                                 BackgroundColor="Tomato"
                                 Command="{Binding GoAdminStoreHomeControl}"
-                                CornerRadius="4"
+                                CornerRadius="15"
                                 FontAttributes="Bold"
                                 FontSize="Body"
                                 HasShadow="True"
                                 HorizontalOptions="End"
                                 Text="View" />
                         </StackLayout>
+
 
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

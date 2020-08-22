@@ -53,7 +53,8 @@ namespace WebApiQuickOrder.Controllers
                     {
                         CardNumber = "●●●●" + cardlastfour,
                         HolderName = item.HolderName,
-                        StripeCardId = item.StripeCardId
+                        StripeCardId = item.StripeCardId,
+                        PaymentCardId = item.PaymentCardId
                     };
 
                     paymentCardDTOs.Add(cardDtO);
@@ -130,19 +131,31 @@ namespace WebApiQuickOrder.Controllers
         }
 
         // DELETE: api/PaymentCards/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<PaymentCard>> DeletePaymentCard(Guid id)
+        [HttpDelete("[action]/{id}")]
+        public async Task<ActionResult<bool>> DeletePaymentCard(string id)
         {
-            var paymentCard = await _context.PaymentCards.FindAsync(id);
+            var paymentCard = await _context.PaymentCards.Where(pc=>pc.PaymentCardId.ToString() == id).FirstOrDefaultAsync();
+
             if (paymentCard == null)
             {
-                return NotFound();
+                return false;
             }
 
             _context.PaymentCards.Remove(paymentCard);
             await _context.SaveChangesAsync();
 
-            return paymentCard;
+            var paymentcardResult = await _context.PaymentCards.Where(pc => pc.PaymentCardId.ToString() == id).FirstOrDefaultAsync();
+
+            if (paymentcardResult == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+          
         }
 
         private bool PaymentCardExists(Guid id)

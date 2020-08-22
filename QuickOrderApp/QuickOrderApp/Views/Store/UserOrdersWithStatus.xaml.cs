@@ -14,11 +14,20 @@ namespace QuickOrderApp.Views.Store
     public partial class UserOrdersWithStatus : ContentPage
     {
         public static string Route = "UserOrdersRoute";
+
+        OrderViewModel OrderViewModel;
         public UserOrdersWithStatus()
         {
             InitializeComponent();
 
-            BindingContext = new OrderViewModel();
+            BindingContext= OrderViewModel = new OrderViewModel();
+        }
+
+        protected async  override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            //OrderViewModel.SetOrders();
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="QuickOrderApp.Views.Settings.RegisterCardPage"
+    x:Class="QuickOrderApp.Views.Settings.EditCardPage"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="RegisterCardRoute"
     BackgroundColor="{x:StaticResource BackgroundColor}"
+    Routing.Route="EditCardRoute"
     Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
@@ -72,7 +72,7 @@
                         Command="{Binding CompleteRegisterCardCommand}"
                         CornerRadius="5"
                         HasShadow="True"
-                        Text="Complete" />
+                        Text="Update Card" />
                 </StackLayout>
             </Frame>
         </StackLayout>

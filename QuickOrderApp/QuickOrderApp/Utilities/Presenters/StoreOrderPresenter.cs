@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.ViewModels;
 using QuickOrderApp.Views.Store.StoreManger;
 using System;
 using System.Windows.Input;
@@ -6,7 +7,7 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.Utilities.Presenters
 {
-    public class StoreOrderPresenter
+    public class StoreOrderPresenter:BaseViewModel
     {
 
         private Order detailOrder;
@@ -17,6 +18,18 @@ namespace QuickOrderApp.Utilities.Presenters
             set { detailOrder = value; }
         }
 
+        private string orderStatus;
+
+        public string OrderStatus
+        {
+            get { return orderStatus; }
+            set
+            {
+                orderStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand DetailCommand { get; set; }
 
         public ICommand DetailEmployeeOrderCommand { get; set; }
@@ -25,6 +38,8 @@ namespace QuickOrderApp.Utilities.Presenters
         {
 
             DetailOrder = order;
+
+            OrderStatus = order.OrderStatus.ToString();
 
             DetailCommand = new Command(async () =>
             {

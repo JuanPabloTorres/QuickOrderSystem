@@ -9,7 +9,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sfTimePicker="clr-namespace:Syncfusion.XForms.Pickers;assembly=Syncfusion.SfPicker.XForms"
     Title="New Store"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="RegisterStoreRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
 
     <ScrollView>
@@ -24,7 +26,7 @@
                 WidthRequest="100" />
             <button:SfButton
                 Margin="10"
-                BackgroundColor="DodgerBlue"
+                BackgroundColor="LimeGreen"
                 Command="{Binding IPickPhotoCommand}"
                 CornerRadius="5"
                 HasShadow="True"

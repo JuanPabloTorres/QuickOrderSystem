@@ -8,7 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms"
     Title="Employee Detail"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="StoreEmployeeDetailRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
 
     <Grid>
@@ -22,12 +24,16 @@
         <StackLayout Grid.Row="0" Margin="5">
 
             <StackLayout>
-
-                <Label FontSize="Body" Text="{Binding EmployeeDetail.EmployeeUser.Name, StringFormat='Name: {0}'}" />
-                <Label FontSize="Body" Text="{Binding EmployeeDetail.EmployeeUser.Email, StringFormat='Email: {0}'}" />
-                <Label FontSize="Body" Text="{Binding EmployeeDetail.Type, StringFormat='Position: {0}'}" />
-                <Label FontSize="Body" Text="{Binding EmployeeDetail.EmployeeUser.Gender, StringFormat='Gender: {0}'}" />
-                <Label FontSize="Body" Text="{Binding EmployeeDetail.EmployeeUser.Phone, StringFormat='Phone: {0}'}" />
+                <Label Style="{StaticResource TitleLabel}" Text="Employee Information" />
+                <BoxView
+                    BackgroundColor="LightGray"
+                    HeightRequest="0.1"
+                    HorizontalOptions="FillAndExpand" />
+                <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeDetail.EmployeeUser.Name, StringFormat='Name: {0}'}" />
+                <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeDetail.EmployeeUser.Email, StringFormat='Email: {0}'}" />
+                <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeDetail.Type, StringFormat='Position: {0}'}" />
+                <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeDetail.EmployeeUser.Gender, StringFormat='Gender: {0}'}" />
+                <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeDetail.EmployeeUser.Phone, StringFormat='Phone: {0}'}" />
             </StackLayout>
         </StackLayout>
         <CollectionView Grid.Row="1" ItemsSource="{Binding EmployeeWorkHours}">
@@ -38,38 +44,38 @@
                 <DataTemplate>
                     <StackLayout>
                         <Label
-                            FontSize="Title"
                             HorizontalOptions="Center"
+                            Style="{StaticResource TitleLabel}"
                             Text="{Binding Day}" />
                         <BoxView
-                            BackgroundColor="Black"
+                            BackgroundColor="LightGray"
                             HeightRequest="0.1"
                             HorizontalOptions="FillAndExpand" />
                         <StackLayout Orientation="Vertical">
 
                             <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
                                 <Label
-                                    FontSize="Body"
+                                    Style="{StaticResource DataLabel}"
                                     Text="Open"
                                     VerticalOptions="Center" />
                                 <Label
+                                    Style="{StaticResource DataLabel}"
                                     Text="{Binding OpenTime, StringFormat='{0:hh:mm tt}'}"
-                                    TextColor="Green"
-                                    VerticalOptions="Center" />
+                                    TextColor="Green" />
 
                                 <Label
-                                    FontSize="Body"
+                                    Style="{StaticResource DataLabel}"
                                     Text="Close"
                                     VerticalOptions="Center" />
                                 <Label
+                                    Style="{StaticResource DataLabel}"
                                     Text="{Binding CloseTime, StringFormat='{0:hh:mm tt}'}"
-                                    TextColor="Red"
-                                    VerticalOptions="Center" />
+                                    TextColor="Red" />
                             </StackLayout>
 
                         </StackLayout>
                         <BoxView
-                            BackgroundColor="Black"
+                            BackgroundColor="LightGray"
                             HeightRequest="0.1"
                             HorizontalOptions="FillAndExpand" />
                     </StackLayout>

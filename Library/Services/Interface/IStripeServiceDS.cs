@@ -28,6 +28,8 @@ namespace Library.Services.Interface
         Task<bool> UpdateStripeCustomer(UserDTO updateinformation);
         Task<string> TransferQuickOrderFeeFromStore(string storestripeAccId, string quickOrderFee,string storeId);
 
+        Task<bool> DeleteCardFromCustomer(string customerId, string cardId);
+
         //Task<string> CreateStripeAccount(UserDTO userDTO);
 
 

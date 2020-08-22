@@ -11,6 +11,7 @@ namespace Library.Services
 {
     public class CardDataStore : DataStoreService<PaymentCard>, ICardDataStore
     {
+
         public async Task<IEnumerable<PaymentCardDTO>> GetCardDTOFromUser(Guid userId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetCardDTOFromUser)}/{userId}");
@@ -26,5 +27,21 @@ namespace Library.Services
             IEnumerable<PaymentCard> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<PaymentCard>>(response.Result);
             return deserializeObject;
         }
+
+        public async Task<bool> DeletePaymentCard(string cardId)
+        {
+            //BaseAPIUri = new Uri($"{LocalBackendUrl}/{typeof(PaymentCard)}/");
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(DeletePaymentCard)}/{cardId}");
+
+            var response = await HttpClient.DeleteAsync(FullAPIUri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                bool deserializeObject = JsonConvert.DeserializeObject<bool>(response.Content.ReadAsStringAsync().Result);
+                return deserializeObject;
+            }
+            else return false;
+        }
+
     }
 }

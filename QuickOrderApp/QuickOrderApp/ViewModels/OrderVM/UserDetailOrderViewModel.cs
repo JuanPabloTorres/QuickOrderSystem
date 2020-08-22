@@ -153,6 +153,17 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
+        private string orderStatus;
+
+        public string OrderStatus
+        {
+            get { return orderStatus; }
+            set { orderStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+
 
 
         private ImageSource qrcodeimg;
@@ -170,7 +181,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
         {        
 
             ProductPresenters = new ObservableCollection<ProductPresenter>();
+
             OrderDetail = SelectedOrder.CurrentOrder;
+            OrderStatus = OrderDetail.OrderStatus.ToString();
             OrderQuantity = OrderDetail.OrderProducts.Count();
             isDeliveryFeeAdded = false;
 
@@ -224,10 +237,12 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                             //var feetransferResult = await stripeServiceDS.TransferQuickOrderFeeFromStore("acct_1HGWePHOvPu5G2cu", fee.ToString(),OrderDetail.StoreId.ToString());
                             var orderUpdate = await orderDataStore.UpdateItemAsync(OrderDetail);
-
+                            OrderStatus = OrderDetail.OrderStatus.ToString();
                             if (orderUpdate)
                             {
                                 await App.Current.MainPage.DisplayAlert("Notification", "Order was submited...!", "OK");
+
+                                MessagingCenter.Send<Library.Models.Order>(OrderDetail, "RemoveOrderSubtmitedMsg");
                             }
                         }
                         else
@@ -290,6 +305,15 @@ namespace QuickOrderApp.ViewModels.OrderVM
             foreach (var item in OrderDetail.OrderProducts)
             {
                 var productPresenter = new ProductPresenter(item);
+
+                if (OrderDetail.OrderStatus == Status.Submited || OrderDetail.OrderStatus == Status.Completed)
+                {
+                    productPresenter.AreVisible = false;
+                }
+                else
+                {
+                    productPresenter.AreVisible = true;
+                }
                 ProductPresenters.Add(productPresenter);
 
             }

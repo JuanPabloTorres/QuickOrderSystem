@@ -7,6 +7,8 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Orders Control"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
@@ -24,12 +26,7 @@
                     <DataTemplate>
 
 
-                        <Frame
-                            Margin="8"
-                            Padding="4"
-                            BorderColor="LightGray"
-                            HasShadow="True"
-                            IsClippedToBounds="True">
+                        <Frame Padding="4" Style="{StaticResource FrameStyle}">
 
                             <StackLayout
                                 Margin="5"
@@ -37,60 +34,43 @@
                                 Orientation="Vertical"
                                 VerticalOptions="Center">
                                 <Label
-                                    FontAttributes="Bold"
-                                    FontSize="Title"
                                     HorizontalOptions="Center"
-                                    Text="Order"
-                                    TextColor="DarkSlateGray" />
+                                    Style="{StaticResource TitleLabel}"
+                                    Text="Order" />
                                 <BoxView
                                     BackgroundColor="LightGray"
                                     HeightRequest="0.1"
                                     HorizontalOptions="Fill" />
-                                <Label
-                                    FontSize="Body"
-                                    Text="{Binding DetailOrder.OrderId, StringFormat='#{0}'}"
-                                    TextColor="DarkSlateGray" />
+                                <Label Style="{StaticResource DataLabel}" Text="{Binding DetailOrder.OrderId, StringFormat='#{0}'}" />
                                 <StackLayout Orientation="Horizontal">
-                                    <Label
-                                        FontAttributes="Bold"
-                                        FontSize="Body"
-                                        Text="Date: " />
+                                    <Label Style="{StaticResource DataLabel}" Text="Date: " />
                                     <Label FontSize="Body" Text="{Binding DetailOrder.OrderDate, StringFormat='{0:MM/dd/yyyy}'}" />
                                 </StackLayout>
 
                                 <StackLayout Orientation="Horizontal">
-                                    <Label
-                                        FontAttributes="Bold"
-                                        FontSize="Body"
-                                        Text="Status: " />
+                                    <Label Style="{StaticResource DataLabel}" Text="Status: " />
 
                                     <Label
-                                        FontSize="Body"
-                                        Text="{Binding DetailOrder.OrderStatus}"
+                                        Style="{StaticResource DataLabel}"
+                                        Text="{Binding OrderStatus}"
                                         TextColor="Green" />
                                 </StackLayout>
 
                                 <StackLayout Orientation="Horizontal">
-                                    <Label
-                                        FontAttributes="Bold"
-                                        FontSize="Body"
-                                        Text="Items: " />
+                                    <Label Style="{StaticResource DataLabel}" Text="Items: " />
 
                                     <Label
-                                        FontSize="Body"
+                                        Style="{StaticResource DataLabel}"
                                         Text="{Binding DetailOrder.OrderProducts.Count}"
                                         TextColor="Red" />
                                 </StackLayout>
 
 
                                 <StackLayout Orientation="Horizontal">
-                                    <Label
-                                        FontAttributes="Bold"
-                                        FontSize="Body"
-                                        Text="Type: " />
+                                    <Label Style="{StaticResource DataLabel}" Text="Type: " />
 
                                     <Label
-                                        FontSize="Body"
+                                        Style="{StaticResource DataLabel}"
                                         Text="{Binding DetailOrder.OrderType}"
                                         TextColor="Orange" />
                                 </StackLayout>
@@ -104,7 +84,7 @@
                                     Margin="10,0,10,0"
                                     BackgroundColor="Tomato"
                                     Command="{Binding DetailEmployeeOrderCommand}"
-                                    CornerRadius="5"
+                                    CornerRadius="10"
                                     HasShadow="True"
                                     Text="Detail"
                                     VerticalOptions="Center" />

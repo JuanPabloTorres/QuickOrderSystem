@@ -1,13 +1,16 @@
 ﻿using Library.DTO;
 using QuickOrderApp.ViewModels;
+using QuickOrderApp.Views.Settings;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
+using Xamarin.Forms;
 
 namespace QuickOrderApp.Utilities.Presenters
 {
-   public  class PaymentCardPresenter:BaseViewModel
-    {
+	public class PaymentCardPresenter : BaseViewModel
+	{
 		private string holdername;
 
 		public string HolderName
@@ -80,12 +83,39 @@ namespace QuickOrderApp.Utilities.Presenters
 			}
 		}
 
+		public ICommand DeleteCardCommand { get; set; }
+
 
 		public PaymentCardPresenter(PaymentCardDTO paymentCardDTO)
 		{
 			this.HolderName = paymentCardDTO.HolderName;
 			this.CardNumber = paymentCardDTO.CardNumber;
 			this.stripecardId = paymentCardDTO.StripeCardId;
+			this.PaymentCardId = paymentCardDTO.PaymentCardId;
+
+
+			DeleteCardCommand = new Command(async() => 
+			{
+
+
+				var deleted = await CardDataStore.DeletePaymentCard(paymentCardId.ToString());
+
+				if (deleted)
+				{
+					var cardDeleteStripeResult = await stripeServiceDS.DeleteCardFromCustomer(App.LogUser.StripeUserId, this.StipeCardId);
+
+					 if (cardDeleteStripeResult)
+					{
+						MessagingCenter.Send<PaymentCardPresenter>(this, "PaymencardDeleteMsg"); 
+					}
+				}
+
+
+				//await Shell.Current.GoToAsync($"{EditCardPage.Route}");
+			  
+			});
+
+
 		}
 
 

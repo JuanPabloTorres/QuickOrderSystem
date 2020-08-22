@@ -8,7 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:numericupdown="clr-namespace:Syncfusion.SfNumericUpDown.XForms;assembly=Syncfusion.SfNumericUpDown.XForms"
     Title="{Binding Title}"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="ProductRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <CollectionView EmptyView="Store does not have inventory." ItemsSource="{Binding StoreProducts}">
         <CollectionView.ItemsLayout>
@@ -18,12 +20,7 @@
             <DataTemplate>
 
                 <ContentView>
-                    <Frame
-                        Margin="8"
-                        Padding="0"
-                        BorderColor="LightGray"
-                        CornerRadius="10"
-                        HasShadow="True">
+                    <Frame Padding="0" Style="{StaticResource FrameStyle}">
 
                         <StackLayout>
                             <Frame
@@ -53,33 +50,24 @@
 
                                 <Label
                                     Margin="8,0,8,0"
-                                    FontAttributes="Bold"
-                                    FontSize="Large"
                                     HorizontalOptions="Start"
-                                    Text="{Binding ProductPrice, StringFormat='{0:C}'}"
-                                    TextColor="MediumSeaGreen" />
+                                    Style="{StaticResource DataLabel}"
+                                    Text="{Binding ProductPrice, StringFormat='{0:C}'}" />
 
 
+                                <Label Style="{StaticResource DataLabel}" Text="Item Left:" />
                                 <Label
-                                    FontAttributes="Bold"
-                                    FontSize="20"
-                                    HorizontalOptions="Start"
-                                    Text="Item Left:" />
-                                <Label
-                                    FontSize="20"
-                                    HorizontalOptions="Start"
+                                    Style="{StaticResource DataLabel}"
                                     Text="{Binding ItemLeft}"
                                     TextColor="Red" />
                                 <Label
-                                    Margin="8,0,0,0"
-                                    FontAttributes="Bold"
-                                    FontSize="20"
                                     HorizontalOptions="Start"
+                                    Style="{StaticResource DataLabel}"
                                     Text="Tag:" />
 
                                 <Label
-                                    FontSize="20"
                                     HorizontalOptions="Start"
+                                    Style="{StaticResource DataLabel}"
                                     Text="{Binding ProductType}"
                                     TextColor="Orange" />
                             </StackLayout>
@@ -88,17 +76,17 @@
                             <StackLayout Margin="4">
                                 <Label
                                     Margin="8,0,8,0"
-                                    FontAttributes="Bold"
-                                    FontSize="Medium"
-                                    HorizontalOptions="Start"
+                                    Style="{StaticResource DataLabel}"
                                     Text="Description:" />
 
                                 <ScrollView>
 
                                     <Label
                                         Margin="8,0,8,0"
-                                        FontSize="Medium"
-                                        Text="{Binding ProductDescription}" />
+                                        HorizontalOptions="Start"
+                                        Style="{StaticResource DataLabel}"
+                                        Text="{Binding ProductDescription}"
+                                        TextColor="Orange" />
                                 </ScrollView>
                             </StackLayout>
 
@@ -121,10 +109,11 @@
                                 Margin="10"
                                 BackgroundColor="Tomato"
                                 Command="{Binding AddToCartCommand}"
-                                CornerRadius="5"
+                                CornerRadius="10"
                                 FontAttributes="Bold"
+                                FontSize="Medium"
                                 HasShadow="True"
-                                Text="Add To Cart"
+                                Text="Add"
                                 TextColor="Black" />
 
                         </StackLayout>

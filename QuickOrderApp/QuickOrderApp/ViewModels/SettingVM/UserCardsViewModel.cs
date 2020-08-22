@@ -1,10 +1,12 @@
-﻿using Library.Models;
+﻿using Library.DTO;
+using Library.Models;
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.SettingVM
 {
@@ -18,6 +20,11 @@ namespace QuickOrderApp.ViewModels.SettingVM
             PaymentCardPresenters = new ObservableCollection<PaymentCardPresenter>();
 
             ExecuteLoadItems();
+
+            MessagingCenter.Subscribe<PaymentCardPresenter>(this, "PaymencardDeleteMsg", (sender) => 
+            {
+                PaymentCardPresenters.Remove(sender);
+            });
         }
 
 

@@ -7,7 +7,9 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Store Inventory"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="InventoryRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
@@ -39,8 +41,8 @@
                                     </Frame>
 
                                     <Label
-                                        FontSize="Title"
                                         HorizontalOptions="Center"
+                                        Style="{StaticResource TitleLabel}"
                                         Text="{Binding ProductName}" />
                                     <BoxView
                                         Margin="10,0,10,0"
@@ -48,34 +50,34 @@
                                         HeightRequest="0.1"
                                         HorizontalOptions="Fill" />
                                     <Label
-                                        FontSize="20"
                                         HorizontalOptions="Center"
+                                        Style="{StaticResource DataLabel}"
                                         Text="{Binding ProductPrice, StringFormat='{0:C}'}" />
                                     <Label
-                                        FontSize="20"
                                         HorizontalOptions="Center"
+                                        Style="{StaticResource DataLabel}"
                                         Text="{Binding ItemLeft, StringFormat='Quantity:{0}'}" />
 
                                     <Label
-                                        FontSize="20"
                                         HorizontalOptions="Center"
+                                        Style="{StaticResource DataLabel}"
                                         Text="{Binding ProductType, StringFormat='Type:{0}'}" />
 
 
 
                                     <button:SfButton
-                                        Margin="5"
+                                        Margin="10,5,10,5"
                                         BackgroundColor="DodgerBlue"
                                         Command="{Binding EditCommand}"
-                                        CornerRadius="5"
+                                        CornerRadius="10"
                                         FontSize="Body"
                                         HasShadow="True"
                                         Text="Edit" />
                                     <button:SfButton
-                                        Margin="5"
+                                        Margin="10,5,10,5"
                                         BackgroundColor="Tomato"
                                         Command="{Binding DeleteCommand}"
-                                        CornerRadius="5"
+                                        CornerRadius="10"
                                         FontSize="Body"
                                         HasShadow="True"
                                         Text="Delete" />

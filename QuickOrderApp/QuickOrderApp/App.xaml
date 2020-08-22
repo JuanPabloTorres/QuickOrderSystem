@@ -1,22 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Application xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:converters="clr-namespace:QuickOrderApp.Utilities.Converters"
-             mc:Ignorable="d"
-             x:Class="QuickOrderApp.App">
+<Application
+    x:Class="QuickOrderApp.App"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:QuickOrderApp.Utilities.Converters"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
     <Application.Resources>
 
 
-        <!--<Style x:Key="BaseButton"   TargetType="{x:Type button:SfButton}" >
+        <Style x:Key="FrameStyle" TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="#fefcff" />
             <Setter Property="CornerRadius" Value="10" />
-            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-            <Setter Property="VerticalOptions" Value="FillAndExpand" />
-            <Setter Property="HorizontalTextAlignment" Value="Center" />
-            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="HasShadow" Value="True" />
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="BorderColor" Value="LightGray" />
+        </Style>
+        <Color x:Key="BackgroundColor">#F0F0F0</Color>
+
+        <Style x:Key="DataLabel" TargetType="Label">
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="Gray" />
+            <Setter Property="FontSize" Value="Body" />
+            <Setter Property="VerticalOptions" Value="Center" />
+
+
+        </Style>
+
+        <!--<Style x:Key="DeleteBtn" TargetType="button:SfButton">
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="FontSize" Value="Body" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="BackgroundColor" Value="Tomato" />
+            <Setter Property="CornerRadius" Value="20" />
+
+
+
+        </Style>
+
+        <Style BasedOn="{StaticResource DeleteBtn}" TargetType="{x:Type button:SfButton}">
+            <Setter Property="Margin" Value="10,0,10,0" />
+            <Setter Property="HasShadow" Value="True" />
+            <Setter Property="Has" Value="{StaticResource CardWhite}" />
         </Style>-->
-        <!--Converters-->
+
+
+        <Style x:Key="TitleLabel" TargetType="Label">
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="Gray" />
+            <Setter Property="FontSize" Value="Title" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+
+
+
+        </Style>
+
+        <!--  Converters  -->
         <converters:BytesToImg x:Key="BytesToImgConverter" />
 
     </Application.Resources>

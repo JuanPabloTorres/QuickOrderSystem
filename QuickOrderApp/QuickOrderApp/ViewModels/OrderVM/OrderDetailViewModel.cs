@@ -39,6 +39,17 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
+        private string orderStatus;
+
+        public string OrderStatus
+        {
+            get { return orderStatus; }
+            set { orderStatus = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public ICommand CompleteOrderCommand { get; set; }
 
 
@@ -60,44 +71,44 @@ namespace QuickOrderApp.ViewModels.OrderVM
             {
                 //DetailOrder = sender;
                 EmployeeOrderPresenter = sender;
+                OrderStatus = EmployeeOrderPresenter.OStatus.ToString();
 
 
             });
 
 
-
-
             CompleteOrderCommand = new Command(async () =>
             {
 
-
-
                 if (EmployeeOrderPresenter.OrderStatus != Status.Completed)
                 {
-                    if (EmployeeOrderPresenter.OrderProductsPresenter.All(op=>op.IsComplete == true))
+                    if (EmployeeOrderPresenter.OrderProductsPresenter.All(op => op.IsComplete == true))
                     {
-                    EmployeeOrderPresenter.OrderStatus = Status.Completed;
-                   
+                        EmployeeOrderPresenter.OrderStatus = Status.Completed;
 
-                    var updateOrder = new Order()
-                    {
-                        BuyerId = EmployeeOrderPresenter.BuyerId,
-                        OrderStatus = EmployeeOrderPresenter.OrderStatus,
-                        OrderDate = EmployeeOrderPresenter.OrderDate,
-                        OrderId = EmployeeOrderPresenter.OrderId,
-                        OrderType = EmployeeOrderPresenter.OrderType,
-                        StoreId = EmployeeOrderPresenter.StoreId,
-                         OrderProducts = EmployeeOrderPresenter.OrderProducts
-                         
 
-                    };
+                        var updateOrder = new Order()
+                        {
+                            BuyerId = EmployeeOrderPresenter.BuyerId,
+                            OrderStatus = EmployeeOrderPresenter.OrderStatus,
+                            OrderDate = EmployeeOrderPresenter.OrderDate,
+                            OrderId = EmployeeOrderPresenter.OrderId,
+                            OrderType = EmployeeOrderPresenter.OrderType,
+                            StoreId = EmployeeOrderPresenter.StoreId,
+                            OrderProducts = EmployeeOrderPresenter.OrderProducts
 
-                    var orderStatusUpdateResult = await orderDataStore.UpdateItemAsync(updateOrder);
 
-                    if (orderStatusUpdateResult)
-                    {
-                        await Shell.Current.DisplayAlert("Notification", "Order Update...!", "OK");
-                    }
+                        };
+
+                        var orderStatusUpdateResult = await orderDataStore.UpdateItemAsync(updateOrder);
+
+                        if (orderStatusUpdateResult)
+                        {
+                            OrderStatus = updateOrder.OrderStatus.ToString();
+
+                            MessagingCenter.Send<EmployeeOrderPresenter>(EmployeeOrderPresenter, "RemoveEmpOrderPrensenter");
+                            await Shell.Current.DisplayAlert("Notification", "Order Update...!", "OK");
+                        }
 
                     }
                     else
@@ -112,11 +123,11 @@ namespace QuickOrderApp.ViewModels.OrderVM
             });
 
 
-           
+
         }
 
 
-      
+
 
     }
 }

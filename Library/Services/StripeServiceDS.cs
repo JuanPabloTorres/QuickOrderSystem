@@ -266,6 +266,19 @@ namespace Library.Services
             return deserialized;
         }
 
+        public async Task<bool> DeleteCardFromCustomer(string customerId, string cardId)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(DeleteCardFromCustomer)}/{customerId}/{cardId}");
+
+
+            var response = HttpClient.GetStringAsync(FullAPIUri);
+
+
+            bool deserialized = JsonConvert.DeserializeObject<bool>(response.Result);
+
+            return deserialized;
+        }
+
         //public Task<string> CreateStripeAccount(UserDTO userDTO)
         //{
         //    throw new NotImplementedException();

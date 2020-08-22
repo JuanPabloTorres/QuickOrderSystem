@@ -26,6 +26,10 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             }
         }
 
+
+      
+
+
         private string storeId;
 
         public string StoreId
@@ -50,6 +54,16 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             SelectedOrder = new Order();
             StoreOrderPresenters = new ObservableCollection<StoreOrderPresenter>();
             Orders = new ObservableCollection<Order>();
+
+            MessagingCenter.Subscribe<EmployeeOrderPresenter>(this, "RemoveEmpOrderPrensenter", (sender) =>
+            {
+              
+
+                var orderToRemove = StoreOrderPresenters.Where(op => op.DetailOrder.OrderId == sender.OrderId).FirstOrDefault();
+                StoreOrderPresenters.Remove(orderToRemove);
+
+
+            });
 
         }
 
