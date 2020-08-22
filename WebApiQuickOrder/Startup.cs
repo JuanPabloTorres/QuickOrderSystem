@@ -12,13 +12,12 @@ using System.Text;
 using WebApiQuickOrder.Context;
 using WebApiQuickOrder.Hubs;
 using WebApiQuickOrder.Models;
+using WebApiQuickOrder.Models.Email;
 
 namespace WebApiQuickOrder
 {
     public class Startup
     {
-
-       
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -61,8 +60,8 @@ namespace WebApiQuickOrder
             });
             //services.AddLogging();
             services.AddControllers();
-
-            services.AddScoped<IEmailSettings, EmailSettings>();
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.AddScoped<IEmailSender, EmailSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

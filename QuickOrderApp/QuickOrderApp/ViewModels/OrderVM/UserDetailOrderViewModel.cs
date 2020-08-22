@@ -1,26 +1,17 @@
 ﻿using Library.Models;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using QRCoder;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Static;
 using Stripe;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 
 namespace QuickOrderApp.ViewModels.OrderVM
 {
-    public class UserDetailOrderViewModel : BaseViewModel
+	public class UserDetailOrderViewModel : BaseViewModel
     {
         public ObservableCollection<ProductPresenter> ProductPresenters { get; set; }
         public ICommand CheckoutCommand { get; set; }
