@@ -47,7 +47,7 @@ namespace QuickOrderApp.ViewModels.InboxVM
             {
                 UserRequests.Clear();
                 
-                var requestData = await requestDataStore.GetRequestOfUser(App.LogUser.UserId);
+                var requestData = await RequestDataStore.GetRequestOfUser(App.LogUser.UserId);
 
                 foreach (var item in requestData)
                 {

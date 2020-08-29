@@ -3,10 +3,27 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _20200817100 : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "AuthCodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(nullable: true),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
+                    EndAt = table.Column<DateTime>(nullable: false),
+                    IsAlive = table.Column<bool>(nullable: false),
+                    Email = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuthCodes", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "ForgotPasswords",
                 columns: table => new
@@ -85,7 +102,8 @@ namespace WebApiQuickOrder.Migrations
                     Phone = table.Column<string>(nullable: true),
                     Gender = table.Column<int>(nullable: false),
                     LoginId = table.Column<Guid>(nullable: false),
-                    StripeUserId = table.Column<string>(nullable: true)
+                    StripeUserId = table.Column<string>(nullable: true),
+                    IsVerified = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -364,6 +382,9 @@ namespace WebApiQuickOrder.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AuthCodes");
+
             migrationBuilder.DropTable(
                 name: "EmployeeWorkHours");
 

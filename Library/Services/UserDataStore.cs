@@ -46,7 +46,7 @@ namespace Library.Services
         public async Task<IEnumerable<UserDTO>> GetUserWithName(string name)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetUserWithName)}/{name}");
-            var response =await  HttpClient.GetStringAsync(FullAPIUri);
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
             IEnumerable<UserDTO> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<UserDTO>>(response);
             return deserializeObject;
         }

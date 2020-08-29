@@ -5,7 +5,7 @@ namespace WebApiQuickOrder.Context
 {
     public class QOContext : DbContext
     {
-
+        public DbSet<AuthCode> AuthCodes { get; private set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -26,17 +26,30 @@ namespace WebApiQuickOrder.Context
 
         public DbSet<UsersConnected> usersConnecteds { get; set; }
 
-
-
         public QOContext(DbContextOptions options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().HasMany(w => w.EmployeeWorkHours).WithOne(s => s.Employee).OnDelete(DeleteBehavior.Cascade);
-            //modelBuilder.Entity<User>().HasOne(l => l.UserLogin).WithOne(u => u.UserLoginOwner).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<AuthCode>().HasKey(x => x.Id);
         }
     }
+
+    //public static class ContextHelper
+    //{
+    //    public static bool AllMigrationsApplied(this QOContext context)
+    //    {
+    //        var applied = context.GetService<IHistoryRepository>()
+    //            .GetAppliedMigrations()
+    //            .Select(m => m.MigrationId);
+
+    //        var total = context.GetService<IMigrationsAssembly>()
+    //            .Migrations
+    //            .Select(m => m.Key);
+
+    //        return !total.Except(applied).Any();
+    //    }
+    //}
 }

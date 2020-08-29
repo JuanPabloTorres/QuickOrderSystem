@@ -4,6 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QuickOrderApp.Manager;
+using QuickOrderApp.Services;
+using QuickOrderApp.Utilities;
+using QuickOrderApp.ViewModels.LoginVM;
 using System;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -66,6 +69,8 @@ namespace QuickOrderApp
 			services.AddSingleton<AppShell>();
 			services.AddSingleton<App>();
 			services.AddSingleton<AppManager>();
+			services.AddSingleton<VerifyAccountViewModel>();
+			services.AddScoped(typeof(IValidateableObject<>), typeof(ValidateableObject<>));
 
 			#region ServiceServices
 
@@ -80,7 +85,7 @@ namespace QuickOrderApp
 			services.AddSingleton<IEmployeeWorkHourDataStore, EmployeeWorkHourDataStore>();
 			services.AddSingleton<ICardDataStore, CardDataStore>();
 			services.AddSingleton<IUserConnectedDataStore, UserConnectedDataStore>();
-
+			services.AddSingleton<IAuthService, AuthService>();
 			#endregion ServiceServices
 		}
 

@@ -1,3 +1,4 @@
+using Library.Factories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -62,6 +63,7 @@ namespace WebApiQuickOrder
             services.AddControllers();
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IAuthCodeFactory, AuthCodeFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,7 +88,20 @@ namespace WebApiQuickOrder
                 routes.MapHub<ComunicationHub>("/comunicationhub");
             });
 
-
+            //Sedding Database
+            //using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    if (!serviceScope.ServiceProvider.GetService<QOContext>().AllMigrationsApplied())
+            //    {
+            //        serviceScope.ServiceProvider.GetService<QOContext>().Database.Migrate();
+            //        serviceScope.ServiceProvider.GetService<QOContext>().EnsureSeeded();
+            //    }
+            //    else
+            //    {
+            //        serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
+            //    }
+            //}
         }
+
     }
 }

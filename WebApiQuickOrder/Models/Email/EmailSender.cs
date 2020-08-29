@@ -43,32 +43,32 @@ namespace WebApiQuickOrder.Models.Email
                     Text = message
                 };
 
-                using (var client = new SmtpClient())
+                using var client = new SmtpClient
                 {
                     // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                    client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                    client.SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;
+                    ServerCertificateValidationCallback = (s, c, lh, e) => true,
+                    SslProtocols = SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13
+                };
 
-                    //client.Connect("smtp.gmail.com", 465, true);
+                //client.Connect("smtp.gmail.com", 465, true);
 
-                    if (_env.IsDevelopment())
-                    {
-                        // The third parameter is useSSL (true if the client should make an SSL-wrapped
-                        // connection to the server; otherwise, false).
-                        await client.ConnectAsync(_emailSettings.MailServer, 465, true);
-                    }
-                    else
-                    {
-                        await client.ConnectAsync(_emailSettings.MailServer);
-                    }
-
-                    // Note: only needed if the SMTP server requires authentication
-                    await client.AuthenticateAsync(_emailSettings.Sender.Trim(), _emailSettings.Password);
-
-                    await client.SendAsync(mimeMessage);
-
-                    await client.DisconnectAsync(true);
+                if (_env.IsDevelopment())
+                {
+                    // The third parameter is useSSL (true if the client should make an SSL-wrapped
+                    // connection to the server; otherwise, false).
+                    await client.ConnectAsync(_emailSettings.MailServer, 465, true);
                 }
+                else
+                {
+                    await client.ConnectAsync(_emailSettings.MailServer);
+                }
+
+                // Note: only needed if the SMTP server requires authentication
+                await client.AuthenticateAsync(_emailSettings.Sender.Trim(), _emailSettings.Password);
+
+                await client.SendAsync(mimeMessage);
+
+                await client.DisconnectAsync(true);
 
             }
             catch (Exception ex)

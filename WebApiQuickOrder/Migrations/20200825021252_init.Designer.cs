@@ -10,8 +10,8 @@ using WebApiQuickOrder.Context;
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    [Migration("20200815184046_IsVerifiedEmail")]
-    partial class IsVerifiedEmail
+    [Migration("20200825021252_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,33 @@ namespace WebApiQuickOrder.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Library.Models.AuthCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("EndAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAlive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AuthCodes");
+                });
 
             modelBuilder.Entity("Library.Models.Employee", b =>
                 {
@@ -97,6 +124,9 @@ namespace WebApiQuickOrder.Migrations
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
@@ -262,6 +292,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<byte[]>("StoreImage")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<Guid>("StoreLicenceId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("StoreName")
                         .HasColumnType("nvarchar(max)");
 
@@ -289,12 +322,15 @@ namespace WebApiQuickOrder.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("LicenseHolderUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("LicenseId");
 
-                    b.ToTable("StoreLicences");
+                    b.ToTable("Licences");
                 });
 
             modelBuilder.Entity("Library.Models.User", b =>

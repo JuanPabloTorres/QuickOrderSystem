@@ -36,18 +36,19 @@ namespace QuickOrderApp
         public App()
         {
             InitializeComponent();
-       
-            MainPage = Startup.ServiceProvider.GetService<AppShell>();
 
-            bool islogged = false;
-            if (!islogged)
-            {
-                Shell.Current.GoToAsync("LoginRoute");
-            }
-            else
-            {
+            MainPage = new AccountVerification();
+            //MainPage = Startup.ServiceProvider.GetService<AppShell>();
 
-            }
+            //bool islogged = false;
+            //if (!islogged)
+            //{
+            //    Shell.Current.GoToAsync("LoginRoute");
+            //}
+            //else
+            //{
+
+            //}
 
             //SharedTransitionNavigationPage
         }
@@ -68,7 +69,6 @@ namespace QuickOrderApp
             DependencyService.Register<CardDataStore>();
             DependencyService.Register<UserConnectedDataStore>();
             DependencyService.Register<RequestDataStore>();
-
         }
 
         protected override void OnStart()

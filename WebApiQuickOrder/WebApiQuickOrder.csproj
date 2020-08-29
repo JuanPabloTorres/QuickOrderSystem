@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+	  <Nullable>enable</Nullable>
+
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.8.0" />

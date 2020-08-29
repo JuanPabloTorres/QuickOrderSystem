@@ -205,14 +205,21 @@ namespace QuickOrderApp.Manager
 		}
 		public async Task<User> GetRegistrationDataInStorage()
 		{
-			return new User
+			try
 			{
-				Name = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageNameKey),
-				Email = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageEmailKey),
-				Phone = await SecureStorage.GetAsync(LocalStorageKeys.SecureStoragePhoneKey),
-				Address = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageAddressKey),
-				Gender = (Gender)int.Parse(await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageGenderKey))
-			};
+				return new User
+				{
+					Name = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageNameKey),
+					Email = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageEmailKey),
+					Phone = await SecureStorage.GetAsync(LocalStorageKeys.SecureStoragePhoneKey),
+					Address = await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageAddressKey),
+					Gender = (Gender)int.Parse(await SecureStorage.GetAsync(LocalStorageKeys.SecureStorageGenderKey))
+				};
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
 		}
 		
 		/// <summary>
