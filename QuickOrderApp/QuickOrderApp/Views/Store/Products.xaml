@@ -25,7 +25,7 @@
                         <StackLayout>
                             <Frame
                                 Padding="0"
-                                HeightRequest="130"
+                                HeightRequest="180"
                                 HorizontalOptions="Fill"
                                 IsClippedToBounds="True">
                                 <Image
@@ -34,11 +34,7 @@
                                     Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}" />
                             </Frame>
 
-                            <Label
-                                FontAttributes="Bold"
-                                FontSize="Title"
-                                HorizontalOptions="Center"
-                                Text="{Binding ProductName}" />
+                            <Label Style="{StaticResource TitleLabel}" Text="{Binding ProductName}" />
 
                             <BoxView
                                 Margin="10,0,10,0"
@@ -111,10 +107,11 @@
                                 Command="{Binding AddToCartCommand}"
                                 CornerRadius="10"
                                 FontAttributes="Bold"
+                                FontFamily="RobotoBold"
                                 FontSize="Medium"
                                 HasShadow="True"
                                 Text="Add"
-                                TextColor="Black" />
+                                TextColor="#2F3538" />
 
                         </StackLayout>
                     </Frame>

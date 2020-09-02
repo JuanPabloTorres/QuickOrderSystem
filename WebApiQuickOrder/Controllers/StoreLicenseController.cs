@@ -46,25 +46,23 @@ namespace WebApiQuickOrder.Controllers
         // PUT: api/StoreLicenses/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutStoreLicense(Guid id, StoreLicense storeLicense)
+        [HttpPut]
+        public async Task<bool> PutStoreLicense( StoreLicense storeLicense)
         {
-            if (id != storeLicense.LicenseId)
-            {
-                return BadRequest();
-            }
+           
 
             _context.Entry(storeLicense).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+                return true;
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StoreLicenseExists(id))
+                if (!StoreLicenseExists(storeLicense.LicenseId))
                 {
-                    return NotFound();
+                    return false;
                 }
                 else
                 {
@@ -72,7 +70,36 @@ namespace WebApiQuickOrder.Controllers
                 }
             }
 
-            return NoContent();
+            
+        }
+
+        [HttpGet("[action]/{id}")]
+        public async Task<bool> UpdateLicenceInCode(Guid id)
+        {
+
+            var storeLicense = await  _context.StoreLicenses.Where(st => st.LicenseId == id).FirstOrDefaultAsync();
+
+            storeLicense.IsUsed = true;
+            _context.Entry(storeLicense).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!StoreLicenseExists(storeLicense.LicenseId))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
         }
 
         // POST: api/StoreLicenses
@@ -94,7 +121,8 @@ namespace WebApiQuickOrder.Controllers
             var newStoreLicense = new StoreLicense()
             {
                 LicenseId = Guid.NewGuid(),
-                StartDate = DateTime.Today
+                StartDate = DateTime.Today,
+                IsUsed = false
             };
 
             _context.StoreLicenses.Add(newStoreLicense);
@@ -150,6 +178,14 @@ namespace WebApiQuickOrder.Controllers
             await _context.SaveChangesAsync();
 
             return storeLicense;
+        }
+
+        [HttpGet("[action]/{license}")]
+        public async Task<bool> IsLicenseInUsed(string license)
+        {
+            var result = await _context.StoreLicenses.Where(l => l.LicenseId.ToString() == license).FirstOrDefaultAsync();
+
+            return result.IsUsed;
         }
 
         [HttpGet("[action]/{id}")]

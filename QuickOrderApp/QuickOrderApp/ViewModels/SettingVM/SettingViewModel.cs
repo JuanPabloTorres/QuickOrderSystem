@@ -18,9 +18,6 @@ namespace QuickOrderApp.ViewModels.SettingVM
 {
     public class SettingViewModel : BaseViewModel
     {
-
-       
-
         private User userinformation;
 
         public User UserInformation
@@ -33,53 +30,9 @@ namespace QuickOrderApp.ViewModels.SettingVM
             }
         }
 
-        ObservableCollection<MediaFile> files = new ObservableCollection<MediaFile>();
-
-
         #region Properties
 
-        private string storename;
-
-        public string StoreName
-        {
-            get { return storename; }
-            set
-            {
-                if (storename != value)
-                {
-
-                    storename = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private string licenceCode;
-
-        public string LicenseCode
-        {
-            get { return licenceCode; }
-            set
-            {
-                licenceCode = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ImageSource storeImage;
-
-        public ImageSource StoreImage
-        {
-            get { return storeImage; }
-            set
-            {
-                storeImage = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        byte[] ImgArray;
+     
 
         private string _email;
         public string Email
@@ -159,17 +112,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
             }
         }
 
-        private string storeTypeSelected;
-
-        public string StoreTypeSelected
-        {
-            get { return storeTypeSelected; }
-            set
-            {
-                storeTypeSelected = value;
-                OnPropertyChanged();
-            }
-        }
+      
 
 
         private bool _isShowCancel;
@@ -181,28 +124,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
         public List<string> Genders { get; set; }
 
-        public List<string> StoreTypes { get; set; }
-
-        private string stripepublickey;
-
-        public string StripePublicKey
-        {
-            get { return stripepublickey; }
-            set { stripepublickey = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        private string stripesecretkey;
-
-        public string StripeSecretKey
-        {
-            get { return stripesecretkey; }
-            set { stripesecretkey = value;
-                OnPropertyChanged();
-            }
-        }
+      
 
         #endregion
 
@@ -218,9 +140,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
         public ICommand RegisterStoreCommand { get; set; }
 
-        public ICommand IPickPhotoCommand { get; set; }
-
-        public ICommand CompleteRegisterCommand { get; set; }
+      
 
         public ICommand RegisterCardCommand { get; set; }
         public ICommand GoRegisterCardCommand { get; set; }
@@ -232,17 +152,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
         #endregion
 
-        #region RegisterStoreHour
-
-
-
-
-
-
-        public ObservableCollection<WorkHourPresenter> WorkHourPresenters { get; set; }
-
-
-        #endregion
+       
         public SettingViewModel()
         {
             #region UserInformaation Initialize
@@ -253,22 +163,14 @@ namespace QuickOrderApp.ViewModels.SettingVM
             GenderSelected = App.LogUser.Gender.ToString();
             UserInformation = App.LogUser;
             #endregion
-            #region WorkHourPresenter Initialize
-            WorkHourPresenters = new ObservableCollection<WorkHourPresenter>();
+           
 
-            WorkHourPresenters.Add(new WorkHourPresenter(DayOfWeek.Monday.ToString()));
-            WorkHourPresenters.Add(new WorkHourPresenter(DayOfWeek.Tuesday.ToString()));
-            WorkHourPresenters.Add(new WorkHourPresenter(DayOfWeek.Wednesday.ToString()));
-            WorkHourPresenters.Add(new WorkHourPresenter(DayOfWeek.Thursday.ToString()));
-            WorkHourPresenters.Add(new WorkHourPresenter(DayOfWeek.Friday.ToString()));
-            WorkHourPresenters.Add(new WorkHourPresenter(DayOfWeek.Saturday.ToString()));
-            WorkHourPresenters.Add(new WorkHourPresenter(DayOfWeek.Sunday.ToString()));
-            #endregion
+           
 
-            StoreImage = ImageSource.FromFile("imgPlaceholder.jpg");
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
-            StoreTypes = new List<string>(Enum.GetNames(typeof(StoreType)).ToList());
-            //SelectedStore = new Store();
+
+           
+          
             GoUserInformationCommand = new Command(async () =>
             {
 
@@ -300,104 +202,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                 await Shell.Current.GoToAsync("RegisterStoreRoute", true);
             });
 
-            IPickPhotoCommand = new Command(async () =>
-            {
-                await CrossMedia.Current.Initialize();
-                files.Clear();
-                if (!CrossMedia.Current.IsPickPhotoSupported)
-                {
-                    await Shell.Current.DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
-                    return;
-                }
-                var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
-                {
-                    PhotoSize = PhotoSize.Full,
-
-                });
-
-
-                if (file == null)
-                    return;
-
-                //files.Add(file);
-
-                ImgArray = ConvertToByteArray(file.GetStream());
-
-                StoreImage = ImageSource.FromStream(() => file.GetStream());
-                //storeImage.Source = ImageSource.FromFile(file.Path);
-
-            });
-
-            CompleteRegisterCommand = new Command(async () =>
-            {
-
-                List<string> valuesToCheck = new List<string>();
-
-                valuesToCheck.Add(StoreName);
-                valuesToCheck.Add(LicenseCode);
-
-                if (GlobalValidator.CheckNullOrEmptyPropertiesOfListValues(valuesToCheck) && GlobalValidator.CheckNullOrEmptyImage(StoreImage))
-                {
-
-                    Guid licenseCodeGuid = Guid.Parse(LicenseCode);
-                    var licenseResult = storeLicenseDataStore.StoreLicenseExists(licenseCodeGuid);
-
-
-
-
-                    if (licenseResult)
-                    {
-
-                        StoreType value;
-                        Enum.TryParse(StoreTypeSelected, out value);
-
-                        var newStoreRegister = new Store()
-                        {
-                            StoreId = Guid.NewGuid(),
-                            StoreName = StoreName,
-                            UserId = App.LogUser.UserId,
-                            StoreImage = ImgArray,
-                            StoreType = value,
-                            StoreRegisterLicenseId = licenseCodeGuid
-
-                        };
-
-                        List<WorkHour> workHours = new List<WorkHour>();
-
-                        foreach (var item in WorkHourPresenters)
-                        {
-                            var workHour = new WorkHour()
-                            {
-                                CloseTime = Convert.ToDateTime(item.Close.ToString()),
-                                Day = item.Day,
-                                OpenTime = Convert.ToDateTime(item.Open.ToString()),
-                                WorkHourId = Guid.NewGuid(),
-                                StoreId = newStoreRegister.StoreId
-                            };
-
-                            workHours.Add(workHour);
-                        }
-
-                        newStoreRegister.WorkHours = workHours;
-
-                        var storeaddedResult = await StoreDataStore.AddItemAsync(newStoreRegister);
-
-                        if (storeaddedResult)
-                        {
-                            await Shell.Current.DisplayAlert("Notification", "Store Added", "OK");
-                        }
-                    }
-                    else
-                    {
-                        await Shell.Current.DisplayAlert("Notification", "License Code Incorrect", "OK");
-                    }
-                }
-                else
-                {
-                    await Shell.Current.DisplayAlert("Notification", "Some fields are empty", "OK");
-                }
-
-            });
+           
 
             LogOutCommand = new Command(() =>
             {
@@ -433,23 +238,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
            await  Launcher.OpenAsync(new Uri(url));
         }
 
-        byte[] ConvertToByteArray(Stream value)
-        {
-
-            byte[] imageArray = null;
-
-            using (MemoryStream memory = new MemoryStream())
-            {
-
-                Stream stream = value;
-                stream.CopyTo(memory);
-                imageArray = memory.ToArray();
-            }
-
-            return imageArray;
-        }
-
-
+       
 
     }
 }

@@ -13,10 +13,15 @@
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center">
             <Label
-                HorizontalOptions="Center"
-                HorizontalTextAlignment="Center"
+                HorizontalOptions="Start"
+                HorizontalTextAlignment="Start"
                 Style="{StaticResource TitleLabel}"
                 Text="Register a card to start make payments." />
+            <BoxView
+                Margin="5,0,5,0"
+                BackgroundColor="LightGray"
+                HeightRequest="0.1"
+                HorizontalOptions="Fill" />
             <Frame Style="{StaticResource FrameStyle}">
 
                 <StackLayout VerticalOptions="Center">
@@ -67,12 +72,15 @@
 
                     </StackLayout>
                     <button:SfButton
-                        Margin="10"
+                        Margin="10,0,10,0"
                         BackgroundColor="Tomato"
                         Command="{Binding CompleteRegisterCardCommand}"
                         CornerRadius="5"
+                        FontFamily="RobotoBold"
+                        FontSize="Body"
                         HasShadow="True"
-                        Text="Complete" />
+                        Text="Complete"
+                        TextColor="#2F3538" />
                 </StackLayout>
             </Frame>
         </StackLayout>

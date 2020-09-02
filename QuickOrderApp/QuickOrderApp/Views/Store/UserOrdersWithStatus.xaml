@@ -79,7 +79,7 @@
 
 
                                     </StackLayout>
-                                    <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
 
                                         <button:SfButton
                                             Grid.Row="0"
@@ -88,25 +88,29 @@
                                             BackgroundColor="SkyBlue"
                                             BorderColor="SkyBlue"
                                             Command="{Binding DetailCommand}"
-                                            CornerRadius="15"
+                                            CornerRadius="8"
                                             FontAttributes="Bold"
+                                            FontFamily="RobotoBold"
+                                            FontSize="Body"
                                             HasShadow="True"
                                             Text="Detail"
-                                            TextColor="Black" />
+                                            TextColor="#2F3538" />
                                         <button:SfButton
-                                            Grid.Row="0"
-                                            Grid.Column="1"
+                                            Grid.Row="1"
+                                            Grid.Column="0"
                                             Margin="4,0,4,0"
                                             BackgroundColor="Tomato"
                                             BorderColor="Tomato"
                                             Command="{Binding DeleteCommand}"
-                                            CornerRadius="15"
+                                            CornerRadius="8"
                                             FontAttributes="Bold"
+                                            FontFamily="RobotoBold"
+                                            FontSize="Body"
                                             HasShadow="True"
-                                          
+                                            IsVisible="{Binding IsDeleteEnable}"
                                             Text="Delete"
-                                            TextColor="Black" />
-                                    </Grid>
+                                            TextColor="#2F3538" />
+                                    </StackLayout>
                                 </StackLayout>
                             </Frame>
 

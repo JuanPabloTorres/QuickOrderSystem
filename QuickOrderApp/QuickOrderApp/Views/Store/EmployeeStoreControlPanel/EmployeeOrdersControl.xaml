@@ -44,7 +44,7 @@
                                 <Label Style="{StaticResource DataLabel}" Text="{Binding DetailOrder.OrderId, StringFormat='#{0}'}" />
                                 <StackLayout Orientation="Horizontal">
                                     <Label Style="{StaticResource DataLabel}" Text="Date: " />
-                                    <Label FontSize="Body" Text="{Binding DetailOrder.OrderDate, StringFormat='{0:MM/dd/yyyy}'}" />
+                                    <Label Style="{StaticResource DataLabel}" Text="{Binding DetailOrder.OrderDate, StringFormat='{0:MM/dd/yyyy}'}" />
                                 </StackLayout>
 
                                 <StackLayout Orientation="Horizontal">
@@ -85,8 +85,10 @@
                                     BackgroundColor="Tomato"
                                     Command="{Binding DetailEmployeeOrderCommand}"
                                     CornerRadius="10"
+                                    FontFamily="RobotoBold"
                                     HasShadow="True"
                                     Text="Detail"
+                                    TextColor="#2F3538"
                                     VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>

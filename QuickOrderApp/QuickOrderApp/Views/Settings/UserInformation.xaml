@@ -31,8 +31,7 @@
                 <Label
                     Grid.Row="0"
                     FontAttributes="Bold"
-                    FontSize="Title"
-                    HorizontalOptions="Center"
+                    Style="{StaticResource TitleLabel}"
                     Text="{Binding Fullname, StringFormat='{0}'}"
                     VerticalOptions="Center" />
                 <StackLayout Grid.Row="1" Margin="5">
@@ -46,10 +45,26 @@
                             BackgroundColor="LightGray"
                             HeightRequest="0.1"
                             HorizontalOptions="Fill" />
-                        <Label Style="{StaticResource DataLabel}" Text="{Binding Email, StringFormat='Email: {0}'}" />
-                        <Label Style="{StaticResource DataLabel}" Text="{Binding Address, StringFormat='Address: {0}'}" />
-                        <Label Style="{StaticResource DataLabel}" Text="{Binding GenderSelected, StringFormat='Gender: {0}'}" />
-                        <Label Style="{StaticResource DataLabel}" Text="{Binding Phone, StringFormat='Phone: {0:(###) ###-####}'}" />
+                        <StackLayout Orientation="Horizontal">
+                            <Label Style="{StaticResource DataLabel}" Text="Email: " />
+                            <Label Style="{StaticResource DataLabel}" Text="{Binding Email}" />
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal">
+                            <Label Style="{StaticResource DataLabel}" Text="Address: " />
+                            <Label Style="{StaticResource DataLabel}" Text="{Binding Address}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Style="{StaticResource DataLabel}" Text="Gender: " />
+                            <Label Style="{StaticResource DataLabel}" Text="{Binding GenderSelected}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Style="{StaticResource DataLabel}" Text="Phone: " />
+                            <Label Style="{StaticResource DataLabel}" Text="{Binding Phone}" />
+                        </StackLayout>
+
+
+
                     </StackLayout>
                 </StackLayout>
 
@@ -68,10 +83,12 @@
                         Command="{Binding UpdateProfileCommand}"
                         CornerRadius="10"
                         FontAttributes="Bold"
+                        FontFamily="RobotoBold"
+                        FontSize="Body"
                         HasShadow="True"
                         HorizontalOptions="Fill"
                         Text="Update Profile"
-                        TextColor="Black"
+                        TextColor="#2F3538"
                         VerticalOptions="End" />
                     <button:SfButton
                         Grid.Row="1"
@@ -81,10 +98,12 @@
                         Command="{Binding GoPaymentCardCommand}"
                         CornerRadius="10"
                         FontAttributes="Bold"
+                        FontFamily="RobotoBold"
+                        FontSize="Body"
                         HasShadow="True"
                         HorizontalOptions="Fill"
                         Text="Your Cards"
-                        TextColor="Black"
+                        TextColor="#2F3538"
                         VerticalOptions="End" />
                     <button:SfButton
                         Grid.Row="2"
@@ -94,10 +113,12 @@
                         Command="{Binding GoRegisterCardCommand}"
                         CornerRadius="10"
                         FontAttributes="Bold"
+                        FontFamily="RobotoBold"
+                        FontSize="Body"
                         HasShadow="True"
                         HorizontalOptions="Fill"
                         Text="Register Card "
-                        TextColor="Black"
+                        TextColor="#2F3538"
                         VerticalOptions="End" />
                 </Grid>
             </Grid>

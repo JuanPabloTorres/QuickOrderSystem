@@ -80,13 +80,18 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             {
                
                 //Obtine el empleado
-                item.EmployeeStore = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                item.EmployeeStore = await StoreDataStore.GetAvailableStoreInformation(item.StoreId);
+                if (item.EmployeeStore != null)
+                {
                 var empWorkHours = await EmployeeWorkHour.GetEmployeeWorkHours(item.EmployeeId.ToString());
                 item.EmployeeWorkHours = empWorkHours.ToList();
 
+               
                 var storePresenter = new StorePresenters(item.EmployeeStore);
 
                 StorePresenters.Add(storePresenter);
+
+                }
                 //UserStoreEmployee.Add(item.EmployeeStore);
             }
 

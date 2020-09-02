@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Stripe;
-using Stripe.Checkout;
+
 
 using WebApiQuickOrder.Context;
 
@@ -415,10 +415,6 @@ namespace WebApiQuickOrder.Controllers
 
         //}
 
-
-
-
-
         [HttpPost("[action]")]
         public async Task<StripePaymentCardResult> CreateCardToken(PaymentCard paymentCard)
         {
@@ -462,73 +458,110 @@ namespace WebApiQuickOrder.Controllers
 
         [HttpGet("[action]/{customerId}")]
         public async Task<string> CreateACustomerSubcription(string customerId)
-        {    
+        {
 
-            StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
-
-           //==================================================================
-           // Create Product Subcription
-
-            var productoptions = new ProductCreateOptions
+            try
             {
-                Name = "Quick Order Subcription",
-                Active = true,
-                Description = "Quick Order Admin System Subcription",
-                Type = "service"
+                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
 
+                //==================================================================
+                // Create Product Subcription
 
-            };
-
-            var productservice = new ProductService();
-           var producttoken =  await productservice.CreateAsync(productoptions);
-
-
-            var priceoptions = new PriceCreateOptions
-            {
-                UnitAmount = 200,
-                Currency = "usd",
-                Recurring = new PriceRecurringOptions
+                var productoptions = new ProductCreateOptions
                 {
-                    Interval = "month",
-                },
-                Product = producttoken.Id,
-            };
-            var priceservice = new PriceService();
-          var priceservicetoken = await   priceservice.CreateAsync(priceoptions);
-
-            //======================================================================= End Create Product Subcription
+                    Name = "Quick Order Subcription",
+                    Active = true,
+                    Description = "Quick Order Admin System Subcription",
+                    Type = "service"
 
 
-            //===================================================================================
-            //Create Subcription to store
+                };
+
+                var productservice = new ProductService();
+                var producttoken = await productservice.CreateAsync(productoptions);
 
 
-            var options = new SubscriptionCreateOptions
-            {
-                Customer = customerId,
-                Items = new List<SubscriptionItemOptions>
+                var priceoptions = new PriceCreateOptions
+                {
+                    UnitAmount = 200,
+                    Currency = "usd",
+                    Recurring = new PriceRecurringOptions
+                    {
+                        Interval = "month",
+                    },
+                    Product = producttoken.Id,
+                };
+                var priceservice = new PriceService();
+                var priceservicetoken = await priceservice.CreateAsync(priceoptions);
+
+                //======================================================================= End Create Product Subcription
+
+
+                //===================================================================================
+                //Create Subcription to store
+
+
+                var options = new SubscriptionCreateOptions
+                {
+                    Customer = customerId,
+                    Items = new List<SubscriptionItemOptions>
                 {
                     new SubscriptionItemOptions
                     {
                         Price = priceservicetoken.Id,
                     },
-                      
+
                   },
 
-            };
-            var service = new SubscriptionService();
-            Subscription subscription = await service.CreateAsync(options);
+                };
+                var service = new SubscriptionService();
+                Subscription subscription = await service.CreateAsync(options);
 
-            if (!string.IsNullOrEmpty(subscription.Id))
-            {
-                return subscription.Id;
+                if (!string.IsNullOrEmpty(subscription.Id))
+                {
+                    //var newSubcription = new Subcription()
+                    //{
+                    //    StripeCustomerId = customerId,
+                    //    StripeSubCriptionID = subscription.Id
+                    //};
+
+                    //_context.Subcriptions.Add(newSubcription);
+
+                    //try
+                    //{
+
+                    //_context.SaveChanges();
+                    //}
+                    //catch (Exception e)
+                    //{
+
+                    //    Console.WriteLine(e);
+                    //}
+
+
+
+                    return subscription.Id;
+
+
+
+
+                }
+                else
+                {
+                    return string.Empty;
+                }
             }
-            else
+            catch (Exception e)
             {
+
+                
+                Console.WriteLine(e);
+
                 return string.Empty;
             }
-
            
+
+
         }
 
         [HttpGet("[action]/{storestripeAccId}/{quickOrderFee}/{storeId}")]
@@ -571,7 +604,6 @@ namespace WebApiQuickOrder.Controllers
 
           
         }
-
 
 
         public async Task<string> CreateSubcritionProduct()
@@ -617,6 +649,41 @@ namespace WebApiQuickOrder.Controllers
         }
 
 
+        [HttpGet("[action]/{customerId}")]
+        public async Task<bool> CancelSubcription(string customerId)
+        {
+            var subcription = await _context.Subcriptions.Where(sub => sub.StripeCustomerId == customerId && sub.IsDisable == false).FirstOrDefaultAsync();
+
+            if (subcription != null)
+            {
+            StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
+
+            var options = new SubscriptionUpdateOptions
+            {
+                CancelAtPeriodEnd = true,
+            };
+
+            var service = new SubscriptionService();
+            var resultToken = await service.UpdateAsync(subcription.StripeSubCriptionID, options);
+
+            if (resultToken.CancelAtPeriodEnd)
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+
+
+            }
+            else
+            {
+                return false;
+            }
+
+        }
 
         //[HttpPost("[action]")]
         //public async Task<StripePaymentCardResult> CreateBankToken(PaymentCard paymentCard)

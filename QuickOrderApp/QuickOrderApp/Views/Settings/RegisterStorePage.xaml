@@ -17,23 +17,35 @@
     <ScrollView>
 
         <StackLayout>
-            <Image
-                x:Name="logo"
-                Margin="5"
-                Aspect="Fill"
+            <Frame
+                Margin="10"
+                Padding="0"
+                CornerRadius="5"
+                HasShadow="True"
                 HeightRequest="200"
-                Source="{Binding StoreImage}"
-                WidthRequest="100" />
+                IsClippedToBounds="True">
+
+                <Image
+                    Aspect="Fill"
+                    HeightRequest="200"
+                    Source="{Binding StoreImage}"
+                    WidthRequest="100" />
+            </Frame>
             <button:SfButton
                 Margin="10"
                 BackgroundColor="LimeGreen"
-                Command="{Binding IPickPhotoCommand}"
+                Command="{Binding PickPhotoCommand}"
                 CornerRadius="5"
+                FontFamily="RobotoBold"
+                FontSize="Body"
                 HasShadow="True"
-                Text="Choose Image" />
+                Text="Choose Image"
+                TextColor="#2F3538" />
             <StackLayout>
                 <!--<Label Text="Store Name" FontSize="Title"/>-->
                 <Entry Placeholder="Store Name" Text="{Binding StoreName}" />
+
+                <Entry Placeholder="Store Description" Text="{Binding StoreDescription}" />
 
                 <StackLayout>
                     <combobox:SfComboBox
@@ -92,12 +104,15 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
             <StackLayout>
-                <Label FontSize="Title" Text="Use Stripe to get your pay from orders. " />
+                <Label Style="{StaticResource TitleLabel}" Text="Use Stripe to get your pay from orders. " />
 
                 <Label>
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span FontSize="Body" Text="If you dont have account click the link and start make your account once finish. Copy the Keys into the textbox. " />
+                            <Span
+                                FontSize="Body"
+                                Text="If you dont have account click the link and start make your account once finish. Copy the Keys into the textbox. "
+                                TextColor="#2F3538" />
                             <Span
                                 Text="Stripe Register"
                                 TextColor="Blue"
@@ -126,7 +141,11 @@
                 BackgroundColor="DodgerBlue"
                 Command="{Binding CompleteRegisterCommand}"
                 CornerRadius="5"
-                Text="Complete" />
+                FontFamily="RobotoBold"
+                FontSize="Body"
+                HasShadow="True"
+                Text="Complete"
+                TextColor="#2F3538" />
         </StackLayout>
     </ScrollView>
 

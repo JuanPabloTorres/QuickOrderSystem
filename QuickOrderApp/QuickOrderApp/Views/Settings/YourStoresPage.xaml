@@ -41,26 +41,41 @@
                                         Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}"
                                         WidthRequest="100" />
                                 </Frame>
+                                <StackLayout HorizontalOptions="Fill" VerticalOptions="Center">
+                                    <Label
+                                        FontAttributes="Bold"
+                                        FontSize="Title"
+                                        HorizontalOptions="Center"
+                                        Text="{Binding StoreName}"
+                                        TextColor="Black"
+                                        VerticalOptions="Center" />
 
-                                <Label
-                                    FontAttributes="Bold"
-                                    FontSize="Title"
-                                    HorizontalOptions="Center"
-                                    Text="{Binding StoreName}"
-                                    TextColor="Black"
-                                    VerticalOptions="Center" />
+
+                                    <StackLayout Orientation="Horizontal">
+                                        <Label
+                                            Style="{StaticResource DataLabel}"
+                                            Text="Type: "
+                                            VerticalOptions="Center" />
+                                        <Label
+                                            Style="{StaticResource DataLabel}"
+                                            Text="{Binding StoreType}"
+                                            TextColor="Orange" />
+                                    </StackLayout>
+
+                                </StackLayout>
 
                             </StackLayout>
                             <button:SfButton
-                                Margin="10,0,10,0"
                                 BackgroundColor="Tomato"
                                 Command="{Binding GoAdminStoreHomeControl}"
-                                CornerRadius="15"
+                                CornerRadius="10"
                                 FontAttributes="Bold"
+                                FontFamily="RobotoBold"
                                 FontSize="Body"
                                 HasShadow="True"
-                                HorizontalOptions="End"
-                                Text="View" />
+                                HorizontalOptions="FillAndExpand"
+                                Text="View"
+                                TextColor="#2F3538" />
                         </StackLayout>
 
 

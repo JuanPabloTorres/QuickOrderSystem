@@ -17,18 +17,44 @@
 
                 <StackLayout Margin="2">
                     <Label Style="{StaticResource TitleLabel}" Text="Order Information" />
-                    <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeOrderPresenter.OrderId, StringFormat='#{0}'}" />
-                    <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeOrderPresenter.OrderDate, StringFormat='Date:{0:MM/dd/yyyy}'}" />
-                    <Label Style="{StaticResource DataLabel}" Text="{Binding OrderStatus, StringFormat='Status:{0}'}" />
-                    <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeOrderPresenter.OrderType, StringFormat='Type:{0}'}" />
+                    <BoxView
+                        Margin="5,0,5,0"
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <StackLayout Orientation="Horizontal">
+
+                        <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeOrderPresenter.OrderId, StringFormat='#{0}'}" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Style="{StaticResource DataLabel}" Text="Date: " />
+                        <Label
+                            Style="{StaticResource DataLabel}"
+                            Text="{Binding EmployeeOrderPresenter.OrderDate, StringFormat='{0:MM/dd/yyyy}'}"
+                            TextColor="Orange" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Style="{StaticResource DataLabel}" Text="Status: " />
+                        <Label
+                            Style="{StaticResource DataLabel}"
+                            Text="{Binding OrderStatus}"
+                            TextColor="Green" />
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                        <Label Style="{StaticResource DataLabel}" Text="Type: " />
+                        <Label
+                            Style="{StaticResource DataLabel}"
+                            Text="{Binding EmployeeOrderPresenter.OrderType}"
+                            TextColor="Orange" />
+                    </StackLayout>
+
+
+
 
                 </StackLayout>
             </Frame>
-            <Label
-                FontSize="Title"
-                HorizontalOptions="Center"
-                Text="Order Products"
-                TextColor="Gray" />
+            <Label Style="{StaticResource TitleLabel}" Text="Order Products" />
             <BoxView
                 Margin="8,0,8,0"
                 BackgroundColor="LightGray"
@@ -48,7 +74,7 @@
                     <DataTemplate>
 
 
-                        <StackLayout  Orientation="Vertical">  
+                        <StackLayout Orientation="Vertical">
                             <Label
                                 Style="{StaticResource TitleLabel}"
                                 Text="{Binding ProductName}"
@@ -91,9 +117,10 @@
                                         CheckedColor="LimeGreen"
                                         ControlSize="100"
                                         FontAttributes="Bold"
+                                        FontFamily="RobotoBold"
                                         IsChecked="{Binding IsComplete}"
                                         Text="Completed"
-                                        TextColor="Gray"
+                                        TextColor="#2F3538"
                                         VerticalOptions="Center" />
                                 </StackLayout>
 
@@ -114,9 +141,11 @@
                 BackgroundColor="Tomato"
                 Command="{Binding CompleteOrderCommand}"
                 CornerRadius="10"
-                FontSize="Body"
+                FontFamily="RobotoBold"
+                FontSize="Medium"
                 HasShadow="True"
-                Text="Complete" />
+                Text="Complete"
+                TextColor="#2F3538" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

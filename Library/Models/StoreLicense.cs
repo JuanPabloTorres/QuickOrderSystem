@@ -10,6 +10,8 @@ namespace Library.Models
         [Key]
         public Guid LicenseId { get; set; }
         public DateTime StartDate { get; set; }
-        public Guid LicenseHolderUserId { get; set; } 
+        public Guid LicenseHolderUserId { get; set; }
+
+        public bool IsUsed { get; set; }
     }
 }

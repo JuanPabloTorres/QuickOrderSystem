@@ -40,6 +40,8 @@ namespace Library.Models
 
         public Guid  StoreLicenceId { get; set; }
 
+        public bool IsDisable { get; set; }
+
     }
 
     public enum StoreType

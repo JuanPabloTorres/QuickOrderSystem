@@ -172,6 +172,36 @@ namespace WebApiQuickOrder.Controllers
 
         }
 
+
+        [HttpGet("[action]/{orderId}")]
+        public async Task<bool> DisableOrder(Guid orderId)
+        {
+
+            var orderToDisable = await _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefaultAsync();
+
+            orderToDisable.IsDisisble = true;
+            _context.Entry(orderToDisable).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderExists(orderToDisable.OrderId))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+           
+        }
+
         // POST: api/Order
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.

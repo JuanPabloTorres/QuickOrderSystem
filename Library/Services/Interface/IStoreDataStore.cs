@@ -13,5 +13,11 @@ namespace Library.Services.Interface
         Task<string> GetStoreDestinationPaymentKey(Guid storeId);
 
         Task<string> GetStoreDestinationPublicPaymentKey(Guid storeId);
+
+        Task<bool> DisableStore(Store store);
+
+        Task<IEnumerable<Store>> GetAvailableStore();
+
+        Task<Store> GetAvailableStoreInformation(Guid id);
     }
 }

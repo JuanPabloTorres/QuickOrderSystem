@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Library.Models
 {
     [Table("Orders")]
-    public class Order
+    public class Order:BaseModel
     {
         [Key]
         public Guid OrderId { get; set; }
@@ -29,6 +29,8 @@ namespace Library.Models
 
         bool IsSubmit { get; set; }
 
+        
+
     }
 
     public enum Type
@@ -45,7 +47,8 @@ namespace Library.Models
         Completed,
         OnTheWay,
         NotSubmited,
-        Submited
+        Submited,
+       
     }
 
 

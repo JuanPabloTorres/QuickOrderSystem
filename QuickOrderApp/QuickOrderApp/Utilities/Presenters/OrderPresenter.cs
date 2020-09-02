@@ -124,6 +124,18 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+        private bool isdeleteEnable;
+
+        public bool IsDeleteEnable
+        {
+            get { return isdeleteEnable; }
+            set
+            {
+                isdeleteEnable = value;
+                OnPropertyChanged();
+            }
+        }
+
         public OrderPresenter(Order order)
         {
             OrderId = order.OrderId;
@@ -134,6 +146,11 @@ namespace QuickOrderApp.Utilities.Presenters
             OStatus = order.OrderStatus;
             OrderType = order.OrderType;
             StoreName = order.StoreOrder.StoreName;
+
+            if (OStatus == Status.NotSubmited)
+            {
+                IsDeleteEnable = true;
+            }
 
             OrderProducts = new ObservableCollection<OrderProduct>(order.OrderProducts);
 
@@ -148,7 +165,8 @@ namespace QuickOrderApp.Utilities.Presenters
             DeleteCommand = new Command(async () =>
             {
 
-                var orderDelete = await orderDataStore.DeleteItemAsync(OrderId.ToString());
+                var orderDelete = await orderDataStore.DisableOrder(OrderId);
+
                 if (orderDelete)
                 {
 

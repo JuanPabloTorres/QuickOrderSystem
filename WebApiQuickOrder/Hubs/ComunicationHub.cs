@@ -1,13 +1,21 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using WebApiQuickOrder.Context;
 
 namespace WebApiQuickOrder.Hubs
 {
     public class ComunicationHub : Hub
     {
+       readonly QOContext _QOContext;
+        public ComunicationHub(QOContext qOContext)
+        {
+            _QOContext = qOContext;
+        }
 
         public async Task SenRequestToUser(string connectionId,string message)
         {
@@ -23,6 +31,15 @@ namespace WebApiQuickOrder.Hubs
         {
             await Clients.All.SendAsync("UpdateStoreInventory", message);
         }
+
+        public async Task SendCompletedOrderNotification(string notificationMessage,string userReciever)
+        {
+
+            var connectionId = _QOContext.usersConnecteds.Where(uc => uc.UserID.ToString() == userReciever).FirstOrDefault().HubConnectionID;
+            await Clients.Client(connectionId).SendAsync("SendCompletedOrderNotification", notificationMessage);
+        }
+
+       
 
     }
 }

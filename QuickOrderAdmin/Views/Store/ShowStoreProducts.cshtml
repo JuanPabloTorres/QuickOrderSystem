@@ -5,11 +5,82 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+
 <h1 class="text-center">Inventory of @QuickOrderAdmin.Utilities.SelectedStore.CurrentStore.StoreName</h1>
 
-<p>
-    <a class="btn btn-warning shadow" asp-action="AddProductStore" asp-controller="Store">Add New Product</a>
-</p>
+@if (!String.IsNullOrEmpty(ViewBag.Error))
+{
+    <script>
+        $(function () {
+            $('#notificationModal').modal();
+        });
+    </script>
+}
+
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Notification</h5>
+
+            </div>
+            <div class="modal-body">
+                <label class="text-center " style="text-decoration-color:red">@ViewBag.Error</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <p>
+                <a class="btn btn-warning shadow" asp-action="AddProductStore" asp-controller="Store">Add New Product</a>
+            </p>
+        </div>
+        <div class="col-md">
+            <form asp-action="SearchItem">
+
+
+                <div class="input-group mb-3">
+                    <input placeholder="Item to search" class="form-control" name="SearchItem" required />
+                    <div class="input-group-append">
+                        <input type="submit" class=" btn btn-primary" value="Search" />
+                    </div>
+                </div>
+                @*<div class="container">
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="form-group">
+
+                                <input placeholder="Item to search" class="form-control" name="SearchItem" required />
+                            </div>
+                        </div>
+                        <div class="col-lg">
+                            <div class="form-group">
+                                <input type="submit" class=" fa fa-search" value="Search" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>*@
+
+
+
+
+            </form>
+
+        </div>
+
+
+    </div>
+</div>
+
 <table class="table table-hover">
     <thead>
         <tr>
@@ -34,31 +105,32 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @foreach (var item in Model)
+        {
+            <tr>
 
-            <td>
-                <img src="data:image;base64,@System.Convert.ToBase64String(item.ProductImage)" width="100" height="100" class="rounded " />
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                <label>@item.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</label>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InventoryQuantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
+                <td>
+                    <img src="data:image;base64,@System.Convert.ToBase64String(item.ProductImage)" width="100" height="100" class="rounded " />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    <label>@item.Price.ToString("C", System.Globalization.CultureInfo.CurrentCulture)</label>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InventoryQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
 
-            <td>
-                @Html.ActionLink("Edit", "EditProduct", new { id = item.ProductId }) |
-                @Html.ActionLink("Details", "DetailProdut", new { id = item.ProductId }) |
-                @Html.ActionLink("Delete", "DeleteProduct", new { id = item.ProductId })
-            </td>
-        </tr>
-}
+                <td>
+                    @Html.ActionLink("Edit", "EditProduct", new { id = item.ProductId }) |
+                    @Html.ActionLink("Details", "DetailProdut", new { id = item.ProductId }) |
+                    @Html.ActionLink("Delete", "DeleteProduct", new { id = item.ProductId })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

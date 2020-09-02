@@ -33,10 +33,13 @@
                 <button:SfButton
                     Margin="10"
                     BackgroundColor="LimeGreen"
-                    Command="{Binding IPickPhotoCommand}"
+                    Command="{Binding ProductPickPhotoCommand}"
                     CornerRadius="5"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Choose Image" />
+                    Text="Choose Image"
+                    TextColor="#2F3538" />
                 <Label
                     FontAttributes="Bold"
                     FontSize="Body"
@@ -81,9 +84,11 @@
                     BackgroundColor="Tomato"
                     Command="{Binding CompleteCommand}"
                     CornerRadius="5"
+                    FontFamily="RobotoBold"
                     FontSize="Body"
                     HasShadow="True"
-                    Text="Complete" />
+                    Text="Complete"
+                    TextColor="#2F3538" />
 
             </StackLayout>
         </ScrollView>

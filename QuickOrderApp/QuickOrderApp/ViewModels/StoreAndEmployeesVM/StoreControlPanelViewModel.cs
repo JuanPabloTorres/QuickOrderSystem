@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -20,6 +21,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
     {
 
         #region Properties
+
         private string storeid;
 
         public string StoreId
@@ -29,7 +31,9 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             {
                 storeid = value;
                 OnPropertyChanged();
-                Store = App.LogUser.Stores.Where(s => s.StoreId.ToString() == StoreId).FirstOrDefault();
+
+                LoadStore(StoreId);
+                //Store = App.LogUser.Stores.Where(s => s.StoreId.ToString() == StoreId).FirstOrDefault();
                 YourSelectedStore = Store;
             }
         }
@@ -180,6 +184,13 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             }
         }
 
+        async Task LoadStore(string storeId)
+        {
+            var result = await StoreDataStore.GetItemAsync(storeId);
+
+            Store = result;
+        }
+
 
         #endregion
 
@@ -195,10 +206,18 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         public ICommand GoOrdersEmployeeCommand { get; set; }
 
         public ICommand GoEmployeesCommand { get; set; }
-        public ICommand IPickPhotoCommand { get; set; }
+        public ICommand ProductPickPhotoCommand { get; set; }
         public ICommand CompleteCommand { get; set; }
 
         public ICommand GoOrderScanner { get; set; }
+
+        public ICommand GoStoreSettings => new Command(async () =>
+         {
+
+             await Shell.Current.GoToAsync($"{StoreSettings.Route}", animate: true);
+             MessagingCenter.Send<Store>(YourSelectedStore, "StoreInformation");
+
+         });
 
         #endregion
 
@@ -206,14 +225,9 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         public StoreControlPanelViewModel()
         {
-            var types = Enum.GetValues(typeof(ProductType));
+           
 
-            ProductTypes = new List<string>();
-
-            foreach (var item in types)
-            {
-                ProductTypes.Add(item.ToString());
-            }
+            ProductTypes = new List<string>(Enum.GetNames(typeof(ProductType)).ToList());          
 
 
             EmpWorkHour = new ObservableCollection<EmployeeWorkHour>();
@@ -226,7 +240,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 await Shell.Current.GoToAsync($"AddProductRoute", animate: true);
             });
 
-            IPickPhotoCommand = new Command(async () =>
+            ProductPickPhotoCommand = new Command(async () =>
             {
                 await CrossMedia.Current.Initialize();
                 files.Clear();
@@ -245,7 +259,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 if (file == null)
                     return;
 
-                //files.Add(file);
+             
 
                 ImgArray = ConvertToByteArray(file.GetStream());
 
@@ -335,6 +349,11 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             {
 
                 await Shell.Current.GoToAsync($"{OrderScannerPage.Route}");
+            });
+
+            MessagingCenter.Subscribe<Store>(this, "UpdatedStore", (sender) =>
+            {               
+                Store = sender;
             });
 
         }

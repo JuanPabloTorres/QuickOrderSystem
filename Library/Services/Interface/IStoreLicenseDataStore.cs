@@ -8,5 +8,9 @@ namespace Library.Services.Interface
     {
         bool StoreLicenseExists(Guid id);
         Task<bool> PostStoreLicense(string email, string username);
+
+        Task<bool> IsLicenseInUsed(string license);
+
+        Task<bool> UpdateLicenceInCode(Guid id);
     }
 }

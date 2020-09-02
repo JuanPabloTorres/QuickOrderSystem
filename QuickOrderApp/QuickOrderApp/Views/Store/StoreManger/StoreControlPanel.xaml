@@ -37,11 +37,8 @@
             </Frame>
             <Label
                 Grid.Row="1"
-                FontAttributes="Bold"
-                FontSize="Title"
-                HorizontalOptions="Center"
-                Text="{Binding Store.StoreName}"
-                TextColor="Black" />
+                Style="{StaticResource TitleLabel}"
+                Text="{Binding Store.StoreName}" />
             <BoxView
                 Grid.Row="2"
                 Margin="8,0,8,0"
@@ -66,8 +63,11 @@
                     Command="{Binding GoInventory}"
                     CornerRadius="5"
                     FontAttributes="Bold"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Inventory" />
+                    Text="Inventory"
+                    TextColor="#2F3538" />
                 <button:SfButton
                     Grid.Row="0"
                     Grid.Column="1"
@@ -76,8 +76,11 @@
                     Command="{Binding GoAddProduct}"
                     CornerRadius="5"
                     FontAttributes="Bold"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Add Product" />
+                    Text="Add Product"
+                    TextColor="#2F3538" />
                 <button:SfButton
                     Grid.Row="1"
                     Grid.Column="0"
@@ -86,8 +89,11 @@
                     Command="{Binding GoOrdersCommand}"
                     CornerRadius="5"
                     FontAttributes="Bold"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Orders" />
+                    Text="Orders"
+                    TextColor="#2F3538" />
                 <button:SfButton
                     Grid.Row="1"
                     Grid.Column="1"
@@ -96,8 +102,11 @@
                     Command="{Binding GoEmployeesCommand}"
                     CornerRadius="5"
                     FontAttributes="Bold"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Employees" />
+                    Text="Employees"
+                    TextColor="#2F3538" />
                 <button:SfButton
                     Grid.Row="2"
                     Grid.Column="0"
@@ -106,8 +115,11 @@
                     Command="{Binding GoSearchEmployeeCommand}"
                     CornerRadius="5"
                     FontAttributes="Bold"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Search Employee" />
+                    Text="Search Employee"
+                    TextColor="#2F3538" />
                 <button:SfButton
                     Grid.Row="2"
                     Grid.Column="1"
@@ -116,19 +128,25 @@
                     Command="{Binding GoDashboards}"
                     CornerRadius="5"
                     FontAttributes="Bold"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Dashboards" />
+                    Text="Dashboards"
+                    TextColor="#2F3538" />
 
                 <button:SfButton
                     Grid.Row="3"
                     Grid.ColumnSpan="2"
                     Margin="3"
                     BackgroundColor="Tomato"
-                    Command="{Binding}"
+                    Command="{Binding GoStoreSettings}"
                     CornerRadius="5"
                     FontAttributes="Bold"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Store Information" />
+                    Text="Store Settings"
+                    TextColor="#2F3538" />
             </Grid>
         </Grid>
 

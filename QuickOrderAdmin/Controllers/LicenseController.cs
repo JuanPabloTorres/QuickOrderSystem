@@ -19,15 +19,19 @@ namespace QuickOrderAdmin.Controllers
         IUserDataStore userDataStore;
         ICardDataStore cardDataStore;
         IStripeServiceDS StripeServiceDS;
+        ISubcriptionDataStore SubcriptionDataStore;
+
 
         static StripePaymentCardResult StripePaymentCardResult;
+
         static PaymentCard PaymentCard;
-        public LicenseController(IStoreLicenseDataStore storeLicenseData, IUserDataStore userData, IStripeServiceDS stripeServiceDS, ICardDataStore cardDataStore)
+        public LicenseController(IStoreLicenseDataStore storeLicenseData, IUserDataStore userData, IStripeServiceDS stripeServiceDS, ICardDataStore cardDataStore,ISubcriptionDataStore subcriptionDataStore)
         {
             storeLicenseDataStore = storeLicenseData;
             userDataStore = userData;
             this.StripeServiceDS = stripeServiceDS;
             this.cardDataStore = cardDataStore;
+            this.SubcriptionDataStore = subcriptionDataStore;
         }
 
         public IActionResult Index()
@@ -63,8 +67,6 @@ namespace QuickOrderAdmin.Controllers
                         HolderName = cardViewModel.Holdername,
                         Month = cardViewModel.MM,
                         Year = cardViewModel.YY
-
-
                     };
 
 
@@ -103,6 +105,7 @@ namespace QuickOrderAdmin.Controllers
             }
         }
 
+       
 
 
         bool UserInfoNotNullOrEmpty(UserViewModel userVm)
@@ -125,124 +128,154 @@ namespace QuickOrderAdmin.Controllers
             if (UserInfoNotNullOrEmpty(userVm))
             {
 
-            if (userVm.Password == userVm.ConfirmPassword)
-            {
-                //Las credenciales de entrada del usuario
-                var userLogin = new Login()
-                {
-                    LoginId = Guid.NewGuid(),
-                    Password = userVm.Password,
-                    Username = userVm.Username
-                };
-
-                //Creamos el usuario
-                var newUser = new User()
-                {
-                    UserId = Guid.NewGuid(),
-                    Email = userVm.Email,
-                    LoginId = userLogin.LoginId,
-                    Name = userVm.Name,
-                    UserLogin = userLogin,
-                    Address = userVm.Address
-                };
-
-
-                //Obtenemos datos de empleados necesarios para el registro en stripe
-                var optionsCustomers = new UserDTO
+                if (userVm.Password == userVm.ConfirmPassword)
                 {
 
-                    Name = userVm.Name,
-                    Email = userVm.Email,
-                    Phone = userVm.Phone,
-                    Address = userVm.Address,
+                    var credentialExist = await userDataStore.CheckIfUsernameAndPasswordExist(userVm.Username, userVm.Password);
 
-                };
-
-
-                //Creamos un nuevo usuario en stripe
-                var customerToken = await StripeServiceDS.CreateStripeCustomer(optionsCustomers);
-
-                //Le  insertamos la tarjeta al nuevo usuario de stripe
-                var cardservicetokenId = await StripeServiceDS.InsertStripeCardToCustomer(PaymentCard, customerToken);
-
-                //Creamos la subcripcion al usuario
-
-                var subcriptiontoken = await StripeServiceDS.CreateACustomerSubcription(customerToken);
-
-                //Verificamos que la informacion este correcta
-
-                if (!string.IsNullOrEmpty(subcriptiontoken))
-                {
-                    //Le damos el id del nuevo customer de la cuenta de stripe.
-                    newUser.StripeUserId = customerToken;
-
-                    //Lo agregamos a la base de datos.
-                    var addedUser = await userDataStore.AddItemAsync(newUser);
-
-                    //Verificamos si el usuario se inserto a nuestra base de datos
-                    if (addedUser)
+                    if (!credentialExist)
                     {
 
-                    //Verificamos si el token de la tarjeta insertada es correcta.
-                    if (!string.IsNullOrEmpty(cardservicetokenId))
-                    {
-                        //Agregamos la tarjeta a nuestra base de datos.
-                        var cardadded = cardDataStore.AddItemAsync(new PaymentCard()
+                        //Las credenciales de entrada del usuario
+                        var userLogin = new Login()
                         {
-                            UserId = newUser.UserId,
-                            StripeCardId = cardservicetokenId, 
-                            CardNumber = PaymentCard.CardNumber, 
-                            Cvc= PaymentCard.Cvc,
-                            Month = PaymentCard.Month, 
-                            Year = PaymentCard.Year, 
-                            HolderName = PaymentCard.HolderName, PaymentCardId = Guid.NewGuid() 
-                        });
-                    }
-
-                    //Creamos el lincense 
-                        var newStoreLicense = new StoreLicense()
-                        {
-                            LicenseId = Guid.NewGuid(),
-                            StartDate = DateTime.Today,
-                            LicenseHolderUserId = newUser.UserId
-                            
+                            LoginId = Guid.NewGuid(),
+                            Password = userVm.Password,
+                            Username = userVm.Username
                         };
 
-                        //Lo insertamos a nuestra base de datos
-                        var storelicenceresult = await storeLicenseDataStore.AddItemAsync(newStoreLicense);
-
-                        //Verificamos el resultado
-                        if (storelicenceresult)
+                        //Creamos el usuario
+                        var newUser = new User()
                         {
-                            //Enviamos el email con el codio de la nueva licensia.
-                            SendStoreLicenceEmailCode(newUser.Email, newStoreLicense.LicenseId.ToString());
-                        }
-                        //Verificamos que los credenciales esten correctos.
-                        var resultCredentials = userDataStore.CheckUserCredential(userLogin.Username, userLogin.Password);
+                            UserId = Guid.NewGuid(),
+                            Email = userVm.Email,
+                            LoginId = userLogin.LoginId,
+                            Name = userVm.Name,
+                            UserLogin = userLogin,
+                            Address = userVm.Address
+                        };
 
-                        //Validamos que el resultado no sea vacio
-                        if (resultCredentials != null)
+
+                        //Obtenemos datos de empleados necesarios para el registro en stripe
+                        var optionsCustomers = new UserDTO
                         {
-                            //Le damos los credenciales al LogUser
-                            LogUser.LoginUser = resultCredentials;
+
+                            Name = userVm.Name,
+                            Email = userVm.Email,
+                            Phone = userVm.Phone,
+                            Address = userVm.Address,
+
+                        };
+
+
+                        //Creamos un nuevo usuario en stripe
+                        var customerToken = await StripeServiceDS.CreateStripeCustomer(optionsCustomers);
+
+                        //Le  insertamos la tarjeta al nuevo usuario de stripe
+                        var cardservicetokenId = await StripeServiceDS.InsertStripeCardToCustomer(PaymentCard, customerToken);
+
+                        //Creamos la subcripcion al usuario
+
+                        var subcriptiontoken = await StripeServiceDS.CreateACustomerSubcription(customerToken);
+
+                        //Verificamos que la informacion este correcta
+
+                        if (!string.IsNullOrEmpty(subcriptiontoken))
+                        {
+                            //Le damos el id del nuevo customer de la cuenta de stripe.
+                            newUser.StripeUserId = customerToken;
+
+                           
+
+                            //Lo agregamos a la base de datos.
+                            var addedUser = await userDataStore.AddItemAsync(newUser);
+
+                            //Verificamos si el usuario se inserto a nuestra base de datos
+                            if (addedUser)
+                            {
+
+                                //Verificamos si el token de la tarjeta insertada es correcta.
+                                if (!string.IsNullOrEmpty(cardservicetokenId))
+                                {
+                                    //Agregamos la tarjeta a nuestra base de datos.
+                                    var cardadded = cardDataStore.AddItemAsync(new PaymentCard()
+                                    {
+                                        UserId = newUser.UserId,
+                                        StripeCardId = cardservicetokenId,
+                                        CardNumber = PaymentCard.CardNumber,
+                                        Cvc = PaymentCard.Cvc,
+                                        Month = PaymentCard.Month,
+                                        Year = PaymentCard.Year,
+                                        HolderName = PaymentCard.HolderName,
+                                        PaymentCardId = Guid.NewGuid()
+                                    });
+                                }
+
+                                //Creamos el lincense 
+                                var newStoreLicense = new StoreLicense()
+                                {
+                                    LicenseId = Guid.NewGuid(),
+                                    StartDate = DateTime.Today,
+                                    LicenseHolderUserId = newUser.UserId
+
+                                };
+
+                                //Lo insertamos a nuestra base de datos
+                                var storelicenceresult = await storeLicenseDataStore.AddItemAsync(newStoreLicense);
+
+                                //Verificamos el resultado
+                                if (storelicenceresult)
+                                {
+
+                                    var subcription = new Subcription()
+                                    {
+                                        IsDisable = false,
+                                        StripeCustomerId = customerToken,
+                                        StripeSubCriptionID = subcriptiontoken,
+                                        StoreLicense = newStoreLicense.LicenseId
+
+
+                                    };
+
+                                    var result = SubcriptionDataStore.AddItemAsync(subcription);
+
+                                    //Enviamos el email con el codio de la nueva licensia.
+                                    SendStoreLicenceEmailCode(newUser.Email, newStoreLicense.LicenseId.ToString());
+                                }
+                                //Verificamos que los credenciales esten correctos.
+                                var resultCredentials = userDataStore.CheckUserCredential(userLogin.Username, userLogin.Password);
+
+                                //Validamos que el resultado no sea vacio
+                                if (resultCredentials != null)
+                                {
+                                    //Le damos los credenciales al LogUser
+                                    LogUser.LoginUser = resultCredentials;
+                                }
+
+                                //Luego de todo completado de manera correcta nos vamos a registrar una tienda.
+                                return RedirectToAction("RegisterStore", "Store");
+                            }
+                        }
+                        else
+                        {
+                            return View();
                         }
 
-                        //Luego de todo completado de manera correcta nos vamos a registrar una tienda.
-                        return RedirectToAction("RegisterStore", "Store");
                     }
+                    else
+                    {
+                        ViewBag.ErrorMsg = "The creditals already exists.";
+                        return View();
+                    }
+
+
+
                 }
                 else
                 {
+                    ViewBag.ErrorMsg = "The password and confirm pasword are different.";
                     return View();
                 }
-
-
-            }
-            else
-            {
-                ViewBag.ErrorMsg = "Las Credenciales de password y confirm password son distintas.";
-                return View();
-            }
             }
 
 

@@ -71,7 +71,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         {
             var orderData = orderDataStore.GetStoreOrders(storeId, App.TokenDto.Token);
 
-            var orderssubmited = orderData.Where(o => o.OrderStatus == Status.Submited).OrderByDescending(date => date.OrderDate);
+            var orderssubmited = orderData.Where(o => o.OrderStatus == Status.Submited ).OrderByDescending(date => date.OrderDate);
 
             StoreOrderPresenters.Clear();
 

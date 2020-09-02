@@ -28,10 +28,18 @@ namespace WebApiQuickOrder.Controllers
         }
 
         // GET: api/Store
+        [HttpGet("[action]")]
+        public async Task<ActionResult<IEnumerable<Store>>> GetAvailableStore()
+        {
+            return await _context.Stores.Where(st=>st.IsDisable == false).ToListAsync();
+        }
+
+
+        // GET: api/Store
         [HttpGet("[action]/{userid}")]
         public async Task<ActionResult<IEnumerable<Store>>> GetStoresFromUser(Guid userid)
         {
-            return await _context.Stores.Where(s => s.UserId == userid).ToListAsync();
+            return await _context.Stores.Where(s => s.UserId == userid && s.IsDisable == false).ToListAsync();
         }
 
         // GET: api/Store
@@ -46,6 +54,20 @@ namespace WebApiQuickOrder.Controllers
         public async Task<ActionResult<Store>> GetStore(Guid id)
         {
             var store = _context.Stores.Where(s => s.StoreId == id).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefault();
+
+            if (store == null)
+            {
+                return NotFound();
+            }
+
+            return store;
+        }
+
+        // GET: api/Store/5
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<Store>> GetAvailableStoreInformation(Guid id)
+        {
+            var store = await _context.Stores.Where(s => s.StoreId == id && s.IsDisable == false).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();
 
             if (store == null)
             {
@@ -89,25 +111,32 @@ namespace WebApiQuickOrder.Controllers
         // PUT: api/Store/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutStore(Guid id, Store store)
+        [HttpPut]
+        public async Task<bool> PutStore(Store store)
         {
-            if (id != store.StoreId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(store).State = EntityState.Modified;
-
             try
             {
+                _context.Entry(store).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+
+                var result = _context.WorkHours.Where(w => w.StoreId == store.StoreId).ToList();
+
+                _context.WorkHours.RemoveRange(result);
+
+                await _context.SaveChangesAsync();
+
+                _context.WorkHours.AddRange(store.WorkHours);
+
+               await _context.SaveChangesAsync();
+               
+
+                return true;
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StoreExists(id))
+                if (!StoreExists(store.StoreId))
                 {
-                    return NotFound();
+                    return false;
                 }
                 else
                 {
@@ -115,8 +144,55 @@ namespace WebApiQuickOrder.Controllers
                 }
             }
 
-            return NoContent();
+
         }
+
+
+        [HttpPut("[action]")]
+        public async Task<bool> DisableStore(Store store)
+        {
+            try
+            {
+                _context.Entry(store).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+               
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!StoreExists(store.StoreId))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+
+        }
+
+
+
+        //[HttpPut("[action]")]
+        //public async Task<bool> UpdateStore(Store store)
+        //{
+        //    var storeResult = await _context.Stores.Where(s => s.StoreId == store.StoreId).FirstOrDefaultAsync();
+
+        //    if (storeResult == null)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+
+        //    }
+
+
+
+        //}
 
         // POST: api/Store
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
@@ -131,20 +207,46 @@ namespace WebApiQuickOrder.Controllers
             return CreatedAtAction("GetStore", new { id = store.StoreId }, store);
         }
 
+        //// DELETE: api/Store/5
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult<Store>> DeleteStore(Guid id)
+        //{
+        //    var store = await _context.Stores.FindAsync(id);
+        //    if (store == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.Stores.Remove(store);
+        //    await _context.SaveChangesAsync();
+
+        //    return store;
+        //}
+
+
         // DELETE: api/Store/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Store>> DeleteStore(Guid id)
+        public async Task<ActionResult<bool>> Delete(Guid id)
         {
             var store = await _context.Stores.FindAsync(id);
             if (store == null)
             {
-                return NotFound();
+                return false;
             }
 
             _context.Stores.Remove(store);
             await _context.SaveChangesAsync();
 
-            return store;
+
+            var result = await _context.Stores.AnyAsync(s => s.StoreId == id);
+
+            if (result)
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
         }
 
         private bool StoreExists(Guid id)

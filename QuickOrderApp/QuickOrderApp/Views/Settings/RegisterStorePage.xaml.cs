@@ -14,41 +14,9 @@ namespace QuickOrderApp.Views.Settings
         public RegisterStorePage()
         {
             InitializeComponent();
-            BindingContext = new SettingViewModel();
+            BindingContext = new RegisterStoreViewModel();
         }
 
-        private async void pickphoto(object sender, EventArgs e)
-        {
-            await CrossMedia.Current.Initialize();
-
-            if (!CrossMedia.Current.IsPickPhotoSupported)
-            {
-                await Shell.Current.DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
-                return;
-            }
-            var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
-            {
-                PhotoSize = PhotoSize.Full,
-
-            });
-
-
-            if (file == null)
-                return;
-
-            //files.Add(file);
-
-            logo.Source = ImageSource.FromStream(() =>
-            {
-                var stream = file.GetStream();
-                file.Dispose();
-                return stream;
-            });
-
-
-            //storeImage.Source = ImageSource.FromFile(file.Path);
-
-
-        }
+       
     }
 }

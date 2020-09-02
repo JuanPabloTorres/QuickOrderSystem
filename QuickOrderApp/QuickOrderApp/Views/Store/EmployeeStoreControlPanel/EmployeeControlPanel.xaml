@@ -34,7 +34,7 @@
                 <Label
                     Grid.Row="0"
                     Style="{StaticResource TitleLabel}"
-                    Text="Employee Stores" />
+                    Text="Workplaces" />
                 <BoxView
                     Grid.Row="1"
                     BackgroundColor="LightGray"
@@ -74,15 +74,16 @@
 
                                 </StackLayout>
                                 <button:SfButton
-                                    Margin="10"
                                     BackgroundColor="Tomato"
                                     Command="{Binding GoSelectedEmployeeStoreCommand}"
                                     CornerRadius="10"
                                     FontAttributes="Bold"
-                                    FontSize="Body"
+                                    FontFamily="RobotoBold"
+                                    FontSize="Medium"
                                     HasShadow="True"
-                                    HorizontalOptions="End"
-                                    Text="View" />
+                                    HorizontalOptions="Fill"
+                                    Text="View"
+                                    TextColor="#2F3538" />
                             </StackLayout>
 
                         </DataTemplate>
@@ -97,8 +98,11 @@
                 Command="{Binding SignOutCommand}"
                 CornerRadius="10"
                 FontAttributes="Bold"
+                FontFamily="RobotoBold"
+                FontSize="Medium"
                 HasShadow="True"
-                Text="Sign Out" />
+                Text="Sign Out"
+                TextColor="#2F3538" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

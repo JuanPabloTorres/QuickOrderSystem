@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/QuickOrderWeb.cshtml";
-    
+
 }
 
   
@@ -12,33 +12,46 @@
 
     <body style="background-image:url(https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&w=1000&q=80);background-repeat:no-repeat;background-size:cover">
 
+        @{
+            void DisplayErroNotification()
+            {
+                NotificationScriptDisplay();
+                <script>
+                    $(function () {
+                        $('#notificationModal').modal();
+                    });
+                </script>
+            }
+
+            void NotificationScriptDisplay()
+            {
+                <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Notification</h5>
+
+                            </div>
+                            <div class="modal-body">
+                                <label class="text-center " style="text-decoration-color:red">Login Incorrect.</label>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
 
         @if (!String.IsNullOrEmpty(ViewBag.ErrorMsg))
         {
-            <script>
-                $(function () {
-                    $('#notificationModal').modal();
-                });
-            </script>
+            DisplayErroNotification();
         }
 
-        <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Notification</h5>
-                      
-                    </div>
-                    <div class="modal-body">
-                        <label class="text-center " style="text-decoration-color:red">Login Incorrect.</label>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        @*<button type="button" class="btn btn-primary">Save changes</button>*@
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <div class="container ">
             <div class="row ">
@@ -46,7 +59,7 @@
                     <div class="card card-signin my-5">
                         <div class="card-body">
                             <h3 class="card-title text-center"><b>Sign In</b></h3>
-                            <form class="form-signin" >
+                            <form class="form-signin">
                                 <div class="form-group">
                                     <b><label asp-for="Username" class="control-label"></label></b>
                                     <input asp-for="Username" class="form-control shadow" required />

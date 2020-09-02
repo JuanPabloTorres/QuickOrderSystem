@@ -49,5 +49,20 @@ namespace QuickOrderAdmin.Utilities
                 throw;
             }
         }
+
+        public async Task SendCompletedOrderNotification(Guid OrderId, string userdId)
+        {
+            try
+            {
+                string message = $"Order: { OrderId.ToString()}";
+
+                await hubConnection.InvokeAsync("SendCompletedOrderNotification", message, userdId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

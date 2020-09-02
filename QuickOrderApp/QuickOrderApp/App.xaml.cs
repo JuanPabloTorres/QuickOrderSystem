@@ -1,9 +1,12 @@
 ﻿using Library.DTO;
 using Library.Models;
 using Library.Services;
+using Microsoft.AspNetCore.SignalR.Client;
 using Plugin.SharedTransitions;
 using QuickOrderApp.ConfigPayment;
 using QuickOrderApp.Services.HubService;
+using QuickOrderApp.Utilities.Dependency;
+using QuickOrderApp.Utilities.Dependency.Interface;
 using QuickOrderApp.Views.Login;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -22,6 +25,7 @@ namespace QuickOrderApp
         DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.56.1:5000/api" : "http://192.168.56.1:5000/api";
 
         public static bool UseMockDataStore = true;
+
         public static User LogUser;
 
         public static Store CurrentStore;
@@ -32,7 +36,7 @@ namespace QuickOrderApp
 
         public static CardPaymentToken CardPaymentToken { get; set; } = new CardPaymentToken();
 
-        
+       
         public App()
         {
             InitializeComponent();
@@ -40,6 +44,8 @@ namespace QuickOrderApp
 
             Dependencies();
 
+            
+           
 
             // MainPage = new NavigationPage(new PaymentPage());
             //MainPage = new NavigationPage(new LoginPage());
@@ -59,6 +65,9 @@ namespace QuickOrderApp
             //SharedTransitionNavigationPage
         }
 
+      
+        
+
         void Dependencies()
         {
             //DependencyService.Register<MockDataStore>();
@@ -76,6 +85,7 @@ namespace QuickOrderApp
             DependencyService.Register<UserConnectedDataStore>();
             DependencyService.Register<RequestDataStore>();
             DependencyService.Register<StripeServiceDS>();
+            DependencyService.Register<SubcriptionDataStore>();
 
         }
 
@@ -100,20 +110,20 @@ namespace QuickOrderApp
 
         }
 
-        protected override void OnResume()
+        protected async override void OnResume()
         {
 
-            MainPage = new AppShell();
+            //MainPage = new AppShell();
 
-            bool islogged = false;
-            if (!islogged)
-            {
-                Shell.Current.GoToAsync("LoginRoute");
-            }
-            else
-            {
+            //bool islogged = false;
+            //if (!islogged)
+            //{
+            //   //await Shell.Current.GoToAsync("LoginRoute");
+            //}
+            //else
+            //{
 
-            }
+            //}
         }
     }
 }

@@ -1,13 +1,18 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.SignalR.Client;
+using QuickOrderApp.Utilities.Dependency;
+using QuickOrderApp.Utilities.Dependency.Interface;
 using System;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace QuickOrderApp.Services.HubService
 {
     public class ComunicationService
     {
         public  HubConnection hubConnection;
+        INotificationManager notificationManager;
+
 
         public ComunicationService()
         {
@@ -22,7 +27,20 @@ namespace QuickOrderApp.Services.HubService
             //Connect();
              task.Wait();
 
-           
+            notificationManager = DependencyService.Get<INotificationManager>();
+
+            notificationManager.NotificationReceived += (sender, eventArgs) =>
+            {
+                var evtData = (NotificationEventArgs)eventArgs;
+                //ShowNotification(evtData.Title, evtData.Message);
+            };
+
+            hubConnection.On<string>("SendCompletedOrderNotification", (message) =>
+            {
+
+                notificationManager.ScheduleNotification("Order Completed", message);
+            });
+
         }
 
        public async Task Connect()
@@ -96,5 +114,19 @@ namespace QuickOrderApp.Services.HubService
             }
         }
 
+        public async Task SendCompletedOrderNotification(Guid OrderId,string userdId)
+        {
+            try
+            {
+                string message= $"Order: { OrderId.ToString()}";
+
+                await hubConnection.InvokeAsync("SendCompletedOrderNotification", message, userdId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

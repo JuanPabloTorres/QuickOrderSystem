@@ -15,16 +15,17 @@
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="HasShadow" Value="True" />
             <Setter Property="Margin" Value="8" />
+
             <Setter Property="BorderColor" Value="LightGray" />
         </Style>
         <Color x:Key="BackgroundColor">#F0F0F0</Color>
 
         <Style x:Key="DataLabel" TargetType="Label">
             <Setter Property="FontAttributes" Value="Bold" />
-            <Setter Property="TextColor" Value="Gray" />
-            <Setter Property="FontSize" Value="Body" />
+            <Setter Property="TextColor" Value="#2F3538" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontFamily" Value="RobotoBold" />
             <Setter Property="VerticalOptions" Value="Center" />
-
 
         </Style>
 
@@ -49,8 +50,9 @@
 
         <Style x:Key="TitleLabel" TargetType="Label">
             <Setter Property="FontAttributes" Value="Bold" />
-            <Setter Property="TextColor" Value="Gray" />
-            <Setter Property="FontSize" Value="Title" />
+            <Setter Property="TextColor" Value="#2F3538" />
+            <Setter Property="FontSize" Value="30" />
+            <Setter Property="FontFamily" Value="RobotoBold" />
             <Setter Property="HorizontalOptions" Value="Center" />
 
 

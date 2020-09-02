@@ -61,9 +61,11 @@
                                             BackgroundColor="Tomato"
                                             Command="{Binding RemoveFromCartCommand}"
                                             CornerRadius="5"
+                                            FontFamily="RobotoBold"
                                             HasShadow="True"
                                             IsVisible="{Binding AreVisible}"
-                                            Text="Remove" />
+                                            Text="Remove"
+                                            TextColor="#2F3538" />
 
                                     </StackLayout>
                                 </Frame>
@@ -85,14 +87,18 @@
                         <button:SfRadioGroup HorizontalOptions="Center" Orientation="Horizontal">
                             <button:SfRadioButton
                                 CheckedColor="Orange"
+                                FontFamily="RobotoBold"
                                 FontSize="Medium"
                                 IsChecked="{Binding IspickUp}"
-                                Text="Pick Up" />
+                                Text="Pick Up"
+                                TextColor="#2F3538" />
                             <button:SfRadioButton
                                 CheckedColor="Orange"
+                                FontFamily="RobotoBold"
                                 FontSize="Medium"
                                 IsChecked="{Binding IsDelivery}"
-                                Text="Delivery" />
+                                Text="Delivery"
+                                TextColor="#2F3538" />
 
                         </button:SfRadioGroup>
                     </StackLayout>
@@ -193,10 +199,12 @@
                     Command="{Binding CheckoutCommand}"
                     CornerRadius="5"
                     FontAttributes="Bold"
+                    FontFamily="RobotoBold"
+                    FontSize="Medium"
                     HasShadow="True"
                     IsVisible="{Binding AreVisible}"
                     Text="Checkout"
-                    TextColor="Black" />
+                    TextColor="#2F3538" />
 
             </StackLayout>
         </ScrollView>

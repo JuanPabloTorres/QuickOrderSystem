@@ -233,9 +233,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                         var isTransactionSuccess = await stripeServiceDS.MakePaymentWithCard(OrderDetail.StoreId, Total, paymentCards[0].PaymentCardId, OrderDetail.OrderId.ToString());
                         if (isTransactionSuccess)
                         {
-                            const double fee= 0.02;
-
-                            //var feetransferResult = await stripeServiceDS.TransferQuickOrderFeeFromStore("acct_1HGWePHOvPu5G2cu", fee.ToString(),OrderDetail.StoreId.ToString());
+                           
                             var orderUpdate = await orderDataStore.UpdateItemAsync(OrderDetail);
                             OrderStatus = OrderDetail.OrderStatus.ToString();
                             if (orderUpdate)

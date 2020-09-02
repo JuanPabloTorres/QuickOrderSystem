@@ -111,7 +111,12 @@ namespace QuickOrderApp.Utilities.Presenters
 
                         var userhubconnectionResult = await userConnectedDataStore.GetUserConnectedID(jobRequest.ToUser);
 
+						if (userhubconnectionResult != null)
+						{
+
                         await App.ComunicationService.SendRequestToUser(userhubconnectionResult.HubConnectionID, jobRequest);
+						}
+
 
 
                     }

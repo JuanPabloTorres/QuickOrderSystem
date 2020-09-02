@@ -26,7 +26,7 @@ namespace WebApiQuickOrder.Context
 
         public DbSet<UsersConnected> usersConnecteds { get; set; }
 
-
+        public DbSet<Subcription> Subcriptions { get; set; }
 
         public QOContext(DbContextOptions options) : base(options)
         {

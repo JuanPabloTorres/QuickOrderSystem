@@ -116,6 +116,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("BuyerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsDisisble")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -251,6 +254,9 @@ namespace WebApiQuickOrder.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsDisable")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PBKey")
                         .HasColumnType("nvarchar(max)");
 
@@ -293,6 +299,9 @@ namespace WebApiQuickOrder.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("LicenseHolderUserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -302,6 +311,28 @@ namespace WebApiQuickOrder.Migrations
                     b.HasKey("LicenseId");
 
                     b.ToTable("Licences");
+                });
+
+            modelBuilder.Entity("Library.Models.Subcription", b =>
+                {
+                    b.Property<string>("StripeSubCriptionID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDisable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("StoreLicense")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StripeCustomerId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StripeSubCriptionID");
+
+                    b.ToTable("Subcriptions");
                 });
 
             modelBuilder.Entity("Library.Models.User", b =>

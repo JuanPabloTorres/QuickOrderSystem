@@ -32,6 +32,9 @@ namespace QuickOrderApp.ViewModels
 
         public IStripeServiceDS stripeServiceDS => DependencyService.Get<IStripeServiceDS>();
 
+        public ISubcriptionDataStore SubcriptionDataStore => DependencyService.Get<ISubcriptionDataStore>();
+           
+
         bool isBusy = false;
         public bool IsBusy
         {

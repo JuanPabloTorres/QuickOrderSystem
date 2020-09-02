@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - QuickOrderAdmin</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -9,22 +12,76 @@
 
 </head>
 <body>
-    <header >
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-warning  border-bottom box-shadow mb-3">
-            <div class="container">
-                @*<a class="navbar-brand text-white" asp-area="" asp-controller="Store" asp-action="HomeStore" asp-route-StoreId="@QuickOrderAdmin.Utilities.SelectedStore.CurrentStore">*@
-                    <div class="navbar-brand row">
 
-                       <div class="col">
+    @if (!String.IsNullOrEmpty(ViewBag.Msg))
+    {
+        <script>
+            $(function () {
+                $('#notificationModal').modal();
+            });
+        </script>
+    }
 
-                            <h5 class="text-dark"><b>Quick Order</b></h5>
-                       </div>
-                        
+    <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Notification</h5>
+
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+
+                        <div class="row">
+                            <div class="col-lg">
+
+                                <label class="text-center " style="text-decoration-color:red">Your are going to get a store license.For the cost $100 by month. Are you OK with that?.</label>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg">
+
+                                <a class="btn btn-danger" asp-route-answer="true" asp-action="GetLicense" asp-controller="Setting"><b>Yes</b></a>
+
+                            </div>
+
+                            <div class="col-lg">
+
+                                <a class="btn btn-danger" asp-route-answer="false" asp-action="GetLicense" asp-controller="Setting"><b>No</b></a>
+
+                            </div>
+                        </div>
 
                     </div>
 
-                 
-                  
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    @*<button type="button" class="btn btn-primary">Save changes</button>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-warning  border-bottom box-shadow mb-3">
+            <div class="container">
+                @*<a class="navbar-brand text-white" asp-area="" asp-controller="Store" asp-action="HomeStore" asp-route-StoreId="@QuickOrderAdmin.Utilities.SelectedStore.CurrentStore">*@
+                <div class="navbar-brand row">
+
+                    <div class="col">
+
+                        <h5 class="text-dark"><b>Quick Order</b></h5>
+                    </div>
+
+
+                </div>
+
+
+
                 @*</a>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -33,11 +90,11 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                          <div class="align-content-center">
+                            <div class="align-content-center">
 
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="HomeStore" asp-route-StoreId="@QuickOrderAdmin.Utilities.SelectedStore.CurrentStore.StoreId">Home</a>
-                          </div>
-                          
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="HomeStore" asp-route-StoreId="@QuickOrderAdmin.Utilities.SelectedStore.CurrentStore.StoreId">Home</a>
+                            </div>
+
                         </li>
                         <li class="nav-item">
                             <div class="dropdown show">
@@ -47,7 +104,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="ShowStoreProducts">Products</a>
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="AddProductStore">Add Product</a>
-                                   
+
                                 </div>
                             </div>
                             @*<a class="nav-link text-white" asp-area="" asp-controller="Store" asp-action="AddProductStore">Products</a>*@
@@ -59,7 +116,7 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="StoreOrders">Store Orders</a>
-                                  
+
                                 </div>
                             </div>
                             @*<a class="nav-link text-white" asp-area="" asp-controller="" asp-action="">Orders</a>*@
@@ -68,11 +125,11 @@
 
                             <div class="dropdown show">
                                 <button class="btn bg-transparent  dropdown-toggle text-dark" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                   Employee Control
+                                    Employee Control
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="ShowEmployees">Employees</a>
-                                  
+
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="Search">Search User For Employee</a>
                                 </div>
                             </div>
@@ -98,18 +155,18 @@
 
                                         </a>
                                     }
-                                @*<a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="UserStores" asp-route-id="@QuickOrderAdmin.Utilities.LogUser.LoginUser.UserId">See Stores</a>*@
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="RegisterStoreAdmin"><b>Register Store</b></a>
+                                    @*<a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="UserStores" asp-route-id="@QuickOrderAdmin.Utilities.LogUser.LoginUser.UserId">See Stores</a>*@
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="RegisterStoreAdmin"><b>Register Store</b></a>
                                 </div>
 
                                 @*<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="UserStores">Your Stores</a>
-            <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="RegisterStore">Register Store</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="UserStores">Your Stores</a>
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="RegisterStore">Register Store</a>
 
-        </div>*@
+                                    </div>*@
                             </div>
 
-                          
+
                         </li>
                         <li class="nav-item">
                             <div class="dropdown show">
@@ -118,9 +175,10 @@
                                 </a>
 
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item"  asp-controller="Login" asp-action="SignOut" >Sing Out</a>
+                                    <a class="dropdown-item" asp-controller="Login" asp-action="SignOut">Sing Out</a>
                                     @*<a class="dropdown-item" asp-action="Index" asp-controller="License">Get License</a>*@
-                                    <a class="dropdown-item"  asp-controller="Setting" asp-action="Index">User Information</a>
+                                    @*<a class="dropdown-item" asp-controller="Setting" asp-action="Index">Settings</a>*@
+                                    <a class="dropdown-item" asp-controller="Store" asp-action="RegisterControl">Get Lincense</a>
 
                                 </div>
                             </div>

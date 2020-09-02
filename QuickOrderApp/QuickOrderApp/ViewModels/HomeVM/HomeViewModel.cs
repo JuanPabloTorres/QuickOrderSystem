@@ -1,4 +1,7 @@
 ﻿using Library.Models;
+using Microsoft.AspNetCore.SignalR.Client;
+using QuickOrderApp.Utilities.Dependency;
+using QuickOrderApp.Utilities.Dependency.Interface;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Presenters.PresenterModel;
 using QuickOrderApp.Views.Home;
@@ -43,7 +46,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
             }
         }
 
-
+      
 
         public HomeViewModel()
         {
@@ -53,11 +56,15 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
             SelectedStore = new Store();
            
+
+
+           
+
         }
 
-       public async Task LoadQuickOrderStores()
+        public async Task LoadQuickOrderStores()
         {
-            var storeData = await StoreDataStore.GetItemsAsync();
+            var storeData = await StoreDataStore.GetAvailableStore();
 
             if (Stores.Count > 0)
             {

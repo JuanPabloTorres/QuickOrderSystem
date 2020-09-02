@@ -25,34 +25,43 @@
 
             <button:SfButton
                 Grid.Row="0"
+                Margin="10,0,10,0"
                 BackgroundColor="LimeGreen"
                 Command="{Binding GetOrdersCommand}"
                 CommandParameter="Submited"
                 CornerRadius="5"
                 FontAttributes="Bold"
+                FontFamily="RobotoBold"
                 FontSize="Title"
                 HasShadow="True"
-                Text="Check Orders Subtmited" />
+                Text="Orders Subtmited"
+                TextColor="#2F3538" />
             <button:SfButton
                 Grid.Row="1"
+                Margin="10,0,10,0"
                 BackgroundColor="DodgerBlue"
                 Command="{Binding GetOrdersCommand}"
                 CommandParameter="NotSubmited"
                 CornerRadius="5"
                 FontAttributes="Bold"
+                FontFamily="RobotoBold"
                 FontSize="Title"
                 HasShadow="True"
-                Text="Check Orders Not Submited" />
+                Text="Orders Not Submited"
+                TextColor="#2F3538" />
             <button:SfButton
                 Grid.Row="2"
+                Margin="10,0,10,0"
                 BackgroundColor="Tomato"
                 Command="{Binding GetOrdersCommand}"
                 CommandParameter="Completed"
                 CornerRadius="5"
                 FontAttributes="Bold"
+                FontFamily="RobotoBold"
                 FontSize="Title"
                 HasShadow="True"
-                Text="Check Orders Completed" />
+                Text="Orders Completed"
+                TextColor="#2F3538" />
         </Grid>
 
 

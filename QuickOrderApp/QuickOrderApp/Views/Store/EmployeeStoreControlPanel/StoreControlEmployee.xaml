@@ -37,9 +37,7 @@
             </Frame>
             <Label
                 Grid.Row="1"
-                FontAttributes="Bold"
-                FontSize="Title"
-                HorizontalOptions="Center"
+                Style="{StaticResource TitleLabel}"
                 Text="{Binding Store.StoreName}" />
             <BoxView
                 Grid.Row="2"
@@ -55,9 +53,11 @@
                 Command="{Binding GoOrdersEmployeeCommand}"
                 CornerRadius="5"
                 FontAttributes="Bold"
+                FontFamily="RobotoBold"
                 FontSize="Body"
                 HasShadow="True"
-                Text="Orders Check And Preparer" />
+                Text="Orders Check And Preparer"
+                TextColor="#2F3538" />
             <button:SfButton
                 Grid.Row="5"
                 Margin="10"
@@ -65,12 +65,14 @@
                 Command="{Binding GoOrderScanner}"
                 CornerRadius="5"
                 FontAttributes="Bold"
+                FontFamily="RobotoBold"
                 FontSize="Body"
                 HasShadow="True"
-                Text="Order Scanner" />
+                Text="Order Scanner"
+                TextColor="#2F3538" />
             <Frame
                 Grid.Row="6"
-                Padding="4"
+                Padding="3"
                 Style="{StaticResource FrameStyle}">
 
 
@@ -80,13 +82,11 @@
                     Orientation="Horizontal">
                     <Label
                         Grid.Row="5"
-                        FontSize="Title"
-                        HorizontalOptions="Center"
+                        Style="{StaticResource DataLabel}"
                         Text="Position:" />
                     <Label
                         Grid.Row="5"
-                        FontAttributes="Bold"
-                        FontSize="Title"
+                        Style="{StaticResource DataLabel}"
                         Text="{Binding StoreEmployee.Type, StringFormat='{0}'}"
                         TextColor="Orange" />
                 </StackLayout>
@@ -126,7 +126,8 @@
                                 <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
                                     <Label
                                         FontSize="14"
-                                        Text="Open"
+                                        Style="{StaticResource DataLabel}"
+                                        Text="Start "
                                         VerticalOptions="Center" />
                                     <Label
                                         Style="{StaticResource DataLabel}"
@@ -136,7 +137,8 @@
 
                                     <Label
                                         FontSize="14"
-                                        Text="Close"
+                                        Style="{StaticResource DataLabel}"
+                                        Text="End "
                                         VerticalOptions="Center" />
                                     <Label
                                         Style="{StaticResource DataLabel}"

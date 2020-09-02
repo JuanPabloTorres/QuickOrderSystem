@@ -1,0 +1,265 @@
+﻿@model QuickOrderAdmin.Models.RegisterStoreViewModel
+
+@{
+    ViewData["Title"] = "GoUpdateStoreInformation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+
+    $('document').ready(function () {
+        $('input[type="file"]').change(function () {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#img').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    });
+
+</script>
+
+<script>
+
+    $(document).ready(function () {
+        $('input[type="file"]').change(function (e) {
+            var fileName = e.target.files[0].name;
+
+            var selectedFile = event.target.files[0];
+            var reader = new FileReader();
+
+            $('#filelabel').text(fileName);
+        });
+    });
+
+</script>
+
+<h1 class="text-center">Update Store, Complete All Information</h1>
+<hr />
+<div class="container">
+
+    <div class="row">
+        <div class="col-xl">
+            <form asp-action="UpdateStore" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+
+                    <img id="img" class="rounded mx-auto d-block" height="150" width="150" alt="Piture" src="data:image;base64,@System.Convert.ToBase64String(Model.StoreImage)" />
+                </div>
+
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="customFile" asp-for="File" >
+                    <label class="custom-file-label" for="customFile" id="filelabel">Choose Image</label>
+                </div>
+
+                <div class="container">
+
+                    <div class="row">
+
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="StoreId" class="control-label"></label>
+                                <input asp-for="StoreId" class="form-control" readonly />
+                                <span asp-validation-for="StoreId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="StoreName" class="control-label"></label>
+                                <input asp-for="StoreName" class="form-control" required />
+                                <span asp-validation-for="StoreName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="StoreDescription" class="control-label"></label>
+                                <input asp-for="StoreDescription" class="form-control" />
+                                <span asp-validation-for="StoreDescription" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xl">
+                            <div class="form-group">
+                                @Html.DropDownList("SelectedStoreType",
+                               new SelectList(Enum.GetValues(typeof(Library.Models.StoreType))), "Select Store Type", new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="MOpenTime" class="control-label"></label>
+                                <input asp-for="MOpenTime" class="form-control" />
+                                <span asp-validation-for="MOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="MCloseTime" class="control-label"></label>
+                                <input asp-for="MCloseTime" class="form-control" />
+                                <span asp-validation-for="MCloseTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="TOpenTime" class="control-label"></label>
+                                <input asp-for="TOpenTime" class="form-control" />
+                                <span asp-validation-for="TOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="TCloseTime" class="control-label"></label>
+                                <input asp-for="TCloseTime" class="form-control" />
+                                <span asp-validation-for="TCloseTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="WOpenTime" class="control-label"></label>
+                                <input asp-for="WOpenTime" class="form-control" />
+                                <span asp-validation-for="WOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="WCloseTime" class="control-label"></label>
+                                <input asp-for="WCloseTime" class="form-control" />
+                                <span asp-validation-for="WCloseTime" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="ThOpenTime" class="control-label"></label>
+                                <input asp-for="ThOpenTime" class="form-control" />
+                                <span asp-validation-for="ThOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ThCloseTime" class="control-label"></label>
+                                <input asp-for="ThCloseTime" class="form-control" />
+                                <span asp-validation-for="ThCloseTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="FOpenTime" class="control-label"></label>
+                                <input asp-for="FOpenTime" class="form-control" />
+                                <span asp-validation-for="FOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="FCloseTime" class="control-label"></label>
+                                <input asp-for="FCloseTime" class="form-control" />
+                                <span asp-validation-for="FCloseTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="SOpenTime" class="control-label"></label>
+                                <input asp-for="SOpenTime" class="form-control" />
+                                <span asp-validation-for="SOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SCloseTime" class="control-label"></label>
+                                <input asp-for="SCloseTime" class="form-control" />
+                                <span asp-validation-for="SCloseTime" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="SuOpenTime" class="control-label"></label>
+                                <input asp-for="SuOpenTime" class="form-control" />
+                                <span asp-validation-for="SuOpenTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="SuCloseTime" class="control-label"></label>
+                                <input asp-for="SuCloseTime" class="form-control" />
+                                <span asp-validation-for="SuCloseTime" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-xl">
+
+                        </div>
+
+                        <div class="col-xl">
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <label asp-for="StoreLicence" class="control-label"></label>
+                                <input asp-for="StoreLicence" class="form-control" readonly />
+                                <span asp-validation-for="StoreLicence" class="text-danger"></span>
+
+                                @if (!string.IsNullOrEmpty(ViewBag.LicenseError))
+                                {
+                                    <span class="text-danger">@ViewBag.LicenseError</span>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label asp-for="StripePublicKey" class="control-label"></label>
+                                    <input asp-for="StripePublicKey" class="form-control" type="text" readonly />
+                                    <span asp-validation-for="StripePublicKey" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label asp-for="StripeSecretKey" class="control-label"></label>
+                                    <input asp-for="StripeSecretKey" class="form-control" type="text" readonly />
+                                    <span asp-validation-for="StripeSecretKey" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+                <div class="form-group">
+                    <input type="submit" value="Update" class="btn btn-primary btn-block" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+</script>

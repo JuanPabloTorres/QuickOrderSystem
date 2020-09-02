@@ -30,6 +30,8 @@ namespace Library.Services.Interface
 
         Task<bool> DeleteCardFromCustomer(string customerId, string cardId);
 
+        Task<bool> CancelSubcription(string customerId);
+
         //Task<string> CreateStripeAccount(UserDTO userDTO);
 
 

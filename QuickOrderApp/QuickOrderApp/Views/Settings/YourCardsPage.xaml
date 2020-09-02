@@ -50,14 +50,16 @@
                                     <button:SfButton
                                         Grid.Row="0"
                                         Grid.Column="0"
-                                        Margin="8,0,8,0"
+                                        Margin="10,0,10,0"
                                         BackgroundColor="Tomato"
                                         Command="{Binding DeleteCardCommand}"
                                         CornerRadius="5"
                                         FontAttributes="Bold"
+                                        FontFamily="RobotoBold"
+                                        FontSize="Body"
                                         HasShadow="True"
                                         Text="Delete"
-                                        TextColor="Black" />
+                                        TextColor="#2F3538" />
 
 
                                 </StackLayout>

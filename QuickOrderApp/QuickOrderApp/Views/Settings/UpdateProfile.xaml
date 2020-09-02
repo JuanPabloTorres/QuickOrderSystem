@@ -15,7 +15,7 @@
     Shell.TitleColor="Black"
     mc:Ignorable="d">
     <ContentPage.Content>
-        <Frame Padding="4" Style="{StaticResource FrameStyle}">
+        <Frame Padding="10" Style="{StaticResource FrameStyle}">
             <ScrollView>
 
                 <Grid
@@ -40,7 +40,7 @@
                             HeightRequest="0.1"
                             HorizontalOptions="Fill" />
                     </StackLayout>
-                    <StackLayout Grid.Row="1">
+                    <!--<StackLayout Grid.Row="1">
 
                         <Label
                             Margin="5,0,0,0"
@@ -52,8 +52,8 @@
                             BackgroundColor="LightGray"
                             HeightRequest="0.1"
                             HorizontalOptions="Fill" />
-                    </StackLayout>
-                    <StackLayout Grid.Row="2" Margin="4">
+                    </StackLayout>-->
+                    <StackLayout Grid.Row="1" Margin="4">
 
                         <Entry Placeholder="FullName" Text="{Binding Fullname}" />
                         <Label
@@ -116,10 +116,11 @@
                         Command="{Binding UpdateCommand}"
                         CornerRadius="5"
                         FontAttributes="Bold"
+                        FontFamily="RobotoBold"
                         FontSize="Body"
                         HasShadow="True"
                         Text="Update"
-                        TextColor="Black"
+                        TextColor="#2F3538"
                         VerticalOptions="Center" />
 
                 </Grid>

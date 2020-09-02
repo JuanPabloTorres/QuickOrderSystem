@@ -67,17 +67,13 @@
                 HorizontalOptions="Center"
                 Orientation="Horizontal">
 
+                <Label Style="{StaticResource DataLabel}" Text="{Binding WorkHour.Day}" />
                 <Label
-                    FontAttributes="Bold"
-                    FontSize="Body"
-                    Text="{Binding WorkHour.Day}"
-                    TextColor="DarkSlateGray" />
-                <Label
-                    FontSize="Body"
+                    Style="{StaticResource DataLabel}"
                     Text="{Binding WorkHour.OpenTime, StringFormat='Open:{0:hh:mm tt}'}"
                     TextColor="Green" />
                 <Label
-                    FontSize="Body"
+                    Style="{StaticResource DataLabel}"
                     Text="{Binding WorkHour.CloseTime, StringFormat='Close:{0:hh:mm tt}'}"
                     TextColor="Red" />
 
@@ -108,8 +104,22 @@
             Margin="5"
             BackgroundColor="#fefcff"
             EmptyView="Not Category Available"
-            Header="Product Category Available"
-            ItemsSource="{Binding ProductCategoryPresenters}">
+            HorizontalOptions="Fill"
+            ItemsSource="{Binding ProductCategoryPresenters}"
+            VerticalOptions="Fill">
+            <CollectionView.Header>
+                <StackLayout>
+                    <Label
+                        HorizontalOptions="Center"
+                        Style="{StaticResource DataLabel}"
+                        Text="Categories" />
+                    <BoxView
+                        Margin="8,0,8,0"
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                </StackLayout>
+            </CollectionView.Header>
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="2" />
             </CollectionView.ItemsLayout>
@@ -124,8 +134,11 @@
                             CommandParameter="{Binding Category}"
                             CornerRadius="5"
                             FontAttributes="Bold"
+                            FontFamily="RobotoBold"
+                            FontSize="Body"
                             HasShadow="True"
-                            Text="{Binding Category}" />
+                            Text="{Binding Category}"
+                            TextColor="#2F3538" />
 
                     </ContentView>
                 </DataTemplate>

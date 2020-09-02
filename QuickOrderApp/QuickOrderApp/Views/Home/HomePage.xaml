@@ -58,7 +58,7 @@
 
                                     <Frame
                                         Padding="0"
-                                        HeightRequest="150"
+                                        HeightRequest="180"
                                         HorizontalOptions="Fill"
                                         IsClippedToBounds="True">
                                         <Image Aspect="Fill" Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />
@@ -101,11 +101,11 @@
                                         BackgroundColor="Tomato"
                                         Command="{Binding GoHomeStoreCommand}"
                                         CornerRadius="5"
-                                        FontAttributes="Bold"
+                                        FontFamily="RobotoBold"
                                         FontSize="Body"
                                         HasShadow="True"
                                         Text="View"
-                                        TextColor="Black" />
+                                        TextColor="#2F3538" />
 
                                 </StackLayout>
                             </Frame>

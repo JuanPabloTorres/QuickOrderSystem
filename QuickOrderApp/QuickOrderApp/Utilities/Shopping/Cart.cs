@@ -38,7 +38,7 @@ namespace QuickOrderApp.Utilities.Shopping
             //bool _haveNotSubmitedOrder = false;
 
 
-            Order orderOfuser= ordersOfuser.Where(o => o.OrderStatus == Status.NotSubmited).FirstOrDefault();
+            Order orderOfuser= ordersOfuser.Where(o => o.OrderStatus == Status.NotSubmited && o.IsDisisble == false).FirstOrDefault();
 
 
             //_haveNotSubmitedOrder = ordersOfuser.Any(o => o.OrderStatus == Status.NotSubmited);

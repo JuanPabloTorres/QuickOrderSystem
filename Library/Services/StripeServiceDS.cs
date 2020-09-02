@@ -279,6 +279,19 @@ namespace Library.Services
             return deserialized;
         }
 
+        public async Task<bool> CancelSubcription(string customerId)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CancelSubcription)}/{customerId}");
+
+
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+
+
+            bool deserialized = JsonConvert.DeserializeObject<bool>(response);
+
+            return deserialized;
+        }
+
         //public Task<string> CreateStripeAccount(UserDTO userDTO)
         //{
         //    throw new NotImplementedException();

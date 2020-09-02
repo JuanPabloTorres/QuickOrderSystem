@@ -13,6 +13,58 @@
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
+            <StackLayout>
+
+
+
+
+                <Label
+                    HorizontalOptions="Start"
+                    Style="{StaticResource DataLabel}"
+                    Text="Search For specific Item" />
+                <BoxView
+                    Margin="10,0,10,0"
+                    BackgroundColor="LightGray"
+                    HeightRequest="0.1"
+                    HorizontalOptions="Fill" />
+                <Entry
+                    HorizontalOptions="Fill"
+                    Placeholder="Search "
+                    Text="{Binding SearchItem}" />
+
+                <button:SfButton
+                    Margin="10,0,10,0"
+                    BackgroundColor="Tomato"
+                    Command="{Binding SearchItemCommand}"
+                    CornerRadius="10"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
+                    HasShadow="True"
+                    Text="Search"
+                    TextColor="#2F3538" />
+
+                <button:SfButton
+                    Margin="10,0,10,0"
+                    BackgroundColor="Tomato"
+                    Command="{Binding ShowAllCommand}"
+                    CornerRadius="10"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
+                    HasShadow="True"
+                    Text="Show All"
+                    TextColor="#2F3538" />
+            </StackLayout>
+            <Label
+                HorizontalOptions="Start"
+                Style="{StaticResource DataLabel}"
+                Text="Inventory Available" />
+            <BoxView
+                Margin="10,0,10,0"
+                BackgroundColor="LightGray"
+                HeightRequest="0.1"
+                HorizontalOptions="Fill" />
+
+            <StackLayout />
             <CollectionView EmptyView="Empty Inventory" ItemsSource="{Binding StoreInventory}">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical" Span="1" />
@@ -31,7 +83,7 @@
                                 <StackLayout>
                                     <Frame
                                         Padding="0"
-                                        HeightRequest="130"
+                                        HeightRequest="180"
                                         HorizontalOptions="Fill"
                                         IsClippedToBounds="True">
                                         <Image
@@ -49,38 +101,51 @@
                                         BackgroundColor="LightGray"
                                         HeightRequest="0.1"
                                         HorizontalOptions="Fill" />
-                                    <Label
-                                        HorizontalOptions="Center"
-                                        Style="{StaticResource DataLabel}"
-                                        Text="{Binding ProductPrice, StringFormat='{0:C}'}" />
-                                    <Label
-                                        HorizontalOptions="Center"
-                                        Style="{StaticResource DataLabel}"
-                                        Text="{Binding ItemLeft, StringFormat='Quantity:{0}'}" />
 
-                                    <Label
-                                        HorizontalOptions="Center"
-                                        Style="{StaticResource DataLabel}"
-                                        Text="{Binding ProductType, StringFormat='Type:{0}'}" />
+                                    <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
+
+                                        <Label
+                                            HorizontalOptions="Center"
+                                            Style="{StaticResource DataLabel}"
+                                            Text="{Binding ProductPrice, StringFormat='{0:C}'}" />
+                                        <Label
+                                            HorizontalOptions="Center"
+                                            Style="{StaticResource DataLabel}"
+                                            Text="{Binding ItemLeft, StringFormat='Quantity:{0}'}" />
+
+                                        <Label
+                                            HorizontalOptions="Center"
+                                            Style="{StaticResource DataLabel}"
+                                            Text="{Binding ProductType, StringFormat='Type:{0}'}" />
+                                    </StackLayout>
 
 
+                                    <Grid HorizontalOptions="Fill">
 
-                                    <button:SfButton
-                                        Margin="10,5,10,5"
-                                        BackgroundColor="DodgerBlue"
-                                        Command="{Binding EditCommand}"
-                                        CornerRadius="10"
-                                        FontSize="Body"
-                                        HasShadow="True"
-                                        Text="Edit" />
-                                    <button:SfButton
-                                        Margin="10,5,10,5"
-                                        BackgroundColor="Tomato"
-                                        Command="{Binding DeleteCommand}"
-                                        CornerRadius="10"
-                                        FontSize="Body"
-                                        HasShadow="True"
-                                        Text="Delete" />
+                                        <button:SfButton
+                                            Grid.Row="0"
+                                            Margin="10,5,10,5"
+                                            BackgroundColor="SkyBlue"
+                                            Command="{Binding EditCommand}"
+                                            CornerRadius="10"
+                                            FontFamily="RobotoBold"
+                                            FontSize="Body"
+                                            HasShadow="True"
+                                            Text="Edit"
+                                            TextColor="#2F3538" />
+                                        <button:SfButton
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            Margin="10,5,10,5"
+                                            BackgroundColor="Tomato"
+                                            Command="{Binding DeleteCommand}"
+                                            CornerRadius="10"
+                                            FontFamily="RobotoBold"
+                                            FontSize="Body"
+                                            HasShadow="True"
+                                            Text="Delete"
+                                            TextColor="#2F3538" />
+                                    </Grid>
 
                                 </StackLayout>
                             </Frame>

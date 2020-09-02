@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _20200817100 : Migration
+    public partial class _8302020100 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -25,7 +25,8 @@ namespace WebApiQuickOrder.Migrations
                 {
                     LicenseId = table.Column<Guid>(nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
-                    LicenseHolderUserId = table.Column<Guid>(nullable: false)
+                    LicenseHolderUserId = table.Column<Guid>(nullable: false),
+                    IsUsed = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,6 +61,21 @@ namespace WebApiQuickOrder.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Requests", x => x.RequestId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subcriptions",
+                columns: table => new
+                {
+                    StripeSubCriptionID = table.Column<string>(nullable: false),
+                    StripeCustomerId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    IsDisable = table.Column<bool>(nullable: false),
+                    StoreLicense = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subcriptions", x => x.StripeSubCriptionID);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,7 +151,8 @@ namespace WebApiQuickOrder.Migrations
                     SKKey = table.Column<string>(nullable: true),
                     PBKey = table.Column<string>(nullable: true),
                     StoreType = table.Column<int>(nullable: false),
-                    StoreLicenceId = table.Column<Guid>(nullable: false)
+                    StoreLicenceId = table.Column<Guid>(nullable: false),
+                    IsDisable = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -252,6 +269,7 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     OrderId = table.Column<Guid>(nullable: false),
+                    IsDisisble = table.Column<bool>(nullable: false),
                     OrderDate = table.Column<DateTime>(nullable: false),
                     BuyerId = table.Column<Guid>(nullable: false),
                     StoreId = table.Column<Guid>(nullable: false),
@@ -384,6 +402,9 @@ namespace WebApiQuickOrder.Migrations
 
             migrationBuilder.DropTable(
                 name: "StoresWorkHours");
+
+            migrationBuilder.DropTable(
+                name: "Subcriptions");
 
             migrationBuilder.DropTable(
                 name: "usersConnecteds");

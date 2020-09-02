@@ -1,0 +1,126 @@
+﻿
+@{
+    ViewData["Title"] = "RegisterControl";
+    Layout = "~/Views/Shared/QuickOrderWeb.cshtml";
+}
+
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <title>Index</title>
+    <style>
+        /*.container {
+                height: 200px;
+                position: relative;
+                border: 3px solid green;
+            }*/
+
+        .vertical-center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+        .centerH {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+
+    <h5 class="text-center text-uppercase">Start Make Use Or System To Grow your business</h5>
+    <hr />
+    <section class="pricing py-5  ">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <!-- Free Tier -->
+                <div class="col-lg-4">
+                    <div class="card mb-5 mb-lg-0">
+                        <div class="card-body">
+                            <h5 class="card-title text-muted text-uppercase text-center">Already Have A Valid License </h5>
+                           
+                            @*<h6 class="card-price text-center">$100<span class="period">/month</span></h6>*@
+                            <hr>
+                            <p>Start Register a Store With Your License.</p>
+
+                            <label>Benefits</label>
+
+                            <ul>
+                                <li>
+                                    <label>Better Management.</label>
+                                </li>
+                                <li>
+                                    <label>Management Employee.</label>
+                                </li>
+                                <li>
+                                    <label>Give extra service to your clients.</label>
+                                </li>
+                                <li>
+                                    <label>Better Management</label>
+                                </li>
+                            </ul>
+                            @Html.ActionLink("Register Store", "AlreadyHaveLicence", "Store", null, new { @class = "btn btn-warning btn-block" })
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card mb-5 mb-lg-0">
+                        <div class="card-body">
+                            <h5 class="card-title text-muted text-uppercase text-center">Get A New Licensee </h5>
+                            <h6 class="card-price text-center">$100<span class="period">/month</span></h6>
+                            <hr>
+                            <p>Get license to start use our Quick Order System and make your busissness grow.</p>
+
+                            <label>Benefits</label>
+
+                            <ul>
+                                <li>
+                                    <label>Better Management.</label>
+                                </li>
+                                <li>
+                                    <label>Management Employee.</label>
+                                </li>
+                                <li>
+                                    <label>Give extra service to your clients.</label>
+                                </li>
+                                <li>
+                                    <label>Better Management</label>
+                                </li>
+                            </ul>
+
+
+
+                            @Html.ActionLink("Get New License", "NewLicense", "Store", null, new { @class = "btn btn-warning btn-block" })
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+</body>
+</html>

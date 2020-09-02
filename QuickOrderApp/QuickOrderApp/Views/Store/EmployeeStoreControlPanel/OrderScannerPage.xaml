@@ -7,7 +7,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
     Title="Order Scanner"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="ScannerRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>

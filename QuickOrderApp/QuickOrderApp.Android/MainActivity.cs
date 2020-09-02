@@ -1,16 +1,30 @@
 ﻿
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Lottie.Forms.Droid;
+using QuickOrderApp.Utilities.Dependency.Interface;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Xamarin.Forms;
+
 namespace QuickOrderApp.Droid
 {
     [Activity(Label = "QuickOrderApp", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+
+        public static readonly int PickImageId = 1000;
+        internal static MainActivity Instance { get; private set; }
+        public TaskCompletionSource<Stream> PickImageTaskCompletionSource { set; get; }
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
+
+            Instance = this;
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
@@ -24,9 +38,45 @@ namespace QuickOrderApp.Droid
             //AnimationViewRenderer.Init();
             AnimationViewRenderer.Init();
 
-
+            CreateNotificationFromIntent(Intent);
 
             LoadApplication(new App());
+        }
+
+        protected override void OnNewIntent(Intent intent)
+        {
+            CreateNotificationFromIntent(intent);
+        }
+
+        void CreateNotificationFromIntent(Intent intent)
+        {
+            if (intent?.Extras != null)
+            {
+                string title = intent.Extras.GetString(AndroidNotificationManager.TitleKey);
+                string message = intent.Extras.GetString(AndroidNotificationManager.MessageKey);
+
+                DependencyService.Get<INotificationManager>().ReceiveNotification(title, message);
+            }
+        }
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent intent)
+        {
+            base.OnActivityResult(requestCode, resultCode, intent);
+
+            if (requestCode == PickImageId)
+            {
+                if ((resultCode == Result.Ok) && (intent != null))
+                {
+                    Android.Net.Uri uri = intent.Data;
+                    Stream stream = ContentResolver.OpenInputStream(uri);
+
+                    // Set the Stream as the completion of the Task
+                    PickImageTaskCompletionSource.SetResult(stream);
+                }
+                else
+                {
+                    PickImageTaskCompletionSource.SetResult(null);
+                }
+            }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

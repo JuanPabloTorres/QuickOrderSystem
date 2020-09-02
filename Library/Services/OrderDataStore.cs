@@ -11,6 +11,19 @@ namespace Library.Services
 {
     public class OrderDataStore : DataStoreService<Order>, IOrderDataStore
     {
+        public async Task<bool> DisableOrder(Guid orderId)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(DisableOrder)}/{orderId}");
+
+            //HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+
+
+            bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+            return deserializeObject;
+        }
+
         public async Task<IEnumerable<Order>> GetOrdersOfStoreOfUserWithSpecifiStatus(Guid userid, Guid storeid, Status status)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetOrdersOfStoreOfUserWithSpecifiStatus)}/{userid}/{storeid}/{status}");

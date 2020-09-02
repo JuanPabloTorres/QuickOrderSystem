@@ -106,6 +106,8 @@ namespace QuickOrderApp.ViewModels.OrderVM
                         {
                             OrderStatus = updateOrder.OrderStatus.ToString();
 
+                           await App.ComunicationService.SendCompletedOrderNotification(updateOrder.OrderId, updateOrder.BuyerId.ToString());
+
                             MessagingCenter.Send<EmployeeOrderPresenter>(EmployeeOrderPresenter, "RemoveEmpOrderPrensenter");
                             await Shell.Current.DisplayAlert("Notification", "Order Update...!", "OK");
                         }

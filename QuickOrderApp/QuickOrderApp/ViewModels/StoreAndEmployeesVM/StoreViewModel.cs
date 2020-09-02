@@ -46,7 +46,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 GetStoreInformation(StoreId);
 
 
-                GroupByProductCategory(StoreProducts);
+                //GroupByProductCategory(StoreProducts);
 
             }
         }
@@ -162,7 +162,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         }
 
 
-        public void GroupByProductCategory(IList<ProductPresenter> products)
+        public async Task GroupByProductCategory(IList<ProductPresenter> products)
         {
 
             if (ProductCategoryPresenters.Count() > 0)
@@ -182,7 +182,9 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
        
         public async Task GetStoreInformation(string id)
         {
-            var store = await StoreDataStore.GetItemAsync(StoreId);
+            Guid StoreId = Guid.Parse(id);
+
+            var store = await StoreDataStore.GetAvailableStoreInformation(StoreId);
             StoreImg = store.StoreImage;
             StoreName = store.StoreName;
             Title = store.StoreName;
@@ -203,6 +205,22 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                     StoreProducts.Add(productPresenter);
                 }
             }
+
+            await GroupByProductCategory(StoreProducts);
+
+            //if (ProductCategoryPresenters.Count() > 0)
+            //{
+            //    ProductCategoryPresenters.Clear();
+            //}
+
+            //var group = StoreProducts.GroupBy(p => p.ProductType);
+
+            //foreach (var item in group)
+            //{
+            //    var _productCategory = new ProductCategoryPresenter(item.Key.ToString());
+
+            //    ProductCategoryPresenters.Add(_productCategory);
+            //}
 
 
             if (StoreWorkoutHours.Count() == 0)

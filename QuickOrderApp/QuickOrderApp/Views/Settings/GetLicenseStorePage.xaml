@@ -32,8 +32,11 @@
                     BackgroundColor="DodgerBlue"
                     Command="{Binding GoGetLicenseCommand}"
                     CornerRadius="5"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Get Licence" />
+                    Text="Get Licence"
+                    TextColor="#2F3538" />
             </StackLayout>
         </Frame>
 
@@ -48,8 +51,11 @@
                     Margin="10"
                     BackgroundColor="DodgerBlue"
                     CornerRadius="5"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Information About Quick Order" />
+                    Text="Information About Quick Order"
+                    TextColor="#2F3538" />
             </StackLayout>
         </Frame>
         <Frame Grid.Row="2" Style="{StaticResource FrameStyle}">
@@ -65,8 +71,11 @@
                     BackgroundColor="Tomato"
                     Command="{Binding AlreadyHaveLicenseCommand}"
                     CornerRadius="5"
+                    FontFamily="RobotoBold"
+                    FontSize="Body"
                     HasShadow="True"
-                    Text="Already have License" />
+                    Text="Already have License"
+                    TextColor="#2F3538" />
             </StackLayout>
         </Frame>
 

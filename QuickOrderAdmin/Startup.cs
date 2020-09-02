@@ -41,6 +41,8 @@ namespace QuickOrderAdmin
             services.AddSingleton<IUserConnectedDataStore, UserConnectedDataStore>();
             services.AddSingleton<IStripeServiceDS, StripeServiceDS>();
             services.AddSingleton<ICardDataStore, CardDataStore>();
+            services.AddSingleton<ISubcriptionDataStore, SubcriptionDataStore>();
+            services.AddSingleton<IWorkHourDataStore, WorkHourDataStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

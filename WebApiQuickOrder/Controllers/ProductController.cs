@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using WebApiQuickOrder.Context;
 namespace WebApiQuickOrder.Controllers
@@ -143,6 +144,16 @@ namespace WebApiQuickOrder.Controllers
                 return false;
             }
 
+
+
+        }
+
+        [HttpGet("[action]/{storeId}/{item}")]
+        public async Task<Product> SearchItemOfStore(string storeId,string item)
+        {
+            var result = await _context.Products.Where(p => p.StoreId.ToString() == storeId && p.ProductName == item).FirstOrDefaultAsync();
+
+            return result;
 
 
         }

@@ -41,13 +41,14 @@
                             Margin="10"
                             BackgroundColor="LimeGreen"
                             Command="{Binding GoUserInformationCommand}"
-                            CornerRadius="20"
+                            CornerRadius="10"
+                            FontFamily="RobotoBold"
                             FontSize="Title"
                             HasShadow="True"
                             HeightRequest="60"
                             HorizontalTextAlignment="Center"
                             Text="Your Information"
-                            TextColor="Black" />
+                            TextColor="#2F3538" />
 
 
                     </StackLayout>
@@ -77,26 +78,28 @@
                             Margin="10"
                             BackgroundColor="Orange"
                             Command="{Binding RegisterStoreCommand}"
-                            CornerRadius="20"
+                            CornerRadius="10"
+                            FontFamily="RobotoBold"
                             FontSize="Title"
                             HasShadow="True"
                             HeightRequest="60"
                             HorizontalTextAlignment="Center"
                             Text="Register Store"
-                            TextColor="Black" />
+                            TextColor="#2F3538" />
 
                         <button:SfButton
                             Grid.Row="3"
                             Margin="10"
                             BackgroundColor="Orange"
                             Command="{Binding GoCheckYourStores}"
-                            CornerRadius="20"
+                            CornerRadius="10"
+                            FontFamily="RobotoBold"
                             FontSize="Title"
                             HasShadow="True"
                             HeightRequest="60"
                             HorizontalTextAlignment="Center"
                             Text="Your Stores"
-                            TextColor="Black" />
+                            TextColor="#2F3538" />
 
 
 
@@ -115,24 +118,26 @@
                             Margin="10"
                             BackgroundColor="DodgerBlue"
                             Command="{Binding}"
-                            CornerRadius="20"
+                            CornerRadius="10"
+                            FontFamily="RobotoBold"
                             FontSize="Title"
                             HasShadow="True"
                             HeightRequest="60"
                             HorizontalTextAlignment="Center"
                             Text="Policies"
-                            TextColor="Black" />
+                            TextColor="#2F3538" />
                         <button:SfButton
                             Margin="10"
                             BackgroundColor="DodgerBlue"
                             Command="{Binding}"
-                            CornerRadius="20"
+                            CornerRadius="10"
+                            FontFamily="RobotoBold"
                             FontSize="Title"
                             HasShadow="True"
                             HeightRequest="60"
                             HorizontalTextAlignment="Center"
                             Text="Terms And Conditions"
-                            TextColor="Black" />
+                            TextColor="#2F3538" />
 
 
                     </StackLayout>
@@ -149,13 +154,14 @@
                             Margin="10"
                             BackgroundColor="Tomato"
                             Command="{Binding LogOutCommand}"
-                            CornerRadius="20"
+                            CornerRadius="10"
+                            FontFamily="RobotoBold"
                             FontSize="Title"
                             HasShadow="True"
                             HeightRequest="60"
                             HorizontalTextAlignment="Center"
                             Text="Sing Out"
-                            TextColor="Black" />
+                            TextColor="#2F3538" />
 
                     </StackLayout>
 

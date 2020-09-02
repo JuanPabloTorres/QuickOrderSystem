@@ -32,8 +32,11 @@
                         Command="{Binding SearchEmployeeCommand}"
                         CornerRadius="10"
                         FontAttributes="Bold"
+                        FontFamily="RobotoBold"
+                        FontSize="Body"
                         HasShadow="True"
-                        Text="Search" />
+                        Text="Search"
+                        TextColor="#2F3538" />
 
                 </StackLayout>
 
@@ -74,8 +77,11 @@
                                         BackgroundColor="LimeGreen"
                                         Command="{Binding SendRequestCommand}"
                                         CornerRadius="10"
+                                        FontFamily="RobotoBold"
+                                        FontSize="Body"
                                         HasShadow="True"
-                                        Text="Send Request" />
+                                        Text="Send Request"
+                                        TextColor="#2F3538" />
                                 </StackLayout>
                             </Frame>
                         </ContentView>

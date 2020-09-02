@@ -50,8 +50,10 @@ namespace QuickOrderAdmin.Controllers
                    var hub_connection_result = await userConnectedDataStore.AddItemAsync(this.UsersConnected);
                    
                      
-                    var stores = new List<Store>(result.Stores);
+                    var stores = new List<Store>(result.Stores.Where(s=>s.IsDisable == false));
 
+
+                    LogUser.LoginUser.Stores = stores;
                     if (stores.Count() > 0)
                     {
 
@@ -60,7 +62,7 @@ namespace QuickOrderAdmin.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("RegisterStore", "Store");
+                        return RedirectToAction("RegisterControl","Store");
                     }
 
                     return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.StoreId });

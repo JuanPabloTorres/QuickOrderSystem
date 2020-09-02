@@ -13,8 +13,8 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 {
-    [QueryProperty("ProductId","pId")]
-    public class EditProductViewModel:BaseViewModel
+    [QueryProperty("ProductId", "pId")]
+    public class EditProductViewModel : BaseViewModel
     {
 
 
@@ -26,11 +26,13 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         public string ProductId
         {
             get { return productId; }
-            set { productId = value;
+            set
+            {
+                productId = value;
                 OnPropertyChanged();
 
                 GetItemToEdit(ProductId);
-               
+
             }
         }
 
@@ -140,43 +142,65 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 ProductTypes.Add(item.ToString());
             }
 
+            //Verificar bug al no seleccionar imagen por segunda vez
             IPickPhotoCommand = new Command(async () =>
             {
-                await CrossMedia.Current.Initialize();
-                files.Clear();
-                if (!CrossMedia.Current.IsPickPhotoSupported)
+                try
                 {
-                    await Shell.Current.DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
-                    return;
+                    await CrossMedia.Current.Initialize();
+                    files.Clear();
+                    if (!CrossMedia.Current.IsPickPhotoSupported)
+                    {
+                        await Shell.Current.DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
+                        return;
+                    }
+
+
+                    var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+                    {
+                        PhotoSize = PhotoSize.Full,
+
+
+                    });
+
+
+                    if (file == null)
+                    {
+
+                        ProductImg = ImageSource.FromFile("imgPlaceholder.jpg");
+                        return;
+                    }
+                    else
+                    {
+
+                        ImgArray = ConvertToByteArray(file.GetStream());
+
+                        ProductImg = ImageSource.FromStream(() => file.GetStream());
+                    }
+
+
+                    //files.Add(file);
+
+
                 }
-                var file = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+                catch (Exception e)
                 {
-                    PhotoSize = PhotoSize.Full,
 
-                });
-
-
-                if (file == null)
-                    return;
-
-                //files.Add(file);
-
-                ImgArray = ConvertToByteArray(file.GetStream());
-
-                ProductImg = ImageSource.FromStream(() => file.GetStream());
+                    Console.WriteLine(e);
+                }
 
 
             });
             UpdateCommand = new Command(async () =>
             {
 
-            List<string> values = new List<string>();
+                List<string> values = new List<string>();
 
-            values.Add(ProductName);
-            values.Add(ProductDescription);
-            values.Add(ProductPrice);
-            values.Add(ProductQuantity.ToString());
-            values.Add(SelectedType);
+                values.Add(ProductName);
+                values.Add(ProductDescription);
+                values.Add(ProductPrice);
+                values.Add(ProductQuantity.ToString());
+                values.Add(SelectedType);
 
                 if (GlobalValidator.CheckNullOrEmptyPropertiesOfListValues(values))
                 {
@@ -222,6 +246,8 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             SelectedType = ToEditProduct.Type.ToString();
             ImgArray = ToEditProduct.ProductImage;
             var stream = new MemoryStream(ToEditProduct.ProductImage);
+
+
             ProductImg = ImageSource.FromStream(() => stream);
 
         }

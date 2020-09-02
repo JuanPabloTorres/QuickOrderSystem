@@ -237,13 +237,13 @@ namespace WebApiQuickOrder.Controllers
             IActionResult response = Unauthorized();
 
             var loginOfUser = _context.Logins.Where(c => c.Username == username && c.Password == password).FirstOrDefault();
+
             if (loginOfUser != null)
             {
 
             if (_context.Users.Count() > 0)
             {
 
-               
                 var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).FirstOrDefault();
 
 

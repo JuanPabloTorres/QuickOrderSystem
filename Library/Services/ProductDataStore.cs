@@ -33,5 +33,13 @@ namespace Library.Services
             IEnumerable<Product> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Product>>(response.Result);
             return deserializeObject;
         }
+
+        public async Task<Product> SearchItemOfStore(string storeId, string item)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(SearchItemOfStore)}/{storeId}/{item}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            Product deserializeObject = JsonConvert.DeserializeObject<Product>(response);
+            return deserializeObject;
+        }
     }
 }

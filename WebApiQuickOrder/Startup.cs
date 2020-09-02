@@ -1,6 +1,8 @@
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +14,7 @@ using System.Text;
 using WebApiQuickOrder.Context;
 using WebApiQuickOrder.Hubs;
 using WebApiQuickOrder.Models;
+using WebApiQuickOrder.Service;
 
 namespace WebApiQuickOrder
 {
@@ -33,7 +36,19 @@ namespace WebApiQuickOrder
         {
             services.AddDbContext<QOContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:DevelopmentDBLocal"]));
             services.AddSignalR();
-       
+
+            services.Configure<OktaSettings>(Configuration.GetSection("Okta"));
+            services.AddSingleton<ITokenService, OktaTokenService>();
+            services.AddMvc();
+
+
+            //services.AddIdentity<IdentityUser, IdentityRole>(options =>
+            //{
+            //    options.Password.RequireDigit = true;
+            //    options.Password.RequireLowercase = true;
+            //    options.Password.RequiredLength = 5;
+            //}).AddEntityFrameworkStores<QOContext>()
+            //   .AddDefaultTokenProviders();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

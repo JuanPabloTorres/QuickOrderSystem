@@ -30,6 +30,7 @@
         <Label
             Margin="0,10,0,10"
             FontAttributes="Bold"
+            FontFamily="SWEETDREAM"
             FontSize="40"
             HorizontalOptions="Center"
             Text="Quick Order"
@@ -47,26 +48,30 @@
                         Keyboard="Text"
                         Placeholder="Password"
                         Text="{Binding Password}" />
+
+
                     <button:SfButton
                         Margin="10,4,10,0"
                         BackgroundColor="Orange"
                         Command="{Binding LoginCommand}"
-                        CornerRadius="15"
+                        CornerRadius="10"
                         FontAttributes="Bold"
+                        FontFamily="RobotoBold"
                         FontSize="Body"
                         HasShadow="True"
                         Text="Log In"
-                        TextColor="Black" />
+                        TextColor="#2F3538" />
                     <button:SfButton
                         Margin="10,4,10,0"
                         BackgroundColor="Tomato"
                         Command="{Binding LoginEmployeeCommand}"
-                        CornerRadius="15"
+                        CornerRadius="10"
                         FontAttributes="Bold"
+                        FontFamily="RobotoBold"
                         FontSize="Body"
                         HasShadow="True"
                         Text="Log In As Employee"
-                        TextColor="Black" />
+                        TextColor="#2F3538" />
                     <Grid HorizontalOptions="Center">
 
                         <button:SfButton
@@ -74,16 +79,20 @@
                             BackgroundColor="Transparent"
                             Command="{Binding RegisterCommand}"
                             FontAttributes="Bold"
+                            FontFamily="RobotoBold"
+                            FontSize="20"
                             Text="Register"
-                            TextColor="DodgerBlue" />
+                            TextColor="#1771F1" />
                         <button:SfButton
                             Grid.Row="0"
                             Grid.Column="1"
                             BackgroundColor="Transparent"
                             Command="{Binding GoForgotPasswordCommand}"
                             FontAttributes="Bold"
+                            FontFamily="RobotoBold"
+                            FontSize="20"
                             Text="Forgot Password"
-                            TextColor="DodgerBlue" />
+                            TextColor="#1771F1" />
 
 
                     </Grid>

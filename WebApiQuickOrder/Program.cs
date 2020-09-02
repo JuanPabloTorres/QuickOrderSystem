@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -8,6 +9,7 @@ namespace WebApiQuickOrder
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
+            BuildWebHost(args).Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -17,5 +19,11 @@ namespace WebApiQuickOrder
                     webBuilder.UseUrls("http://0.0.0.0:5000");
                     webBuilder.UseStartup<Startup>();
                 });
+
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .UseUrls("http://localhost:5050")
+                .Build();
     }
 }

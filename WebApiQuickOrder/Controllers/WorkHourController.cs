@@ -48,28 +48,31 @@ namespace WebApiQuickOrder.Controllers
             return workHour;
         }
 
+        [HttpGet("[action]/{storeId}")]
+        public async Task<IEnumerable<WorkHour>> GetStoreWorkHours(string storeId)
+        {
+            return await _context.WorkHours.Where(wh => wh.StoreId.ToString() == storeId).ToListAsync();
+        }
+
         // PUT: api/WorkHour/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutWorkHour(Guid id, WorkHour workHour)
-        {
-            if (id != workHour.WorkHourId)
-            {
-                return BadRequest();
-            }
+        [HttpPut]
+        public async Task<bool> PutWorkHour( WorkHour workHour)
+        {           
 
             _context.Entry(workHour).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+                return true;
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!WorkHourExists(id))
+                if (!WorkHourExists(workHour.WorkHourId))
                 {
-                    return NotFound();
+                    return false;
                 }
                 else
                 {
@@ -77,7 +80,7 @@ namespace WebApiQuickOrder.Controllers
                 }
             }
 
-            return NoContent();
+            
         }
 
         // POST: api/WorkHour

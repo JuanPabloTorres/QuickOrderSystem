@@ -1,4 +1,6 @@
-﻿using Stripe;
+﻿using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
+using Stripe;
+using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -20,7 +22,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                 {
                     var cardResult = await CardDataStore.GetCardFromUser(App.LogUser.UserId);
 
-                    if (cardResult != null)
+                    if (cardResult != null && cardResult.Count() > 0)
                     {
                         //Make the Payment transation here...
 
@@ -32,11 +34,24 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
                         if (!string.IsNullOrEmpty(subcriptionToken))
                         {
-                            var licenseReuslt = await storeLicenseDataStore.PostStoreLicense(App.LogUser.Email, App.LogUser.Name);
-
-                            if (licenseReuslt)
+                            var subcription = new Library.Models.Subcription()
                             {
-                                await App.Current.MainPage.DisplayAlert("Notification", "License added succefully.", "OK");
+                                StripeCustomerId = App.LogUser.StripeUserId,
+                                StripeSubCriptionID = subcriptionToken,
+                                //StoreLicense = StoreControlPanelViewModel.YourSelectedStore.StoreLicenceId
+                            };
+
+                            var subcriptionResult = await SubcriptionDataStore.AddItemAsync(subcription);
+
+                            if (subcriptionResult)
+                            {
+
+                                var licenseReuslt = await storeLicenseDataStore.PostStoreLicense(App.LogUser.Email, App.LogUser.Name);
+
+                                if (licenseReuslt)
+                                {
+                                    await App.Current.MainPage.DisplayAlert("Notification", "License added succefully.", "OK");
+                                }
                             }
 
                         }

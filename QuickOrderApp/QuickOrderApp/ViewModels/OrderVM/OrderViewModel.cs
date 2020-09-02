@@ -62,8 +62,12 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
+       
+
+
         public OrderViewModel()
         {
+            
             UserOrders = new ObservableCollection<OrderPresenter>();
 
             MessagingCenter.Subscribe<Order>(this, "RemoveOrderSubtmitedMsg", (sender) =>
@@ -100,6 +104,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
             foreach (var item in userOrderData)
             {
+               
                 item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
                 var presenter = new OrderPresenter(item);
 
@@ -114,15 +119,63 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
             var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue);
 
-            UserOrders.Clear();
-
-            foreach (var item in orderData)
+            switch (_statusvalue)
             {
-                item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-                var presenter = new OrderPresenter(item);
 
-                UserOrders.Add(presenter);
+                case Status.Completed:
+                    {
+
+
+                        UserOrders.Clear();
+                        foreach (var item in orderData)
+                        {
+
+                            item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                            var presenter = new OrderPresenter(item);
+
+                            UserOrders.Add(presenter);
+                        }
+                       
+
+                        break;
+                    }
+
+                case Status.NotSubmited:
+                    {
+                        UserOrders.Clear();
+
+                        foreach (var item in orderData.Where(o => o.IsDisisble == false))
+                        {
+
+                            item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                            var presenter = new OrderPresenter(item);
+
+                            UserOrders.Add(presenter);
+                        }
+                        
+                        break;
+                    }
+                case Status.Submited:
+                    {
+
+                        UserOrders.Clear();
+
+                        foreach (var item in orderData)
+                        {
+
+                            item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                            var presenter = new OrderPresenter(item);
+
+                            UserOrders.Add(presenter);
+                        }
+
+                        break;
+                    }
+                default:
+                    break;
             }
+
+           
         }
 
 

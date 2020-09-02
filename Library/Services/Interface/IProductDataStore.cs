@@ -11,5 +11,7 @@ namespace Library.Services.Interface
         IEnumerable<Product> GetProductWithLowQuantity(Guid storeid, int lowquantity);
 
         Task<IEnumerable<Product>>GetSpecificProductTypeFromStore(Guid storeId, ProductType type);
+
+        Task<Product> SearchItemOfStore(string storeId, string item);
     }
 }
