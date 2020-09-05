@@ -59,18 +59,27 @@ namespace QuickOrderApp.ViewModels.LoginVM
             AppManager = Startup.ServiceProvider.GetService<AppManager>();
             authService = Startup.ServiceProvider.GetService<IAuthService>();
 
-            Task.Run(async () => await this.AppManager.GetRegistrationDataInStorage().ContinueWith(async (userLoadTask) =>
-            {
-                //FILL REGISTRATION INPUTS
-                if (await userLoadTask is User u)
-                {
-                    this.Address = u.Address;
-                    this.Fullname = u.Name;
-                    this.Phone = u.Phone;
-                    this.Email = u.Email;
-                    this.GenderSelected = u.Gender.ToString();
-                }
-            }));
+            //Task.Run(async () => await this.AppManager.GetRegistrationDataInStorage().ContinueWith(async (userLoadTask) =>
+            //{
+            //    //FILL REGISTRATION INPUTS
+            //    if (await userLoadTask is User u)
+            //    {
+            //        this.Address = u.Address;
+            //        this.Fullname = u.Name;
+            //        this.Phone = u.Phone;
+            //        this.Email = u.Email;
+            //        this.GenderSelected = u.Gender.ToString();
+            //    }
+            //}));
+
+            Fullname = "Ricardo Torres";
+            Email = "cs.torresricardo@gmail.com";
+            Password = "1234";
+            ConfirmPassword = Password;
+            Phone = "1234567890";
+            GenderSelected = Gender.Male.ToString();
+            Address = "Some Address";
+            Username = Email;
 
             #region Instaciando Validadores
 
@@ -82,7 +91,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
             ConfirmPasswordValidator = new Validator();
             GenderValidator = new Validator();
             ConfirmAndPasswordValidator = new Validator();
-
             #endregion Instaciando Validadores
 
             App.ComunicationService = new ComunicationService();
@@ -135,7 +143,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                                 App.CardPaymentToken.CardTokenId = UserCardToken.Id;
                             }
-
                             App.UsersConnected = new UsersConnected()
                             {
                                 HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
@@ -560,12 +567,12 @@ namespace QuickOrderApp.ViewModels.LoginVM
                             UserLogin = userlogin,
                         };
 
-                        await this.AppManager.SaveRegistrationInStorage(newUser);
+                        //await this.AppManager.SaveRegistrationInStorage(newUser);
                         await this.authService.SendEmailVerificationCode(newUser.Email).ContinueWith((task) =>
                         {
                             if (task.IsCompletedSuccessfully)
                             {
-                                App.Current.MainPage = Startup.ServiceProvider.GetService<AppShell>();
+                                App.Current.MainPage = new AccountVerification();
                             }
                             else
                             {

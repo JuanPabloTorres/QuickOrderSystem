@@ -9,13 +9,15 @@
 	xmlns:sfbtn="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
 	xmlns:vm="QuickOrderApp.ViewModels.LoginVM.VerifyAccountViewModel"
 	rainbow:DebugRainbow.IsDebug="True"
-	rainbow:DebugRainbow.ShowColors="false"
-	x:DataType="vm:VerifyAccountViewModel">
+	rainbow:DebugRainbow.ShowColors="True">
+
+	<!--  x:DataType="vm:VerifyAccountViewModel"  -->
 	<ContentPage.Content>
 		<AbsoluteLayout>
 			<ck:PancakeView
-				AbsoluteLayout.LayoutBounds=".5,.5,.9,.6"
+				AbsoluteLayout.LayoutBounds=".5,.5,.9,.5"
 				AbsoluteLayout.LayoutFlags="All"
+				BackgroundColor="AliceBlue"
 				CornerRadius="5"
 				HasShadow="True">
 				<StackLayout>
@@ -24,9 +26,10 @@
 					</input:SfTextInputLayout>
 					<sfbtn:SfButton
 						Command="{Binding VerifyCodeCommand}"
-						CommandParameter="{Binding Source={x:Reference codeEntry}, Path=Text}}"
+						CommandParameter="{Binding Source={x:Reference codeEntry}, Path=Text}"
 						CornerRadius="5"
-						Text="Verify Code" />
+						Text="Verify Code"
+						VerticalOptions="End" />
 				</StackLayout>
 			</ck:PancakeView>
 		</AbsoluteLayout>

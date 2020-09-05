@@ -39,7 +39,12 @@ namespace Library.Models
 		//public StoreLicense UserStoreLicense { get; set; }
 
 		public bool IsVerified { get; set; }
+		public ICollection<Permission> Permissions { get; set; }
 
+		public User()
+		{
+            Permissions = new List<Permission>();
+		}
 	}
 
     public enum Gender

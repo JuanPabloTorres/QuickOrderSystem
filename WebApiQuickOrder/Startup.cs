@@ -59,6 +59,26 @@ namespace WebApiQuickOrder
                 config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
             });
+
+           // var key = Encoding.ASCII.GetBytes("testignKey");
+           // services.AddAuthentication(x =>
+           // {
+           //     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+           //     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+           // })
+           //.AddJwtBearer(x =>
+           //{
+           //    x.RequireHttpsMetadata = false;
+           //    x.SaveToken = true;
+           //    x.TokenValidationParameters = new TokenValidationParameters
+           //    {
+           //        ValidateIssuerSigningKey = true,
+           //        IssuerSigningKey = new SymmetricSecurityKey(key),
+           //        ValidateIssuer = false,
+           //        ValidateAudience = false
+           //    };
+           //});
+
             //services.AddLogging();
             services.AddControllers();
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
@@ -78,30 +98,39 @@ namespace WebApiQuickOrder
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+                builder.AllowAnyOrigin();
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ComunicationHub>("/comunicationhub");
             });
 
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ComunicationHub>("/comunicationhub");
-            });
-
-            //Sedding Database
-            //using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            //app.UseSignalR(routes =>
             //{
-            //    if (!serviceScope.ServiceProvider.GetService<QOContext>().AllMigrationsApplied())
-            //    {
-            //        serviceScope.ServiceProvider.GetService<QOContext>().Database.Migrate();
-            //        serviceScope.ServiceProvider.GetService<QOContext>().EnsureSeeded();
-            //    }
-            //    else
-            //    {
-            //        serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
-            //    }
-            //}
-        }
+            //    routes.MapHub<ComunicationHub>("/comunicationhub");
+            //});
 
-    }
+			//Sedding Database
+
+			//using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+			//{
+			//	if (!serviceScope.ServiceProvider.GetService<QOContext>().AllMigrationsApplied())
+			//	{
+			//		serviceScope.ServiceProvider.GetService<QOContext>().Database.Migrate();
+			//		serviceScope.ServiceProvider.GetService<QOContext>().EnsureSeeded();
+			//	}
+			//	else
+			//	{
+			//		serviceScope.ServiceProvider.GetService<DataContext>().EnsureSeeded();
+			//	}
+			//}
+		}
+
+	}
 }

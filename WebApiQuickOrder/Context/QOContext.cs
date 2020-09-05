@@ -25,6 +25,10 @@ namespace WebApiQuickOrder.Context
         public DbSet<PaymentCard> PaymentCards { get; set; }
 
         public DbSet<UsersConnected> usersConnecteds { get; set; }
+		public DbSet<Permission> Permissions { get; set; }
+		public DbSet<PermissionItem> PermissionItems { get; set; }
+        public DbSet<PermissionAction> PermissionActions { get; set; }
+
 
         public QOContext(DbContextOptions options) : base(options)
         {
@@ -34,6 +38,8 @@ namespace WebApiQuickOrder.Context
         {
             modelBuilder.Entity<Employee>().HasMany(w => w.EmployeeWorkHours).WithOne(s => s.Employee).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<AuthCode>().HasKey(x => x.Id);
+
+
         }
     }
 

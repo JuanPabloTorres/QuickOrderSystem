@@ -9,14 +9,14 @@ namespace QuickOrderApp.Services
 {
     public interface IAuthService
     {
-        Task SendEmailVerificationCode(string email);
+        Task<bool> SendEmailVerificationCode(string email);
 
         Task<ResponseDto> VerifyAuthCode(string code);
     }
 
     public class AuthService : IAuthService
 	{
-        readonly string _controllerName = "Auth";
+        readonly string _controllerName = "api/Auth";
         public Uri? FullAPIUri { get; private set; }
         public UriBuilder? UriBuilder { get; set; }
         private readonly HttpClient httpClient;
@@ -26,14 +26,16 @@ namespace QuickOrderApp.Services
             httpClient = httpClientFactory.CreateClient("MyHttpClient");
         }
 
-        public async Task SendEmailVerificationCode(string email)
+        public async Task<bool> SendEmailVerificationCode(string email)
         {
             HttpResponseMessage result;
             FullAPIUri = new UriBuilder { 
-                Path = $"{this._controllerName}" ,
+                Port=5000,
+                Path = $"{this._controllerName}/{nameof(SendEmailVerificationCode)}" ,
                 Query = $"{nameof(email)}={email}"
             }.Uri;
             result = await httpClient.GetAsync(FullAPIUri);
+             return result.IsSuccessStatusCode;
         }
 
         public async Task<ResponseDto> VerifyAuthCode(string code)
@@ -41,8 +43,10 @@ namespace QuickOrderApp.Services
             ResponseDto responseMessage;
             FullAPIUri = new UriBuilder
             {
+                Port = 5000,
                 Path = $"{this._controllerName}/{nameof(VerifyAuthCode)}",
-                Query = $"{nameof(code)}={code}"
+                Query = $"{nameof(code)}={code}",
+                Host = httpClient.BaseAddress.Host
             }.Uri;
             responseMessage = JsonConvert.DeserializeObject<ResponseDto>(await httpClient.GetStringAsync(FullAPIUri));
             return responseMessage;

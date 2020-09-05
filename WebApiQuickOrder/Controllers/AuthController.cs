@@ -26,7 +26,7 @@ namespace WebApiQuickOrder.Controllers
             this._authCodeFactory = authCodeFactory;
         }
 
-        [HttpPost("[action]")]
+        [HttpGet("[action]")]
         //[ValidateAntiForgeryToken]
         [AllowAnonymous]
         public async Task<IActionResult> SendEmailVerificationCode([FromQuery] string email)
@@ -54,10 +54,10 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]")]
-        public ActionResult<ResponseDto> VerifyAuthCode([FromQuery]string code, [FromQuery]string email)
+        public ActionResult<ResponseDto> VerifyAuthCode([FromQuery]string code)
         {
 
-            const string successMessage = "Your account has been verrifed succesfulle.";
+            const string successMessage = "Your account has been verrifed succesfully.";
             const string expiredMessage = "This code has expired...";
             const string notFoundMessage = "Code does not exist.";
 
@@ -65,9 +65,9 @@ namespace WebApiQuickOrder.Controllers
             ActionResult<ResponseDto> result;
             try
             {
-                if (_context.AuthCodes.FirstOrDefault(x => x.Code == code && x.Email == email) is AuthCode authCode)
+                if (_context.AuthCodes.FirstOrDefault(x => x.Code == code) is AuthCode authCode)
                 {
-                    if (authCode.EndAt <= DateTime.Now && authCode.IsAlive)
+                    if (authCode.EndAt >= DateTime.Now  && authCode.CreatedAt <= DateTime.Now && authCode.IsAlive)
                     {
                         authCode.IsAlive = false;
                         _context.Entry(authCode).CurrentValues.SetValues(authCode);
@@ -76,12 +76,12 @@ namespace WebApiQuickOrder.Controllers
                     }
                     else
                     {
-                        result = NotFound(response = new ResponseDto { HasErrors = true, TextMessage = expiredMessage });
+                        result = Ok(response = new ResponseDto { HasErrors = true, TextMessage = expiredMessage });
                     }
                 }
                 else
                 {
-                    result = NotFound(response = new ResponseDto { HasErrors = true, TextMessage = notFoundMessage });
+                    result = Ok(response = new ResponseDto { HasErrors = true, TextMessage = notFoundMessage });
                 }
             }
             catch (Exception ex)

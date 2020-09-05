@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiQuickOrder.Context;
 
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    partial class QOContextModelSnapshot : ModelSnapshot
+    [Migration("20200901034019_Permissions")]
+    partial class Permissions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -273,45 +275,9 @@ namespace WebApiQuickOrder.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PermissionActionId");
-
-                    b.HasIndex("PermissionItemId");
-
                     b.HasIndex("UserId");
 
-                    b.ToTable("Permissions");
-                });
-
-            modelBuilder.Entity("Library.Models.PermissionAction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ActionName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PermissionActions");
-                });
-
-            modelBuilder.Entity("Library.Models.PermissionItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ItemName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PermissionItems");
+                    b.ToTable("Permission");
                 });
 
             modelBuilder.Entity("Library.Models.Product", b =>
@@ -578,18 +544,6 @@ namespace WebApiQuickOrder.Migrations
 
             modelBuilder.Entity("Library.Models.Permission", b =>
                 {
-                    b.HasOne("Library.Models.PermissionAction", "PermissionAction")
-                        .WithMany()
-                        .HasForeignKey("PermissionActionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Library.Models.PermissionItem", "PermissionItem")
-                        .WithMany()
-                        .HasForeignKey("PermissionItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Library.Models.User", null)
                         .WithMany("Permissions")
                         .HasForeignKey("UserId")

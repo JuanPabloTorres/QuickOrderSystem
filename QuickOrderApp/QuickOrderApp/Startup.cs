@@ -55,7 +55,7 @@ namespace QuickOrderApp
 
 			if (ctx.HostingEnvironment.IsDevelopment())
 			{
-				LocalBackendUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5000" : "http://localhost:5000";
+				LocalBackendUrl = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5000" : "http://10.0.2.2:5000";
 			}
 			else
 			{
