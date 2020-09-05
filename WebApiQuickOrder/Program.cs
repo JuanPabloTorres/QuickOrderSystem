@@ -9,14 +9,16 @@ namespace WebApiQuickOrder
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
-            BuildWebHost(args).Run();
+            //BuildWebHost(args).Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://0.0.0.0:5000");
+                    webBuilder.UseUrls("http://*:5000");
+                    
+                    //webBuilder.UseUrls("http://0.0.0.0:5000");
                     webBuilder.UseStartup<Startup>();
                 });
 

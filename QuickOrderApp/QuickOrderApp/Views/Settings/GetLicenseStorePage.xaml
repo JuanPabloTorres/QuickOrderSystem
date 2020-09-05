@@ -14,71 +14,74 @@
     Shell.TitleColor="Black"
     mc:Ignorable="d">
 
-    <Grid VerticalOptions="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Frame Grid.Row="0" Style="{StaticResource FrameStyle}">
-            <StackLayout VerticalOptions="Center">
-                <Label Style="{StaticResource DataLabel}" Text="Get license to start use our Quick Order System and make your busissness grow." />
-                <BoxView
-                    BackgroundColor="Black"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
-                <button:SfButton
-                    Margin="10"
-                    BackgroundColor="DodgerBlue"
-                    Command="{Binding GoGetLicenseCommand}"
-                    CornerRadius="5"
-                    FontFamily="RobotoBold"
-                    FontSize="Body"
-                    HasShadow="True"
-                    Text="Get Licence"
-                    TextColor="#2F3538" />
-            </StackLayout>
-        </Frame>
+    <ScrollView>
+        <Grid VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Frame Grid.Row="0" Style="{StaticResource FrameStyle}">
+                <StackLayout VerticalOptions="Center">
+                    <Label Style="{StaticResource DataLabel}" Text="Get license to start use our Quick Order System and make your busissness grow." />
+                    <BoxView
+                        BackgroundColor="Black"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <button:SfButton
+                        Margin="10"
+                        BackgroundColor="DodgerBlue"
+                        Command="{Binding GoGetLicenseCommand}"
+                        CornerRadius="5"
+                        FontFamily="RobotoBold"
+                        FontSize="Body"
+                        HasShadow="True"
+                        Text="Get Licence"
+                        TextColor="#2F3538" />
+                </StackLayout>
+            </Frame>
 
-        <Frame Grid.Row="1" Style="{StaticResource FrameStyle}">
-            <StackLayout VerticalOptions="Center">
-                <Label Style="{StaticResource DataLabel}" Text="Information About Quick Order." />
-                <BoxView
-                    BackgroundColor="Black"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
-                <button:SfButton
-                    Margin="10"
-                    BackgroundColor="DodgerBlue"
-                    CornerRadius="5"
-                    FontFamily="RobotoBold"
-                    FontSize="Body"
-                    HasShadow="True"
-                    Text="Information About Quick Order"
-                    TextColor="#2F3538" />
-            </StackLayout>
-        </Frame>
-        <Frame Grid.Row="2" Style="{StaticResource FrameStyle}">
-            <StackLayout VerticalOptions="Center">
-                <Label Style="{StaticResource DataLabel}" Text="If you already have a license start make your store." />
-                <BoxView
-                    BackgroundColor="Black"
-                    HeightRequest="0.1"
-                    HorizontalOptions="Fill" />
-                <button:SfButton
-                    Grid.Row="2"
-                    Margin="10"
-                    BackgroundColor="Tomato"
-                    Command="{Binding AlreadyHaveLicenseCommand}"
-                    CornerRadius="5"
-                    FontFamily="RobotoBold"
-                    FontSize="Body"
-                    HasShadow="True"
-                    Text="Already have License"
-                    TextColor="#2F3538" />
-            </StackLayout>
-        </Frame>
+            <Frame Grid.Row="1" Style="{StaticResource FrameStyle}">
+                <StackLayout VerticalOptions="Center">
+                    <Label Style="{StaticResource DataLabel}" Text="Information About Quick Order." />
+                    <BoxView
+                        BackgroundColor="Black"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <button:SfButton
+                        Margin="10"
+                        BackgroundColor="DodgerBlue"
+                        CornerRadius="5"
+                        FontFamily="RobotoBold"
+                        FontSize="Body"
+                        HasShadow="True"
+                        Text="Information About Quick Order"
+                        TextColor="#2F3538" />
+                </StackLayout>
+            </Frame>
+            <Frame Grid.Row="2" Style="{StaticResource FrameStyle}">
+                <StackLayout VerticalOptions="Center">
+                    <Label Style="{StaticResource DataLabel}" Text="If you already have a license start make your store." />
+                    <BoxView
+                        BackgroundColor="Black"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+                    <button:SfButton
+                        Grid.Row="2"
+                        Margin="10"
+                        BackgroundColor="Tomato"
+                        Command="{Binding AlreadyHaveLicenseCommand}"
+                        CornerRadius="5"
+                        FontFamily="RobotoBold"
+                        FontSize="Body"
+                        HasShadow="True"
+                        Text="Already have License"
+                        TextColor="#2F3538" />
+                </StackLayout>
+            </Frame>
 
-    </Grid>
+        </Grid>
+
+    </ScrollView>
 
 </ContentPage>

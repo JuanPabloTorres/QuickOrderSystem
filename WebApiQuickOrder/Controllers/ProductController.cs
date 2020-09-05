@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,6 +23,7 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/Product
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return await _context.Products.ToListAsync();
@@ -52,7 +54,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{storeId}/{type}")]
         public async Task<IEnumerable<Product>> GetSpecificProductTypeFromStore(Guid storeId,ProductType type)
         {
-            var result =  _context.Products.Where(p => p.Type == type && p.StoreId == storeId).ToList();
+            var result = await _context.Products.Where(p => p.Type == type && p.StoreId == storeId).ToListAsync();
 
             return result;
         }
@@ -119,9 +121,35 @@ namespace WebApiQuickOrder.Controllers
             return product;
         }
 
+        [HttpGet("[action]")]
+        public async Task<bool> UpdateInventoryItem(Guid productId, int quantity)
+        {
+            var product = await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
+
+            product.InventoryQuantity -= quantity;
+
+            _context.Entry(product).State = EntityState.Modified;
+
+
+            try
+            {
+                _context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
+
+                return false;
+            }
+
+        }
+
         public async Task<bool> UpdateInventoryFromOrderSubmited(Guid productId, int quantity)
         {
-            var product = _context.Products.Where(p => p.ProductId == productId).FirstOrDefault();
+            var product =await  _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
 
 
             if (product != null)

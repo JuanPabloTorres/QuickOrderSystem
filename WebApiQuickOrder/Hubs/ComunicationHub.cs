@@ -32,14 +32,31 @@ namespace WebApiQuickOrder.Hubs
             await Clients.All.SendAsync("UpdateStoreInventory", message);
         }
 
-        public async Task SendCompletedOrderNotification(string notificationMessage,string userReciever)
+        public async Task SendJobNotification(string notificationMessage, string userReciever)
         {
 
-            var connectionId = _QOContext.usersConnecteds.Where(uc => uc.UserID.ToString() == userReciever).FirstOrDefault().HubConnectionID;
-            await Clients.Client(connectionId).SendAsync("SendCompletedOrderNotification", notificationMessage);
+            var connectionId = _QOContext.usersConnecteds.Where(uc => uc.UserID.ToString() == userReciever && uc.IsDisable == false).FirstOrDefault();
+
+            if (connectionId != null)
+            {
+                await Clients.Client(connectionId.HubConnectionID).SendAsync("SendJobNotification", notificationMessage);
+
+            }
         }
 
-       
+        public async Task SendCompletedOrderNotification(string notificationMessage, string userReciever)
+        {
+
+            var connection = _QOContext.usersConnecteds.Where(uc => uc.UserID.ToString() == userReciever && uc.IsDisable == false).FirstOrDefault();
+
+            if (connection != null)
+            {
+                await Clients.Client(connection.HubConnectionID).SendAsync("SendCompletedOrderNotification", notificationMessage);
+
+            }
+        }
+
+
 
     }
 }

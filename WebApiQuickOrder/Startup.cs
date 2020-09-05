@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -55,6 +56,7 @@ namespace WebApiQuickOrder
             {
                 options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -69,12 +71,20 @@ namespace WebApiQuickOrder
 
             });
 
+           
+
             services.AddAuthorization(config =>
             {
+              
+                //config.AddPolicy("AdmindAndEmployees", policy => policy.RequireRole("Admin","Employee"));
                 config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
+                config.AddPolicy(Policies.Employee, Policies.EmployeePolicy());
+                config.AddPolicy(Policies.UserAndEmployees, Policies.UserAndEmployeesPolicy());
+                config.AddPolicy(Policies.StoreControl, Policies.StoreControlPolicy());
+
             });
-            //services.AddLogging();
+          
             services.AddControllers();
         }
 

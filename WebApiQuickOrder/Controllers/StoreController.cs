@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,6 +23,7 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/Store
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Store>>> GetStores()
         {
             return await _context.Stores.ToListAsync();
@@ -53,7 +55,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Store>> GetStore(Guid id)
         {
-            var store = _context.Stores.Where(s => s.StoreId == id).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefault();
+            var store = await _context.Stores.Where(s => s.StoreId == id).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();
 
             if (store == null)
             {
@@ -81,8 +83,8 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{storeId}")]
         public async Task<ActionResult<string>> GetStoreDestinationPaymentKey(Guid storeId)
         {
-            var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().SKKey;
-
+            var keyResult =  _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().SKKey;
+            
             if (keyResult == null)
             {
                 return NotFound();
@@ -176,23 +178,6 @@ namespace WebApiQuickOrder.Controllers
 
 
 
-        //[HttpPut("[action]")]
-        //public async Task<bool> UpdateStore(Store store)
-        //{
-        //    var storeResult = await _context.Stores.Where(s => s.StoreId == store.StoreId).FirstOrDefaultAsync();
-
-        //    if (storeResult == null)
-        //    {
-        //        return false;
-        //    }
-        //    else
-        //    {
-
-        //    }
-
-
-
-        //}
 
         // POST: api/Store
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
@@ -207,22 +192,7 @@ namespace WebApiQuickOrder.Controllers
             return CreatedAtAction("GetStore", new { id = store.StoreId }, store);
         }
 
-        //// DELETE: api/Store/5
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<Store>> DeleteStore(Guid id)
-        //{
-        //    var store = await _context.Stores.FindAsync(id);
-        //    if (store == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Stores.Remove(store);
-        //    await _context.SaveChangesAsync();
-
-        //    return store;
-        //}
-
+        
 
         // DELETE: api/Store/5
         [HttpDelete("{id}")]

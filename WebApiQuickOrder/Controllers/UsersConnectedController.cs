@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Library.Models;
 using WebApiQuickOrder.Context;
+using System.Threading.Tasks.Dataflow;
 
 namespace WebApiQuickOrder.Controllers
 {
@@ -28,6 +29,40 @@ namespace WebApiQuickOrder.Controllers
             return await _context.usersConnecteds.ToListAsync();
         }
 
+        [HttpPost("[action]")]
+        public async Task<ActionResult<bool>> ModifyOldConnections(UsersConnected usersConnected)
+        {
+            var userconnections =await _context.usersConnecteds.Where(usc => usc.UserID == usersConnected.UserID &&   usc.ConnecteDate < usersConnected.ConnecteDate  && usc.IsDisable == false).ToListAsync();
+
+
+            if (userconnections.Count() > 0)
+            {
+
+                foreach (var item in userconnections)
+                {
+                    item.IsDisable = true;
+
+                    _context.Entry(item).State = EntityState.Modified;
+
+                _context.SaveChanges();
+
+                }
+
+
+                return true;
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
+        //public async Task<ActionResult<bool>> DisconnectUser(string hubId)
+        //{
+            
+        //}
+
         // GET: api/UsersConnected/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UsersConnected>> GetUsersConnected(string id)
@@ -45,23 +80,22 @@ namespace WebApiQuickOrder.Controllers
         // PUT: api/UsersConnected/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsersConnected(string id, UsersConnected usersConnected)
+        [HttpPut]
+        public async Task<ActionResult<bool>> PutUsersConnected(UsersConnected usersConnected)
         {
-            if (id != usersConnected.HubConnectionID)
-            {
-                return BadRequest();
-            }
+           
 
             _context.Entry(usersConnected).State = EntityState.Modified;
 
             try
             {
                 await _context.SaveChangesAsync();
+
+                return true;
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UsersConnectedExists(id))
+                if (!UsersConnectedExists(usersConnected.HubConnectionID))
                 {
                     return NotFound();
                 }
@@ -71,7 +105,7 @@ namespace WebApiQuickOrder.Controllers
                 }
             }
 
-            return NoContent();
+           
         }
 
         // POST: api/UsersConnected
@@ -131,7 +165,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{userId}")]
         public async Task<ActionResult<UsersConnected>> GetUserConnectedID(Guid userId)
         {
-            var result = await _context.usersConnecteds.Where(u => u.UserID == userId).FirstOrDefaultAsync();
+            var result = await _context.usersConnecteds.Where(u => u.UserID == userId && u.IsDisable == false).FirstOrDefaultAsync();
 
             return result;
         }

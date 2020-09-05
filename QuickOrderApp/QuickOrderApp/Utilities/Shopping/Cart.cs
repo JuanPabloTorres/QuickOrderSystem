@@ -72,11 +72,12 @@ namespace QuickOrderApp.Utilities.Shopping
                     BuyerId = App.LogUser.UserId,
                     StoreId = App.CurrentStore.StoreId,
                     OrderId = order.OrderId,
-                    ProductImage = product.ProductImg
+                    ProductImage = product.ProductImg,
+                    ProductIdReference = product.ProductId
                 };
 
                 //Check id orderproduct exist in the order
-                var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductName, order.OrderId);
+                var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductIdReference, order.OrderId);
                 if (!_productoExisteEnOrden)
                 {
                     //Add orderproduct to order
@@ -95,7 +96,7 @@ namespace QuickOrderApp.Utilities.Shopping
                 else
                 {
 
-                    var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(product.ProductName, order.OrderId);
+                    var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, order.OrderId);
 
                     if (orderProducttoUpdate.Quantity != orderProduct.Quantity)
                     {
@@ -124,10 +125,11 @@ namespace QuickOrderApp.Utilities.Shopping
                     BuyerId = App.LogUser.UserId,
                     StoreId = App.CurrentStore.StoreId,
                     OrderId = orderOfuser.OrderId,
-                    ProductImage = product.ProductImg
+                    ProductImage = product.ProductImg,
+                    ProductIdReference = product.ProductId
                 };
 
-                var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductName, orderOfuser.OrderId);
+                var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductIdReference, orderOfuser.OrderId);
                 if (!_productoExisteEnOrden)
                 {
 
@@ -147,7 +149,7 @@ namespace QuickOrderApp.Utilities.Shopping
                 else
                 {
 
-                    var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(product.ProductName, orderOfuser.OrderId);
+                    var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, orderOfuser.OrderId);
 
                     if (orderProducttoUpdate.Quantity != orderProduct.Quantity)
                     {
@@ -155,9 +157,13 @@ namespace QuickOrderApp.Utilities.Shopping
                         {
 
                             orderProducttoUpdate.Quantity = orderProduct.Quantity;
-                            var uptedResult = await orderProductDataStore.UpdateItemAsync(orderProducttoUpdate);
+                            var updateResult = await orderProductDataStore.UpdateItemAsync(orderProducttoUpdate);
 
-                            return uptedResult;
+                            if (updateResult)
+                            {
+                                MessagingCenter.Send<OrderProduct>(orderProducttoUpdate, "OrderProductUpdate");
+                            }
+                            return updateResult;
                         }
                         else
                         {

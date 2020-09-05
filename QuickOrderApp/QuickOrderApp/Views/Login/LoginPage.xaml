@@ -74,13 +74,21 @@
                         TextColor="#2F3538" />
                     <Grid HorizontalOptions="Center">
 
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
                         <button:SfButton
                             Grid.Row="0"
+                            Grid.Column="0"
                             BackgroundColor="Transparent"
                             Command="{Binding RegisterCommand}"
                             FontAttributes="Bold"
                             FontFamily="RobotoBold"
-                            FontSize="20"
+                            FontSize="12"
                             Text="Register"
                             TextColor="#1771F1" />
                         <button:SfButton
@@ -90,9 +98,10 @@
                             Command="{Binding GoForgotPasswordCommand}"
                             FontAttributes="Bold"
                             FontFamily="RobotoBold"
-                            FontSize="20"
+                            FontSize="12"
                             Text="Forgot Password"
-                            TextColor="#1771F1" />
+                            TextColor="#1771F1"
+                            VerticalTextAlignment="Center" />
 
 
                     </Grid>

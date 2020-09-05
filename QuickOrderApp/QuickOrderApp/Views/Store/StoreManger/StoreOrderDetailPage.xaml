@@ -24,7 +24,10 @@
                         HorizontalOptions="Fill" />
                     <StackLayout Orientation="Horizontal">
 
-                        <Label Style="{StaticResource DataLabel}" Text="{Binding EmployeeOrderPresenter.OrderId, StringFormat='#{0}'}" />
+                        <Label
+                            LineBreakMode="TailTruncation"
+                            Style="{StaticResource DataLabel}"
+                            Text="{Binding EmployeeOrderPresenter.OrderId, StringFormat='#{0}'}" />
                     </StackLayout>
                     <StackLayout Orientation="Horizontal">
                         <Label Style="{StaticResource DataLabel}" Text="Date: " />
@@ -98,7 +101,7 @@
 
                                     <Label
                                         Style="{StaticResource DataLabel}"
-                                        Text="{Binding Quantity, StringFormat='Quantity:{0}'}"
+                                        Text="{Binding Quantity, StringFormat='Quantity: {0}'}"
                                         VerticalOptions="Center" />
                                     <!--<Label
                                         FontSize="Medium"
@@ -109,10 +112,7 @@
 
 
                                 </StackLayout>
-                                <StackLayout
-                                    HorizontalOptions="End"
-                                    TranslationX="100"
-                                    VerticalOptions="Center">
+                                <StackLayout VerticalOptions="Center">
                                     <button:SfCheckBox
                                         CheckedColor="LimeGreen"
                                         ControlSize="100"
@@ -142,7 +142,7 @@
                 Command="{Binding CompleteOrderCommand}"
                 CornerRadius="10"
                 FontFamily="RobotoBold"
-                FontSize="Medium"
+                FontSize="18"
                 HasShadow="True"
                 Text="Complete"
                 TextColor="#2F3538" />

@@ -61,11 +61,24 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             StorePresenters = new ObservableCollection<StorePresenters>();
             GetUserEmployeeInformation();
 
-            SignOutCommand = new Command(() => 
+            SignOutCommand = new Command(async() => 
             {
 
+                await App.ComunicationService.Disconnect();
 
-                Shell.Current.GoToAsync("../LoginRoute");
+
+                if (App.UsersConnected != null)
+                {
+                    App.UsersConnected.IsDisable = true;
+                    var result = await userConnectedDataStore.UpdateItemAsync(App.UsersConnected);
+
+                    if (result)
+                    {
+                        App.UsersConnected = null;
+                    }
+
+                }
+               await Shell.Current.GoToAsync("../LoginRoute");
 
             });
         }

@@ -10,14 +10,14 @@ using WebApiQuickOrder.Context;
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    [Migration("20200830064811_8-30-2020-1.00")]
-    partial class _8302020100
+    [Migration("20200902220614_2020-9-2-1.02")]
+    partial class _202092102
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.6")
+                .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -159,6 +159,9 @@ namespace WebApiQuickOrder.Migrations
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
+
+                    b.Property<Guid>("ProductIdReference")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<byte[]>("ProductImage")
                         .HasColumnType("varbinary(max)");
@@ -398,6 +401,12 @@ namespace WebApiQuickOrder.Migrations
                 {
                     b.Property<string>("HubConnectionID")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ConnecteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDisable")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");

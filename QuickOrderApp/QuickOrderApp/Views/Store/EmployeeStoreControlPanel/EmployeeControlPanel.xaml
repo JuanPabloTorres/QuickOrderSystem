@@ -79,7 +79,7 @@
                                     CornerRadius="10"
                                     FontAttributes="Bold"
                                     FontFamily="RobotoBold"
-                                    FontSize="Medium"
+                                    FontSize="18"
                                     HasShadow="True"
                                     HorizontalOptions="Fill"
                                     Text="View"
@@ -99,7 +99,7 @@
                 CornerRadius="10"
                 FontAttributes="Bold"
                 FontFamily="RobotoBold"
-                FontSize="Medium"
+                FontSize="18"
                 HasShadow="True"
                 Text="Sign Out"
                 TextColor="#2F3538" />

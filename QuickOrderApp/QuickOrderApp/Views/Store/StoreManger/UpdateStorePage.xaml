@@ -49,7 +49,7 @@
                     <StackLayout>
                         <combobox:SfComboBox
                             ComboBoxSource="{Binding StoreTypes}"
-                            DropDownTextColor="Gray"
+                            DropDownTextColor="#2F3538"
                             FontAttributes="Bold"
                             SelectedDropDownItemColor="LightSteelBlue"
                             SelectedItem="{Binding StoreTypeSelected}"

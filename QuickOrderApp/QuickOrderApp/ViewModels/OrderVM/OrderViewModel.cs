@@ -117,7 +117,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
         {
             Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
 
-            var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue);
+            var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue,App.TokenDto.Token);
 
             switch (_statusvalue)
             {

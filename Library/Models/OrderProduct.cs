@@ -23,6 +23,8 @@ namespace Library.Models
 
         public ProductType Type { get; set; }
 
+        public Guid ProductIdReference { get; set; }
+
 
     }
 }

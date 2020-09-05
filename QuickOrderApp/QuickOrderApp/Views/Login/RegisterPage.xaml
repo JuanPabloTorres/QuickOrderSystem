@@ -9,7 +9,9 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Register New User"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     NavigationPage.HasNavigationBar="False"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     Shell.TabBarIsVisible="False"
     mc:Ignorable="d">
 
@@ -20,14 +22,10 @@
             <StackLayout VerticalOptions="Center">
                 <Label
                     Margin="10"
-                    FontAttributes="Bold"
-                    FontSize="Title"
-                    HorizontalOptions="Center"
-                    HorizontalTextAlignment="Center"
                     LineBreakMode="WordWrap"
+                    Style="{StaticResource TitleLabel}"
                     Text="Complete All Information "
-                    TextColor="Black"
-                    VerticalOptions="Start" />
+                    TextColor="Black" />
 
                 <BoxView
                     Margin="10,0,10,0"
@@ -39,8 +37,7 @@
 
                     <StackLayout>
                         <Label
-                            FontSize="Body"
-                            HorizontalOptions="Start"
+                            Style="{StaticResource DataLabel}"
                             Text="User Information"
                             TextColor="Orange" />
                         <BoxView
@@ -86,8 +83,8 @@
 
                     <StackLayout>
                         <Label
-                            FontSize="Body"
                             HorizontalOptions="Start"
+                            Style="{StaticResource DataLabel}"
                             Text="User Credential Information"
                             TextColor="Orange" />
                         <BoxView
@@ -129,10 +126,11 @@
                             Command="{Binding DoneCommand}"
                             CornerRadius="5"
                             FontAttributes="Bold"
-                            FontSize="Body"
+                            FontFamily="RobotoBold"
+                            FontSize="Medium"
                             HasShadow="True"
                             Text="Done"
-                            TextColor="Black" />
+                            TextColor="#2F3538" />
 
                     </StackLayout>
 

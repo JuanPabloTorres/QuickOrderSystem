@@ -11,5 +11,9 @@ namespace QuickOrderAdmin.Utilities
 
         public static TokenDTO Token { get; set; }
 
+        public static UsersConnected UsersConnected { get; set; }
+
+        public static ComunicationService ComunicationService { get; set; }
+
     }
 }

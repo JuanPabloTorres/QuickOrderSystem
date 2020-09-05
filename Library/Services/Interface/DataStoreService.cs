@@ -12,8 +12,9 @@ namespace Library.Interface
         protected readonly HttpClient HttpClient;
         protected readonly Uri BaseAPIUri;
         //protected readonly INetworkService NetworkService;
-
-        public static string LocalBackendUrl = "http://192.168.56.1:5000/api";
+       
+              public static string LocalBackendUrl = "http://192.168.1.133:5000/api";
+        //public static string LocalBackendUrl = "http://192.168.56.1:5000/api";
         //public static string LocalBackendUrl = "https://192.168.1.132:5001/api";
 
         protected Uri FullAPIUri { get; set; }
@@ -40,9 +41,9 @@ namespace Library.Interface
             var byteContent = new ByteArrayContent(buffer);
             byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            var response = HttpClient.PostAsync(BaseAPIUri, byteContent);
+            var response = await HttpClient.PostAsync(BaseAPIUri, byteContent);
 
-            if (response.Result.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 return true;
             }
@@ -95,9 +96,10 @@ namespace Library.Interface
             var byteContent = new ByteArrayContent(buffer);
             byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            var response = HttpClient.PutAsync(BaseAPIUri, byteContent);
+            var response = await HttpClient.PutAsync(BaseAPIUri, byteContent);
 
-            if (response.Result.IsSuccessStatusCode)
+
+            if (response.IsSuccessStatusCode)
             {
                 return true;
             }

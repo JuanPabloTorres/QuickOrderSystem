@@ -14,8 +14,7 @@ namespace QuickOrderAdmin.Controllers
 {
     public class StoreController : Controller
     {
-        UsersConnected UsersConnected;
-        ComunicationService ComunicationService;
+       
         #region DataStores
         IStoreDataStore StoreDataStore;
         IUserDataStore userDataStore;
@@ -34,7 +33,7 @@ namespace QuickOrderAdmin.Controllers
         static Product oldProduct;
         #endregion
 
-        public StoreController(IStoreDataStore storeData, IUserDataStore userData, IProductDataStore productData, IStoreLicenseDataStore storeLicenseData, IOrderDataStore orderData, IEmployeeDataStore employeeData, IRequestDataStore requestData, UsersConnected usersConnected, IUserConnectedDataStore userConnectedDataStore, ComunicationService comunication, ICardDataStore cardDataStore, IStripeServiceDS stripeServiceDS, ISubcriptionDataStore subcriptionDataStore)
+        public StoreController(IStoreDataStore storeData, IUserDataStore userData, IProductDataStore productData, IStoreLicenseDataStore storeLicenseData, IOrderDataStore orderData, IEmployeeDataStore employeeData, IRequestDataStore requestData, IUserConnectedDataStore userConnectedDataStore ,ICardDataStore cardDataStore, IStripeServiceDS stripeServiceDS, ISubcriptionDataStore subcriptionDataStore)
         {
             userDataStore = userData;
             StoreDataStore = storeData;
@@ -44,7 +43,7 @@ namespace QuickOrderAdmin.Controllers
             employeeDataStore = employeeData;
             RequestDataStore = requestData;
             this.userConnectedDataStore = userConnectedDataStore;
-            this.ComunicationService = comunication;
+           
             this.cardDataStore = cardDataStore;
             this.stripeServiceDS = stripeServiceDS;
             this.subcriptionDataStore = subcriptionDataStore;
@@ -287,6 +286,14 @@ namespace QuickOrderAdmin.Controllers
 
                             if (LogUser.Token == null)
                             {
+                                LogUser.UsersConnected = new UsersConnected()
+                                {
+                                    HubConnectionID = LogUser.ComunicationService.hubConnection.ConnectionId,
+                                    UserID = result.UserId
+                                };
+
+                                var hub_connection_result = await userConnectedDataStore.AddItemAsync(LogUser.UsersConnected);
+
                                 LogUser.Token = userDataStore.LoginCredential(LogUser.LoginUser.UserLogin.Username, LogUser.LoginUser.UserLogin.Password);
                             }
 
@@ -554,10 +561,10 @@ namespace QuickOrderAdmin.Controllers
         }
 
 
-        public IActionResult StoreOrders()
+        public async Task<IActionResult> StoreOrders()
         {
 
-            var orderStoreData = orderDataStore.GetStoreOrders(SelectedStore.CurrentStore.StoreId, LogUser.Token.Token);
+            var orderStoreData = await orderDataStore.GetStoreOrders(SelectedStore.CurrentStore.StoreId, LogUser.Token.Token);
 
             var Orders = orderStoreData.Where(o => o.OrderStatus == Status.Submited).ToList();
 
@@ -581,7 +588,7 @@ namespace QuickOrderAdmin.Controllers
 
             if (orderUpdated)
             {
-                await ComunicationService.SendCompletedOrderNotification(order.OrderId, order.BuyerId.ToString());
+                await LogUser.ComunicationService.SendCompletedOrderNotification(order.OrderId, order.BuyerId.ToString());
             }
             return RedirectToAction("StoreOrders");
         }
@@ -650,7 +657,8 @@ namespace QuickOrderAdmin.Controllers
                 if (userhubconnectionResult != null)
                 {
 
-                    await this.ComunicationService.SendRequestToUser(userhubconnectionResult.HubConnectionID, jobRequest);
+                    await LogUser.ComunicationService.SendRequestToUser(userhubconnectionResult.HubConnectionID, jobRequest);
+                    await LogUser.ComunicationService.SendJobNotification(SelectedStore.CurrentStore, userId.ToString());
                 }
 
 
@@ -685,7 +693,7 @@ namespace QuickOrderAdmin.Controllers
             {
                 editproduct.ProductImage = currentproductimg;
 
-                if (oldProduct.Price != editproduct.Price || oldProduct.InventoryQuantity != editproduct.InventoryQuantity)
+                if (oldProduct.Price != editproduct.Price || oldProduct.InventoryQuantity != editproduct.InventoryQuantity || oldProduct.ProductName != editproduct.ProductName)
                 {
                     var editproductresult = await productDataStore.UpdateItemAsync(editproduct);
 
@@ -748,7 +756,7 @@ namespace QuickOrderAdmin.Controllers
 
         public async Task<IActionResult> NewLicense()
         {
-            var cardResult = await cardDataStore.GetCardFromUser(LogUser.LoginUser.UserId);
+            var cardResult = await cardDataStore.GetCardFromUser(LogUser.LoginUser.UserId,LogUser.Token.Token);
 
             if (cardResult.Count() > 0)
             {

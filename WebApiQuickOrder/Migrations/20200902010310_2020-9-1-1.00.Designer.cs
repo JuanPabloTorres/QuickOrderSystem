@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiQuickOrder.Context;
 
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    partial class QOContextModelSnapshot : ModelSnapshot
+    [Migration("20200902010310_2020-9-1-1.00")]
+    partial class _202091100
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,9 +159,6 @@ namespace WebApiQuickOrder.Migrations
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
-
-                    b.Property<Guid>("ProductIdReference")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<byte[]>("ProductImage")
                         .HasColumnType("varbinary(max)");
@@ -399,12 +398,6 @@ namespace WebApiQuickOrder.Migrations
                 {
                     b.Property<string>("HubConnectionID")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("ConnecteDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDisable")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");

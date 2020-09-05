@@ -40,9 +40,19 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             #endregion
 
 
+
+
             MessagingCenter.Subscribe<Store>(this, "StoreUpdateMsg", (sender) =>
             {
                 StoreUpdate = sender;
+
+                StoreName = StoreUpdate.StoreName;
+                storeDescription = StoreUpdate.StoreDescription;
+
+                var stream = new MemoryStream(StoreUpdate.StoreImage);
+                StoreImage = ImageSource.FromStream(() => stream);
+
+                StoreTypeSelected = StoreUpdate.StoreType.ToString();
                
             });
         }

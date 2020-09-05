@@ -81,14 +81,20 @@
                             <StackLayout Orientation="Vertical">
 
                                 <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
-                                    <Label Text="Open" VerticalOptions="Center" />
+                                    <Label Style="{StaticResource DataLabel}" Text="Open" />
                                     <TimePicker
+                                        FontSize="15"
                                         Format="hh:mm:tt"
                                         HorizontalOptions="FillAndExpand"
                                         Time="{Binding Open}" />
 
-                                    <Label Text="Close" VerticalOptions="Center" />
+                                    <Label
+                                        LineBreakMode="NoWrap"
+                                        Style="{StaticResource DataLabel}"
+                                        Text="Close"
+                                        VerticalOptions="Center" />
                                     <TimePicker
+                                        FontSize="15"
                                         Format="hh:mm:tt"
                                         HorizontalOptions="FillAndExpand"
                                         Time="{Binding Close}" />

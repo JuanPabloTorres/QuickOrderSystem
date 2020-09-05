@@ -60,7 +60,7 @@ namespace QuickOrderApp.Droid
                 .SetStyle(new NotificationCompat.BigTextStyle()
                     .BigText(message))
                 .SetLargeIcon(BitmapFactory.DecodeResource(AndroidApp.Context.Resources, Resource.Drawable.bell))
-                .SetSmallIcon(Resource.Drawable.bag)
+                .SetSmallIcon(Resource.Drawable.bell)
                 .SetDefaults((int)NotificationDefaults.Sound | (int)NotificationDefaults.Vibrate)
                 .SetPriority(NotificationCompat.PriorityDefault);
 

@@ -1,4 +1,5 @@
-﻿using Library.DTO;
+﻿using FFImageLoading.Concurrency;
+using Library.DTO;
 using Library.Models;
 using Library.Services;
 using Library.Services.Interface;
@@ -57,7 +58,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             ValidatorsInitializer();
 
-            App.ComunicationService = new ComunicationService();
+            //App.ComunicationService = new ComunicationService();
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
             IsLoading = false;
 
@@ -107,12 +108,25 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                
                             }
 
+
+                            if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
+                            {
+
                             App.UsersConnected = new UsersConnected()
                             {
                                 HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                UserID = App.LogUser.UserId
+                                UserID = App.LogUser.UserId,
+                                IsDisable=false,
+                                ConnecteDate = DateTime.Now
                             };
+
+                            var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
                             var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                            }
+
+
+
 
                             App.Current.MainPage = new AppShell();                          
                             IsLoading = false;
@@ -149,8 +163,21 @@ namespace QuickOrderApp.ViewModels.LoginVM
                     {
                         var userEmployees = await EmployeeDataStore.GetUserEmployees(loginresult.UserId.ToString());
                         App.LogUser = loginresult;
+
+                        App.UsersConnected = new UsersConnected()
+                        {
+                            HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                            UserID = App.LogUser.UserId,
+                            IsDisable = false,
+                            ConnecteDate = DateTime.Now
+                        };
+                        var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
+                       
+                        var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+
                         App.Current.MainPage = new EmployeeShell();
-                        //await Shell.Current.GoToAsync("EmployeeControlPanelRoute");
+                      
 
                     }
                     else
@@ -242,7 +269,19 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                     if (result)
                                     {
                                         await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
+
+
                                         App.LogUser = credentialsResult;
+
+                                        App.UsersConnected = new UsersConnected()
+                                        {
+                                            HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                            UserID = App.LogUser.UserId,
+                                            IsDisable = false,
+                                            ConnecteDate = DateTime.Now
+                                        };
+
+                                        var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
                                         App.Current.MainPage = new AppShell();
                                     }
                                 }

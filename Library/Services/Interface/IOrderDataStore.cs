@@ -10,9 +10,9 @@ namespace Library.Services.Interface
         Order HaveOrderOfSpecificStore(Guid userid, Guid storeid,string token);
         IEnumerable<Order> GetUserOrders(Guid userid);
 
-        IEnumerable<Order> GetStoreOrders(Guid storeId,string token);
+        Task<IEnumerable<Order>> GetStoreOrders(Guid storeId,string token);
 
-        Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status);
+        Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status,string token);
 
         IEnumerable<Order> GetUserOrdersWithToken(Guid userid, string token);
         IEnumerable<Order> GetUserOrdersOfStore(Guid userid, Guid storeid);

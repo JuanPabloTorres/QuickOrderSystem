@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiQuickOrder.Context;
 
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    partial class QOContextModelSnapshot : ModelSnapshot
+    [Migration("20200902160400_2020-9-2-1.01")]
+    partial class _202092101
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,9 +159,6 @@ namespace WebApiQuickOrder.Migrations
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
-
-                    b.Property<Guid>("ProductIdReference")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<byte[]>("ProductImage")
                         .HasColumnType("varbinary(max)");

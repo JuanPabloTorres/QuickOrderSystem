@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Store Inventory"
     BackgroundColor="{x:StaticResource BackgroundColor}"
@@ -86,10 +87,17 @@
                                         HeightRequest="180"
                                         HorizontalOptions="Fill"
                                         IsClippedToBounds="True">
-                                        <Image
+
+                                        <ff:CachedImage
+                                            Aspect="Fill"
+                                            HeightRequest="150"
+                                            Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}" />
+
+
+                                        <!--<Image
                                             Aspect="Fill"
                                             HeightRequest="200"
-                                            Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}" />
+                                            Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}" />-->
                                     </Frame>
 
                                     <Label

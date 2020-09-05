@@ -4,6 +4,7 @@ using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -30,7 +31,9 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
         async Task ExecuteLoadItems()
         {
-            var cardData = await CardDataStore.GetCardDTOFromUser(App.LogUser.UserId);
+
+            var tokenData = new  JwtSecurityTokenHandler().ReadJwtToken(App.TokenDto.Token);
+            var cardData = await CardDataStore.GetCardDTOFromUser(App.LogUser.UserId,App.TokenDto.Token);
 
             foreach (var item in cardData)
             {

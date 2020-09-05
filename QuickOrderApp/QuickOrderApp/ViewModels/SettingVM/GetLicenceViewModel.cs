@@ -20,7 +20,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
                 if (result)
                 {
-                    var cardResult = await CardDataStore.GetCardFromUser(App.LogUser.UserId);
+                    var cardResult = await CardDataStore.GetCardFromUser(App.LogUser.UserId,App.TokenDto.Token);
 
                     if (cardResult != null && cardResult.Count() > 0)
                     {

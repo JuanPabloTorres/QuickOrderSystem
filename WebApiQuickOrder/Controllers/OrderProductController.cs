@@ -127,16 +127,16 @@ namespace WebApiQuickOrder.Controllers
             return _context.OrderProducts.Any(e => e.OrderProductId == id);
         }
 
-        [HttpGet("[action]/{userid}/{productname}/{orderId}")]
-        public bool OrderProductOfUserExistInOrder(Guid userid, string productname, Guid orderId)
+        [HttpGet("[action]/{userid}/{productId}/{orderId}")]
+        public bool OrderProductOfUserExistInOrder(Guid userid, Guid productId, Guid orderId)
         {
-            return _context.OrderProducts.Any(e => e.BuyerId == userid && e.ProductName == productname && e.OrderId == orderId);
+            return _context.OrderProducts.Any(e => e.BuyerId == userid && e.ProductIdReference == productId && e.OrderId == orderId);
         }
 
-        [HttpGet("[action]/{productname}/{orderId}")]
-        public OrderProduct OrderProductOfUserExistOnOrder(string productname, Guid orderId)
+        [HttpGet("[action]/{productId}/{orderId}")]
+        public OrderProduct OrderProductOfUserExistOnOrder(Guid productId, Guid orderId)
         {
-            return _context.OrderProducts.Where(e => e.ProductName == productname && e.OrderId == orderId).FirstOrDefault();
+            return _context.OrderProducts.Where(e => e.ProductIdReference == productId && e.OrderId == orderId).FirstOrDefault();
         }
     }
 }

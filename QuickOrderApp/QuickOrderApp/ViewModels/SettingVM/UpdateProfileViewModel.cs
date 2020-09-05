@@ -220,6 +220,18 @@ namespace QuickOrderApp.ViewModels.SettingVM
         {
             ValidatorInitializer();
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
+
+            MessagingCenter.Subscribe<User>(this, "UserInformation", (obj) => 
+            {
+
+                Fullname = obj.Name;
+                Address = obj.Address;
+                Phone = obj.Phone;
+                Email = obj.Email;
+                GenderSelected = obj.Gender.ToString();
+
+            
+            });
         }
 
         void ValidatorInitializer()

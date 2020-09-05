@@ -6,6 +6,7 @@
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Add Product"
     BackgroundColor="{x:StaticResource BackgroundColor}"
@@ -23,12 +24,18 @@
                     HasShadow="True"
                     IsClippedToBounds="True">
 
-                    <Image
+                    <ff:CachedImage
+                        Aspect="Fill"
+                        HeightRequest="200"
+                        Source="{Binding ProductImg}" />
+
+
+                    <!--<Image
                         x:Name="logo"
                         Aspect="Fill"
                         HeightRequest="200"
                         Source="{Binding ProductImg}"
-                        WidthRequest="100" />
+                        WidthRequest="100" />-->
                 </Frame>
                 <button:SfButton
                     Margin="10"
@@ -76,8 +83,8 @@
                         DropDownBorderColor="LightGray"
                         DropDownCornerRadius="5"
                         SelectedItem="{Binding SelectedType}"
-                        Text="--Product Type--"
-                        TextColor="Gray" />
+                        Text="Product Type"
+                        TextColor="#2F3538" />
                 </StackLayout>
                 <button:SfButton
                     Margin="10"

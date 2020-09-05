@@ -1,12 +1,13 @@
 ﻿using Library.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApiQuickOrder.Context
 {
     public class QOContext : DbContext
     {
-
-        public DbSet<User> Users { get; set; }
+        
+        public  DbSet<User> Users { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Login> Logins { get; set; }

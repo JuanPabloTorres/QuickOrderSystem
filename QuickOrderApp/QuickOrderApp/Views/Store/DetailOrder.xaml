@@ -118,52 +118,19 @@
                             <StackLayout Margin="6,0,0,0">
 
 
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="{Binding OrderDetail.OrderId, StringFormat='Order #{0}'}"
-                                    TextColor="Gray" />
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="{Binding OrderDetail.OrderDate, StringFormat='Date: {0:MM/dd/YYYY}'}"
-                                    TextColor="Gray" />
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="{Binding OrderStatus, StringFormat='Items:{0}'}"
-                                    TextColor="Gray" />
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="{Binding OrderQuantity, StringFormat='Items:{0}'}"
-                                    TextColor="Gray" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="{Binding OrderDetail.OrderId, StringFormat='Order #{0}'}" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="{Binding OrderDetail.OrderDate, StringFormat='Date: {0:MM/dd/YYYY}'}" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="{Binding OrderStatus, StringFormat='Items:{0}'}" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="{Binding OrderQuantity, StringFormat='Items:{0}'}" />
 
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="Tax 11.5%"
-                                    TextColor="Gray" />
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="{Binding TotalTax, StringFormat='Tax {0:C}'}"
-                                    TextColor="Gray" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="Tax 11.5%" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="{Binding TotalTax, StringFormat='Tax {0:C}'}" />
 
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="Online Payment Fee 2.9%"
-                                    TextColor="Gray" />
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="Stripe Comision Fee $0.30"
-                                    TextColor="Gray" />
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="{Binding StripeFee, StringFormat='Total Fee{0:C}'}"
-                                    TextColor="Gray" />
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="{Binding OrderTypeFee, StringFormat='Delivery Fee {0:C}'}"
-                                    TextColor="Gray" />
-                                <Label
-                                    FontAttributes="Bold"
-                                    Text="{Binding Total, StringFormat='Total:{0:C}'}"
-                                    TextColor="Gray" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="Online Payment Fee 2.9%" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="Stripe Comision Fee $0.30" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="{Binding StripeFee, StringFormat='Total Fee{0:C}'}" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="{Binding OrderTypeFee, StringFormat='Delivery Fee {0:C}'}" />
+                                <Label Style="{StaticResource ReceiptLabel}" Text="{Binding Total, StringFormat='Total:{0:C}'}" />
                             </StackLayout>
 
 

@@ -8,13 +8,15 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding EmpDetail.EmployeeUser.Name}"
+    BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="StoreEmployeeEditRoute"
+    Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="{Binding EmpDetail.EmployeeId, StringFormat='Employee #{0}'}" />
+            <Label Style="{StaticResource DataLabel}" Text="{Binding EmpDetail.EmployeeId, StringFormat='Employee #{0}'}" />
 
-            <Label Text="{Binding EmpDetail.Type, StringFormat='Current Position: {0}'}" />
+            <Label Style="{StaticResource DataLabel}" Text="{Binding EmpDetail.Type, StringFormat='Current Position: {0}'}" />
             <BoxView
                 BackgroundColor="Black"
                 HeightRequest="0.1"
@@ -40,21 +42,24 @@
                                 BackgroundColor="LightGray"
                                 HeightRequest="0.1"
                                 HorizontalOptions="FillAndExpand" />
-                            <Label
-                                FontSize="Title"
-                                HorizontalOptions="Center"
-                                Text="{Binding Day}" />
+                            <Label Style="{StaticResource TitleLabel}" Text="{Binding Day}" />
 
                             <StackLayout Orientation="Vertical">
 
                                 <StackLayout HorizontalOptions="Center" Orientation="Horizontal">
-                                    <Label Text="Open" VerticalOptions="Center" />
+                                    <Label
+                                        Style="{StaticResource DataLabel}"
+                                        Text="Open"
+                                        VerticalOptions="Center" />
                                     <TimePicker
                                         Format="hh:mm:tt"
                                         HorizontalOptions="FillAndExpand"
                                         Time="{Binding Open}" />
 
-                                    <Label Text="Close" VerticalOptions="Center" />
+                                    <Label
+                                        Style="{StaticResource DataLabel}"
+                                        Text="Close"
+                                        VerticalOptions="Center" />
                                     <TimePicker
                                         Format="hh:mm:tt"
                                         HorizontalOptions="FillAndExpand"
@@ -84,8 +89,10 @@
                 BackgroundColor="DodgerBlue"
                 Command="{Binding CompleteEditCommand}"
                 CornerRadius="5"
+                FontFamily="RobotoBold"
                 HasShadow="True"
-                Text="Edit Employee" />
+                Text="Edit Employee"
+                TextColor="#2F3538" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

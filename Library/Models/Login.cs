@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
@@ -6,6 +7,7 @@ namespace Library.Models
     [Table("Logins")]
     public class Login
     {
+        [Key]
         public Guid LoginId { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }

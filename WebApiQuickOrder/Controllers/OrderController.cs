@@ -56,6 +56,7 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/Order/5
         [HttpGet("[action]/{userid}/{status}")]
+        [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status)
         {
             var _completeOrders = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status).Include(op => op.OrderProducts).ToListAsync();
@@ -84,93 +85,146 @@ namespace WebApiQuickOrder.Controllers
         // PUT: api/Order/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
+
+
         [HttpPut]
-        public async Task<bool> PutOrder(Order order)
+        public async Task<ActionResult<bool>> PutOrder(Order orderupdated)
         {
-            var oldOrder = _context.Orders.Where(o => o.OrderId == order.OrderId).FirstOrDefault();
+            _context.Entry(orderupdated).State = EntityState.Modified;
 
-
-
-            if (oldOrder != null)
+            try
             {
+                await _context.SaveChangesAsync();
 
-                try
+                
+
+                if (orderupdated.OrderStatus == Status.Submited)
                 {
-
-                    _context.Orders.Remove(oldOrder);
-
-                    _context.SaveChanges();
-
-                    _context.Add(order);
-
-                    //order.StoreOrder= null;
-
-                    if (order.StoreOrder != null)
+                    foreach (var item in orderupdated.OrderProducts)
                     {
+                        var product = _context.Products.Where(p => p.StoreId == item.StoreId && p.ProductId == item.ProductIdReference).FirstOrDefault();
 
-                        _context.Attach(order.StoreOrder);
-
-                        if (order.StoreOrder.Products != null)
+                        if (product != null && product.InventoryQuantity > 0)
                         {
+                            product.InventoryQuantity -= item.Quantity;
 
-                            foreach (var item in order.StoreOrder.Products)
-                            {
+                            _context.Entry(product).State = EntityState.Modified;
 
-                                _context.Attach(item);
-                            }
-                        }
-
-
-                        order.StoreOrder.WorkHours = null;
-
-                        if (order.StoreOrder.WorkHours != null)
-                        {
-
-                            foreach (var item in order.StoreOrder.WorkHours)
-                            {
-                                _context.Attach(item);
-                            }
-                        }
-                    }
-
-                    ProductController productController = new ProductController(_context);
-                    if (order.OrderStatus == Status.Submited)
-                    {
-                        foreach (var item in order.OrderProducts)
-                        {
-                            var product = _context.Products.Where(p => p.StoreId == item.StoreId && p.ProductName == item.ProductName).FirstOrDefault();
-
-                            if (product != null && product.InventoryQuantity > 0)
-                            {
-
-                                var result = productController.UpdateInventoryFromOrderSubmited(product.ProductId, item.Quantity);
-
-                            }
-
+                           await _context.SaveChangesAsync();
+                          
 
                         }
                     }
-
-
-
-
-                    _context.SaveChanges();
-                }
-                catch (Exception e)
-                {
-
-                    Console.WriteLine(e);
                 }
 
+                //_context.SaveChanges();
 
                 return true;
             }
-            else
+            catch (DbUpdateConcurrencyException)
             {
-                return false;
+                if (!OrderExists(orderupdated.OrderId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return false;
+                }
             }
 
+           
         }
+
+        //[HttpPut]
+        //public async Task<bool> PutOrder(Order order)
+        //{
+
+            
+        //    var oldOrder = _context.Orders.Where(o => o.OrderId == order.OrderId).FirstOrDefault();
+
+
+
+        //    if (oldOrder != null)
+        //    {
+
+        //        try
+        //        {
+
+        //            _context.Orders.Remove(oldOrder);
+
+        //            _context.SaveChanges();
+
+        //            _context.Add(order);
+
+        //            //order.StoreOrder= null;
+
+        //            if (order.StoreOrder != null)
+        //            {
+
+        //                _context.Attach(order.StoreOrder);
+
+        //                if (order.StoreOrder.Products != null)
+        //                {
+
+        //                    foreach (var item in order.StoreOrder.Products)
+        //                    {
+
+        //                        _context.Attach(item);
+        //                    }
+        //                }
+
+
+        //                order.StoreOrder.WorkHours = null;
+
+        //                if (order.StoreOrder.WorkHours != null)
+        //                {
+
+        //                    foreach (var item in order.StoreOrder.WorkHours)
+        //                    {
+        //                        _context.Attach(item);
+        //                    }
+        //                }
+        //            }
+
+        //            ProductController productController = new ProductController(_context);
+        //            if (order.OrderStatus == Status.Submited)
+        //            {
+        //                foreach (var item in order.OrderProducts)
+        //                {
+        //                    var product = _context.Products.Where(p => p.StoreId == item.StoreId && p.ProductName == item.ProductName).FirstOrDefault();
+
+        //                    if (product != null && product.InventoryQuantity > 0)
+        //                    {
+
+        //                        var result = productController.UpdateInventoryFromOrderSubmited(product.ProductId, item.Quantity);
+
+        //                    }
+
+
+        //                }
+        //            }
+
+
+
+
+        //            _context.SaveChanges();
+        //        }
+        //        catch (Exception e)
+        //        {
+
+        //            Console.WriteLine(e);
+        //        }
+
+
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+
+        //}
 
 
         [HttpGet("[action]/{orderId}")]
@@ -243,6 +297,7 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{userid}")]
+        [Authorize(Policy = Policies.User)]
         public IEnumerable<Order> GetUserOrders(Guid userid)
         {
             return _context.Orders.Where(e => e.BuyerId == userid).Include(o => o.OrderProducts).ToList();
@@ -262,7 +317,7 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{storeId}")]
-        [Authorize(Policy = Policies.User)]
+        [Authorize(Policy  = Policies.StoreControl)]       
         public IEnumerable<Order> GetStoreOrders(Guid storeId)
         {
             return _context.Orders.Where(e => e.StoreId == storeId).Include(o => o.OrderProducts).ToList();

@@ -15,16 +15,17 @@ namespace QuickOrderAdmin.Controllers
         IUserDataStore userDataStore;
         IUserConnectedDataStore userConnectedDataStore;
 
-        UsersConnected UsersConnected;
-        ComunicationService ComunicationService;
-        public LoginController(IUserDataStore userData,IUserConnectedDataStore userConnectedData,UsersConnected usersConnected,ComunicationService comunication)
+      
+       
+        public LoginController(IUserDataStore userData,IUserConnectedDataStore userConnectedData)
         {
             userDataStore = userData;
             userConnectedDataStore = userConnectedData;
-            UsersConnected = usersConnected;
-            ComunicationService = comunication;
+            //UsersConnected = usersConnected;
+            //ComunicationService = comunication;
+            //ComunicationService = new ComunicationService();
 
-            
+            LogUser.ComunicationService = new ComunicationService();
         }
 
         //Sign In Action
@@ -38,16 +39,23 @@ namespace QuickOrderAdmin.Controllers
 
                 if (result != null)
                 {
+
+                    //LogUser.ComunicationService = new ComunicationService();
                     LogUser.LoginUser = result;
 
 
-                    this.UsersConnected = new UsersConnected()
+                    LogUser.UsersConnected = new UsersConnected()
                     {
-                        HubConnectionID = ComunicationService.hubConnection.ConnectionId,
-                        UserID = result.UserId
+                        HubConnectionID = LogUser.ComunicationService.hubConnection.ConnectionId,
+                        UserID = result.UserId,
+                        IsDisable = false,
+                        ConnecteDate = DateTime.Now
                     };
 
-                   var hub_connection_result = await userConnectedDataStore.AddItemAsync(this.UsersConnected);
+
+                    bool isConnectionWasModify = await userConnectedDataStore.ModifyOldConnections(LogUser.UsersConnected);
+
+                    var hub_connection_result = await userConnectedDataStore.AddItemAsync(LogUser.UsersConnected);
                    
                      
                     var stores = new List<Store>(result.Stores.Where(s=>s.IsDisable == false));
@@ -147,17 +155,23 @@ namespace QuickOrderAdmin.Controllers
         public async Task<IActionResult> SignOut()
         {
 
-            string hubconnectionId = ComunicationService.hubConnection.ConnectionId;
-            await this.ComunicationService.Disconnect();
+            string hubconnectionId = LogUser.ComunicationService.hubConnection.ConnectionId;
+            await LogUser.ComunicationService.Disconnect();
 
-            bool result = await userConnectedDataStore.DeleteItemAsync(hubconnectionId);
+
+            LogUser.UsersConnected.IsDisable = true;
+            bool result = await userConnectedDataStore.UpdateItemAsync(LogUser.UsersConnected);
 
             if (result)
             {
 
+            return RedirectToAction("Index", new { loginViewModel = new LoginViewModel() });
+            }
+            else
+            {
+                return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.StoreId });
             }
 
-            return RedirectToAction("Index", new { loginViewModel = new LoginViewModel() });
         }
     }
 }

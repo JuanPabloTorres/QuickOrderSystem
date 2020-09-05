@@ -115,8 +115,10 @@ namespace WebApiQuickOrder.Controllers
                 //Obtenemos los valores de la tarjeta 
                 var tokenoptions = new TokenCreateOptions()
                 {
+                     
                     Card = new CreditCardOptions()
                     {
+                        
                         Number = paymentCard.CardNumber,
                         ExpYear = long.Parse(paymentCard.Year),
                         ExpMonth = long.Parse(paymentCard.Month),

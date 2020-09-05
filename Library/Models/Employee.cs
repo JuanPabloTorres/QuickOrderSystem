@@ -29,5 +29,6 @@ namespace Library.Models
         OrderPreperarer,
         Delivery,
         PickUpRecepcionist,
+        SubAdministrator
     }
 }

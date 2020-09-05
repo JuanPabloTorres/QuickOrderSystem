@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Store Control Panel"
     BackgroundColor="{x:StaticResource BackgroundColor}"
@@ -32,8 +33,12 @@
                 HeightRequest="150"
                 HorizontalOptions="Fill"
                 IsClippedToBounds="True">
+                <ff:CachedImage
+                    Aspect="Fill"
+                    HeightRequest="150"
+                    Source="{Binding Store.StoreImage, Converter={StaticResource BytesToImgConverter}}" />
 
-                <Image Aspect="Fill" Source="{Binding Store.StoreImage, Converter={StaticResource BytesToImgConverter}}" />
+                <!--<Image Aspect="Fill" Source="{Binding Store.StoreImage, Converter={StaticResource BytesToImgConverter}}" />-->
             </Frame>
             <Label
                 Grid.Row="1"
@@ -64,7 +69,7 @@
                     CornerRadius="5"
                     FontAttributes="Bold"
                     FontFamily="RobotoBold"
-                    FontSize="Body"
+                    FontSize="12"
                     HasShadow="True"
                     Text="Inventory"
                     TextColor="#2F3538" />
@@ -77,7 +82,7 @@
                     CornerRadius="5"
                     FontAttributes="Bold"
                     FontFamily="RobotoBold"
-                    FontSize="Body"
+                    FontSize="12"
                     HasShadow="True"
                     Text="Add Product"
                     TextColor="#2F3538" />
@@ -90,7 +95,7 @@
                     CornerRadius="5"
                     FontAttributes="Bold"
                     FontFamily="RobotoBold"
-                    FontSize="Body"
+                    FontSize="12"
                     HasShadow="True"
                     Text="Orders"
                     TextColor="#2F3538" />
@@ -103,7 +108,7 @@
                     CornerRadius="5"
                     FontAttributes="Bold"
                     FontFamily="RobotoBold"
-                    FontSize="Body"
+                    FontSize="12"
                     HasShadow="True"
                     Text="Employees"
                     TextColor="#2F3538" />
@@ -116,7 +121,7 @@
                     CornerRadius="5"
                     FontAttributes="Bold"
                     FontFamily="RobotoBold"
-                    FontSize="Body"
+                    FontSize="12"
                     HasShadow="True"
                     Text="Search Employee"
                     TextColor="#2F3538" />
@@ -129,7 +134,7 @@
                     CornerRadius="5"
                     FontAttributes="Bold"
                     FontFamily="RobotoBold"
-                    FontSize="Body"
+                    FontSize="12"
                     HasShadow="True"
                     Text="Dashboards"
                     TextColor="#2F3538" />
@@ -143,7 +148,7 @@
                     CornerRadius="5"
                     FontAttributes="Bold"
                     FontFamily="RobotoBold"
-                    FontSize="Body"
+                    FontSize="12"
                     HasShadow="True"
                     Text="Store Settings"
                     TextColor="#2F3538" />

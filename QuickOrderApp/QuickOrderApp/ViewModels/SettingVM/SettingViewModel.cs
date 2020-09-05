@@ -162,10 +162,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
             Phone = App.LogUser.Phone;
             GenderSelected = App.LogUser.Gender.ToString();
             UserInformation = App.LogUser;
-            #endregion
-           
-
-           
+            #endregion           
 
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
 
@@ -182,6 +179,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
            {
 
                await Shell.Current.GoToAsync("UpdateProfileRoute", true);
+               MessagingCenter.Send<User>(App.LogUser, "UserInformation");
            });
 
             GoPaymentCardCommand = new Command(async () =>
@@ -204,10 +202,23 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
            
 
-            LogOutCommand = new Command(() =>
+            LogOutCommand = new Command(async() =>
             {
+                await App.ComunicationService.Disconnect();
+              
 
-                Shell.Current.GoToAsync("../LoginRoute");
+                if (App.UsersConnected != null)
+                {
+                    App.UsersConnected.IsDisable = true;
+                    var result = await userConnectedDataStore.UpdateItemAsync(App.UsersConnected);
+
+                    if (result)
+                    {
+                        App.UsersConnected = null;
+                    }
+
+                }
+               await Shell.Current.GoToAsync("../LoginRoute");
 
             });
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _8302020100 : Migration
+    public partial class _202091100 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -4,7 +4,9 @@ using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
+using FFImageLoading.Forms.Platform;
 using Lottie.Forms.Droid;
+
 using QuickOrderApp.Utilities.Dependency.Interface;
 using System.Collections.Generic;
 using System.IO;
@@ -34,9 +36,10 @@ namespace QuickOrderApp.Droid
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            //AnimationViewRenderer.Init();
-            //AnimationViewRenderer.Init();
             AnimationViewRenderer.Init();
+            CachedImageRenderer.Init(true);
+
+
 
             CreateNotificationFromIntent(Intent);
 

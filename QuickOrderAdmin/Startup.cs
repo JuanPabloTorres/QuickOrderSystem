@@ -28,8 +28,8 @@ namespace QuickOrderAdmin
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddSingleton<ComunicationService>();
-            services.AddSingleton<UsersConnected>();
+            //services.AddTransient<ComunicationService>();
+            //services.AddSingleton<UsersConnected>();
             services.AddSingleton<IStoreLicenseDataStore, StoreLicenceDataStore>();
             services.AddSingleton<IStoreDataStore, StoreDataStore>();
             services.AddSingleton<IUserDataStore, UserDataStore>();

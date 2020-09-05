@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding OrderStatus}"
     BackgroundColor="{x:StaticResource BackgroundColor}"
@@ -33,8 +34,9 @@
                                         HeightRequest="130"
                                         HorizontalOptions="Fill"
                                         IsClippedToBounds="True">
+                                        <ff:CachedImage Aspect="Fill" Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}" />
 
-                                        <Image Aspect="Fill" Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}" />
+                                        <!--<Image Aspect="Fill" Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}" />-->
                                     </Frame>
                                     <Label Style="{StaticResource TitleLabel}" Text="{Binding StoreName}" />
                                     <BoxView

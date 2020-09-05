@@ -12,5 +12,9 @@ namespace Library.Models
 
         [Key]
         public string HubConnectionID { get; set; }
+
+        public bool IsDisable { get; set; }
+
+        public DateTime ConnecteDate { get; set; }
     }
 }

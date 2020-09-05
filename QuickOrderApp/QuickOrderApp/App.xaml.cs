@@ -8,6 +8,7 @@ using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Dependency;
 using QuickOrderApp.Utilities.Dependency.Interface;
 using QuickOrderApp.Views.Login;
+using System.Threading;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -22,7 +23,7 @@ namespace QuickOrderApp
             DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5000" : "http://localhost:5000";
 
         public static string LocalBackendUrl =
-        DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.56.1:5000/api" : "http://192.168.56.1:5000/api";
+        DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.1.133:5000/api" : "http://192.168.1.133:5000/api";
 
         public static bool UseMockDataStore = true;
 
@@ -37,15 +38,14 @@ namespace QuickOrderApp
         public static CardPaymentToken CardPaymentToken { get; set; } = new CardPaymentToken();
 
        
+
         public App()
         {
             InitializeComponent();
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MjY0MTU4QDMxMzgyZTMxMmUzMEx6QkJ4RjEvcHl6V2VaMFF3TENBa0tUU1c1RWpKWlh3bDNUdXduc3J6Q2c9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzEyODgyQDMxMzgyZTMyMmUzMG5kVWdEWkdxRFg3c2VzOWorUUI1LzUzNGtGVmsyd3JhYjJ4ZUZXQnloMFE9");
 
+            ComunicationService = new ComunicationService();
             Dependencies();
-
-            
-           
 
             // MainPage = new NavigationPage(new PaymentPage());
             //MainPage = new NavigationPage(new LoginPage());
@@ -53,7 +53,7 @@ namespace QuickOrderApp
 
             bool islogged = false;
 
-            if (!islogged)
+            if (!islogged) 
             {
                 Shell.Current.GoToAsync("LoginRoute");
             }
@@ -101,11 +101,16 @@ namespace QuickOrderApp
 
             UserConnectedDataStore userConnectedDataStore = new UserConnectedDataStore();
 
-            var result = await userConnectedDataStore.DeleteItemAsync(App.UsersConnected.HubConnectionID);
-
-            if (result)
+            if (App.UsersConnected != null)
             {
-                UsersConnected = null;
+                App.UsersConnected.IsDisable = true;
+                var result = await userConnectedDataStore.UpdateItemAsync(App.UsersConnected);
+
+                if (result)
+                {
+                    UsersConnected = null;
+                }
+
             }
 
         }
@@ -118,7 +123,7 @@ namespace QuickOrderApp
             //bool islogged = false;
             //if (!islogged)
             //{
-            //   //await Shell.Current.GoToAsync("LoginRoute");
+            //    await Shell.Current.GoToAsync("LoginRoute");
             //}
             //else
             //{

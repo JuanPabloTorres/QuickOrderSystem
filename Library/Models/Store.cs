@@ -13,6 +13,7 @@ namespace Library.Models
 
         public string StoreName { get; set; }
 
+        
         public Guid? UserId { get; set; }
 
         public byte[] StoreImage { get; set; }

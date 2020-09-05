@@ -23,7 +23,16 @@
         <Style x:Key="DataLabel" TargetType="Label">
             <Setter Property="FontAttributes" Value="Bold" />
             <Setter Property="TextColor" Value="#2F3538" />
-            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontFamily" Value="RobotoBold" />
+            <Setter Property="VerticalOptions" Value="Center" />
+
+        </Style>
+
+        <Style x:Key="ReceiptLabel" TargetType="Label">
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="TextColor" Value="#2F3538" />
+            <Setter Property="FontSize" Value="10" />
             <Setter Property="FontFamily" Value="RobotoBold" />
             <Setter Property="VerticalOptions" Value="Center" />
 
@@ -51,7 +60,7 @@
         <Style x:Key="TitleLabel" TargetType="Label">
             <Setter Property="FontAttributes" Value="Bold" />
             <Setter Property="TextColor" Value="#2F3538" />
-            <Setter Property="FontSize" Value="30" />
+            <Setter Property="FontSize" Value="24" />
             <Setter Property="FontFamily" Value="RobotoBold" />
             <Setter Property="HorizontalOptions" Value="Center" />
 

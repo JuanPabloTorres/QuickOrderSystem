@@ -223,6 +223,8 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                     if (itemUpdateResult)
                     {
                         await Shell.Current.DisplayAlert("Notification", "Item Update.", "OK");
+
+                        MessagingCenter.Send<Product>(toupdate, "InventoryItemUpdated");
                     }
                 }
                 else

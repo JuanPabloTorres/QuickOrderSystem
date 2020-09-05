@@ -34,12 +34,7 @@
                             <StackLayout BackgroundColor="White">
 
 
-                                <Label
-                                    FontAttributes="Bold"
-                                    FontSize="Title"
-                                    HorizontalOptions="Center"
-                                    Text="{Binding RequestTitle}"
-                                    TextColor="Black" />
+                                <Label Style="{StaticResource TitleLabel}" Text="{Binding RequestTitle}" />
                                 <BoxView
                                     Margin="4"
                                     BackgroundColor="LightGray"
@@ -53,9 +48,11 @@
                                     CommandParameter="Accept"
                                     CornerRadius="5"
                                     FontAttributes="Bold"
+                                    FontFamily="RobotoBold"
+                                    FontSize="Medium"
                                     HasShadow="True"
                                     Text="Accept"
-                                    TextColor="Black" />
+                                    TextColor="#2F3538" />
                                 <button:SfButton
                                     Margin="2"
                                     BackgroundColor="Tomato"
@@ -63,9 +60,11 @@
                                     CommandParameter="Decline"
                                     CornerRadius="5"
                                     FontAttributes="Bold"
+                                    FontFamily="RobotoBold"
+                                    FontSize="Medium"
                                     HasShadow="True"
                                     Text="Decline"
-                                    TextColor="Black" />
+                                    TextColor="#2F3538" />
                             </StackLayout>
                         </Frame>
 

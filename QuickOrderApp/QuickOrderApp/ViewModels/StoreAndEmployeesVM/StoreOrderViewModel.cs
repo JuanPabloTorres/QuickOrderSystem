@@ -69,7 +69,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         public async Task ExecuteLoadItems(Guid storeId)
         {
-            var orderData = orderDataStore.GetStoreOrders(storeId, App.TokenDto.Token);
+            var orderData =await orderDataStore.GetStoreOrders(storeId, App.TokenDto.Token);
 
             var orderssubmited = orderData.Where(o => o.OrderStatus == Status.Submited ).OrderByDescending(date => date.OrderDate);
 

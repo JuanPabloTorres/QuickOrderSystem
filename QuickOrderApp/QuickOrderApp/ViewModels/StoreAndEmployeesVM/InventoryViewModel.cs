@@ -1,6 +1,7 @@
 ﻿using Library.Models;
 using QuickOrderApp.Utilities.Presenters;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -63,6 +64,22 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             
             });
             LoadInventory();
+
+            MessagingCenter.Subscribe<Product>(this, "InventoryItemUpdated", (obj) => 
+            {
+
+                var itemtoRemove = StoreInventory.Where(pid => pid.ProductId == obj.ProductId).FirstOrDefault();
+
+
+                StoreInventory.Remove(itemtoRemove);
+                var productPresenterUpdated = new ProductPresenter(obj);
+
+                StoreInventory.Add(productPresenterUpdated);
+            
+            
+            
+            
+            });
 
             MessagingCenter.Subscribe<ProductPresenter>(this, "DeleteProductInventory", (obj) => 
             {

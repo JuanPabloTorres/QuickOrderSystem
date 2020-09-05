@@ -202,7 +202,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
             CheckoutCommand = new Command(async () =>
             {
 
-                var usercards = await CardDataStore.GetCardFromUser(App.LogUser.UserId);
+                var usercards = await CardDataStore.GetCardFromUser(App.LogUser.UserId,App.TokenDto.Token);
 
                 if (usercards.Count() > 0)
                 {
@@ -290,11 +290,32 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
 
             });
+            MessagingCenter.Subscribe<OrderProduct>(this, "OrderProductUpdate", async (obj) =>
+            {
+                var oproductToRemove = ProductPresenters.Where(op=>op.ProductId == obj.OrderProductId ).FirstOrDefault();
 
-            
+                ProductPresenters.Remove(oproductToRemove);
+
+                var updatedOrderProductPrensenter = new ProductPresenter(obj);
+
+                if (OrderDetail.OrderStatus == Status.Submited || OrderDetail.OrderStatus == Status.Completed)
+                {
+                    updatedOrderProductPrensenter.AreVisible = false;
+                }
+                else
+                {
+                updatedOrderProductPrensenter.AreVisible = true;
+
+                }
+                ProductPresenters.Add(updatedOrderProductPrensenter);
+
+                CalculateTotal();
+
+            });
+
         }
 
-     
+
 
         public Token stripeToken;
         public TokenService tokenService;
@@ -324,7 +345,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 Total = 0;
             }
 
-            if (OrderDetail.OrderProducts.Count() > 0)
+            if (ProductPresenters.Count() > 0)
             {
 
                 //Total = OrderDetail.OrderProducts.Sum(op => op.Quantity * op.Price);
@@ -338,7 +359,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
 
 
-                double _netTotal = OrderDetail.OrderProducts.Sum(op => op.Quantity * op.Price);
+                double _netTotal = ProductPresenters.Sum(op => op.Quantity * op.ProductPrice);
 
                 Total += _netTotal;
 

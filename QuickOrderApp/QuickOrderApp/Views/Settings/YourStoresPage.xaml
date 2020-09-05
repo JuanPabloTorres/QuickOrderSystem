@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Your Stores"
     BackgroundColor="{x:StaticResource BackgroundColor}"
@@ -27,44 +28,42 @@
 
 
                         <StackLayout>
-                            <StackLayout Orientation="Horizontal">
+                            <StackLayout>
                                 <Frame
                                     Margin="4"
                                     Padding="0"
                                     CornerRadius="5"
                                     HasShadow="True"
                                     IsClippedToBounds="True">
+                                    <ff:CachedImage
+                                        Aspect="Fill"
+                                        HeightRequest="150"
+                                        Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />
 
-                                    <Image
+                                    <!--<Image
                                         Aspect="Fill"
                                         HeightRequest="100"
                                         Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}"
-                                        WidthRequest="100" />
+                                        WidthRequest="100" />-->
                                 </Frame>
-                                <StackLayout HorizontalOptions="Fill" VerticalOptions="Center">
-                                    <Label
-                                        FontAttributes="Bold"
-                                        FontSize="Title"
-                                        HorizontalOptions="Center"
-                                        Text="{Binding StoreName}"
-                                        TextColor="Black"
-                                        VerticalOptions="Center" />
 
 
-                                    <StackLayout Orientation="Horizontal">
-                                        <Label
-                                            Style="{StaticResource DataLabel}"
-                                            Text="Type: "
-                                            VerticalOptions="Center" />
-                                        <Label
-                                            Style="{StaticResource DataLabel}"
-                                            Text="{Binding StoreType}"
-                                            TextColor="Orange" />
-                                    </StackLayout>
+                                <Label
+                                    FontAttributes="Bold"
+                                    FontSize="Title"
+                                    HorizontalOptions="Center"
+                                    Text="{Binding StoreName}"
+                                    TextColor="Black"
+                                    VerticalOptions="Center" />
 
-                                </StackLayout>
 
                             </StackLayout>
+
+                            <BoxView
+                                Margin="8,0,8,0"
+                                BackgroundColor="LightGray"
+                                HeightRequest="0.1"
+                                HorizontalOptions="Fill" />
                             <button:SfButton
                                 BackgroundColor="Tomato"
                                 Command="{Binding GoAdminStoreHomeControl}"

@@ -10,22 +10,19 @@ namespace QuickOrderApp.Services.HubService
 {
     public class ComunicationService
     {
-        public  HubConnection hubConnection;
+        public readonly  HubConnection hubConnection;
         INotificationManager notificationManager;
 
 
         public ComunicationService()
         {
           
-            hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.56.1:5000" + "/comunicationhub").Build();
+            hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.133:5000" + "/comunicationhub").Build();
 
-            Task task = Task.Factory.StartNew(() =>
-            {
+          
                  Connect();
 
-            });
-            //Connect();
-             task.Wait();
+           
 
             notificationManager = DependencyService.Get<INotificationManager>();
 
@@ -35,6 +32,14 @@ namespace QuickOrderApp.Services.HubService
                 //ShowNotification(evtData.Title, evtData.Message);
             };
 
+            CompletedOrderNotificationReciever();
+            JobNotificationReciever();
+          
+
+        }
+
+        public void CompletedOrderNotificationReciever()
+        {
             hubConnection.On<string>("SendCompletedOrderNotification", (message) =>
             {
 
@@ -43,19 +48,28 @@ namespace QuickOrderApp.Services.HubService
 
         }
 
+        public void JobNotificationReciever()
+        {
+            hubConnection.On<string>("SendJobNotification", (message) =>
+            {
+
+                notificationManager.ScheduleNotification("Job Application", message);
+            });
+        }
+
        public async Task Connect()
         {
            
-                await hubConnection.StartAsync();
+          await hubConnection.StartAsync();
             
         }
        public async Task Disconnect()
         {
-            await hubConnection.StopAsync();
+           
 
-            if (String.IsNullOrEmpty(hubConnection.ConnectionId))
+            if (!String.IsNullOrEmpty(hubConnection.ConnectionId))
             {
-
+                await hubConnection.StopAsync();
             }
         }
 
@@ -66,10 +80,10 @@ namespace QuickOrderApp.Services.HubService
 
             await hubConnection.InvokeAsync("SendMessage", user, message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -80,10 +94,10 @@ namespace QuickOrderApp.Services.HubService
 
                 await hubConnection.InvokeAsync("SendOrderToStore", user, message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -94,10 +108,10 @@ namespace QuickOrderApp.Services.HubService
 
                 await hubConnection.InvokeAsync("SenRequestToUser", connectionId, request);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -107,10 +121,10 @@ namespace QuickOrderApp.Services.HubService
             {
                 await hubConnection.InvokeAsync("UpdateStoreInventory", storeToUpdate);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -122,10 +136,10 @@ namespace QuickOrderApp.Services.HubService
 
                 await hubConnection.InvokeAsync("SendCompletedOrderNotification", message, userdId);
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                Console.WriteLine(e.Message);
             }
         }
     }

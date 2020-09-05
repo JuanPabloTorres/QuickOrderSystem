@@ -15,7 +15,8 @@ namespace QuickOrderAdmin.Utilities
         public ComunicationService()
         {
 
-            hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.56.1:5000" + "/comunicationhub").Build();
+            //hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.56.1:5000" + "/comunicationhub").Build();
+            hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.133:5000" + "/comunicationhub").Build();
 
             Connect();
         }
@@ -42,6 +43,21 @@ namespace QuickOrderAdmin.Utilities
                var jsonString = JsonSerializer.Serialize(request);
 
                 await hubConnection.InvokeAsync("SenRequestToUser",connectionId, jsonString);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task SendJobNotification(Store jobRequest,string userdId)
+        {
+            try
+            {
+                string message = $"{ jobRequest.StoreName.ToString()} sent a job request.";
+
+                await hubConnection.InvokeAsync("SendJobNotification", message, userdId);
             }
             catch (Exception)
             {

@@ -17,6 +17,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebApiQuickOrder.Context;
+using WebApiQuickOrder.Models;
 
 namespace WebApiQuickOrder.Controllers
 {
@@ -95,54 +96,66 @@ namespace WebApiQuickOrder.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-        public async Task<User> PutUser(User user)
+      
+        public async Task<ActionResult<User>> PutUser(User user)
         {
-            var oldUser = _context.Users.Where(u => u.UserId == user.UserId).FirstOrDefault();
 
-            if (oldUser != null)
+            _context.Entry(user).State = EntityState.Modified;
+
+            try
             {
-                try
-                {
-                    _context.Users.Remove(oldUser);
-
-                    _context.Users.Add(user);
-                    _context.Attach(user.UserLogin);
-
-                    if (user.Stores.Count > 0)
-                    {
-                        foreach (var item in user.Stores)
-                        {
-                            _context.Attach(item);
-                        }
-                    }
-
-                    _context.SaveChanges();
-                }
-                catch (Exception e)
-                {
-
-                    Console.WriteLine(e);
-                }
+                await _context.SaveChangesAsync();
 
                 return user;
             }
-            else
+            catch (DbUpdateConcurrencyException)
             {
-                return null;
+                if (!UserExists(user.UserId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
+
+            //var oldUser = _context.Users.Where(u => u.UserId == user.UserId).FirstOrDefault();
+
+            //if (oldUser != null)
+            //{
+            //    try
+            //    {
+            //        _context.Users.Remove(oldUser);
+
+            //        _context.Users.Add(user);
+            //        _context.Attach(user.UserLogin);
+
+            //        if (user.Stores.Count > 0)
+            //        {
+            //            foreach (var item in user.Stores)
+            //            {
+            //                _context.Attach(item);
+            //            }
+            //        }
+
+            //        _context.SaveChanges();
+            //    }
+            //    catch (Exception e)
+            //    {
+
+            //        Console.WriteLine(e);
+            //    }
+
+            //    return user;
+            //}
+            //else
+            //{
+            //    return null;
+            //}
         }
 
-        // POST: api/User
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        //[HttpPost]
-        //public async Task<ActionResult<User>> PostUser([FromBody]User user)
-        //{
-        //    _context.Users.Add(user);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetUser", new { id = user.UserId }, user);
-        //}
+      
 
 
         [HttpPost]
@@ -180,18 +193,70 @@ namespace WebApiQuickOrder.Controllers
 
         //Genera token de seguridad para los distintos action a los que se tendra acceso.
         //===========================================================================================
+        string GenerateJWTTokenWithRole(User userInfo,string role)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>()
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserId.ToString()),
+                new Claim("fullName", userInfo.Name.ToString()),
+                new Claim("role",Policies.User),
+                
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            
+            if (!string.IsNullOrEmpty(role))
+            {
+
+                switch (role)
+                {
+                    case "Admin":
+                        {
+                            claims.Add(new Claim("role", Policies.Admin));
+                            claims.Add(new Claim("role", Policies.StoreControl));
+                            break;
+                        }
+                    case "Employee":
+                        {
+                            claims.Add(new Claim("role", Policies.Employee));
+                            claims.Add(new Claim("role", Policies.StoreControl));
+                            break;
+                        }
+                    default:
+                        break;
+                }
+               
+            }
+           
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),                
+                signingCredentials: credentials
+            );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
         string GenerateJWTToken(User userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserId.ToString()),
                 new Claim("fullName", userInfo.Name.ToString()),
-                new Claim("role","User"),
+                new Claim("role",Policies.User),
+
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
+
+
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
@@ -241,35 +306,63 @@ namespace WebApiQuickOrder.Controllers
             if (loginOfUser != null)
             {
 
-            if (_context.Users.Count() > 0)
-            {
+                if (_context.Users.Count() > 0)
+                {
 
-                var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).FirstOrDefault();
+                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).FirstOrDefault();
+
+                    var isAdministrator = _context.Stores.Any(s => s.UserId == user.UserId);
+                    string tokenString;
+                    TokenDTO tokenDTO;
+
+                    if (isAdministrator)
+                    {
+
+                        tokenString = GenerateJWTTokenWithRole(user, "Admin");
+                        var date = DateTime.Now.AddMinutes(30);
+                        var obj = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+                        tokenDTO = new TokenDTO()
+                        {
+                            Token = tokenString,
+                            UserDetail = user,
+
+                        };
+
+                        return tokenDTO;
+
+                    }
+
+                    var isEmployee = _context.Employees.Any(emp => emp.EmployeeUser.UserId == user.UserId);
+
+                    if (isEmployee)
+                    {
+
+                        tokenString = GenerateJWTTokenWithRole(user, "Employee");
+                        tokenDTO = new TokenDTO()
+                        {
+                            Token = tokenString,
+                            UserDetail = user,
+
+                        };
+                        return tokenDTO;
+                    }
 
 
-                //Login authloging = AuthenticateUser(loginOfUser);
 
 
-                var tokenString = GenerateJWTToken(user);
-
-                   //SecurityToken securityToken = tokenString;
-                    TokenDTO tokenDTO = new TokenDTO()
+                    tokenString = GenerateJWTToken(user);
+                    tokenDTO = new TokenDTO()
                     {
                         Token = tokenString,
-                        UserDetail = user,
-                        
+                        UserDetail = user
                     };
-
-
                     return tokenDTO;
-              
-                //user.Employees = _context.Employees.Where(e => e.UserId == user.UserId).Include(s => s.EmployeeStore).ToList();
-              
-            }
-            else
-            {
-                return null;
-            }
+                   
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
