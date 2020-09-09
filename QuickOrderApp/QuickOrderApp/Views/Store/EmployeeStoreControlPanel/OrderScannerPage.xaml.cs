@@ -1,4 +1,6 @@
-﻿using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
+﻿using Library.Models;
+using Library.Services;
+using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
 using Syncfusion.XForms.Buttons;
 using System;
 using System.Collections.Generic;
@@ -24,11 +26,20 @@ namespace QuickOrderApp.Views.Store.EmployeeStoreControlPanel
             BindingContext = scannerViewModel = new ScannerViewModel();
         }
 
-        public void scanView_OnScanResult(Result result)
+        public  void scanView_OnScanResult(Result result)
         {
+
+            OrderDataStore orderDataStore = new OrderDataStore();
             Device.BeginInvokeOnMainThread(async () =>
             {
-                await Shell.Current.GoToAsync($"{OrderScannerPage.Route}?Id={result.Text}");
+                scanView.IsScanning = false;
+                //await Shell.Current.DisplayAlert("Notification", result.Text, "OK");
+                var order =await orderDataStore.GetItemAsync(result.Text);
+
+
+                await EmployeeShell.Current.GoToAsync($"{ScannedOrder.Route}");
+
+                MessagingCenter.Send<Order>(order, "orderscanned");
                 //await Shell.Current.DisplayAlert("Scanned result", "The barcode's text is " + scannerViewModel.OrderIdScanned + ". The barcode's format is " + result.BarcodeFormat, "OK");
             });
         }

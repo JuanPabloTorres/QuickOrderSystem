@@ -6,7 +6,6 @@ namespace QuickOrderApp.ConfigPayment
 {
     public class CardPaymentToken
     {
-
 		private string cardtokenId;
 
 		public string CardTokenId
@@ -14,6 +13,5 @@ namespace QuickOrderApp.ConfigPayment
 			get { return cardtokenId; }
 			set { cardtokenId = value; }
 		}
-
 	}
 }

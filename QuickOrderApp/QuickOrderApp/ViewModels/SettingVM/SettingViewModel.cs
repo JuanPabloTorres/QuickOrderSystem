@@ -1,6 +1,7 @@
 ﻿using Library.Models;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.Views.Login;
@@ -165,39 +166,79 @@ namespace QuickOrderApp.ViewModels.SettingVM
             #endregion           
 
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
-
-           
           
             GoUserInformationCommand = new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
 
                 await Shell.Current.GoToAsync("UserInformationRoute", true);
+                }
 
             });
 
             UpdateProfileCommand = new Command(async () =>
            {
+               TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+               if (tokenExpManger.IsExpired())
+               {
+                   await tokenExpManger.CloseSession();
+               }
+               else
+               {
 
                await Shell.Current.GoToAsync("UpdateProfileRoute", true);
                MessagingCenter.Send<User>(App.LogUser, "UserInformation");
+               }
            });
 
             GoPaymentCardCommand = new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
+
                 await Shell.Current.GoToAsync($"{YourCardsPage.Route}", true);
+                }
 
             });
 
 
             RegisterStoreCommand = new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
 
                 await Shell.Current.GoToAsync("GetLicensenStoreRoute", true);
+                }
             });
 
             AlreadyHaveLicenseCommand = new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
+
                 await Shell.Current.GoToAsync("RegisterStoreRoute", true);
+                }
             });
 
            
@@ -224,23 +265,49 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
             GoRegisterCardCommand = new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
 
                 await Shell.Current.GoToAsync("RegisterCardRoute");
+                }
 
 
             });
 
             GoGetLicenseCommand = new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
 
                 await Shell.Current.GoToAsync("StoreLicenseRoute");
+                }
+
 
 
             });
 
             GoCheckYourStores = new Command(async () => 
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
+
                 await Shell.Current.GoToAsync($"{YourStoresPage.Route}");
+                }
             });
         }
 

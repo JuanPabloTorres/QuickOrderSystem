@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
+
 namespace Library.DTO
 {
     [DataContract]
@@ -12,8 +13,15 @@ namespace Library.DTO
         [DataMember]
         public string Token { get; set; }
         [DataMember]
-        public string Exp { get; set; }
+
+      
+        public DateTime Exp { get; set; }
         [DataMember]
         public User UserDetail { get; set; }
     }
+
+
+
+
+
 }

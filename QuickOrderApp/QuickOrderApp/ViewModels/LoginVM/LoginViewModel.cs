@@ -51,10 +51,30 @@ namespace QuickOrderApp.ViewModels.LoginVM
         }
 
 
+
+
         public LoginViewModel(INavigation _navigation)
         {
             Navigation = _navigation;
-           
+
+
+
+            //Task.Run(async () =>
+            //{
+
+            //try
+            //{
+            //  Username  =  await SecureStorage.GetAsync("username");
+            //   Password =  await SecureStorage.GetAsync("password");
+            //}
+            //catch (Exception ex)
+            //{
+            //    // Possible that device doesn't support secure storage on device.
+            //}
+
+            //});
+
+
 
             ValidatorsInitializer();
 
@@ -65,21 +85,15 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             LoginCommand = new Command(async () =>
             {
-
+                //var currentuserID = Xamarin.Forms.Application.Current.Properties["loginId "].ToString();
                 IsLoading = true;
-                List<string> capturecredentialValues = new List<string>();
 
-                capturecredentialValues.Add(Username);
-                capturecredentialValues.Add(Password);
-
-                bool valuesareValid = GlobalValidator.CheckNullOrEmptyPropertiesOfListValues(capturecredentialValues);
-
-                if (valuesareValid)
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
                 {
                     //Verifica si el telefono tiene acceso a internet
-                    var current = Connectivity.NetworkAccess;
+                   
 
-                    if (current == NetworkAccess.Internet)
+                    if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
                         //Obtine los credenciales del usuario
                         var loginresult = userDataStore.CheckUserCredential(Username, Password);
@@ -90,6 +104,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                         //Verifica si el resultado del login no es vacio. 
                         if (loginresult != null)
                         {
+                            await App.ComunicationService.Connect();
                             App.LogUser = loginresult;
 
                             bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
@@ -107,7 +122,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                 App.CardPaymentToken.CardTokenId = userCardTokenId;
                                
                             }
-
+                            
 
                             if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
                             {
@@ -126,8 +141,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                             }
 
 
-
-
+                          
                             App.Current.MainPage = new AppShell();                          
                             IsLoading = false;
                            
@@ -152,7 +166,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             LoginEmployeeCommand = new Command(async () =>
             {
-
+                IsLoading = true;
                 if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
                 {
 
@@ -161,23 +175,41 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                     if (loginresult != null)
                     {
+                        await App.ComunicationService.Connect();
                         var userEmployees = await EmployeeDataStore.GetUserEmployees(loginresult.UserId.ToString());
                         App.LogUser = loginresult;
 
-                        App.UsersConnected = new UsersConnected()
+
+                        if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
                         {
-                            HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                            UserID = App.LogUser.UserId,
-                            IsDisable = false,
-                            ConnecteDate = DateTime.Now
-                        };
-                        var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
+                            App.UsersConnected = new UsersConnected()
+                            {
+                                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                UserID = App.LogUser.UserId,
+                                IsDisable = false,
+                                ConnecteDate = DateTime.Now
+                            };
+
+                            var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
+                            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                        }
+
+                        //App.UsersConnected = new UsersConnected()
+                        //{
+                        //    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                        //    UserID = App.LogUser.UserId,
+                        //    IsDisable = false,
+                        //    ConnecteDate = DateTime.Now
+                        //};
+                        //var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
 
                        
-                        var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                        //var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
 
                         App.Current.MainPage = new EmployeeShell();
-                      
+                        IsLoading = false;
 
                     }
                     else
@@ -261,6 +293,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                                 if (!string.IsNullOrEmpty(customertokenId))
                                 {
+                                    await App.ComunicationService.Connect();
                                     newUser.StripeUserId = customertokenId;
                                     var result = await userDataStore.AddItemAsync(newUser);
 
@@ -273,15 +306,33 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                                         App.LogUser = credentialsResult;
 
-                                        App.UsersConnected = new UsersConnected()
+                                        if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
                                         {
-                                            HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                            UserID = App.LogUser.UserId,
-                                            IsDisable = false,
-                                            ConnecteDate = DateTime.Now
-                                        };
 
-                                        var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                                            App.UsersConnected = new UsersConnected()
+                                            {
+                                                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                                UserID = App.LogUser.UserId,
+                                                IsDisable = false,
+                                                ConnecteDate = DateTime.Now
+                                            };
+
+                                            //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
+                                            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                                        }
+
+
+                                        try
+                                        {
+                                            await SecureStorage.SetAsync("username", Username);
+                                            await SecureStorage.SetAsync("password", Password);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // Possible that device doesn't support secure storage on device.
+                                        }
+
                                         App.Current.MainPage = new AppShell();
                                     }
                                 }

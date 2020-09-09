@@ -1,5 +1,6 @@
 ﻿using Library.DTO;
 using Library.Models;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,14 @@ namespace QuickOrderApp.ViewModels.SettingVM
         async Task ExecuteLoadItems()
         {
 
+            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+            if (tokenExpManger.IsExpired())
+            {
+                await tokenExpManger.CloseSession();
+            }
+            else
+            {
+
             var tokenData = new  JwtSecurityTokenHandler().ReadJwtToken(App.TokenDto.Token);
             var cardData = await CardDataStore.GetCardDTOFromUser(App.LogUser.UserId,App.TokenDto.Token);
 
@@ -41,6 +50,8 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
                 PaymentCardPresenters.Add(cardPresenter);
             }
+            }
+
         }
 
     }

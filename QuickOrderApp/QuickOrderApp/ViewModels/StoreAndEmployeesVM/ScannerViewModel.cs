@@ -54,7 +54,14 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 		});
 		public ScannerViewModel()
 		{
+
+			MessagingCenter.Subscribe<Order>(this, "orderscanned", (sender) => 
+			{
+
+				OrderScanned = sender;
 			
+			});
+
 		}
 
 	

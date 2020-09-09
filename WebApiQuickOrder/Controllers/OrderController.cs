@@ -320,7 +320,7 @@ namespace WebApiQuickOrder.Controllers
         [Authorize(Policy  = Policies.StoreControl)]       
         public IEnumerable<Order> GetStoreOrders(Guid storeId)
         {
-            return _context.Orders.Where(e => e.StoreId == storeId).Include(o => o.OrderProducts).ToList();
+            return _context.Orders.Where(e => e.StoreId == storeId && e.OrderStatus == Status.Submited).Include(o => o.OrderProducts).ToList();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Library.Models;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Dependency.Interface;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Static;
@@ -88,6 +89,15 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
             CompleteRegisterCommand = new Command(async () =>
             {
+
+
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
 
                 List<string> valuesToCheck = new List<string>();
 
@@ -190,6 +200,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                 else
                 {
                     await Shell.Current.DisplayAlert("Notification", "Some fields are empty", "OK");
+                }
                 }
 
             });

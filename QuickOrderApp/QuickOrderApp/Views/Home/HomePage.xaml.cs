@@ -19,7 +19,7 @@ namespace QuickOrderApp.Views.Home
         {
             base.OnAppearing();
 
-           await HomeViewModel.LoadQuickOrderStores();
+           await HomeViewModel.LoadItems();
 
             
         }

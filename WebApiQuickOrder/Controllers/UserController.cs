@@ -185,6 +185,8 @@ namespace WebApiQuickOrder.Controllers
             return user;
         }
 
+
+
         Login AuthenticateUser(Login loginCredentials)
         {
             Login user = _context.Logins.SingleOrDefault(x => x.Username == loginCredentials.Username && x.Password == loginCredentials.Password);
@@ -319,14 +321,15 @@ namespace WebApiQuickOrder.Controllers
                     {
 
                         tokenString = GenerateJWTTokenWithRole(user, "Admin");
-                        var date = DateTime.Now.AddMinutes(30);
+                       
                         var obj = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
                         tokenDTO = new TokenDTO()
                         {
                             Token = tokenString,
                             UserDetail = user,
+                            Exp = DateTime.Now.AddMinutes(30)
 
-                        };
+                    };
 
                         return tokenDTO;
 
@@ -342,8 +345,9 @@ namespace WebApiQuickOrder.Controllers
                         {
                             Token = tokenString,
                             UserDetail = user,
+                            Exp = DateTime.Now.AddMinutes(30)
 
-                        };
+                    };
                         return tokenDTO;
                     }
 
@@ -354,7 +358,8 @@ namespace WebApiQuickOrder.Controllers
                     tokenDTO = new TokenDTO()
                     {
                         Token = tokenString,
-                        UserDetail = user
+                        UserDetail = user,
+                        Exp = DateTime.Now.AddMinutes(2)
                     };
                     return tokenDTO;
                    

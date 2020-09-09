@@ -4,51 +4,52 @@
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     BackgroundColor="{x:StaticResource BackgroundColor}"
+    Routing.Route="ScannedOrder"
     Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     mc:Ignorable="d">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="{Binding DetailOrder.OrderId}" />
-            <Label Text="{Binding DetailOrder.OrderDate}" />
-            <Label Text="{Binding DetailOrder.OrderStatus}" />
+            <Label Style="{StaticResource DataLabel}" Text="{Binding OrderScanned.OrderId}" />
+            <Label Style="{StaticResource DataLabel}" Text="{Binding OrderScanned.OrderDate}" />
+            <Label Style="{StaticResource DataLabel}" Text="{Binding OrderScanned.OrderStatus}" />
 
             <CollectionView
                 Grid.Row="3"
                 Margin="5"
                 EmptyView="Empty"
-                ItemsSource="{Binding DetailOrder.OrderProducts}"
+                ItemsSource="{Binding OrderScanned.OrderProducts}"
                 SelectionMode="Single"
                 VerticalOptions="Center">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
-                        <Frame
+
+                        <StackLayout
                             Margin="5"
-                            BorderColor="Black"
-                            HasShadow="True">
+                            BackgroundColor="White"
+                            Orientation="Vertical">
+                            <Frame Style="{StaticResource FrameStyle}">
 
-                            <StackLayout
-                                Margin="5"
-                                BackgroundColor="White"
-                                Orientation="Vertical">
-                                <Frame CornerRadius="5" IsClippedToBounds="True">
+                                <ff:CachedImage Aspect="Fill" Source="{Binding ProductImage, Converter={StaticResource BytesToImgConverter}}" />
 
-                                    <Image
+                                <!--<Image
                                         Margin="5"
                                         Aspect="Fill"
                                         HeightRequest="200"
                                         Source="{Binding ProductImage}"
-                                        WidthRequest="100" />
-                                </Frame>
 
-                                <Label Text="{Binding ProductName}" />
-                                <Label Text="{Binding Quantity}" />
-                                <Label Text="{Binding Price, StringFormat='Order Products: {0}'}" />
+                                        WidthRequest="100" />-->
+                            </Frame>
 
-                            </StackLayout>
-                        </Frame>
+                            <Label Style="{StaticResource DataLabel}" Text="{Binding ProductName}" />
+                            <Label Style="{StaticResource DataLabel}" Text="{Binding Quantity}" />
+                            <Label Style="{StaticResource DataLabel}" Text="{Binding Price, StringFormat='{0:C}'}" />
+
+                        </StackLayout>
+
 
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

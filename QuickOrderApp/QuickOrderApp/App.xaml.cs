@@ -23,7 +23,7 @@ namespace QuickOrderApp
             DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5000" : "http://localhost:5000";
 
         public static string LocalBackendUrl =
-        DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.1.133:5000/api" : "http://192.168.1.133:5000/api";
+        DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.1.144:5000/api" : "http://192.168.1.144:5000/api";
 
         public static bool UseMockDataStore = true;
 
@@ -31,7 +31,7 @@ namespace QuickOrderApp
 
         public static Store CurrentStore;
         public static TokenDTO TokenDto { get; set; }
-        public static ComunicationService ComunicationService { get; set; } 
+        public static ComunicationService ComunicationService { get; set; } = new ComunicationService();
 
         public static UsersConnected UsersConnected { get; set; } 
 
@@ -42,13 +42,12 @@ namespace QuickOrderApp
         public App()
         {
             InitializeComponent();
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzEyODgyQDMxMzgyZTMyMmUzMG5kVWdEWkdxRFg3c2VzOWorUUI1LzUzNGtGVmsyd3JhYjJ4ZUZXQnloMFE9");
 
-            ComunicationService = new ComunicationService();
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzEyODgyQDMxMzgyZTMyMmUzMG5kVWdEWkdxRFg3c2VzOWorUUI1LzUzNGtGVmsyd3JhYjJ4ZUZXQnloMFE9");
+                    
             Dependencies();
 
-            // MainPage = new NavigationPage(new PaymentPage());
-            //MainPage = new NavigationPage(new LoginPage());
+         
             MainPage = new AppShell();
 
             bool islogged = false;
@@ -62,7 +61,7 @@ namespace QuickOrderApp
 
             }
 
-            //SharedTransitionNavigationPage
+          
         }
 
       
@@ -94,29 +93,30 @@ namespace QuickOrderApp
 
         }
 
-        protected async override void OnSleep()
+        protected  override void OnSleep()
         {
 
-            await App.ComunicationService.Disconnect();
+            //await App.ComunicationService.Disconnect();
 
-            UserConnectedDataStore userConnectedDataStore = new UserConnectedDataStore();
+            //UserConnectedDataStore userConnectedDataStore = new UserConnectedDataStore();
 
-            if (App.UsersConnected != null)
-            {
-                App.UsersConnected.IsDisable = true;
-                var result = await userConnectedDataStore.UpdateItemAsync(App.UsersConnected);
+            //if (App.UsersConnected != null)
+            //{
+            //    App.UsersConnected.IsDisable = true;
+            //    var result = await userConnectedDataStore.UpdateItemAsync(App.UsersConnected);
 
-                if (result)
-                {
-                    UsersConnected = null;
-                }
+            //    if (result)
+            //    {
+            //        UsersConnected = null;
+            //    }
 
-            }
+            //}
 
         }
 
-        protected async override void OnResume()
+        protected  override void OnResume()
         {
+
 
             //MainPage = new AppShell();
 

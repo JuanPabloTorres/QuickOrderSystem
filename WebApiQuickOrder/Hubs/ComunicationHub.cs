@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,5 +59,13 @@ namespace WebApiQuickOrder.Hubs
 
 
 
+
+        public async Task OrderPreparer(string message, string connectionId)
+        {
+            await Clients.Client(connectionId).SendAsync("OrderPrepareNotification", message);
+
+        }
+
+      
     }
 }

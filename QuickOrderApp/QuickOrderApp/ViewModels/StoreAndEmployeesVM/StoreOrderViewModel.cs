@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.ObjectModel;
@@ -41,7 +42,18 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 OnPropertyChanged();
                 Guid id = new Guid(storeId);
 
-                ExecuteLoadItems(id);
+                Task.Run(async () =>
+                {
+                    LoadingManager.OnLoading();
+                    await ExecuteLoadItems(id);
+
+                    LoadingManager.OffLoading();
+
+
+
+                });
+
+               
 
             }
         }
@@ -49,9 +61,12 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         public ObservableCollection<StoreOrderPresenter> StoreOrderPresenters { get; set; }
         public ObservableCollection<Order> Orders { get; set; }
 
+
+        public LoadingManager LoadingManager { get; set; }
         public StoreOrderViewModel()
         {
             SelectedOrder = new Order();
+            LoadingManager = new LoadingManager();
             StoreOrderPresenters = new ObservableCollection<StoreOrderPresenter>();
             Orders = new ObservableCollection<Order>();
 
@@ -69,19 +84,25 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         public async Task ExecuteLoadItems(Guid storeId)
         {
+           
             var orderData =await orderDataStore.GetStoreOrders(storeId, App.TokenDto.Token);
 
-            var orderssubmited = orderData.Where(o => o.OrderStatus == Status.Submited ).OrderByDescending(date => date.OrderDate);
-
+            //var orderssubmited = orderData.Where(o => o.OrderStatus == Status.Submited ).OrderByDescending(date => date.OrderDate);
+            if (StoreOrderPresenters.Count() > 0 )
+            {
             StoreOrderPresenters.Clear();
 
-            foreach (var item in orderssubmited)
+            }
+
+            foreach (var item in orderData)
             {
                 var detailOrderPresenter = new StoreOrderPresenter(item);
                 StoreOrderPresenters.Add(detailOrderPresenter);
 
                
             }
+
+           
         }
     }
 }

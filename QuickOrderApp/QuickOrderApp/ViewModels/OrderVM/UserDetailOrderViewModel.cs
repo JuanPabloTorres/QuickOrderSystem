@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using QRCoder;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Static;
 using Stripe;
@@ -202,9 +203,16 @@ namespace QuickOrderApp.ViewModels.OrderVM
             CheckoutCommand = new Command(async () =>
             {
 
-                var usercards = await CardDataStore.GetCardFromUser(App.LogUser.UserId,App.TokenDto.Token);
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
 
-                if (usercards.Count() > 0)
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
+
+                if (App.LogUser.PaymentCards.Count() > 0)
                 {
 
                     if (OrderDetail.OrderStatus == Status.NotSubmited)
@@ -226,21 +234,30 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                         OrderDetail.OrderStatus = Status.Submited;
 
-                        List<PaymentCard> paymentCards = new List<PaymentCard>(usercards);
+                        //List<PaymentCard> paymentCards = new List<PaymentCard>(App.LogUser.PaymentCards);
 
-                        var customercardId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId,paymentCards[0].StripeCardId);
+                        var customercardId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId,App.LogUser.PaymentCards.FirstOrDefault().StripeCardId);
 
-                        var isTransactionSuccess = await stripeServiceDS.MakePaymentWithCard(OrderDetail.StoreId, Total, paymentCards[0].PaymentCardId, OrderDetail.OrderId.ToString());
+                        var isTransactionSuccess = await stripeServiceDS.MakePaymentWithCard(OrderDetail.StoreId, Total, App.LogUser.PaymentCards.FirstOrDefault().PaymentCardId, OrderDetail.OrderId.ToString());
+
                         if (isTransactionSuccess)
                         {
                            
                             var orderUpdate = await orderDataStore.UpdateItemAsync(OrderDetail);
+
                             OrderStatus = OrderDetail.OrderStatus.ToString();
+
                             if (orderUpdate)
                             {
+
+                                var orderNotificationToEmployees = await userConnectedDataStore.SendOrdersToEmployees(OrderDetail.StoreId.ToString(), OrderDetail.OrderId.ToString());
+
+                                //await App.ComunicationService.OrderToPrepare(OrderDetail);
+
                                 await App.Current.MainPage.DisplayAlert("Notification", "Order was submited...!", "OK");
 
                                 MessagingCenter.Send<Library.Models.Order>(OrderDetail, "RemoveOrderSubtmitedMsg");
+
                             }
                         }
                         else
@@ -262,6 +279,8 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 {
                     await App.Current.MainPage.DisplayAlert("Notification", "You dont have a card register, register a card first.", "OK");
                 }
+                }
+
 
             });
 

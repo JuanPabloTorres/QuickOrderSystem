@@ -57,5 +57,13 @@ namespace Library.Services
             }    
 
         }
+
+        public async Task<bool> SendOrdersToEmployees(string storeId, string orderId)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(SendOrdersToEmployees)}/{storeId}/{orderId}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+            return deserializeObject;
+        }
     }
 }

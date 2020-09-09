@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Shopping;
 using QuickOrderApp.ViewModels;
 using QuickOrderApp.Views.Store.StoreManger;
@@ -136,6 +137,15 @@ namespace QuickOrderApp.Utilities.Presenters
             AddToCartCommand = new Command(async () =>
             {
 
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
+
                 if (ItemLeft > 0)
                 {
 
@@ -266,27 +276,27 @@ namespace QuickOrderApp.Utilities.Presenters
                 {
                     await Shell.Current.DisplayAlert("Notification", "There are no products.", "OK");
                 }
+                }
+
 
 
 
             });
 
-            //RemoveFromCartCommand = new Command(async () =>
-            //{
-
-            //    var orderProductRemovedResult = await orderProductDataStore.DeleteItemAsync(productid.ToString());
-
-            //    if (orderProductRemovedResult)
-            //    {
-            //        await Shell.Current.DisplayAlert("Notification", "Product Removed succefully.", "OK");
-
-            //        MessagingCenter.Send<ProductPresenter, ProductPresenter>(this, "RemoveOrderProduct", this);
-            //    }
-
-            //});
+          
 
             DeleteCommand = new Command(async() => 
             {
+
+
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
 
                 var answer =await Shell.Current.DisplayAlert("Notification", "Are you sure that you want to delete this item?", "Yes", "No");
 
@@ -300,6 +310,8 @@ namespace QuickOrderApp.Utilities.Presenters
                     }
 
                 }
+                }
+
 
             
 
@@ -307,9 +319,18 @@ namespace QuickOrderApp.Utilities.Presenters
 
             EditCommand = new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
 
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
 
-               await Shell.Current.GoToAsync($"{EditProductPage.Route}?pId={ProductId.ToString()}", animate: true);
+                await Shell.Current.GoToAsync($"{EditProductPage.Route}?pId={ProductId.ToString()}", animate: true);
+                }
+
 
             });
 
@@ -328,6 +349,14 @@ namespace QuickOrderApp.Utilities.Presenters
 
             RemoveFromCartCommand = new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
 
                 var orderProductRemovedResult = await orderProductDataStore.DeleteItemAsync(ProductId.ToString());
 
@@ -336,6 +365,8 @@ namespace QuickOrderApp.Utilities.Presenters
                     await Shell.Current.DisplayAlert("Notification", "Product Removed succefully.", "OK");
 
                     MessagingCenter.Send<ProductPresenter>(this,"RemoveOrderProduct");
+                }
+
                 }
 
             });

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.EntityFrameworkCore;
 using Library.Models;
 using WebApiQuickOrder.Context;
 using System.Threading.Tasks.Dataflow;
+
 
 namespace WebApiQuickOrder.Controllers
 {
@@ -16,10 +18,13 @@ namespace WebApiQuickOrder.Controllers
     public class UsersConnectedController : ControllerBase
     {
         private readonly QOContext _context;
-
+        public readonly HubConnection hubConnection;
         public UsersConnectedController(QOContext context)
         {
+
+
             _context = context;
+          hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000" + "/comunicationhub").Build();
         }
 
         // GET: api/UsersConnected
@@ -32,7 +37,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPost("[action]")]
         public async Task<ActionResult<bool>> ModifyOldConnections(UsersConnected usersConnected)
         {
-            var userconnections =await _context.usersConnecteds.Where(usc => usc.UserID == usersConnected.UserID &&   usc.ConnecteDate < usersConnected.ConnecteDate  && usc.IsDisable == false).ToListAsync();
+            var userconnections = await _context.usersConnecteds.Where(usc => usc.UserID == usersConnected.UserID && usc.IsDisable == false).ToListAsync();
 
 
             if (userconnections.Count() > 0)
@@ -44,8 +49,7 @@ namespace WebApiQuickOrder.Controllers
 
                     _context.Entry(item).State = EntityState.Modified;
 
-                _context.SaveChanges();
-
+                    _context.SaveChanges();
                 }
 
 
@@ -58,9 +62,49 @@ namespace WebApiQuickOrder.Controllers
         }
 
 
+        [HttpGet("[action]/{storeId}/{orderId}")]
+        public async Task<bool> SendOrdersToEmployees(string storeId,string orderId)
+        {
+
+            await hubConnection.StartAsync();
+            var employees =await  _context.Employees.Where(emp => emp.StoreId.ToString() == storeId).ToListAsync();
+
+            List<UsersConnected> usersConnecteds = new List<UsersConnected>();
+
+            foreach (var item in employees)
+            {
+
+                var userconnection = _context.usersConnecteds.Where(c => c.UserID == item.UserId && c.IsDisable == false).FirstOrDefault();
+
+                if (userconnection != null)
+                {
+
+                    usersConnecteds.Add(userconnection);
+                }
+
+
+            }
+
+            string Preparemessage = $"Order: { orderId}";
+
+            foreach (var item in usersConnecteds)
+            {
+
+                await hubConnection.InvokeAsync("OrderPreparer", Preparemessage, item.HubConnectionID);
+            }
+
+
+            await hubConnection.StopAsync();
+
+            return true;
+
+
+        }
+
+
         //public async Task<ActionResult<bool>> DisconnectUser(string hubId)
         //{
-            
+
         //}
 
         // GET: api/UsersConnected/5

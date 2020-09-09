@@ -1,6 +1,7 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Presenters;
 using System;
@@ -41,6 +42,13 @@ namespace QuickOrderApp.ViewModels.InboxVM
 
         public async Task ExecuteLoadItemsCommand()
         {
+            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+            if (tokenExpManger.IsExpired())
+            {
+                await tokenExpManger.CloseSession();
+            }
+            else
+            {
             IsBusy = true;
 
             try
@@ -69,6 +77,9 @@ namespace QuickOrderApp.ViewModels.InboxVM
             {
                 IsBusy = false;
             }
+
+            }
+
         }
     }
 }

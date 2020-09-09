@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Presenters;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -53,13 +54,24 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         public ICommand SignOutCommand { get; set; }
 
+        public LoadingManager LoadingManager { get; set; }
+
 
 
         public EmployeeControlHomeViewModel()
         {
+            LoadingManager = new LoadingManager();
             Username = App.LogUser.Name;
             StorePresenters = new ObservableCollection<StorePresenters>();
-            GetUserEmployeeInformation();
+
+            Task.Run(async () =>
+            {
+
+                LoadingManager.OnLoading();
+                await GetUserEmployeeInformation();
+
+                LoadingManager.OffLoading();
+            });
 
             SignOutCommand = new Command(async() => 
             {

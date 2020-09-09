@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using QuickOrderApp.Utilities.Dependency;
 using QuickOrderApp.Utilities.Dependency.Interface;
 using System;
@@ -17,12 +18,8 @@ namespace QuickOrderApp.Services.HubService
         public ComunicationService()
         {
           
-            hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.133:5000" + "/comunicationhub").Build();
+            hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.144:5000" + "/comunicationhub").Build();
 
-          
-                 Connect();
-
-           
 
             notificationManager = DependencyService.Get<INotificationManager>();
 
@@ -34,6 +31,8 @@ namespace QuickOrderApp.Services.HubService
 
             CompletedOrderNotificationReciever();
             JobNotificationReciever();
+
+            OrderToPreparerEmployee();
           
 
         }
@@ -57,13 +56,21 @@ namespace QuickOrderApp.Services.HubService
             });
         }
 
-       public async Task Connect()
+        public void OrderToPreparerEmployee()
         {
-           
-          await hubConnection.StartAsync();
-            
+            hubConnection.On<string>("OrderPrepareNotification", (message) =>
+            {
+
+                notificationManager.ScheduleNotification("Order To Preparer", message);
+            });
         }
-       public async Task Disconnect()
+
+        public async Task Connect()
+        {
+                  await hubConnection.StartAsync();
+
+        }
+        public async Task Disconnect()
         {
            
 
@@ -135,6 +142,24 @@ namespace QuickOrderApp.Services.HubService
                 string message= $"Order: { OrderId.ToString()}";
 
                 await hubConnection.InvokeAsync("SendCompletedOrderNotification", message, userdId);
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        public async Task OrderToPrepare(Order order)
+        {
+            try
+            {
+               
+                string Preparemessage = $"Order: { order.OrderId.ToString()}";
+
+              
+
+                await hubConnection.InvokeAsync("OrderToPrepare", Preparemessage, order.StoreId.ToString());
             }
             catch (Exception e)
             {

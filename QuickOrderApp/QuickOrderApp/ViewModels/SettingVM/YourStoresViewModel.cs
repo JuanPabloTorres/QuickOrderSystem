@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.Generic;
@@ -60,25 +61,46 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
         public async Task ExecuteLoadItems()
         {
-            if (StorePresenters.Count > 0 )
+
+            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+            if (tokenExpManger.IsExpired())
             {
-                StorePresenters.Clear();
+                await tokenExpManger.CloseSession();
+            }
+            else
+            {
+
+                if (StorePresenters.Count > 0)
+                {
+                    StorePresenters.Clear();
+                }
+
+                var yourStores = StoreDataStore.GetStoresFromUser(App.LogUser.UserId);
+
+                foreach (var item in yourStores)
+                {
+                    var storePresenter = new StorePresenters(item);
+
+                    StorePresenters.Add(storePresenter);
+                }
+
             }
 
-            var yourStores = StoreDataStore.GetStoresFromUser(App.LogUser.UserId);
-
-            foreach (var item in yourStores)
-            {
-                var storePresenter = new StorePresenters(item);
-
-                StorePresenters.Add(storePresenter);
-            }
         }
 
 
         async Task GoStoreControlPanel(Guid StoreId)
         {
+            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+            if (tokenExpManger.IsExpired())
+            {
+                await tokenExpManger.CloseSession();
+            }
+            else
+            {
+
             await Shell.Current.GoToAsync($"StoreControlPanelRoute?Id={StoreId.ToString()}", animate: true);
+            }
         }
     }
 }

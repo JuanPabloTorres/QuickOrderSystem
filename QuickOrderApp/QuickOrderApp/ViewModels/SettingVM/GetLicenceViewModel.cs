@@ -1,4 +1,5 @@
-﻿using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
+﻿using QuickOrderApp.Managers;
+using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
 using Stripe;
 using System.Linq;
 using System.Windows.Input;
@@ -15,6 +16,14 @@ namespace QuickOrderApp.ViewModels.SettingVM
         {
             GetLicenseCommand = new Command<string>(async (arg) =>
             {
+
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
 
                 var result = await Shell.Current.DisplayAlert("Notification", "Your are going to get a store license.For the cost $100 by month. Are you OK with that?", "Yes", "No");
 
@@ -67,6 +76,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                     {
                         await App.Current.MainPage.DisplayAlert("Notification", "You dont have a card register, register a card first.", "OK");
                     }
+                }
                 }
 
             });

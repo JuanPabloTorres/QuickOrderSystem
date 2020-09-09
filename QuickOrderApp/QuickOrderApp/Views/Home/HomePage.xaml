@@ -6,11 +6,13 @@
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    xmlns:forms="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
     xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
     xmlns:local="clr-namespace:QuickOrderApp.Utilities.Shopping"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Quick Order"
     BackgroundColor="{x:StaticResource BackgroundColor}"
+    IsBusy="{Binding LoadingManager.IsLoading}"
     Routing.Route="HomePageRoute"
     Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
     Shell.NavBarIsVisible="True"
@@ -41,9 +43,21 @@
 
         <StackLayout>
 
+            <forms:AnimationView
+                Animation="loading.json"
+                AutoPlay="True"
+                HeightRequest="80"
+                HorizontalOptions="Center"
+                IsVisible="{Binding LoadingManager.IsLoading}"
+                Loop="True"
+                VerticalOptions="Center"
+                WidthRequest="80" />
 
 
-            <CollectionView Margin="5" ItemsSource="{Binding Stores}">
+            <CollectionView
+                Margin="5"
+                IsVisible="{Binding LoadingManager.contentVisible}"
+                ItemsSource="{Binding Stores}">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout
                         HorizontalItemSpacing="5"

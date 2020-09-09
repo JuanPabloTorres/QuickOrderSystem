@@ -1,6 +1,7 @@
 ﻿using Library.DTO;
 using Library.Models;
 using Library.SolutionUtilities.ValidatorComponents;
+using QuickOrderApp.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,15 @@ namespace QuickOrderApp.ViewModels.SettingVM
     {
         public ICommand UpdateCommand => new Command(async () => 
         {
+
+
+            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+            if (tokenExpManger.IsExpired())
+            {
+                await tokenExpManger.CloseSession();
+            }
+            else
+            {
 
             SetValidatorValues(Fullname, Email, Phone, Address, GenderSelected);
 
@@ -60,6 +70,8 @@ namespace QuickOrderApp.ViewModels.SettingVM
                     }
                 }
             }
+            }
+
             
         
         });

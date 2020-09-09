@@ -1,10 +1,14 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.SignalR.Client;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Dependency;
 using QuickOrderApp.Utilities.Dependency.Interface;
+using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Presenters.PresenterModel;
 using QuickOrderApp.Views.Home;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -46,25 +50,42 @@ namespace QuickOrderApp.ViewModels.HomeVM
             }
         }
 
-      
+       public LoadingManager LoadingManager { get; set; }
+
 
         public HomeViewModel()
         {
             StoreCategories = new ObservableCollection<StoreCategory>();
             Stores = new ObservableCollection<StorePresenters>();
-            LoadQuickOrderStores();            
+            LoadingManager = new LoadingManager();
+
+
+            Task.Run(async() => 
+            {
+                LoadingManager.OnLoading();
+                await LoadItems();
+                LoadingManager.OffLoading();
+            }).Wait();
+                      
 
             SelectedStore = new Store();
-           
-
-
-           
 
         }
 
-        public async Task LoadQuickOrderStores()
+       
+        public async  Task LoadItems()
         {
+
+            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+            if (tokenExpManger.IsExpired())
+            {
+               await tokenExpManger.CloseSession();
+            }
+            else
+            {
+
             var storeData = await StoreDataStore.GetAvailableStore();
+
 
             if (Stores.Count > 0)
             {
@@ -80,6 +101,9 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
                 Stores.Add(storepresenter);
             }
+
+            }
+
 
         }
 

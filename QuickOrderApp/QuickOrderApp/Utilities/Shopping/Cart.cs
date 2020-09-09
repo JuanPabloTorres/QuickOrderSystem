@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using Library.Services.Interface;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.ObjectModel;
@@ -31,18 +32,21 @@ namespace QuickOrderApp.Utilities.Shopping
 
         public static async Task<bool> OrderManger(ProductPresenter product)
         {
-            //var orderOfuser = orderDataStore.HaveOrderOfSpecificStore(App.LogUser.UserId, App.CurrentStore.StoreId,App.TokenDto.Token);
 
+
+            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+            if (tokenExpManger.IsExpired())
+            {
+                await tokenExpManger.CloseSession();
+                return false;
+            }
+            else
+            {
 
             var ordersOfuser = orderDataStore.GetUserOrdersOfStore(App.LogUser.UserId, App.CurrentStore.StoreId);
-            //bool _haveNotSubmitedOrder = false;
-
+          
 
             Order orderOfuser= ordersOfuser.Where(o => o.OrderStatus == Status.NotSubmited && o.IsDisisble == false).FirstOrDefault();
-
-
-            //_haveNotSubmitedOrder = ordersOfuser.Any(o => o.OrderStatus == Status.NotSubmited);
-
            
            
             //Crear por primera vez la orden
@@ -55,7 +59,7 @@ namespace QuickOrderApp.Utilities.Shopping
                     BuyerId = App.LogUser.UserId,
                     StoreId = App.CurrentStore.StoreId,
                     OrderType = Library.Models.Type.None,
-                    OrderDate = DateTime.Today,
+                    OrderDate = DateTime.Now,
                     OrderStatus = Status.NotSubmited,
                 };
 
@@ -176,6 +180,9 @@ namespace QuickOrderApp.Utilities.Shopping
                     }
                 }
             }
+            }
+          
+
 
 
         }

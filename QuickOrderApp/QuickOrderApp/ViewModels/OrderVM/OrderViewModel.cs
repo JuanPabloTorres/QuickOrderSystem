@@ -1,4 +1,7 @@
 ﻿using Library.Models;
+using QuickOrderApp.Managers;
+using QuickOrderApp.Utilities.Attributes;
+using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Views.Store;
 using System;
@@ -45,7 +48,28 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                 OnPropertyChanged();
 
-                LoadUserOrderWithStatus(OrderStatus);
+                  
+
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+
+                if (tokenExpManger.IsExpired())
+                {
+
+                    tokenExpManger.CloseSession();
+                    //DisplayNotification();
+
+                }
+                else
+                {
+                    Task.Run(async () =>
+                    {
+
+                        await LoadUserOrderWithStatus(OrderStatus);
+                    });
+
+
+                }
+             
 
             }
         }
@@ -62,13 +86,14 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
-       
+       public LoadingManager LoadingManager { get; set; }
 
 
         public OrderViewModel()
         {
             
             UserOrders = new ObservableCollection<OrderPresenter>();
+            LoadingManager = new LoadingManager();
 
             MessagingCenter.Subscribe<Order>(this, "RemoveOrderSubtmitedMsg", (sender) =>
             {
@@ -113,8 +138,17 @@ namespace QuickOrderApp.ViewModels.OrderVM
            
         }
 
+    
+
+        //async void DisplayNotification()
+        //{
+           
+        //}
+
+       
         async Task LoadUserOrderWithStatus(string value)
         {
+            LoadingManager.OnLoading();
             Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
 
             var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue,App.TokenDto.Token);
@@ -175,7 +209,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
                     break;
             }
 
-           
+            LoadingManager.OffLoading();
+
+
         }
 
 

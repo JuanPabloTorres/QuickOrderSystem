@@ -11,6 +11,8 @@ namespace Library.Services.Interface
 
         Task<UsersConnected> GetUserConnectedID(Guid userId);
         Task<bool> ModifyOldConnections(UsersConnected usersConnected);
+
+        Task<bool> SendOrdersToEmployees(string storeId, string orderId);
     }
        
 }

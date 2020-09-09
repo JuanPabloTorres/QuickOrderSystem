@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Factories;
 using QuickOrderApp.Utilities.Static;
 using Stripe;
@@ -137,6 +138,15 @@ namespace QuickOrderApp.ViewModels.SettingVM
             CompleteRegisterCardCommand = new Command(async () =>
             {
 
+
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
+
                 HolderNameValidator = ValidatorRules.EmptyOrNullValueRule(HolderName);
                 CardNumberValidator = ValidatorRules.EmptyOrNullValueRule(CardNumber);
                 YearValidator = ValidatorRules.EmptyOrNullValueRule(Year);
@@ -187,6 +197,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                     }
 
 
+                }
                 }
                
 

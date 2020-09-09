@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.Managers;
 using QuickOrderApp.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -73,13 +74,32 @@ namespace QuickOrderApp.Utilities.Presenters
 
         public ICommand GoAdminStoreHomeControl => new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
                 await Shell.Current.GoToAsync($"StoreControlPanelRoute?Id={StoreId.ToString()}", animate: true);
+
+                }
+
             });
         public ICommand GoHomeStoreCommand { get; set; }
 
-        public ICommand GoSelectedEmployeeStoreCommand => new Command(() =>
+        public ICommand GoSelectedEmployeeStoreCommand => new Command(async() =>
             {
-                EmployeeShell.Current.GoToAsync($"StoreControlEmployee?EmpStoreId={StoreId.ToString()}", animate: true);
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
+
+                await EmployeeShell.Current.GoToAsync($"StoreControlEmployee?EmpStoreId={StoreId.ToString()}", animate: true);
+                }
             });
 
         public StorePresenters(Store store)
@@ -93,8 +113,18 @@ namespace QuickOrderApp.Utilities.Presenters
 
             GoHomeStoreCommand = new Command(async () =>
             {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                if (tokenExpManger.IsExpired())
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
+
                 App.CurrentStore = store;
                 await GoStoreHome();
+                }
+
             });
         }
 
