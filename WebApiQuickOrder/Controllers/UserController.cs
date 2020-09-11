@@ -359,7 +359,7 @@ namespace WebApiQuickOrder.Controllers
                     {
                         Token = tokenString,
                         UserDetail = user,
-                        Exp = DateTime.Now.AddMinutes(2)
+                        Exp = DateTime.Now.AddMinutes(30)
                     };
                     return tokenDTO;
                    

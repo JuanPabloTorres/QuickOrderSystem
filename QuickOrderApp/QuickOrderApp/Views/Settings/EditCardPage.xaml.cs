@@ -17,7 +17,7 @@ namespace QuickOrderApp.Views.Settings
         public EditCardPage()
         {
             InitializeComponent();
-            BindingContext = new EditCardViewModel();
+            //BindingContext = new EditCardViewModel();
         }
     }
 }

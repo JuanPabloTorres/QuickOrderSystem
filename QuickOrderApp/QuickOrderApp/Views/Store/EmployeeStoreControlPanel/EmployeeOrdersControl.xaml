@@ -32,6 +32,12 @@
                 IsVisible="{Binding LoadingManager.contentVisible}"
                 ItemsSource="{Binding StoreOrderPresenters}"
                 VerticalOptions="Center">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout
+                        Orientation="Vertical"
+                        SnapPointsAlignment="Start"
+                        SnapPointsType="MandatorySingle" />
+                </CollectionView.ItemsLayout>
 
                 <CollectionView.ItemTemplate>
 
