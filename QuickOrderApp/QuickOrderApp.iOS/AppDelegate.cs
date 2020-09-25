@@ -1,5 +1,6 @@
 using Foundation;
 using Syncfusion.SfNumericUpDown.XForms.iOS;
+using Syncfusion.SfPicker.XForms.iOS;
 using Syncfusion.XForms.iOS.Buttons;
 using Syncfusion.XForms.iOS.ComboBox;
 using UIKit;

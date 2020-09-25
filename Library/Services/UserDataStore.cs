@@ -35,6 +35,14 @@ namespace Library.Services
             return deserializeObject;
         }
 
+        public async Task<bool> EmailExist(string email)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(EmailExist)}/{email}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+            return deserializeObject;
+        }
+
         public bool ForgotCodeSend(string email)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(ForgotCodeSend)}/{email}");
@@ -56,6 +64,22 @@ namespace Library.Services
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(LoginCredential)}/{username}/{password}");
             var response = HttpClient.GetStringAsync(FullAPIUri);
             TokenDTO deserializeObject = JsonConvert.DeserializeObject<TokenDTO>(response.Result);
+            return deserializeObject;
+        }
+
+        public async Task<bool> ResendCode(string userId)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(ResendCode)}/{userId}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+            return deserializeObject;
+        }
+
+        public async Task<bool> ValidateEmail(string code, string userid)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(ValidateEmail)}/{code}/{userid}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
             return deserializeObject;
         }
     }

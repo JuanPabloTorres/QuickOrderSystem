@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -90,6 +92,70 @@ namespace WebApiQuickOrder.Controllers
         }
 
 
+        [HttpGet("[action]/{email}")]
+        public async Task<bool> EmailExist(string email)
+        {
+         var result=   await _context.Users.AnyAsync(e => e.Email == email);
+
+            return result;
+
+        }
+
+        [HttpGet("[action]/{code}/{userid}")]
+        public async Task<ActionResult<bool>> ValidateEmail(string code,string userid)
+        {
+            var validate =await  _context.EmailValidations.Where(email => email.ValidationCode == code && email.UserId.ToString() == userid &&  DateTime.Now <= email.ExpDate).FirstOrDefaultAsync();
+
+
+            if (validate != null)
+            {
+                var user = await _context.Users.Where(u => u.UserId.ToString() == userid).FirstOrDefaultAsync();
+
+                user.IsValidUser = true;
+
+                _context.Entry(user).State = EntityState.Modified;
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
+
+        }
+
+        [HttpGet("[action]/{userId}")]
+        public async Task<ActionResult<bool>> ResendCode(string userId)
+        {
+
+            var user = _context.Users.Where(u => u.UserId.ToString() == userId).FirstOrDefault();
+
+            if (user != null)
+            {
+                string validationcode = Guid.NewGuid().ToString().Substring(0, 5);
+
+                var emailValidation = new EmailValidation()
+                {
+                    Email = user.Email,
+                    ExpDate = DateTime.Now.AddMinutes(30),
+                    EmailValidationId = Guid.NewGuid(),
+                    UserId = user.UserId,
+                    ValidationCode = validationcode
+                };
+
+                _context.EmailValidations.Add(emailValidation);
+
+                await _context.SaveChangesAsync();
+
+                SendValidateEmailCode(emailValidation);
+
+                return true;
+            }
+
+            return false;
+        }
+
+
 
 
         // PUT: api/User/5
@@ -159,12 +225,29 @@ namespace WebApiQuickOrder.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> PostUser([FromBody]User user)
+        public async Task<ActionResult<bool>> PostUser([FromBody]User user)
         {
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-             return BuildToken(user);
+            string validationcode = Guid.NewGuid().ToString().Substring(0, 5);
+
+            var emailValidation = new EmailValidation()
+            {
+                Email = user.Email,
+                ExpDate = DateTime.Now.AddMinutes(30),
+                EmailValidationId = Guid.NewGuid(),
+                UserId = user.UserId,
+                ValidationCode = validationcode
+            };
+
+            _context.EmailValidations.Add(emailValidation);
+
+            await _context.SaveChangesAsync();
+
+            SendValidateEmailCode(emailValidation);
+
+            return true;
 
             //return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
@@ -376,6 +459,10 @@ namespace WebApiQuickOrder.Controllers
 
         }
 
+
+
+        
+
         [HttpGet("[action]/{email}")]
         public bool ForgotCodeSend(string email)
         {
@@ -425,6 +512,39 @@ namespace WebApiQuickOrder.Controllers
             {
                 return false;
             }
+        }
+
+
+        bool SendValidateEmailCode(EmailValidation emailValidation)
+        {
+
+
+            var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
+            var receiverEmail = new MailAddress(emailValidation.Email, emailValidation.UserId.ToString());
+
+            var sub = "Validation Email Code";
+            var body = "<div><b>Code:</b>" + emailValidation.ValidationCode;
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
+            };
+            using (var mess = new MailMessage(senderEmail, receiverEmail)
+            {
+                IsBodyHtml = true,
+                Subject = sub,
+                Body = body
+            })
+            {
+                smtp.Send(mess);
+                return true;
+            }
+
+
         }
 
         [HttpGet("[action]/{code}")]

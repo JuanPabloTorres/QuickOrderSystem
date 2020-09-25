@@ -32,6 +32,8 @@ namespace Library.Models
 
         public string StripeUserId { get; set; }
 
+        public bool IsValidUser { get; set; }
+
         //public Guid StoreRegisterLicenseId { get; set; }
 
         //[ForeignKey("StoreRegisterLicenseId")]

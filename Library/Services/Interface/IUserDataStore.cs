@@ -15,5 +15,11 @@ namespace Library.Services.Interface
         Task<IEnumerable<UserDTO>> GetUserWithName(string name);
 
         Task<bool> CheckIfUsernameAndPasswordExist(string username, string password);
+
+        Task<bool> ValidateEmail(string code, string userid);
+
+        Task<bool> ResendCode(string userId);
+
+        Task<bool> EmailExist(string email);
     }
 }

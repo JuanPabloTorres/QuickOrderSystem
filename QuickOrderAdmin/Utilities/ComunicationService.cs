@@ -16,9 +16,12 @@ namespace QuickOrderAdmin.Utilities
         {
 
             //hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.56.1:5000" + "/comunicationhub").Build();
-            hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.144:5000" + "/comunicationhub").Build();
+            //hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.144:5000" + "/comunicationhub").Build();
 
-            Connect();
+
+            hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres94-001-site1.htempurl.com" + "/comunicationhub").Build();
+
+            //Connect();
         }
 
         public async Task Connect()

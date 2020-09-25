@@ -6,6 +6,8 @@ using Library.Services.Interface;
 using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.Views.Login;
+using Rg.Plugins.Popup.Contracts;
+using Rg.Plugins.Popup.Services;
 using Stripe;
 using System;
 using System.Collections.Generic;
@@ -52,29 +54,19 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
 
-
+        IPopupNavigation popupNavigation;
         public LoginViewModel(INavigation _navigation)
         {
             Navigation = _navigation;
 
+            popupNavigation = PopupNavigation.Instance;
 
+            Task.Run(async () =>
+            {
+            Username = await SecureStorage.GetAsync("username");
+            Password = await SecureStorage.GetAsync("password");
 
-            //Task.Run(async () =>
-            //{
-
-            //try
-            //{
-            //  Username  =  await SecureStorage.GetAsync("username");
-            //   Password =  await SecureStorage.GetAsync("password");
-            //}
-            //catch (Exception ex)
-            //{
-            //    // Possible that device doesn't support secure storage on device.
-            //}
-
-            //});
-
-
+            });
 
             ValidatorsInitializer();
 
@@ -85,6 +77,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             LoginCommand = new Command(async () =>
             {
+
+               
                 //var currentuserID = Xamarin.Forms.Application.Current.Properties["loginId "].ToString();
                 IsLoading = true;
 
@@ -104,8 +98,23 @@ namespace QuickOrderApp.ViewModels.LoginVM
                         //Verifica si el resultado del login no es vacio. 
                         if (loginresult != null)
                         {
-                            await App.ComunicationService.Connect();
-                            App.LogUser = loginresult;
+
+                            if (!loginresult.IsValidUser)
+                            {
+                                App.LogUser = loginresult;
+                                await popupNavigation.PushAsync(new ValidateEmailCode());
+                                IsLoading = false;
+
+                            }
+                            else
+                            {
+
+                                Task.Run(async () =>
+                                {
+                                    await App.ComunicationService.Connect();
+                                }).Wait();
+
+                                App.LogUser = loginresult;
 
                             bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
 
@@ -144,6 +153,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                           
                             App.Current.MainPage = new AppShell();                          
                             IsLoading = false;
+                            }
                            
                         }
                         else
@@ -175,7 +185,11 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                     if (loginresult != null)
                     {
-                        await App.ComunicationService.Connect();
+                        Task.Run(async () =>
+                        {
+                            await App.ComunicationService.Connect();
+                        }).Wait();
+
                         var userEmployees = await EmployeeDataStore.GetUserEmployees(loginresult.UserId.ToString());
                         App.LogUser = loginresult;
 
@@ -234,6 +248,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             });
 
+            
+
             DoneCommand = new Command(async () =>
             {
 
@@ -242,6 +258,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 //Verficamos que las propiedades esten de con la informacion correcta y llenas.
                 if (!UsernameValidator.HasError && !FullNameValidator.HasError && !PhoneValidator.HasError && !AddressValidator.HasError && !PasswordValidator.HasError && !ConfirmPasswordValidator.HasError && !EmailValidator.HasError && !GenderValidator.HasError && !EmailPatternValidator.HasError)
                 {
+
+                    if (!await userDataStore.EmailExist(Email))
+                    {
 
                     ConfirmAndPasswordValidator = ValidatorRules.PasswordAndConfirmPasswordEquals(Password, ConfirmPassword);
                     //Verificamos que el password y el confirmpassword matcheen
@@ -293,16 +312,20 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                                 if (!string.IsNullOrEmpty(customertokenId))
                                 {
-                                    await App.ComunicationService.Connect();
+                                    Task.Run(async() => 
+                                    { 
+                                     await App.ComunicationService.Connect();
+                                    }).Wait();
+
                                     newUser.StripeUserId = customertokenId;
                                     var result = await userDataStore.AddItemAsync(newUser);
 
                                     var credentialsResult = userDataStore.CheckUserCredential(Username, Password);
+                                    App.TokenDto = userDataStore.LoginCredential(Username, Password);
 
                                     if (result)
                                     {
-                                        await App.Current.MainPage.DisplayAlert("Notification", "Register succsefully", "OK");
-
+                                        
 
                                         App.LogUser = credentialsResult;
 
@@ -333,7 +356,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                             // Possible that device doesn't support secure storage on device.
                                         }
 
-                                        App.Current.MainPage = new AppShell();
+                                      
+                                        await popupNavigation.PushAsync(new RegisterValidationEmail());
+                                        
+
                                     }
                                 }
                             }
@@ -351,6 +377,11 @@ namespace QuickOrderApp.ViewModels.LoginVM
                         }
                     }
 
+                    }
+                    else
+                    {
+                        await App.Current.MainPage.DisplayAlert("Notification", "Email is in used.", "OK");
+                    }
 
 
                 }
@@ -362,6 +393,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
             });
+           
+
 
             GoForgotPasswordCommand = new Command(async () =>
             {

@@ -24,7 +24,9 @@ namespace WebApiQuickOrder.Controllers
 
 
             _context = context;
-          hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000" + "/comunicationhub").Build();
+
+            hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres94-001-site1.htempurl.com" + "/comunicationhub").Build();
+            //hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000" + "/comunicationhub").Build();
         }
 
         // GET: api/UsersConnected

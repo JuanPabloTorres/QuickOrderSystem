@@ -40,7 +40,16 @@ namespace QuickOrderAdmin.Controllers
                 if (result != null)
                 {
 
-                    //LogUser.ComunicationService = new ComunicationService();
+                    LogUser.ComunicationService = new ComunicationService();
+
+
+                    Task.Run(async() =>
+                    {
+                    
+                    await LogUser.ComunicationService.Connect();
+                    
+                    }).Wait();
+
                     LogUser.LoginUser = result;
 
 

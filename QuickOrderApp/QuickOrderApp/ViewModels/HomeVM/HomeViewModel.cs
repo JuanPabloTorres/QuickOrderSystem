@@ -62,11 +62,10 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
             Task.Run(async() => 
             {
-                LoadingManager.OnLoading();
+            
                 await LoadItems();
-                LoadingManager.OffLoading();
             }).Wait();
-                      
+           
 
             SelectedStore = new Store();
 
@@ -75,11 +74,14 @@ namespace QuickOrderApp.ViewModels.HomeVM
        
         public async  Task LoadItems()
         {
+            LoadingManager.OnLoading();
 
             TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
             if (tokenExpManger.IsExpired())
             {
                await tokenExpManger.CloseSession();
+                LoadingManager.OffLoading();
+
             }
             else
             {
@@ -102,6 +104,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
                 Stores.Add(storepresenter);
             }
 
+                LoadingManager.OffLoading();
             }
 
 

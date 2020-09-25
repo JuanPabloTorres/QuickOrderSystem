@@ -53,9 +53,10 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         public SearchEmployeeViewModel()
         {
             Users = new ObservableCollection<SearchEmployeePresenter>();
+
             SearchEmployeeCommand = new Command(async () =>
             {
-                if (!string.IsNullOrEmpty(ToSearch))
+                if (!string.IsNullOrEmpty(ToSearch) && !string.IsNullOrWhiteSpace(ToSearch))
                 {
                     await SearchEmployee(ToSearch);
 
@@ -73,6 +74,8 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         async Task SearchEmployee(string value)
 		{
+
+
 			var usersdto = await userDataStore.GetUserWithName(value);
 
 			Users.Clear();

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiQuickOrder.Context;
 
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    partial class QOContextModelSnapshot : ModelSnapshot
+    [Migration("20200916032156_9-15-2020-1.01")]
+    partial class _9152020101
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,8 +27,8 @@ namespace WebApiQuickOrder.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("Email")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ExpDate")
                         .HasColumnType("datetime2");
@@ -34,8 +36,8 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ValidationCode")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ValidationCode")
+                        .HasColumnType("int");
 
                     b.HasKey("EmailValidationId");
 

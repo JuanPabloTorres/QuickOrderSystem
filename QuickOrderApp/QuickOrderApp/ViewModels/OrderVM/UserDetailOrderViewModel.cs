@@ -212,6 +212,10 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 else
                 {
 
+                    var cardofUser = await CardDataStore.GetCardFromUser(App.LogUser.UserId, App.TokenDto.Token);
+
+                    App.LogUser.PaymentCards = new List<PaymentCard>(cardofUser);
+
                 if (App.LogUser.PaymentCards.Count() > 0)
                 {
 

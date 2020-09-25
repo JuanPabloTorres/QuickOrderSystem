@@ -34,6 +34,7 @@ namespace QuickOrderApp.Droid
 
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
             ZXing.Net.Mobile.Forms.Android.Platform.Init();
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             AnimationViewRenderer.Init();
