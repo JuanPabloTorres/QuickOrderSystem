@@ -394,7 +394,7 @@ namespace WebApiQuickOrder.Controllers
                 if (_context.Users.Count() > 0)
                 {
 
-                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).FirstOrDefault();
+                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).Include(c=>c.PaymentCards).FirstOrDefault();
 
                     var isAdministrator = _context.Stores.Any(s => s.UserId == user.UserId);
                     string tokenString;

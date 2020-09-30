@@ -57,10 +57,22 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             {
                 storeInformation.IsDisable = true;
                 var storeDeleted = await StoreDataStore.DisableStore(storeInformation);
+
+
+
                 await Shell.Current.DisplayAlert("Notification", "Subcription are canceled and store is going to be disable.", "OK");
 
+                if (App.LogUser.Stores.Count > 0 )
+                {
+                    if (App.LogUser.Stores.Remove(StoreInformation))
+                    {
+                        await Shell.Current.GoToAsync("HomePageRoute");
+                    } 
+
+                }
+               
               
-                await Shell.Current.GoToAsync("HomePageRoute");
+              
             }
             else
             {

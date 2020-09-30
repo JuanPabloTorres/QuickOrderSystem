@@ -38,6 +38,8 @@ namespace WebApiQuickOrder.Controllers
         {
             var order = _context.Orders.Where(o => o.OrderId == id).Include(op => op.OrderProducts).FirstOrDefault();
 
+           
+
             if (order == null)
             {
                 return NotFound();
@@ -59,8 +61,58 @@ namespace WebApiQuickOrder.Controllers
         [Authorize(Policy = Policies.User)]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status)
         {
-            var _completeOrders = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status).Include(op => op.OrderProducts).ToListAsync();
-            return _completeOrders;
+            var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status && o.IsDisisble == false).Include(op => op.OrderProducts).ToListAsync();
+
+            List<Order> orders = new List<Order>();
+
+            foreach (var item in result)
+            {
+                orders.Add(item);
+
+                if (orders.Count() == 5)
+                {
+                    return orders.ToList();
+                }
+            }
+
+            return orders.ToList();
+        }
+
+        // GET: api/Order/5
+        [HttpPost("[action]/{status}/{userid}")]       
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Order> ordersAdded,Status status,Guid userid)
+        {
+            if (ordersAdded.Count() < _context.Orders.Count())
+            {
+
+                List<Order> orders = new List<Order>();
+
+
+                var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status).Include(op=>op.OrderProducts).ToListAsync();
+
+                foreach (var item in result)
+                {
+                    if (!item.IsDisisble)
+                    {
+                        if (!ordersAdded.Any(x => x.OrderId == item.OrderId))
+                        {
+                            orders.Add(item);
+
+                            if (orders.Count == 5)
+                            {
+                                return orders;
+                            }
+                        }
+
+                    }
+                }
+
+
+
+                return orders.ToList();
+            }
+
+            return null;
         }
 
 

@@ -1,10 +1,12 @@
 ﻿using Library.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Attributes;
 using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Views.Store;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -64,8 +66,8 @@ namespace QuickOrderApp.ViewModels.OrderVM
                     Task.Run(async () =>
                     {
 
-                        await LoadUserOrderWithStatus(OrderStatus);
-                    });
+                        await LoadOrders(OrderStatus);
+                    }).Wait();
 
 
                 }
@@ -88,12 +90,67 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
        public LoadingManager LoadingManager { get; set; }
 
+        Dictionary<string, IEnumerable<Order>> KeyValues { get; set; }
 
+
+        public ICommand MoreCommand => new Command(async() => 
+        {
+            LoadingManager.OnLoading();
+            Status _statusvalue = (Status)Enum.Parse(typeof(Status), OrderStatus);
+            List<Order> tempData = new List<Order>();
+
+            var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"], _statusvalue,App.LogUser.UserId);
+
+            if (data != null)
+            {
+                foreach (var item in KeyValues["orderAdded"])
+                {
+                    if (!tempData.Any(o => o.OrderId == item.OrderId))
+                    {
+
+                        tempData.Add(item);
+                    }
+                }
+
+                foreach (var item in data)
+                {
+                    if (!tempData.Any(s => s.StoreId == item.StoreId))
+                    {
+
+                        tempData.Add(item);
+
+                    }
+
+                }
+
+                KeyValues.Clear();
+                KeyValues.Add("orderAdded", tempData);
+
+
+                foreach (var item in KeyValues["orderAdded"])
+                {
+
+                    if (!UserOrders.Any(s => s.OrderId == item.OrderId))
+                    {
+
+                        item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                        var presenter = new OrderPresenter(item);
+
+                        UserOrders.Add(presenter);
+
+                    }
+                }
+            }
+
+            LoadingManager.OffLoading();
+
+        });
         public OrderViewModel()
         {
             
             UserOrders = new ObservableCollection<OrderPresenter>();
             LoadingManager = new LoadingManager();
+            KeyValues = new Dictionary<string, IEnumerable<Order>>();
 
             MessagingCenter.Subscribe<Order>(this, "RemoveOrderSubtmitedMsg", (sender) =>
             {
@@ -125,6 +182,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
         {
             var userOrderData = orderDataStore.GetUserOrders(App.LogUser.UserId);
 
+          
             UserOrders.Clear();
 
             foreach (var item in userOrderData)
@@ -138,70 +196,232 @@ namespace QuickOrderApp.ViewModels.OrderVM
            
         }
 
-    
 
-        //async void DisplayNotification()
-        //{
+        async Task LoadOrders(string value)
+        {
+            LoadingManager.OnLoading();
+            Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
+
+            var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue, App.TokenDto.Token);
+
+
+            KeyValues.Clear();
            
-        //}
+            KeyValues.Add("orderAdded", orderData);
 
-       
+            UserOrders.Clear();
+
+            foreach (var item in orderData)
+            {
+
+                item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                var presenter = new OrderPresenter(item);
+
+                UserOrders.Add(presenter);
+            }
+
+            LoadingManager.OffLoading();
+        }
+
         async Task LoadUserOrderWithStatus(string value)
         {
             LoadingManager.OnLoading();
             Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
 
             var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue,App.TokenDto.Token);
+            KeyValues.Add("orderAdded", orderData);
 
+           
             switch (_statusvalue)
             {
 
                 case Status.Completed:
                     {
+                        //List<Order> tempData = new List<Order>();
+
+                        //UserOrders.Clear();
+                        //foreach (var item in orderData)
+                        //{
+
+                        //    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                        //    var presenter = new OrderPresenter(item);
+
+                        //    UserOrders.Add(presenter);
+                        //}
 
 
-                        UserOrders.Clear();
-                        foreach (var item in orderData)
+                        List<Order> tempData = new List<Order>();
+
+                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"], _statusvalue,App.LogUser.UserId);
+
+                        if (data != null)
                         {
+                            foreach (var item in KeyValues["orderAdded"])
+                            {
+                                if (!tempData.Any(o => o.OrderId == item.OrderId))
+                                {
 
-                            item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-                            var presenter = new OrderPresenter(item);
+                                    tempData.Add(item);
+                                }
+                            }
 
-                            UserOrders.Add(presenter);
+                            foreach (var item in data)
+                            {
+                                if (!tempData.Any(s => s.StoreId == item.StoreId))
+                                {
+
+                                    tempData.Add(item);
+
+                                }
+
+                            }
+
+                            KeyValues.Clear();
+                            KeyValues.Add("orderAdded", tempData);
+
+
+                            foreach (var item in KeyValues["orderAdded"])
+                            {
+
+                                if (!UserOrders.Any(s => s.OrderId == item.OrderId))
+                                {
+
+                                    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                                    var presenter = new OrderPresenter(item);
+
+                                    UserOrders.Add(presenter);
+
+                                }
+                            }
                         }
-                       
+
+
 
                         break;
                     }
 
                 case Status.NotSubmited:
                     {
-                        UserOrders.Clear();
 
-                        foreach (var item in orderData.Where(o => o.IsDisisble == false))
+                        List<Order> tempData = new List<Order>();
+
+                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"],_statusvalue,App.LogUser.UserId);
+
+                        if (data != null)
                         {
+                            foreach (var item in KeyValues["orderAdded"])
+                            {
+                                if (!tempData.Any(o => o.OrderId == item.OrderId))
+                                {
 
-                            item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-                            var presenter = new OrderPresenter(item);
+                                    tempData.Add(item);
+                                }
+                            }
 
-                            UserOrders.Add(presenter);
+                            foreach (var item in data)
+                            {
+                                if (!tempData.Any(s => s.StoreId == item.StoreId))
+                                {
+
+                                    tempData.Add(item);
+
+                                }
+
+                            }
+
+                            KeyValues.Clear();
+                            KeyValues.Add("orderAdded", tempData);
+
+
+                            foreach (var item in KeyValues["orderAdded"])
+                            {
+
+                                if (!UserOrders.Any(s => s.OrderId == item.OrderId))
+                                {
+
+                                    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                                    var presenter = new OrderPresenter(item);
+
+                                    UserOrders.Add(presenter);
+
+                                }
+                            }
                         }
-                        
+
                         break;
+
+                        //UserOrders.Clear();
+
+                        //foreach (var item in orderData)
+                        //{
+
+                        //    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                        //    var presenter = new OrderPresenter(item);
+
+                        //    UserOrders.Add(presenter);
+                        //}
+
                     }
                 case Status.Submited:
                     {
 
-                        UserOrders.Clear();
 
-                        foreach (var item in orderData)
+                        List<Order> tempData = new List<Order>();
+
+                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"], _statusvalue,App.LogUser.UserId);
+
+                        if (data != null)
                         {
+                            foreach (var item in KeyValues["orderAdded"])
+                            {
+                                if (!tempData.Any(o => o.OrderId == item.OrderId))
+                                {
 
-                            item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-                            var presenter = new OrderPresenter(item);
+                                    tempData.Add(item);
+                                }
+                            }
 
-                            UserOrders.Add(presenter);
+                            foreach (var item in data)
+                            {
+                                if (!tempData.Any(s => s.StoreId == item.StoreId))
+                                {
+
+                                    tempData.Add(item);
+
+                                }
+
+                            }
+
+                            KeyValues.Clear();
+                            KeyValues.Add("orderAdded", tempData);
+
+
+                            foreach (var item in KeyValues["orderAdded"])
+                            {
+
+                                if (!UserOrders.Any(s => s.OrderId == item.OrderId))
+                                {
+
+                                    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                                    var presenter = new OrderPresenter(item);
+
+                                    UserOrders.Add(presenter);
+
+                                }
+                            }
                         }
+
+
+                        //UserOrders.Clear();
+
+                        //foreach (var item in orderData)
+                        //{
+
+                        //    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                        //    var presenter = new OrderPresenter(item);
+
+                        //    UserOrders.Add(presenter);
+                        //}
 
                         break;
                     }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using WebApiQuickOrder.Context;
 namespace WebApiQuickOrder.Controllers
@@ -44,19 +45,73 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{StoreId}")]
-        public IEnumerable<Product> GetProductFromStore(Guid StoreId)
+        public async Task<IEnumerable<Product>> GetProductFromStore(Guid StoreId)
         {
-            var result = _context.Products.Where(p => p.StoreId == StoreId);
+            var result = await _context.Products.Where(p => p.StoreId == StoreId).ToListAsync();
 
-            return result;
+
+            List<Product> products = new List<Product>();
+
+            foreach (var item in result)
+            {
+                products.Add(item);
+
+                if (products.Count() == 5)
+                {
+                    return products;
+                }
+            }
+
+
+
+            return products;
         }
+
+
+        [HttpPost("[action]/{StoreId}")]
+        public async Task<IEnumerable<Product>> GetDifferentProductFromStore(IEnumerable<Product> productsAdded,Guid storeId)
+        {
+            var result = await _context.Products.Where(p => p.StoreId == storeId).ToListAsync();
+
+            List<Product> products = new List<Product>();
+
+            foreach (var item in result)
+            {
+                if (!productsAdded.Any(p => p.ProductId == item.ProductId))
+                {
+                    products.Add(item);
+
+                    if (products.Count == 5)
+                    {
+                        return products;
+                    }
+                }
+            }
+
+          
+
+            return products;
+        }
+
 
         [HttpGet("[action]/{storeId}/{type}")]
         public async Task<IEnumerable<Product>> GetSpecificProductTypeFromStore(Guid storeId,ProductType type)
         {
             var result = await _context.Products.Where(p => p.Type == type && p.StoreId == storeId).ToListAsync();
 
-            return result;
+            List<Product> products = new List<Product>();
+
+            foreach (var item in result)
+            {
+                products.Add(item);
+
+                if (products.Count() == 5)
+                {
+                    return products;
+                }
+            }
+
+            return products;
         }
 
         [HttpGet("[action]/{storeid}/{lowquantity}")]

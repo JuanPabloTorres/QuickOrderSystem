@@ -1,5 +1,7 @@
 ﻿using Library.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QuickOrderApp.Utilities.Presenters;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,10 +29,14 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         public ICommand ShowAllCommand { get; set; }
 
+        public ICommand MoreCommand { get; set; }
+
+
+        public Dictionary<string,IEnumerable<Product>> keyValues { get; set; }
         public InventoryViewModel()
         {
             StoreInventory = new ObservableCollection<ProductPresenter>();
-
+            keyValues = new Dictionary<string, IEnumerable<Product>>();
 
             SearchItemCommand = new Command(async () => 
             {
@@ -56,10 +62,10 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             
             });
 
-            ShowAllCommand = new Command(() => 
+            ShowAllCommand = new Command(async() => 
             {
 
-                LoadInventory();
+               await LoadInventory();
             
             
             });
@@ -87,17 +93,80 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 StoreInventory.Remove(obj);
             
             });
+
+            MoreCommand = new Command(async() =>
+            {
+
+                var result = await productDataStore.GetDifferentProductFromStore(keyValues["productAdded"],StoreControlPanelViewModel.YourSelectedStore.StoreId);
+
+
+                if (result != null)
+                {
+                    List<Product> tempData = new List<Product>();
+
+                    foreach (var item in keyValues["productAdded"])
+                    {
+
+                        if (!tempData.Any(s => s.ProductId == item.ProductId))
+                        {
+
+                            tempData.Add(item);
+
+                        }
+                    }
+
+                    foreach (var item in result)
+                    {
+                        if (!tempData.Any(s => s.ProductId == item.ProductId))
+                        {
+
+                            tempData.Add(item);
+
+                        }
+
+                    }
+
+
+                    keyValues.Clear();
+                    keyValues.Add("productAdded", tempData);
+
+                    foreach (var item in keyValues["productAdded"])
+                    {
+
+                        if (!StoreInventory.Any(s => s.ProductId == item.ProductId))
+                        {
+                            var productPresenter = new ProductPresenter(item);
+
+
+                            StoreInventory.Add(productPresenter);
+
+                        }
+                    }
+                }
+              
+
+            });
         }
 
         async Task LoadInventory()
         {
-            StoreInventory.Clear();
+
+            if (StoreInventory.Count() > 0)
+            {
+                StoreInventory.Clear();
+
+            }
 
             var data = productDataStore.GetProductFromStore(StoreControlPanelViewModel.YourSelectedStore.StoreId);
 
+            if (!keyValues.ContainsKey("productAdded"))
+            {
+                keyValues.Add("productAdded", data);
+
+            }
+
             foreach (var item in data)
             {
-
                 var productPresenter = new ProductPresenter(item);
                 StoreInventory.Add(productPresenter);
             }

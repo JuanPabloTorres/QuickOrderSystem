@@ -19,5 +19,7 @@ namespace Library.Services.Interface
         Task<IEnumerable<Store>> GetAvailableStore();
 
         Task<Store> GetAvailableStoreInformation(Guid id);
+
+        Task<IEnumerable<Store>> GetDifferentStore(IEnumerable<Store> storesAdded);
     }
 }

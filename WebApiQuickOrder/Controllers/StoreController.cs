@@ -33,7 +33,70 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]")]
         public async Task<ActionResult<IEnumerable<Store>>> GetAvailableStore()
         {
-            return await _context.Stores.Where(st=>st.IsDisable == false).ToListAsync();
+            var result = await _context.Stores.Where(st => st.IsDisable == false).ToListAsync();
+
+
+
+            List<Store> stores = new List<Store>();
+
+
+            foreach (var item in result)
+            {
+
+                if (!item.IsDisable)
+                {
+
+                stores.Add(item);
+
+                if (stores.Count() == 5)
+                {
+                    return stores;
+                }
+                }
+            }
+
+
+
+            return stores.ToList();
+
+        }
+
+
+        // GET: api/Store
+        [HttpPost("[action]")]
+        public  ActionResult<IEnumerable<Store>> GetDifferentStore(IEnumerable<Store> storesAdded)
+        {
+            
+            if (storesAdded.Count() < _context.Stores.Count())
+            {
+
+                List<Store> stores = new List<Store>();
+
+
+                foreach (var item in _context.Stores)
+                {
+                    if (!item.IsDisable)
+                    {
+                    if (!storesAdded.Any(x=>x.StoreId == item.StoreId))
+                    {
+                        stores.Add(item);
+
+                        if (stores.Count == 5)
+                        {
+                            return stores;
+                        }
+                    }
+
+                    }
+                }
+
+                
+
+                return stores.ToList();
+            }
+
+            return null;
+
         }
 
 

@@ -90,10 +90,11 @@ namespace QuickOrderApp.ViewModels.LoginVM
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
                         //Obtine los credenciales del usuario
-                        var loginresult = userDataStore.CheckUserCredential(Username, Password);
+                        //var loginresult = userDataStore.CheckUserCredential(Username, Password);
                         //Obtiene el token de acceso 
                         App.TokenDto = userDataStore.LoginCredential(Username, Password);
 
+                        var loginresult = App.TokenDto.UserDetail;
 
                         //Verifica si el resultado del login no es vacio. 
                         if (loginresult != null)
@@ -180,9 +181,11 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
                 {
 
-                    var loginresult = userDataStore.CheckUserCredential(Username, Password);
+                    //var loginresult = userDataStore.CheckUserCredential(Username, Password);
                     App.TokenDto = userDataStore.LoginCredential(Username, Password);
 
+
+                    var loginresult = App.TokenDto.UserDetail;
                     if (loginresult != null)
                     {
                         Task.Run(async () =>
@@ -320,14 +323,14 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                     newUser.StripeUserId = customertokenId;
                                     var result = await userDataStore.AddItemAsync(newUser);
 
-                                    var credentialsResult = userDataStore.CheckUserCredential(Username, Password);
+                                    //var credentialsResult = userDataStore.CheckUserCredential(Username, Password);
                                     App.TokenDto = userDataStore.LoginCredential(Username, Password);
 
                                     if (result)
                                     {
                                         
 
-                                        App.LogUser = credentialsResult;
+                                        App.LogUser = App.TokenDto.UserDetail;
 
                                         if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
                                         {

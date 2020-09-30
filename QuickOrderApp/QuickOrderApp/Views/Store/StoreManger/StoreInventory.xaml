@@ -55,6 +55,7 @@
                     Text="Show All"
                     TextColor="#2F3538" />
             </StackLayout>
+
             <Label
                 HorizontalOptions="Start"
                 Style="{StaticResource DataLabel}"
@@ -67,6 +68,19 @@
 
             <StackLayout />
             <CollectionView EmptyView="Empty Inventory" ItemsSource="{Binding StoreInventory}">
+
+                <CollectionView.Footer>
+                    <button:SfButton
+                        Margin="20,0,20,0"
+                        BackgroundColor="Transparent"
+                        Command="{Binding MoreCommand}"
+                        CornerRadius="5"
+                        FontFamily="RobotoBold"
+                        FontSize="18"
+                        Text="More"
+                        TextColor="#2F3538" />
+                </CollectionView.Footer>
+
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical" Span="1" />
                 </CollectionView.ItemsLayout>

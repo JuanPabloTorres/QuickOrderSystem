@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Dependency;
 using QuickOrderApp.Utilities.Dependency.Interface;
@@ -10,6 +11,8 @@ using QuickOrderApp.Views.Home;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -24,6 +27,8 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
         public ObservableCollection<StoreCategory> StoreCategories { get; set; }
         public ICommand SearchStoreCommand { get; set; }
+
+        public ICommand MoreCommand { get; set; }
 
         private Store selectedStore;
 
@@ -52,19 +57,29 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
        public LoadingManager LoadingManager { get; set; }
 
-
+        Dictionary<string,IEnumerable<Store>> KeyValues { get; set; }
+        static int group;
         public HomeViewModel()
         {
             StoreCategories = new ObservableCollection<StoreCategory>();
+
+            KeyValues = new Dictionary<string, IEnumerable<Store>>();
             Stores = new ObservableCollection<StorePresenters>();
             LoadingManager = new LoadingManager();
 
 
-            Task.Run(async() => 
+            MoreCommand = new Command(async() =>
             {
+
+               await LoadDifferentItems();
             
-                await LoadItems();
-            }).Wait();
+            });
+
+            //Task.Run(async() => 
+            //{
+            
+            //    await LoadItems();
+            //}).Wait();
            
 
             SelectedStore = new Store();
@@ -85,17 +100,19 @@ namespace QuickOrderApp.ViewModels.HomeVM
             }
             else
             {
-
+                
             var storeData = await StoreDataStore.GetAvailableStore();
 
+                if (!KeyValues.ContainsKey("storeAdded"))
+                {
 
-            if (Stores.Count > 0)
+                    KeyValues.Add("storeAdded", storeData);
+                }
+
+                if (Stores.Count > 0)
             {
-
                 Stores.Clear();
             }
-
-
 
             foreach (var store in storeData)
             {
@@ -103,6 +120,87 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
                 Stores.Add(storepresenter);
             }
+
+                LoadingManager.OffLoading();
+            }
+
+
+        }
+
+        public async Task LoadDifferentItems()
+        {
+            LoadingManager.OnLoading();
+
+            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+            if (tokenExpManger.IsExpired())
+            {
+                await tokenExpManger.CloseSession();
+                LoadingManager.OffLoading();
+
+            }
+            else
+            {
+
+                if (!KeyValues.ContainsKey("storeAdded"))
+                {
+                    await LoadItems();
+                }
+                else
+                {
+                    var storeData = await StoreDataStore.GetDifferentStore(KeyValues["storeAdded"]);
+
+                    if (storeData != null)
+                    {
+
+                        var tempData = new List<Store>();
+
+
+                        foreach (var item in KeyValues["storeAdded"])
+                        {
+
+                            if (!tempData.Any(s => s.StoreId == item.StoreId))
+                            {
+
+                                tempData.Add(item);
+
+                            }
+                        }
+
+                        foreach (var item in storeData)
+                        {
+                            if (!tempData.Any(s => s.StoreId == item.StoreId))
+                            {
+
+                                tempData.Add(item);
+
+                            }
+                            
+                        }
+
+
+                        KeyValues.Clear();
+                        KeyValues.Add("storeAdded", tempData);
+
+                        foreach (var item in KeyValues["storeAdded"])
+                        {
+
+                            if (!Stores.Any(s => s.StoreId == item.StoreId))
+                            {
+                                var storepresenter = new StorePresenters(item);
+
+
+                                Stores.Add(storepresenter);
+
+                            }
+                        }
+
+
+                    }
+                }
+
+
+               
+
 
                 LoadingManager.OffLoading();
             }

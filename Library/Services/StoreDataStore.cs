@@ -54,6 +54,36 @@ namespace Library.Services
             return deserializeObject;
         }
 
+        public async Task<IEnumerable<Store>> GetDifferentStore(IEnumerable<Store> storesAdded)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetDifferentStore)}");
+
+            var serializeObj = JsonConvert
+             .SerializeObject(storesAdded, Formatting.Indented, new JsonSerializerSettings
+             {
+                 //ContractResolver = new JsonPrivateResolver(),
+                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                 NullValueHandling = NullValueHandling.Include
+             });
+
+            var buffer = System.Text.Encoding.UTF8.GetBytes(serializeObj);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+            var response = await HttpClient.PostAsync(FullAPIUri, byteContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                IEnumerable<Store> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Store>>(await response.Content.ReadAsStringAsync());
+                return deserializeObject;
+            }else
+            {
+                return null;
+            }
+
+            
+        }
+
         public async Task<IEnumerable<Store>> GetSpecificStoreCategory(string category)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetSpecificStoreCategory)}/{category}");

@@ -46,18 +46,30 @@
             <forms:AnimationView
                 Animation="loading.json"
                 AutoPlay="True"
-                HeightRequest="80"
+                HeightRequest="40"
                 HorizontalOptions="Center"
                 IsVisible="{Binding LoadingManager.IsLoading}"
                 Loop="True"
                 VerticalOptions="Center"
-                WidthRequest="80" />
+                WidthRequest="40" />
+
 
 
             <CollectionView
                 Margin="5"
                 IsVisible="{Binding LoadingManager.contentVisible}"
                 ItemsSource="{Binding Stores}">
+                <CollectionView.Footer>
+                    <button:SfButton
+                        Margin="20,0,20,0"
+                        BackgroundColor="Transparent"
+                        Command="{Binding MoreCommand}"
+                        CornerRadius="5"
+                        FontFamily="RobotoBold"
+                        FontSize="18"
+                        Text="More"
+                        TextColor="#2F3538" />
+                </CollectionView.Footer>
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout
                         HorizontalItemSpacing="5"
@@ -65,6 +77,7 @@
                         Span="1"
                         VerticalItemSpacing="5" />
                 </CollectionView.ItemsLayout>
+
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <ContentView Margin="3">

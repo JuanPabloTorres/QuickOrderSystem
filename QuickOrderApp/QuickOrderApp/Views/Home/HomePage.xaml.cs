@@ -24,5 +24,23 @@ namespace QuickOrderApp.Views.Home
             
         }
 
+        private async void CollectionView_Scrolled(object sender, ItemsViewScrolledEventArgs e)
+        {
+            var collectionlastindex = e.LastVisibleItemIndex;
+
+            var i = HomeViewModel.Stores.Count - 1;
+
+            if (collectionlastindex == i)
+            {
+
+                await HomeViewModel.LoadDifferentItems();
+            }
+
+
+            //await Shell.Current.DisplayAlert("Notification", collectionlastindex.ToString() + "Found", "OK");
+
+        }
+
+      
     }
 }

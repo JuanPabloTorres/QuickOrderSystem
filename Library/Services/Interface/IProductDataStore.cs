@@ -13,5 +13,7 @@ namespace Library.Services.Interface
         Task<IEnumerable<Product>>GetSpecificProductTypeFromStore(Guid storeId, ProductType type);
 
         Task<Product> SearchItemOfStore(string storeId, string item);
+
+        Task<IEnumerable<Product>> GetDifferentProductFromStore(IEnumerable<Product> productsAdded, Guid storeId);
     }
 }
