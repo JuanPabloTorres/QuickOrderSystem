@@ -12,7 +12,7 @@ namespace QuickOrderApp.iOS
     public class IOSNotificationManager : INotificationManager
     {
         int messageId = -1;
-
+        
         bool hasNotificationsPermission;
 
         public event EventHandler NotificationReceived;
