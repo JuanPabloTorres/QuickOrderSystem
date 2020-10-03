@@ -13,6 +13,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/Order",
+      "applicationUrl": "http://localhost:5000/",
       "environmentVariables": {
         "Llave_super_secreta": "dahsfkjdhsafjdshfjkdshfjkdshfjkdhsjdsfjkdhfjdsgjsdgdsjfhdskjfhsdlfkjhdsjfhsdjfdshjdfs",
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -22,10 +23,10 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/Order",
+      "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+      }
     }
   }
 }
