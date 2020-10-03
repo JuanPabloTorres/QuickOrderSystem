@@ -68,6 +68,7 @@
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IOSNotificationManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
@@ -175,11 +176,14 @@
     <PackageReference Include="ZXing.Net.Mobile.Forms">
       <Version>2.4.1</Version>
     </PackageReference>
+    <PackageReference Include="Com.Airbnb.iOS.Lottie">
+      <Version>2.5.12</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\QuickOrderApp\QuickOrderApp.csproj">
-      <Project>{0BAC6479-8547-43EA-BCD6-D781D3EE1C67}</Project>
+      <Project>{E8A8BECB-B9F6-4429-AC40-D240893A67A6}</Project>
       <Name>QuickOrderApp</Name>
     </ProjectReference>
   </ItemGroup>

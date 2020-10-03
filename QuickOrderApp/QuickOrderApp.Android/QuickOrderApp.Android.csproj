@@ -16,7 +16,6 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
     <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidUseAapt2>true</AndroidUseAapt2>
@@ -133,7 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QuickOrderApp\QuickOrderApp.csproj">
-      <Project>{0BAC6479-8547-43EA-BCD6-D781D3EE1C67}</Project>
+      <Project>{E8A8BECB-B9F6-4429-AC40-D240893A67A6}</Project>
       <Name>QuickOrderApp</Name>
     </ProjectReference>
   </ItemGroup>

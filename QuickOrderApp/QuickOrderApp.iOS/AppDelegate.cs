@@ -24,6 +24,10 @@ namespace QuickOrderApp.iOS
         {
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
             global::Xamarin.Forms.Forms.Init();
+            global::ZXing.Net.Mobile.Forms.iOS.Platform.Init();
+            Rg.Plugins.Popup.Popup.Init();
+            
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init();
             SfPickerRenderer.Init();
             SfComboBoxRenderer.Init();
             SfRadioButtonRenderer.Init();
