@@ -1,6 +1,7 @@
 ﻿using Library.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -130,31 +131,73 @@ namespace WebApiQuickOrder.Controllers
 
             if (_context.StoreLicenses.Where(l => l.LicenseId == newStoreLicense.LicenseId).FirstOrDefault() != null)
             {
-                var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
-                var receiverEmail = new MailAddress(email, username);
 
-                var sub = "Quick Order Lincense Code";
-                var body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
-                var smtp = new SmtpClient
+                try
                 {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
-                };
-                using (var mess = new MailMessage(senderEmail, receiverEmail)
+
+                    //create the mail message 
+                    MailMessage mail = new MailMessage();
+
+                    //set the addresses 
+                    mail.From = new MailAddress("est.juanpablotorres@gmail.com"); //IMPORTANT: This must be same as your smtp authentication address.
+                    mail.To.Add(email);
+
+                    //set the content 
+                    mail.Subject = "This is an email";
+                    mail.Body = "This is from system.net.mail using C sharp with smtp authentication.";
+                    //send the message 
+                    SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+
+                    //IMPORANT:  Your smtp login email MUST be same as your FROM address. 
+                    NetworkCredential Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt");
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = Credentials;
+                    smtp.Port = 587;    //alternative port number is 8889
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+
+
+
+
+
+
+
+                    //var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
+                    //var receiverEmail = new MailAddress(email, username);
+
+                    //var sub = "Quick Order Lincense Code";
+                    //var body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
+                    //var smtp = new SmtpClient
+                    //{
+                    //    Host = "smtp.gmail.com",
+                    //    Port = 587,
+                    //    Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt"),
+                    //    EnableSsl = true,
+                    //    UseDefaultCredentials = false,
+                    //    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    //};
+                    //using (var mess = new MailMessage(senderEmail, receiverEmail)
+                    //{
+                    //    IsBodyHtml = true,
+                    //    Subject = sub,
+                    //    Body = body
+                    //})
+                    //{
+                    //    smtp.Send(mess);
+                    //}
+
+                    return true;
+                }
+                catch (Exception e)
                 {
-                    IsBodyHtml = true,
-                    Subject = sub,
-                    Body = body
-                })
-                {
-                    smtp.Send(mess);
+
+                    throw new Exception(e.Message);
+                   
+                   
                 }
 
-                return true;
+                return false;
+
             }
             else
             {

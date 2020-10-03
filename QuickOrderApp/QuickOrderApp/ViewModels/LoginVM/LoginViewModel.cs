@@ -77,7 +77,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             LoginCommand = new Command(async () =>
             {
-
                
                 //var currentuserID = Xamarin.Forms.Application.Current.Properties["loginId "].ToString();
                 IsLoading = true;
@@ -94,12 +93,14 @@ namespace QuickOrderApp.ViewModels.LoginVM
                         //Obtiene el token de acceso 
                         App.TokenDto = userDataStore.LoginCredential(Username, Password);
 
-                        var loginresult = App.TokenDto.UserDetail;
+                        
+                       
 
                         //Verifica si el resultado del login no es vacio. 
-                        if (loginresult != null)
+                        if (App.TokenDto != null)
                         {
 
+                            var loginresult = App.TokenDto.UserDetail;
                             if (!loginresult.IsValidUser)
                             {
                                 App.LogUser = loginresult;

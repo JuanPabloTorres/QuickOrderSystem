@@ -434,9 +434,6 @@ namespace WebApiQuickOrder.Controllers
                         return tokenDTO;
                     }
 
-
-
-
                     tokenString = GenerateJWTToken(user);
                     tokenDTO = new TokenDTO()
                     {
