@@ -32,9 +32,8 @@
             <CollectionView
                 Margin="5"
                 EmptyView="Not Order Register"
-                IsEnabled="{Binding LoadingManager.contentVisible}"
                 IsVisible="{Binding LoadingManager.contentVisible}"
-                ItemsSource="{Binding UserOrders, Mode=TwoWay}">
+                ItemsSource="{Binding UserOrders}">
                 <CollectionView.Footer>
                     <button:SfButton
                         Margin="20,0,20,0"
@@ -47,25 +46,31 @@
                         TextColor="#2F3538" />
                 </CollectionView.Footer>
                 <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical" Span="1" />
+                    <GridItemsLayout
+                        HorizontalItemSpacing="5"
+                        Orientation="Vertical"
+                        Span="1"
+                        VerticalItemSpacing="5" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <ContentView Margin="5">
+                        <ContentView Margin="3">
 
                             <Frame Padding="0" Style="{x:StaticResource FrameStyle}">
 
                                 <StackLayout BackgroundColor="White">
 
-                                    <Frame
+                                    <!--<Frame
                                         Padding="0"
                                         HeightRequest="130"
                                         HorizontalOptions="Fill"
                                         IsClippedToBounds="True">
                                         <ff:CachedImage Aspect="Fill" Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}" />
 
-                                        <!--<Image Aspect="Fill" Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}" />-->
-                                    </Frame>
+                                    -->
+                                    <!--<Image Aspect="Fill" Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}" />-->
+                                    <!--
+                                    </Frame>-->
                                     <Label Style="{StaticResource TitleLabel}" Text="{Binding StoreName}" />
                                     <BoxView
                                         Margin="8,0,8,0"
@@ -84,7 +89,7 @@
 
                                         <StackLayout Orientation="Horizontal">
                                             <Label Style="{StaticResource DataLabel}" Text="Date:" />
-                                            <Label Style="{StaticResource DataLabel}" Text="{Binding OrderDate, StringFormat='Date: {0:MM/dd/yyyy}'}" />
+                                            <Label Style="{StaticResource DataLabel}" Text="{Binding OrderDate}" />
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
                                             <Label Style="{StaticResource DataLabel}" Text="Order Type:" />

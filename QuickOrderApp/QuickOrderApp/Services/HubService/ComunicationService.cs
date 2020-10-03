@@ -17,10 +17,10 @@ namespace QuickOrderApp.Services.HubService
 
         public ComunicationService()
         {
-          
-            hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.144:5000" + "/comunicationhub").Build();
 
-            //hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres94-001-site1.htempurl.com" + "/comunicationhub").Build();
+        //hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.144:5000" + "/comunicationhub").Build();
+
+            hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres9-001-site1.etempurl.com" + "/comunicationhub").Build();
 
             notificationManager = DependencyService.Get<INotificationManager>();
 
