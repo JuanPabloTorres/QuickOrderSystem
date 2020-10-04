@@ -11,7 +11,7 @@
     NavigationPage.HasNavigationBar="False"
     Routing.Route="LoginRoute"
     Shell.NavBarIsVisible="False"
-    Shell.TabBarIsVisible="False"
+    Shell.PresentationMode="ModalAnimated"
     mc:Ignorable="d">
     <StackLayout VerticalOptions="Center">
 

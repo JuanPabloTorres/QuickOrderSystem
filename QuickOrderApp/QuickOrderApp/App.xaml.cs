@@ -50,16 +50,18 @@ namespace QuickOrderApp
          
             MainPage = new AppShell();
 
-            bool islogged = false;
+           
 
-            if (!islogged) 
-            {
-                Shell.Current.GoToAsync("LoginRoute");
-            }
-            else
-            {
+            //bool islogged = false;
 
-            }
+            //if (!islogged) 
+            //{
+            //    Shell.Current.GoToAsync("LoginRoute");
+            //}
+            //else
+            //{
+
+            //}
 
           
         }

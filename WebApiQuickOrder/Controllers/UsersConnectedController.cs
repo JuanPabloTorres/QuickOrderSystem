@@ -160,6 +160,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPost]
         public async Task<ActionResult<UsersConnected>> PostUsersConnected(UsersConnected usersConnected)
         {
+
             _context.usersConnecteds.Add(usersConnected);
             try
             {

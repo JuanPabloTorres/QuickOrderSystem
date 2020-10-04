@@ -18,6 +18,7 @@
     Shell.NavBarIsVisible="True"
     Shell.TabBarForegroundColor="Orange"
     Shell.TabBarIsVisible="True"
+   
     Shell.TabBarTitleColor="Black"
     Shell.TitleColor="Black"
     mc:Ignorable="d">

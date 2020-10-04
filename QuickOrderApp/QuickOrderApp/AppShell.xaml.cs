@@ -17,9 +17,13 @@ namespace QuickOrderApp
         {
             InitializeComponent();
             RegistersRoutes();
-
+       
+           
            
         }
+
+       
+             
 
         void RegistersRoutes()
         {

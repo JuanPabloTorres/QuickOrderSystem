@@ -92,8 +92,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
                         //var loginresult = userDataStore.CheckUserCredential(Username, Password);
                         //Obtiene el token de acceso 
                         App.TokenDto = userDataStore.LoginCredential(Username, Password);
-
-                        
                        
 
                         //Verifica si el resultado del login no es vacio. 
@@ -152,8 +150,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
                             }
 
 
-                          
-                            App.Current.MainPage = new AppShell();                          
+
+                                await Shell.Current.GoToAsync("//RouteName");
+                            //App.Current.MainPage = new AppShell();                          
                             IsLoading = false;
                             }
                            

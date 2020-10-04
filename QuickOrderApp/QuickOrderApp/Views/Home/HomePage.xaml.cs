@@ -24,6 +24,10 @@ namespace QuickOrderApp.Views.Home
             
         }
 
+        protected override bool OnBackButtonPressed()
+        {
+            return false;
+        }
         private async void CollectionView_Scrolled(object sender, ItemsViewScrolledEventArgs e)
         {
             var collectionlastindex = e.LastVisibleItemIndex;
