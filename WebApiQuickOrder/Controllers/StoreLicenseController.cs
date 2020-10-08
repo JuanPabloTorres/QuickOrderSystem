@@ -127,6 +127,7 @@ namespace WebApiQuickOrder.Controllers
             };
 
             _context.StoreLicenses.Add(newStoreLicense);
+
             await _context.SaveChangesAsync();
 
             if (_context.StoreLicenses.Where(l => l.LicenseId == newStoreLicense.LicenseId).FirstOrDefault() != null)
@@ -135,56 +136,58 @@ namespace WebApiQuickOrder.Controllers
                 try
                 {
 
-                    //create the mail message 
-                    MailMessage mail = new MailMessage();
+                    ////create the mail message 
+                    //MailMessage mail = new MailMessage();
 
-                    //set the addresses 
-                    mail.From = new MailAddress("est.juanpablotorres@gmail.com"); //IMPORTANT: This must be same as your smtp authentication address.
-                    mail.To.Add(email);
+                    ////set the addresses 
+                    //mail.From = new MailAddress("est.juanpablotorres@gmail.com"); //IMPORTANT: This must be same as your smtp authentication address.
+                    //mail.To.Add(email);
 
-                    //set the content 
-                    mail.Subject = "This is an email";
-                    mail.Body = "This is from system.net.mail using C sharp with smtp authentication.";
-                    //send the message 
-                    SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+                    ////set the content 
+                    //mail.Subject = "This is an email";
+                    //mail.Body = "This is from system.net.mail using C sharp with smtp authentication.";
+                    ////send the message 
+                    //SmtpClient smtp = new SmtpClient("smtp.gmail.com");
 
-                    //IMPORANT:  Your smtp login email MUST be same as your FROM address. 
-                    NetworkCredential Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt");
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = Credentials;
-                    smtp.Port = 587;    //alternative port number is 8889
-                    smtp.EnableSsl = true;
-                    smtp.Send(mail);
-
-
+                    ////IMPORANT:  Your smtp login email MUST be same as your FROM address. 
+                    //NetworkCredential Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt");
+                    //smtp.UseDefaultCredentials = false;
+                    //smtp.Credentials = Credentials;
+                    //smtp.Port = 587;    //alternative port number is 8889
+                    //smtp.EnableSsl = true;
+                    //smtp.Send(mail);
 
 
 
 
 
-                    //var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
-                    //var receiverEmail = new MailAddress(email, username);
 
-                    //var sub = "Quick Order Lincense Code";
-                    //var body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
-                    //var smtp = new SmtpClient
-                    //{
-                    //    Host = "smtp.gmail.com",
-                    //    Port = 587,
-                    //    Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt"),
-                    //    EnableSsl = true,
-                    //    UseDefaultCredentials = false,
-                    //    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    //};
-                    //using (var mess = new MailMessage(senderEmail, receiverEmail)
-                    //{
-                    //    IsBodyHtml = true,
-                    //    Subject = sub,
-                    //    Body = body
-                    //})
-                    //{
-                    //    smtp.Send(mess);
-                    //}
+
+                    var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
+                    var receiverEmail = new MailAddress(email, username);
+
+                    var sub = "Quick Order Lincense Code";
+
+                    var body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
+
+                    var smtp = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        UseDefaultCredentials = false,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
+                    };
+                    using (var mess = new MailMessage(senderEmail, receiverEmail)
+                    {
+                        IsBodyHtml = true,
+                        Subject = sub,
+                        Body = body
+                    })
+                    {
+                        smtp.Send(mess);
+                    }
 
                     return true;
                 }

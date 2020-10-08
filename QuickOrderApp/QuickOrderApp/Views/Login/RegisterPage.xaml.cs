@@ -11,7 +11,7 @@ namespace QuickOrderApp.Views.Login
         public RegisterPage()
         {
             InitializeComponent();
-            BindingContext = new LoginViewModel(Navigation);
+            BindingContext = new LoginViewModel();
         }
     }
 }

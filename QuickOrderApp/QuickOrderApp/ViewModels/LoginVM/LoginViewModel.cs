@@ -3,7 +3,9 @@ using Library.DTO;
 using Library.Models;
 using Library.Services;
 using Library.Services.Interface;
+using QuickOrderApp.LoginBuilder;
 using QuickOrderApp.Services.HubService;
+using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.Views.Login;
 using Rg.Plugins.Popup.Contracts;
@@ -22,7 +24,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 {
     public class LoginViewModel : BaseViewModel
     {
-        private readonly INavigation Navigation;
+      
 
         #region Commandos
         public ICommand LoginCommand { get; set; }
@@ -38,6 +40,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
         public ICommand ConfirmCodeCommand { get; set; }
 
         #endregion
+
         public List<string> Genders { get; set; }
 
         private bool isloading;
@@ -55,9 +58,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
         IPopupNavigation popupNavigation;
-        public LoginViewModel(INavigation _navigation)
+        public LoginViewModel()
         {
-            Navigation = _navigation;
+           
 
             popupNavigation = PopupNavigation.Instance;
 
@@ -66,103 +69,36 @@ namespace QuickOrderApp.ViewModels.LoginVM
             Username = await SecureStorage.GetAsync("username");
             Password = await SecureStorage.GetAsync("password");
 
-            });
+            }).Wait();
 
             ValidatorsInitializer();
 
-            //App.ComunicationService = new ComunicationService();
+           
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
-            IsLoading = false;
 
+            //IsLoading = false;
 
             LoginCommand = new Command(async () =>
             {
-               
+
                 //var currentuserID = Xamarin.Forms.Application.Current.Properties["loginId "].ToString();
                 IsLoading = true;
 
                 if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
                 {
                     //Verifica si el telefono tiene acceso a internet
-                   
+
 
                     if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-                        //Obtine los credenciales del usuario
-                        //var loginresult = userDataStore.CheckUserCredential(Username, Password);
-                        //Obtiene el token de acceso 
-                        App.TokenDto = userDataStore.LoginCredential(Username, Password);
-                       
 
-                        //Verifica si el resultado del login no es vacio. 
-                        if (App.TokenDto != null)
-                        {
+                        LoginTokenDirector LoginDirector = new LoginTokenDirector();
 
-                            var loginresult = App.TokenDto.UserDetail;
-                            if (!loginresult.IsValidUser)
-                            {
-                                App.LogUser = loginresult;
-                                await popupNavigation.PushAsync(new ValidateEmailCode());
-                                IsLoading = false;
+                        ConcreteLoginTokenBuilder userlog = new ConcreteLoginTokenBuilder();
 
-                            }
-                            else
-                            {
+                        App.TokenDto = LoginDirector.MakeLogin(userlog, Username, Password);
 
-                                Task.Run(async () =>
-                                {
-                                    await App.ComunicationService.Connect();
-                                }).Wait();
-
-                                App.LogUser = loginresult;
-
-                            bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
-
-                            //Verfico si hay tarjetas registradas con el usuario
-                            if (hasPaymentCard)
-                            {
-                                var data = App.LogUser.PaymentCards;
-                                var card = new List<PaymentCard>(data);
-
-
-                                var userCardTokenId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, card[0].StripeCardId);
-
-
-                                App.CardPaymentToken.CardTokenId = userCardTokenId;
-                               
-                            }
-                            
-
-                            if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
-                            {
-
-                            App.UsersConnected = new UsersConnected()
-                            {
-                                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                UserID = App.LogUser.UserId,
-                                IsDisable=false,
-                                ConnecteDate = DateTime.Now
-                            };
-
-                            var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
-
-                            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-                            }
-
-
-
-                                await Shell.Current.GoToAsync("//RouteName");
-                            //App.Current.MainPage = new AppShell();                          
-                            IsLoading = false;
-                            }
-                           
-                        }
-                        else
-                        {
-                            IsLoading = false;
-                            await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login...!", "OK");
-
-                        }
+                        IsLoading = false;
 
                     }
                 }
@@ -175,6 +111,106 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             });
 
+            //LoginCommand = new Command(async () =>
+            //{
+               
+            //    //var currentuserID = Xamarin.Forms.Application.Current.Properties["loginId "].ToString();
+            //    IsLoading = true;
+
+            //    if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+            //    {
+            //        //Verifica si el telefono tiene acceso a internet
+                   
+
+            //        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+            //        {
+            //            //Obtine los credenciales del usuario
+            //            //var loginresult = userDataStore.CheckUserCredential(Username, Password);
+            //            //Obtiene el token de acceso 
+            //            App.TokenDto = userDataStore.LoginCredential(Username, Password);
+                       
+
+            //            //Verifica si el resultado del login no es vacio. 
+            //            if (App.TokenDto != null)
+            //            {
+
+            //                var loginresult = App.TokenDto.UserDetail;
+            //                if (!loginresult.IsValidUser)
+            //                {
+            //                    App.LogUser = loginresult;
+            //                    await popupNavigation.PushAsync(new ValidateEmailCode());
+            //                    IsLoading = false;
+
+            //                }
+            //                else
+            //                {
+
+            //                    Task.Run(async () =>
+            //                    {
+            //                        await App.ComunicationService.Connect();
+            //                    }).Wait();
+
+            //                    App.LogUser = loginresult;
+
+            //                bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
+
+            //                //Verfico si hay tarjetas registradas con el usuario
+            //                if (hasPaymentCard)
+            //                {
+            //                    var data = App.LogUser.PaymentCards;
+            //                    var card = new List<PaymentCard>(data);
+
+
+            //                    var userCardTokenId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, card[0].StripeCardId);
+
+
+            //                    App.CardPaymentToken.CardTokenId = userCardTokenId;
+                               
+            //                }
+                            
+
+            //                if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
+            //                {
+
+            //                App.UsersConnected = new UsersConnected()
+            //                {
+            //                    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+            //                    UserID = App.LogUser.UserId,
+            //                    IsDisable=false,
+            //                    ConnecteDate = DateTime.Now
+            //                };
+
+            //                var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
+            //                var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+            //                }
+
+
+
+            //                    App.Current.MainPage = new AppShell();                          
+            //                    await Shell.Current.GoToAsync("//RouteName");
+            //                IsLoading = false;
+            //                }
+                           
+            //            }
+            //            else
+            //            {
+            //                IsLoading = false;
+            //                await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login...!", "OK");
+
+            //            }
+
+            //        }
+            //    }
+            //    else
+            //    {
+            //        IsLoading = false;
+            //        await App.Current.MainPage.DisplayAlert("Notification", "Empty values...!", "OK");
+
+            //    }
+
+            //});
+
             LoginEmployeeCommand = new Command(async () =>
             {
                 IsLoading = true;
@@ -183,61 +219,70 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                     //var loginresult = userDataStore.CheckUserCredential(Username, Password);
                     App.TokenDto = userDataStore.LoginCredential(Username, Password);
-
-
-                    var loginresult = App.TokenDto.UserDetail;
-                    if (loginresult != null)
+                    if (App.TokenDto != null)
                     {
-                        Task.Run(async () =>
+                        var loginresult = App.TokenDto.UserDetail;
+                        if (loginresult != null)
                         {
-                            await App.ComunicationService.Connect();
-                        }).Wait();
-
-                        var userEmployees = await EmployeeDataStore.GetUserEmployees(loginresult.UserId.ToString());
-                        App.LogUser = loginresult;
-
-
-                        if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
-                        {
-
-                            App.UsersConnected = new UsersConnected()
+                            Task.Run(async () =>
                             {
-                                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                UserID = App.LogUser.UserId,
-                                IsDisable = false,
-                                ConnecteDate = DateTime.Now
-                            };
+                                await App.ComunicationService.Connect();
+                            }).Wait();
 
-                            var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+                            var userEmployees = await EmployeeDataStore.GetUserEmployees(loginresult.UserId.ToString());
+                            App.LogUser = loginresult;
 
-                            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+
+                            if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
+                            {
+
+                                App.UsersConnected = new UsersConnected()
+                                {
+                                    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                    UserID = App.LogUser.UserId,
+                                    IsDisable = false,
+                                    ConnecteDate = DateTime.Now
+                                };
+
+                                var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
+                                var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                            }
+
+                            //App.UsersConnected = new UsersConnected()
+                            //{
+                            //    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                            //    UserID = App.LogUser.UserId,
+                            //    IsDisable = false,
+                            //    ConnecteDate = DateTime.Now
+                            //};
+                            //var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
+
+                            //var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+
+                            App.Current.MainPage = new EmployeeShell();
+                            IsLoading = false;
+
                         }
+                        else
+                        {
+                            await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login.", "OK");
 
-                        //App.UsersConnected = new UsersConnected()
-                        //{
-                        //    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                        //    UserID = App.LogUser.UserId,
-                        //    IsDisable = false,
-                        //    ConnecteDate = DateTime.Now
-                        //};
-                        //var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
-
-                       
-                        //var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-
-                        App.Current.MainPage = new EmployeeShell();
-                        IsLoading = false;
-
+                        }
                     }
                     else
                     {
-                        await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login.", "OK");
-
+                        await App.Current.MainPage.DisplayAlert("Notification", "Some error has ocurred, try againg.", "OK");
+                        IsLoading = false;
                     }
+
+                   
                 }
                 else
                 {
                     await App.Current.MainPage.DisplayAlert("Notification", "Empty inputs.", "OK");
+                    IsLoading = false;
 
                 }
 
@@ -264,8 +309,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                     if (!await userDataStore.EmailExist(Email))
                     {
-
                     ConfirmAndPasswordValidator = ValidatorRules.PasswordAndConfirmPasswordEquals(Password, ConfirmPassword);
+
                     //Verificamos que el password y el confirmpassword matcheen
                     if (!ConfirmAndPasswordValidator.HasError)
                     {
@@ -317,7 +362,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                 {
                                     Task.Run(async() => 
                                     { 
+
                                      await App.ComunicationService.Connect();
+
                                     }).Wait();
 
                                     newUser.StripeUserId = customertokenId;

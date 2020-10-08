@@ -136,6 +136,9 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+
+      
+
         public OrderPresenter(Order order)
         {
             OrderId = order.OrderId;

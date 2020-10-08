@@ -32,6 +32,19 @@
                 IsVisible="{Binding LoadingManager.contentVisible}"
                 ItemsSource="{Binding StoreOrderPresenters}"
                 VerticalOptions="Center">
+
+                <CollectionView.Footer>
+                    <button:SfButton
+                        Margin="20,0,20,0"
+                        BackgroundColor="Transparent"
+                        Command="{Binding MoreCommand}"
+                        CornerRadius="5"
+                        FontFamily="RobotoBold"
+                        FontSize="18"
+                        Text="More"
+                        TextColor="#2F3538" />
+                </CollectionView.Footer>
+
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout
                         Orientation="Vertical"

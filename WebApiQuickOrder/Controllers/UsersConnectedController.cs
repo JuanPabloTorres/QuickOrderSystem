@@ -25,8 +25,8 @@ namespace WebApiQuickOrder.Controllers
 
             _context = context;
 
-            hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres9-001-site1.etempurl.com" + "/comunicationhub").Build();
-            //hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000" + "/comunicationhub").Build();
+            //hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres9-001-site1.etempurl.com" + "/comunicationhub").Build();
+            hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000" + "/comunicationhub").Build();
         }
 
         // GET: api/UsersConnected
