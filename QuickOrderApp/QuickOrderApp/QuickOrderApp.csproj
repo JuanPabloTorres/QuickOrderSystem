@@ -52,6 +52,7 @@
     <PackageReference Include="Xamarin.Plugin.SharedTransitions" Version="2.2.0" />
     <PackageReference Include="ZXing.Net.Mobile" Version="2.4.1" />
     <PackageReference Include="ZXing.Net.Mobile.Forms" Version="2.4.1" />
+    <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.1.0.714" />
   </ItemGroup>
 
   <ItemGroup>

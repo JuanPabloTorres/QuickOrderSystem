@@ -6,10 +6,17 @@
     xmlns:converters="clr-namespace:QuickOrderApp.Utilities.Converters"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:frame="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     mc:Ignorable="d">
     <Application.Resources>
 
 
+        <Style x:Key="frameCakeStyle" TargetType="frame:PancakeView">
+            <Setter Property="BackgroundColor" Value="#fefcff" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="BorderColor" Value="LightGray" />
+        </Style>
         <Style x:Key="FrameStyle" TargetType="Frame">
             <Setter Property="BackgroundColor" Value="#fefcff" />
             <Setter Property="CornerRadius" Value="10" />

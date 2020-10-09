@@ -8,6 +8,7 @@
     xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:forms="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:frame="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
     Title="{Binding OrderStatus}"
     BackgroundColor="{x:StaticResource BackgroundColor}"
     IsBusy="{Binding LoadingManager.IsLoading}"
@@ -56,7 +57,10 @@
                     <DataTemplate>
                         <ContentView Margin="3">
 
-                            <Frame Padding="0" Style="{x:StaticResource FrameStyle}">
+                            <frame:PancakeView Padding="0" Style="{x:StaticResource frameCakeStyle}">
+                                 <frame:PancakeView.Shadow>
+                                    <frame:DropShadow Color="#000000" Offset="5,5" Opacity="0.5" />
+                                </frame:PancakeView.Shadow>
 
                                 <StackLayout BackgroundColor="White">
 
@@ -137,7 +141,7 @@
                                             TextColor="#2F3538" />
                                     </StackLayout>
                                 </StackLayout>
-                            </Frame>
+                            </frame:PancakeView>
 
                         </ContentView>
                     </DataTemplate>

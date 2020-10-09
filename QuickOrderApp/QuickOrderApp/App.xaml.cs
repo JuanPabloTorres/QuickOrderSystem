@@ -25,7 +25,7 @@ namespace QuickOrderApp
         public static string LocalBackendUrl =
         DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.1.144:5000/api" : "http://192.168.1.144:5000/api";
 
-        public static bool UseMockDataStore = true;
+        public static bool UseMockDataStore = false;
 
         public static User LogUser;
 
