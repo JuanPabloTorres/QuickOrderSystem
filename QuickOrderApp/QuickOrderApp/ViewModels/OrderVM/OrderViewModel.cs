@@ -250,7 +250,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                                   
 
-                                    item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
+                                    item.StoreOrder = await StoreDataStore.GetStoreInformation(item.StoreId);
 
                                     var presenter = new OrderPresenter(item);
 
@@ -304,7 +304,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                                 if (!UserOrders.Any(s => s.OrderId == item.OrderId))
                                 {
 
-                                    item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
+                                    item.StoreOrder = await StoreDataStore.GetStoreInformation(item.StoreId);
                                     var presenter = new OrderPresenter(item);
 
                                     UserOrders.Add(presenter);
@@ -358,7 +358,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                                 if (!UserOrders.Any(s => s.OrderId == item.OrderId))
                                 {
 
-                                    item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
+                                    item.StoreOrder = await StoreDataStore.GetStoreInformation(item.StoreId);
                                     var presenter = new OrderPresenter(item);
 
                                     UserOrders.Add(presenter);
