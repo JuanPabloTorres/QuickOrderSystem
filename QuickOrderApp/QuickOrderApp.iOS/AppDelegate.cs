@@ -1,3 +1,4 @@
+using FFImageLoading.Forms.Platform;
 using Foundation;
 using Syncfusion.SfNumericUpDown.XForms.iOS;
 using Syncfusion.SfPicker.XForms.iOS;
@@ -24,6 +25,9 @@ namespace QuickOrderApp.iOS
         {
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
             global::Xamarin.Forms.Forms.Init();
+            Rg.Plugins.Popup.Popup.Init();
+            ZXing.Net.Mobile.Forms.iOS.Platform.Init();
+            CachedImageRenderer.Init();
             SfPickerRenderer.Init();
             SfComboBoxRenderer.Init();
             SfRadioButtonRenderer.Init();

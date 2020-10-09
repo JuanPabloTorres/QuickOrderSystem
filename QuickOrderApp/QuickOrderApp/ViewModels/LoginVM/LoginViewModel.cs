@@ -57,10 +57,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
 
-        IPopupNavigation popupNavigation;
-        public LoginViewModel()
+        IPopupNavigation popupNavigation;           
+        public LoginViewModel(/*INavigation _navigation*/)
         {
-           
+            //Navigation = _navigation;
 
             popupNavigation = PopupNavigation.Instance;
 
