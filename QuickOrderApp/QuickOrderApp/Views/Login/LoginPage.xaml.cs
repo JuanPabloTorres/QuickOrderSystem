@@ -12,7 +12,11 @@ namespace QuickOrderApp.Views.Login
         public LoginPage()
         {
             InitializeComponent();
+<<<<<<< Updated upstream
             BindingContext = new LoginViewModel();
+=======
+            BindingContext = new LoginViewModel(/*Navigation*/);
+>>>>>>> Stashed changes
         }
     }
 }
