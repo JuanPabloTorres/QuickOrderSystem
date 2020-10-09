@@ -60,6 +60,9 @@ namespace QuickOrderApp
             Routing.RegisterRoute(StoreSettings.Route, typeof(StoreSettings));
             Routing.RegisterRoute(UpdateStorePage.Route, typeof(UpdateStorePage));
 
+            Routing.RegisterRoute(RegisterPage.Route, typeof(RegisterPage));
+            Routing.RegisterRoute(ForgotPasswordPage.Route, typeof(ForgotPasswordPage));
+
         }
     }
 }

@@ -75,12 +75,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
             
             });
 
-            //Task.Run(async() => 
-            //{
-            
-            //    await LoadItems();
-            //}).Wait();
-           
+          
 
             SelectedStore = new Store();
 

@@ -181,7 +181,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
             foreach (var item in orderData)
             {
 
-                item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
+                item.StoreOrder = await StoreDataStore.GetStoreInformation(item.StoreId);
                 var presenter = new OrderPresenter(item);
 
                 UserOrders.Add(presenter);
@@ -229,7 +229,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                             foreach (var item in data)
                             {
-                                if (!tempData.Any(s => s.StoreId == item.StoreId))
+                                if (!tempData.Any(s => s.OrderId == item.OrderId))
                                 {
 
                                     tempData.Add(item);

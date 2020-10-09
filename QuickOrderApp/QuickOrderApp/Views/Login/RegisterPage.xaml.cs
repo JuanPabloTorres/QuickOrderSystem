@@ -8,6 +8,7 @@ namespace QuickOrderApp.Views.Login
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RegisterPage : ContentPage
     {
+        public static string Route = "RegisterPageRoute";
         public RegisterPage()
         {
             InitializeComponent();

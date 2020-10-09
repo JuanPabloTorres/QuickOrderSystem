@@ -89,12 +89,11 @@ namespace WebApiQuickOrder.Controllers
                 List<Order> orders = new List<Order>();
 
 
-                var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status).Include(op=>op.OrderProducts).ToListAsync();
+                var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status && o.IsDisisble == false).Include(op=>op.OrderProducts).ToListAsync();
 
                 foreach (var item in result)
                 {
-                    if (!item.IsDisisble)
-                    {
+                    
                         if (!ordersAdded.Any(x => x.OrderId == item.OrderId))
                         {
                             orders.Add(item);
@@ -105,7 +104,7 @@ namespace WebApiQuickOrder.Controllers
                             }
                         }
 
-                    }
+                    
                 }
 
 

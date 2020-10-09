@@ -18,7 +18,6 @@
     Shell.NavBarIsVisible="True"
     Shell.TabBarForegroundColor="Orange"
     Shell.TabBarIsVisible="True"
-   
     Shell.TabBarTitleColor="Black"
     Shell.TitleColor="Black"
     mc:Ignorable="d">
@@ -97,10 +96,11 @@
                                         <!--<Image Aspect="Fill" Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />-->
                                     </Frame>
                                     <Label Style="{StaticResource TitleLabel}" Text="{Binding StoreName}" />
+
                                     <BoxView
                                         Margin="10,0,10,0"
                                         BackgroundColor="LightGray"
-                                        HeightRequest="0.1"
+                                        HeightRequest="1"
                                         HorizontalOptions="Fill" />
 
                                     <StackLayout

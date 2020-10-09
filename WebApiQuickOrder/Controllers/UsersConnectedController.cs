@@ -41,6 +41,11 @@ namespace WebApiQuickOrder.Controllers
         {
             var userconnections = await _context.usersConnecteds.Where(usc => usc.UserID == usersConnected.UserID && usc.IsDisable == false).ToListAsync();
 
+            if (userconnections.Count == 0)
+            {
+                return true;
+            }
+
 
             if (userconnections.Count() > 0)
             {
@@ -57,10 +62,9 @@ namespace WebApiQuickOrder.Controllers
 
                 return true;
             }
-            else
-            {
-                return NotFound();
-            }
+
+
+            return NotFound();
         }
 
 
@@ -154,6 +158,7 @@ namespace WebApiQuickOrder.Controllers
            
         }
 
+
         // POST: api/UsersConnected
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -161,25 +166,62 @@ namespace WebApiQuickOrder.Controllers
         public async Task<ActionResult<UsersConnected>> PostUsersConnected(UsersConnected usersConnected)
         {
 
-            _context.usersConnecteds.Add(usersConnected);
-            try
+            var result = await ModifyOldConnections(usersConnected);
+
+
+            if (result.Value)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UsersConnectedExists(usersConnected.HubConnectionID))
+                _context.usersConnecteds.Add(usersConnected);
+                try
                 {
-                    return Conflict();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateException)
                 {
-                    throw;
+                    if (UsersConnectedExists(usersConnected.HubConnectionID))
+                    {
+                        return Conflict();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+
+                return CreatedAtAction("GetUsersConnected", new { id = usersConnected.HubConnectionID }, usersConnected);
+
             }
 
-            return CreatedAtAction("GetUsersConnected", new { id = usersConnected.HubConnectionID }, usersConnected);
+            return null;
         }
+
+
+        //// POST: api/UsersConnected
+        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
+        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        //[HttpPost]
+        //public async Task<ActionResult<UsersConnected>> PostUsersConnected(UsersConnected usersConnected)
+        //{
+
+        //    _context.usersConnecteds.Add(usersConnected);
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateException)
+        //    {
+        //        if (UsersConnectedExists(usersConnected.HubConnectionID))
+        //        {
+        //            return Conflict();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return CreatedAtAction("GetUsersConnected", new { id = usersConnected.HubConnectionID }, usersConnected);
+        //}
 
         // DELETE: api/UsersConnected/5
         [HttpDelete("{id}")]

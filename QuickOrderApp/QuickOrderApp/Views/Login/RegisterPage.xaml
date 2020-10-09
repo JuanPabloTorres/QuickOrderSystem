@@ -11,7 +11,9 @@
     Title="Register New User"
     BackgroundColor="{x:StaticResource BackgroundColor}"
     NavigationPage.HasNavigationBar="False"
+    Routing.Route="RegisterPageRoute"
     Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
+    Shell.NavBarIsVisible="True"
     Shell.TabBarIsVisible="False"
     mc:Ignorable="d">
 

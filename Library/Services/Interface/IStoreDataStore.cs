@@ -23,5 +23,7 @@ namespace Library.Services.Interface
         Task<IEnumerable<Store>> GetDifferentStore(IEnumerable<Store> storesAdded);
 
         Task<Store> GetStoreSimpleInformation(Guid id);
+
+        Task<Store> GetStoreInformation(Guid id);
     }
 }

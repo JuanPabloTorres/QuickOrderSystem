@@ -105,6 +105,14 @@ namespace Library.Services
             throw new NotImplementedException();
         }
 
+        public async Task<Store> GetStoreInformation(Guid id)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoreInformation)}/{id}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            Store deserializeObject = JsonConvert.DeserializeObject<Store>(response);
+            return deserializeObject;
+        }
+
         public IEnumerable<Store> GetStoresFromUser(Guid userid)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoresFromUser)}/{userid}");

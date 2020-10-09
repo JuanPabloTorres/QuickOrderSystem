@@ -13,17 +13,28 @@ namespace QuickOrderApp.LoginBuilder
 
             loginBuilder.CreateLoginToken(username, password);
 
-            loginBuilder.VerifyLogin();
+            if (loginBuilder.GetLogin() != null)
+            {
+                loginBuilder.VerifyLogin();
 
-            loginBuilder.MakeHubConnection();
+                loginBuilder.MakeHubConnection();
 
-            loginBuilder.GoQuickOrderHome();
+                return loginBuilder.GetLogin();
 
-            return loginBuilder.GetLogin();
+            }
+            else
+            {
+                loginBuilder.ErrorMessage();
+                return null;
+            }
+
+
 
 
 
         }
+
+       
 
     }
 }

@@ -16,9 +16,7 @@ namespace Library.Interface
         public static string LocalBackendUrl = "http://192.168.1.144:5000/api";
 
         //public static string LocalBackendUrl = "http://juantorres9-001-site1.etempurl.com/api";
-              //public static string LocalBackendUrl = "http://192.168.1.133:5000/api";
-        //public static string LocalBackendUrl = "http://192.168.56.1:5000/api";
-        //public static string LocalBackendUrl = "https://192.168.1.132:5001/api";
+             
 
         protected Uri FullAPIUri { get; set; }
 
