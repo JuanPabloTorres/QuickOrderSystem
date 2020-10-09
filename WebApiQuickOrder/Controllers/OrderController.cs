@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -370,9 +371,47 @@ namespace WebApiQuickOrder.Controllers
 
         [HttpGet("[action]/{storeId}")]
         [Authorize(Policy  = Policies.StoreControl)]       
-        public IEnumerable<Order> GetStoreOrders(Guid storeId)
+        public async Task<IEnumerable<Order>> GetStoreOrders(Guid storeId)
         {
-            return _context.Orders.Where(e => e.StoreId == storeId && e.OrderStatus == Status.Submited).Include(o => o.OrderProducts).ToList();
+            var result = await _context.Orders.Where(e => e.StoreId == storeId && e.OrderStatus == Status.Submited).Include(o => o.OrderProducts).Take(5).ToListAsync();
+
+
+            return result;
+        }
+
+        [HttpPost("[action]/{storeId}")]
+        public async Task<IEnumerable<Order>> GetDifferentStoreOrders(IEnumerable<Order> orders, Guid storeId)
+        {
+
+
+            if (orders != null)
+            {
+                List<Order> differentOrders = new List<Order>();
+
+                var results = _context.Orders.Where(o => o.OrderStatus == Status.Submited && o.StoreId == storeId).Include(op => op.OrderProducts);
+
+                foreach (var item in results)
+                {
+
+                    if (!orders.Any(x => x.OrderId == item.OrderId))
+                    {
+                        differentOrders.Add(item);
+
+                        if (differentOrders.Count == 5)
+                        {
+                            return differentOrders;
+                        }
+                    }
+
+                }
+
+
+                return differentOrders;
+
+            }
+
+            return null;
+
         }
     }
 }

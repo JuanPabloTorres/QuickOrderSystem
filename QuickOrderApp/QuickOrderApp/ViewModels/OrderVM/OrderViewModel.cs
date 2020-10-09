@@ -23,8 +23,21 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
         public ObservableCollection<ProductPresenter> ProductPresenters { get; set; }
       
-        public ICommand GetOrdersCommand { get; set; }
+        public ICommand GetOrdersCommand => new Command<string>(async (arg) =>
+            {
+
+                await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}");
+
+
+    });
       
+        public ICommand MoreCommand => new Command(async() => 
+        {
+            await LoadUserOrderWithStatus(OrderStatus);
+
+           
+
+        });
 
         private string orderId;
 
@@ -93,66 +106,10 @@ namespace QuickOrderApp.ViewModels.OrderVM
         Dictionary<string, IEnumerable<Order>> KeyValues { get; set; }
 
 
-        public ICommand MoreCommand => new Command(async() => 
-        {
-            await LoadUserOrderWithStatus(OrderStatus);
-
-            //LoadingManager.OnLoading();
-            //Status _statusvalue = (Status)Enum.Parse(typeof(Status), OrderStatus);
-            //List<Order> tempData = new List<Order>();
-
-            //var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"], _statusvalue,App.LogUser.UserId);
-
-            //if (data != null)
-            //{
-            //    foreach (var item in KeyValues["orderAdded"])
-            //    {
-            //        if (!tempData.Any(o => o.OrderId == item.OrderId))
-            //        {
-
-            //            tempData.Add(item);
-            //        }
-            //    }
-
-            //    foreach (var item in data)
-            //    {
-            //        if (!tempData.Any(s => s.StoreId == item.StoreId))
-            //        {
-
-            //            tempData.Add(item);
-
-            //        }
-
-            //    }
-
-            //    KeyValues.Clear();
-            //    KeyValues.Add("orderAdded", tempData);
-
-
-            //    foreach (var item in KeyValues["orderAdded"])
-            //    {
-
-            //        if (!UserOrders.Any(s => s.OrderId == item.OrderId))
-            //        {
-
-            //            item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-            //            var presenter = new OrderPresenter(item);
-
-            //            UserOrders.Add(presenter);
-
-            //        }
-            //    }
-            //}
-
-            //LoadingManager.OffLoading();
-
-        });
         public OrderViewModel()
         {
-            
-            UserOrders = new ObservableCollection<OrderPresenter>();
-            LoadingManager = new LoadingManager();
-            KeyValues = new Dictionary<string, IEnumerable<Order>>();
+
+            PropertiesInitialization();
 
             MessagingCenter.Subscribe<Order>(this, "RemoveOrderSubtmitedMsg", (sender) =>
             {
@@ -171,13 +128,21 @@ namespace QuickOrderApp.ViewModels.OrderVM
                
             });
 
-            GetOrdersCommand = new Command<string>(async (arg) =>
-            {
+            //GetOrdersCommand = new Command<string>(async (arg) =>
+            //{
 
-                await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}");
+            //    await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}");
               
 
-            });
+            //});
+        }
+
+
+        void PropertiesInitialization()
+        {
+            UserOrders = new ObservableCollection<OrderPresenter>();
+            LoadingManager = new LoadingManager();
+            KeyValues = new Dictionary<string, IEnumerable<Order>>();
         }
 
         public async Task SetOrders()
@@ -216,7 +181,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
             foreach (var item in orderData)
             {
 
-                item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
                 var presenter = new OrderPresenter(item);
 
                 UserOrders.Add(presenter);
@@ -225,6 +190,8 @@ namespace QuickOrderApp.ViewModels.OrderVM
             LoadingManager.OffLoading();
         }
 
+
+      
         async Task LoadUserOrderWithStatus(string value)
         {
             LoadingManager.OnLoading();
@@ -244,8 +211,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                 case Status.Completed:
                     {
-                       
-
 
                         List<Order> tempData = new List<Order>();
 
@@ -283,13 +248,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
                                 if (!UserOrders.Any(s => s.OrderId == item.OrderId))
                                 {
 
-                                    //Task.Run(async() =>
-                                    //{
-                                    //    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                                  
 
-                                    //}).Wait();
-
-                                    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                                    item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
 
                                     var presenter = new OrderPresenter(item);
 
@@ -324,7 +285,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                             foreach (var item in data)
                             {
-                                if (!tempData.Any(s => s.StoreId == item.StoreId))
+                                if (!tempData.Any(s => s.OrderId == item.OrderId))
                                 {
 
                                     tempData.Add(item);
@@ -343,7 +304,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                                 if (!UserOrders.Any(s => s.OrderId == item.OrderId))
                                 {
 
-                                    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                                    item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
                                     var presenter = new OrderPresenter(item);
 
                                     UserOrders.Add(presenter);
@@ -354,16 +315,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                         break;
 
-                        //UserOrders.Clear();
-
-                        //foreach (var item in orderData)
-                        //{
-
-                        //    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-                        //    var presenter = new OrderPresenter(item);
-
-                        //    UserOrders.Add(presenter);
-                        //}
+                      
 
                     }
                 case Status.Submited:
@@ -387,7 +339,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                             foreach (var item in data)
                             {
-                                if (!tempData.Any(s => s.StoreId == item.StoreId))
+                                if (!tempData.Any(s => s.OrderId == item.OrderId))
                                 {
 
                                     tempData.Add(item);
@@ -406,7 +358,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                                 if (!UserOrders.Any(s => s.OrderId == item.OrderId))
                                 {
 
-                                    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                                    item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
                                     var presenter = new OrderPresenter(item);
 
                                     UserOrders.Add(presenter);
@@ -416,16 +368,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                         }
 
 
-                        //UserOrders.Clear();
-
-                        //foreach (var item in orderData)
-                        //{
-
-                        //    item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-                        //    var presenter = new OrderPresenter(item);
-
-                        //    UserOrders.Add(presenter);
-                        //}
+                      
 
                         break;
                     }

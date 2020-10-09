@@ -25,6 +25,35 @@ namespace Library.Services
             return deserializeObject;
         }
 
+        public async Task<IEnumerable<Order>> GetDifferentStoreOrders(IEnumerable<Order> orders,Guid storeId)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetDifferentStoreOrders)}/{storeId}");
+
+            var serializeObj = JsonConvert
+             .SerializeObject(orders, Formatting.Indented, new JsonSerializerSettings
+             {
+                 //ContractResolver = new JsonPrivateResolver(),
+                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+                 NullValueHandling = NullValueHandling.Include
+             });
+
+            var buffer = System.Text.Encoding.UTF8.GetBytes(serializeObj);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+            var response = await HttpClient.PostAsync(FullAPIUri, byteContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                IEnumerable<Order> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Order>>(await response.Content.ReadAsStringAsync());
+                return deserializeObject;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public async Task<IEnumerable<Order>> GetOrdersOfStoreOfUserWithSpecifiStatus(Guid userid, Guid storeid, Status status)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetOrdersOfStoreOfUserWithSpecifiStatus)}/{userid}/{storeid}/{status}");

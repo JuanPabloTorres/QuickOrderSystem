@@ -130,6 +130,20 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/Store/5
         [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<Store>> GetStoreSimpleInformation(Guid id)
+        {
+            var store = await _context.Stores.Where(s => s.StoreId == id).FirstOrDefaultAsync();
+
+            if (store == null)
+            {
+                return NotFound();
+            }
+
+            return store;
+        }
+
+        // GET: api/Store/5
+        [HttpGet("[action]/{id}")]
         public async Task<ActionResult<Store>> GetAvailableStoreInformation(Guid id)
         {
             var store = await _context.Stores.Where(s => s.StoreId == id && s.IsDisable == false).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();

@@ -60,17 +60,7 @@
 
                                 <StackLayout BackgroundColor="White">
 
-                                    <!--<Frame
-                                        Padding="0"
-                                        HeightRequest="130"
-                                        HorizontalOptions="Fill"
-                                        IsClippedToBounds="True">
-                                        <ff:CachedImage Aspect="Fill" Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}" />
 
-                                    -->
-                                    <!--<Image Aspect="Fill" Source="{Binding StoreImage, Converter={StaticResource BytesToImgConverter}}" />-->
-                                    <!--
-                                    </Frame>-->
                                     <Label Style="{StaticResource TitleLabel}" Text="{Binding StoreName}" />
                                     <BoxView
                                         Margin="8,0,8,0"

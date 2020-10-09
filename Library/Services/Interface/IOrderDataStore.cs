@@ -23,5 +23,7 @@ namespace Library.Services.Interface
         Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Order> ordersAdded,Status status,Guid userid);
 
         Task<bool> DisableOrder(Guid orderId);
+
+        Task<IEnumerable<Order>> GetDifferentStoreOrders(IEnumerable<Order> orders,Guid storeId);
     }
 }

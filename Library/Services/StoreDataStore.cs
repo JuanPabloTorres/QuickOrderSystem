@@ -113,6 +113,16 @@ namespace Library.Services
             return deserializeObject;
         }
 
+        public async Task<Store> GetStoreSimpleInformation(Guid id)
+        {
+
+          
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoreSimpleInformation)}/{id}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            Store deserializeObject = JsonConvert.DeserializeObject<Store>(response);
+            return deserializeObject;
+        }
+
         public async Task<IEnumerable<Store>> SearchStore(string searchStore)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(SearchStore)}/{searchStore}");
