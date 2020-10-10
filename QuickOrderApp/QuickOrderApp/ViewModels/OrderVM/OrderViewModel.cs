@@ -105,7 +105,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
         Dictionary<string, IEnumerable<Order>> KeyValues { get; set; }
 
+        private MoreManager<Order> MoreManager;
 
+        private string keyname = "orderAdded";
         public OrderViewModel()
         {
 
@@ -142,6 +144,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
         {
             UserOrders = new ObservableCollection<OrderPresenter>();
             LoadingManager = new LoadingManager();
+            MoreManager = new MoreManager<Order>();
             KeyValues = new Dictionary<string, IEnumerable<Order>>();
         }
 
@@ -172,9 +175,14 @@ namespace QuickOrderApp.ViewModels.OrderVM
             var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue, App.TokenDto.Token);
 
 
-            KeyValues.Clear();
+            if (!MoreManager.ExistKey(keyname))
+            {
+                MoreManager.AddKeyAndValues(keyname, orderData);
+            }
+
+            //KeyValues.Clear();
            
-            KeyValues.Add("orderAdded", orderData);
+            //KeyValues.Add("orderAdded", orderData);
 
             UserOrders.Clear();
 
@@ -199,10 +207,10 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
             var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue,App.TokenDto.Token);
 
-            if (!KeyValues.ContainsKey("orderAdded"))
+            if (!MoreManager.ExistKey(keyname))
             {
 
-            KeyValues.Add("orderAdded", orderData);
+            MoreManager.AddKeyAndValues(keyname, orderData);
             }
 
            
@@ -212,37 +220,16 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 case Status.Completed:
                     {
 
-                        List<Order> tempData = new List<Order>();
+                        var orderdata = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(MoreManager.DataValues[keyname], _statusvalue,App.LogUser.UserId);
 
-                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"], _statusvalue,App.LogUser.UserId);
-
-                        if (data != null)
+                        if (orderdata != null)
                         {
-                            foreach (var item in KeyValues["orderAdded"])
-                            {
-                                if (!tempData.Any(o => o.OrderId == item.OrderId))
-                                {
+                            var differentValue = MoreManager.InsertDifferentDataValue(orderdata, keyname);
 
-                                    tempData.Add(item);
-                                }
-                            }
-
-                            foreach (var item in data)
-                            {
-                                if (!tempData.Any(s => s.OrderId == item.OrderId))
-                                {
-
-                                    tempData.Add(item);
-
-                                }
-
-                            }
-
-                            KeyValues.Clear();
-                            KeyValues.Add("orderAdded", tempData);
+                            MoreManager.ModifyDictionary(keyname, differentValue);
 
 
-                            foreach (var item in KeyValues["orderAdded"])
+                            foreach (var item in MoreManager.DataValues[keyname])
                             {
 
                                 if (!UserOrders.Any(s => s.OrderId == item.OrderId))
@@ -268,37 +255,16 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 case Status.NotSubmited:
                     {
 
-                        List<Order> tempData = new List<Order>();
+                        var orderdata = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(MoreManager.DataValues[keyname], _statusvalue,App.LogUser.UserId);
 
-                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"],_statusvalue,App.LogUser.UserId);
-
-                        if (data != null)
+                        if (orderdata != null)
                         {
-                            foreach (var item in KeyValues["orderAdded"])
-                            {
-                                if (!tempData.Any(o => o.OrderId == item.OrderId))
-                                {
+                            var differentValue = MoreManager.InsertDifferentDataValue(orderdata, keyname);
 
-                                    tempData.Add(item);
-                                }
-                            }
-
-                            foreach (var item in data)
-                            {
-                                if (!tempData.Any(s => s.OrderId == item.OrderId))
-                                {
-
-                                    tempData.Add(item);
-
-                                }
-
-                            }
-
-                            KeyValues.Clear();
-                            KeyValues.Add("orderAdded", tempData);
+                            MoreManager.ModifyDictionary(keyname, differentValue);
 
 
-                            foreach (var item in KeyValues["orderAdded"])
+                            foreach (var item in MoreManager.DataValues[keyname])
                             {
 
                                 if (!UserOrders.Any(s => s.OrderId == item.OrderId))
@@ -321,38 +287,16 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 case Status.Submited:
                     {
 
+                        var orderdata = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(MoreManager.DataValues[keyname], _statusvalue,App.LogUser.UserId);
 
-                        List<Order> tempData = new List<Order>();
-
-                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"], _statusvalue,App.LogUser.UserId);
-
-                        if (data != null)
+                        if (orderdata != null)
                         {
-                            foreach (var item in KeyValues["orderAdded"])
-                            {
-                                if (!tempData.Any(o => o.OrderId == item.OrderId))
-                                {
+                            var differentValue = MoreManager.InsertDifferentDataValue(orderdata, keyname);
 
-                                    tempData.Add(item);
-                                }
-                            }
-
-                            foreach (var item in data)
-                            {
-                                if (!tempData.Any(s => s.OrderId == item.OrderId))
-                                {
-
-                                    tempData.Add(item);
-
-                                }
-
-                            }
-
-                            KeyValues.Clear();
-                            KeyValues.Add("orderAdded", tempData);
+                            MoreManager.ModifyDictionary(keyname, differentValue);
 
 
-                            foreach (var item in KeyValues["orderAdded"])
+                            foreach (var item in MoreManager.DataValues[keyname])
                             {
 
                                 if (!UserOrders.Any(s => s.OrderId == item.OrderId))

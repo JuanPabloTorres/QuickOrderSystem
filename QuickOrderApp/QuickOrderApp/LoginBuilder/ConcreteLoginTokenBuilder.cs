@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Library.Models;
 using Library.Services;
+using QuickOrderApp.Views.Store.EmployeeStoreControlPanel;
 
 namespace QuickOrderApp.LoginBuilder
 {
@@ -25,10 +26,11 @@ namespace QuickOrderApp.LoginBuilder
             await Shell.Current.GoToAsync("//RouteName");
         }
 
-        public  override void GoEmployeeHome()
+        public  async override void GoEmployeeHome()
         {
-            App.Current.MainPage = new EmployeeShell();
-            
+            App.Current.MainPage = new AppShell();
+            await Shell.Current.GoToAsync("EmployeeControlPanelRoute");
+
         }
 
         public async override void MakeHubConnection()

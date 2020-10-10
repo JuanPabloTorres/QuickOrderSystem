@@ -58,6 +58,9 @@ namespace QuickOrderApp.ViewModels.HomeVM
        public LoadingManager LoadingManager { get; set; }
 
         Dictionary<string,IEnumerable<Store>> KeyValues { get; set; }
+
+        private MoreManager<Store> MoreManager;
+        private string keyname = "storeAdded";
         static int group;
         public HomeViewModel()
         {
@@ -66,7 +69,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
             KeyValues = new Dictionary<string, IEnumerable<Store>>();
             Stores = new ObservableCollection<StorePresenters>();
             LoadingManager = new LoadingManager();
-
+            MoreManager = new MoreManager<Store>();
 
             MoreCommand = new Command(async() =>
             {
@@ -98,11 +101,14 @@ namespace QuickOrderApp.ViewModels.HomeVM
                 
             var storeData = await StoreDataStore.GetAvailableStore();
 
-                if (!KeyValues.ContainsKey("storeAdded"))
-                {
+                //if (!KeyValues.ContainsKey("storeAdded"))
+                //{
 
-                    KeyValues.Add("storeAdded", storeData);
-                }
+                //    KeyValues.Add("storeAdded", storeData);
+                //}
+
+                MoreManager.AddKeyAndValues(keyname, storeData);
+
 
                 if (Stores.Count > 0)
             {
@@ -136,47 +142,25 @@ namespace QuickOrderApp.ViewModels.HomeVM
             else
             {
 
-                if (!KeyValues.ContainsKey("storeAdded"))
+                if (!MoreManager.ExistKey(keyname))
                 {
                     await LoadItems();
                 }
+
                 else
                 {
-                    var storeData = await StoreDataStore.GetDifferentStore(KeyValues["storeAdded"]);
+                    var storeData = await StoreDataStore.GetDifferentStore(MoreManager.DataValues[keyname]);
 
                     if (storeData != null)
                     {
 
-                        var tempData = new List<Store>();
+
+                        var differentValue = MoreManager.InsertDifferentDataValue(storeData, keyname);
+
+                        MoreManager.ModifyDictionary(keyname, differentValue);
 
 
-                        foreach (var item in KeyValues["storeAdded"])
-                        {
-
-                            if (!tempData.Any(s => s.StoreId == item.StoreId))
-                            {
-
-                                tempData.Add(item);
-
-                            }
-                        }
-
-                        foreach (var item in storeData)
-                        {
-                            if (!tempData.Any(s => s.StoreId == item.StoreId))
-                            {
-
-                                tempData.Add(item);
-
-                            }
-                            
-                        }
-
-
-                        KeyValues.Clear();
-                        KeyValues.Add("storeAdded", tempData);
-
-                        foreach (var item in KeyValues["storeAdded"])
+                        foreach (var item in MoreManager.DataValues[keyname])
                         {
 
                             if (!Stores.Any(s => s.StoreId == item.StoreId))

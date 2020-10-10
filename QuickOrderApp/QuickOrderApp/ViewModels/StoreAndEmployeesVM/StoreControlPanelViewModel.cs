@@ -323,7 +323,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             GoOrdersEmployeeCommand = new Command(async () =>
             {
-                await EmployeeShell.Current.GoToAsync($"EmployeeOrderControl?Id={Store.StoreId.ToString()}", animate: true);
+                await Shell.Current.GoToAsync($"EmployeeOrderControl?Id={Store.StoreId.ToString()}", animate: true);
               
 
             });

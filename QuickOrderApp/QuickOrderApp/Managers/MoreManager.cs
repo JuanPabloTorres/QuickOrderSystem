@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace QuickOrderApp.Managers
@@ -13,6 +14,18 @@ namespace QuickOrderApp.Managers
             DataValues = new Dictionary<string, IEnumerable<T>>();
         }
 
+        public bool ExistKey(string name)
+        {
+            if (DataValues.ContainsKey(name))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public  bool AddKeyAndValues(string key, IEnumerable<T> values)
         {
             if (!DataValues.ContainsKey(key))
@@ -23,6 +36,19 @@ namespace QuickOrderApp.Managers
             else
             {
                 return false;
+            }
+        }
+
+
+        public IEnumerable<T> GetValues(string key)
+        {
+            if (ExistKey(key))
+            {
+                return DataValues[key];
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -40,10 +66,27 @@ namespace QuickOrderApp.Managers
             }
         }
 
-        //public  IEnumerable<T>  InsertDifferentDataValue(IEnumerable<T> newvalue)
-        //{
+        public IEnumerable<T> InsertDifferentDataValue(IEnumerable<T> newvalue,string key)
+        {
+            List<T> tempData = new List<T>();
 
-        //}
+            foreach (var item in DataValues[key])
+            {
+                
+
+                    tempData.Add(item);
+               
+            }
+
+            foreach (var item in newvalue)
+            {
+                    tempData.Add(item);
+            }
+
+            return tempData.ToList();
+
+
+        }
 
     }
 }
