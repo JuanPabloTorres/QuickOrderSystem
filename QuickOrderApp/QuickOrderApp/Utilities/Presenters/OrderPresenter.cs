@@ -109,7 +109,7 @@ namespace QuickOrderApp.Utilities.Presenters
 
         public ObservableCollection<OrderProduct> OrderProducts { get; set; }
 
-        
+
         public Status OrderStatus { get; set; }
 
 
@@ -160,9 +160,11 @@ namespace QuickOrderApp.Utilities.Presenters
 
             DetailCommand = new Command(async () =>
             {
-                //await Shell.Current.GoToAsync($"DetailOrderRoute?Id={OrderId.ToString()}", animate: true);
                 SelectedOrder.CurrentOrder = order;
-                await Shell.Current.GoToAsync($"DetailOrderRoute", animate: true);
+                await Device.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Shell.Current.GoToAsync($"DetailOrderRoute?OrderId={OrderId}", animate: true);
+                });
 
             });
 
@@ -201,9 +203,10 @@ namespace QuickOrderApp.Utilities.Presenters
 
             DetailCommand = new Command(async () =>
             {
-                await Shell.Current.GoToAsync($"DetailOrderRoute?OrderId={OrderId}", animate: true);
-                //SelectedOrder.CurrentOrder = order;
-                //await Shell.Current.GoToAsync($"DetailOrderRoute", animate: true);
+                await Device.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Shell.Current.GoToAsync($"DetailOrderRoute?OrderId={OrderId}", animate: true);
+                });
 
             });
 

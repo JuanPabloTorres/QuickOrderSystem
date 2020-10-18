@@ -187,7 +187,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
                     OrderDetail = SelectedOrder.CurrentOrder = Task.Run(async () => await orderDataStore.GetOrderWithProducts(OrderId, App.TokenDto.Token)).GetAwaiter().GetResult();
                     Init();
                 }
-
             }
         }
 
