@@ -4,6 +4,7 @@ using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.ViewModels;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 

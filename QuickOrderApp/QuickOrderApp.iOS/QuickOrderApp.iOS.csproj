@@ -123,6 +123,31 @@
     <BundleResource Include="Resources\xamarin_logo%402x.png" />
     <BundleResource Include="Resources\xamarin_logo%403x.png" />
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+    <ImageAsset Include="Assets.xcassets\QOBackground.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\imgPlaceholder.jpg" />
+    <ImageAsset Include="Assets.xcassets\inbox.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\settings.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Background.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\Background.imageset\Background.jpg" />
+    <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\imgPlaceholder-1.jpg" />
+    <ImageAsset Include="Assets.xcassets\Background.imageset\Background-1.jpg" />
+    <ImageAsset Include="Assets.xcassets\bag.imageset\Contents.json" />
+    <BundleResource Include="Resources\loading.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </BundleResource>
+    <ImageAsset Include="Assets.xcassets\QOBackground.imageset\QOBackground-2.jpg" />
+    <ImageAsset Include="Assets.xcassets\QOBackground.imageset\QOBackground.jpg" />
+    <ImageAsset Include="Assets.xcassets\home.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\home.imageset\home.png" />
+    <ImageAsset Include="Assets.xcassets\home.imageset\home-1.png" />
+    <ImageAsset Include="Assets.xcassets\home.imageset\home-2.png" />
+    <ImageAsset Include="Assets.xcassets\home.imageset\home-3.png" />
+    <ImageAsset Include="Assets.xcassets\home.imageset\home-4.png" />
+    <ImageAsset Include="Assets.xcassets\inbox.imageset\inbox.png" />
+    <ImageAsset Include="Assets.xcassets\inbox.imageset\inbox-1.png" />
+    <ImageAsset Include="Assets.xcassets\bag.imageset\bag.png" />
+    <ImageAsset Include="Assets.xcassets\settings.imageset\settings.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -183,5 +208,14 @@
       <Project>{E8A8BECB-B9F6-4429-AC40-D240893A67A6}</Project>
       <Name>QuickOrderApp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets.xcassets\QOBackground.imageset\" />
+    <Folder Include="Assets.xcassets\imgPlaceHolder.imageset\" />
+    <Folder Include="Assets.xcassets\inbox.imageset\" />
+    <Folder Include="Assets.xcassets\settings.imageset\" />
+    <Folder Include="Assets.xcassets\Background.imageset\" />
+    <Folder Include="Assets.xcassets\bag.imageset\" />
+    <Folder Include="Assets.xcassets\home.imageset\" />
   </ItemGroup>
 </Project>

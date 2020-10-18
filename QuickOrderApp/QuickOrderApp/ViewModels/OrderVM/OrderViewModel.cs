@@ -25,12 +25,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
         public ObservableCollection<ProductPresenter> ProductPresenters { get; set; }
 
         public ICommand GetOrdersCommand => new Command<string>(async (arg) =>
-            {
-
-                await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}");
-
-
-            });
+        {
+            await Device.InvokeOnMainThreadAsync(async()=> await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}"));
+        });
 
         public ICommand MoreCommand => new Command(async () =>
         {
