@@ -145,7 +145,7 @@
                         <Label
                             HorizontalOptions="Start"
                             Style="{StaticResource TitleLabel}"
-                            Text="Sing Out" />
+                            Text="Log Out" />
                         <BoxView
                             BackgroundColor="LightGray"
                             HeightRequest="0.1"
@@ -160,7 +160,7 @@
                             HasShadow="True"
                             HeightRequest="60"
                             HorizontalTextAlignment="Center"
-                            Text="Sing Out"
+                            Text="Log Out"
                             TextColor="#2F3538" />
 
                     </StackLayout>

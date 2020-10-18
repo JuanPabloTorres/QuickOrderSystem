@@ -133,9 +133,6 @@
     <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\imgPlaceholder-1.jpg" />
     <ImageAsset Include="Assets.xcassets\Background.imageset\Background-1.jpg" />
     <ImageAsset Include="Assets.xcassets\bag.imageset\Contents.json" />
-    <BundleResource Include="Resources\loading.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </BundleResource>
     <ImageAsset Include="Assets.xcassets\QOBackground.imageset\QOBackground-2.jpg" />
     <ImageAsset Include="Assets.xcassets\QOBackground.imageset\QOBackground.jpg" />
     <ImageAsset Include="Assets.xcassets\home.imageset\Contents.json" />
@@ -148,6 +145,7 @@
     <ImageAsset Include="Assets.xcassets\inbox.imageset\inbox-1.png" />
     <ImageAsset Include="Assets.xcassets\bag.imageset\bag.png" />
     <ImageAsset Include="Assets.xcassets\settings.imageset\settings.png" />
+    <BundleResource Include="loading.json" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

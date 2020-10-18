@@ -58,18 +58,15 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
         IPopupNavigation popupNavigation;           
-        public LoginViewModel(/*INavigation _navigation*/)
+        public LoginViewModel()
         {
-            //Navigation = _navigation;
-
             popupNavigation = PopupNavigation.Instance;
 
             Task.Run(async () =>
             {
-            Username = await SecureStorage.GetAsync("username");
-            Password = await SecureStorage.GetAsync("password");
-
-            }).Wait();
+                Username = await SecureStorage.GetAsync("username");
+                Password = await SecureStorage.GetAsync("password");
+            });
 
             ValidatorsInitializer();
 
@@ -80,8 +77,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             LoginCommand = new Command(async () =>
             {
-
-                //var currentuserID = Xamarin.Forms.Application.Current.Properties["loginId "].ToString();
                 IsLoading = true;
 
                 if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
