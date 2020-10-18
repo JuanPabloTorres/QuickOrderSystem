@@ -12,6 +12,10 @@ namespace Library.Services
 {
     public class UserConnectedDataStore : DataStoreService<UsersConnected>, IUserConnectedDataStore
     {
+        public UserConnectedDataStore(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        {
+        }
+
         public async Task<UsersConnected> GetUserConnectedID(Guid userId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetUserConnectedID)}/{userId}");

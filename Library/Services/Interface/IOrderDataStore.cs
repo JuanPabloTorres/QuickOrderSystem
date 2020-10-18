@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.DTO;
+using Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Library.Services.Interface
 
         Task<IEnumerable<Order>> GetStoreOrders(Guid storeId,string token);
 
-        Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status,string token);
+        Task<IEnumerable<OrderDto>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status,string token);
 
         IEnumerable<Order> GetUserOrdersWithToken(Guid userid, string token);
         IEnumerable<Order> GetUserOrdersOfStore(Guid userid, Guid storeid);
@@ -20,10 +21,12 @@ namespace Library.Services.Interface
         Task<IEnumerable<Order>> GetOrdersOfStoreOfUserWithSpecifiStatus(Guid userid, Guid storeid, Status status);
 
 
-        Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Order> ordersAdded,Status status,Guid userid);
+        Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Guid> ordersAdded,Status status,Guid userid);
 
         Task<bool> DisableOrder(Guid orderId);
 
-        Task<IEnumerable<Order>> GetDifferentStoreOrders(IEnumerable<Order> orders,Guid storeId);
+        Task<IEnumerable<Order>> GetDifferentStoreOrders(IEnumerable<Order> orders, Guid storeId);
+
+        Task<Order> GetOrderWithProducts(string orderId, string token);
     }
 }

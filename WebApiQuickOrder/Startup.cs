@@ -1,4 +1,5 @@
 
+using Library.Factories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -42,6 +43,9 @@ namespace WebApiQuickOrder
             services.AddSingleton<ITokenService, OktaTokenService>();
             services.AddMvc();
 
+            // SERVICES
+            services.AddSingleton<IOrderFactory, OrderFactory>();
+            //------------------------------------------------------
 
             //services.AddIdentity<IdentityUser, IdentityRole>(options =>
             //{

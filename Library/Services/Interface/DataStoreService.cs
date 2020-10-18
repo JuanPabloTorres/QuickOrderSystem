@@ -11,22 +11,22 @@ namespace Library.Interface
     {
         protected readonly HttpClient HttpClient;
         protected readonly Uri BaseAPIUri;
-        //protected readonly INetworkService NetworkService;
+        ////protected readonly INetworkService NetworkService;
 
-        public static string LocalBackendUrl = "http://localhost:5000/api";
+        //public static string LocalBackendUrl = "http://localhost:5000/api";
 
-        //public static string LocalBackendUrl = "http://juantorres9-001-site1.etempurl.com/api";
-              //public static string LocalBackendUrl = "http://192.168.1.133:5000/api";
-        //public static string LocalBackendUrl = "http://192.168.56.1:5000/api";
-        //public static string LocalBackendUrl = "https://192.168.1.132:5001/api";
+        ////public static string LocalBackendUrl = "http://juantorres9-001-site1.etempurl.com/api";
+        //      //public static string LocalBackendUrl = "http://192.168.1.133:5000/api";
+        ////public static string LocalBackendUrl = "http://192.168.56.1:5000/api";
+        ////public static string LocalBackendUrl = "https://192.168.1.132:5001/api";
 
         protected Uri FullAPIUri { get; set; }
 
-        public DataStoreService()
+        public DataStoreService(IHttpClientFactory httpClientFactory)
         {
 
-            HttpClient = new HttpClient();
-            BaseAPIUri = new Uri($"{LocalBackendUrl}/{typeof(T).Name}/");
+            HttpClient = httpClientFactory.CreateClient("MyHttpClient");
+            BaseAPIUri = new Uri($"{HttpClient.BaseAddress}{typeof(T).Name}/");
             FullAPIUri = BaseAPIUri;
         }
 

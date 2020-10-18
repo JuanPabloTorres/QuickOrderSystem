@@ -5,6 +5,7 @@ using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -12,6 +13,9 @@ namespace Library.Services
 {
     public class CardDataStore : DataStoreService<PaymentCard>, ICardDataStore
     {
+        public CardDataStore(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        {
+        }
 
         public async Task<IEnumerable<PaymentCardDTO>> GetCardDTOFromUser(Guid userId,string token)
         {

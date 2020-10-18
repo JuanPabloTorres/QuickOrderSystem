@@ -3,12 +3,17 @@ using Library.Models;
 using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Library.Services
 {
     public class StoreLicenceDataStore : DataStoreService<StoreLicense>, IStoreLicenseDataStore
     {
+        public StoreLicenceDataStore(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        {
+        }
+
         public async Task<bool> IsLicenseInUsed(string license)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(IsLicenseInUsed)}/{license}");

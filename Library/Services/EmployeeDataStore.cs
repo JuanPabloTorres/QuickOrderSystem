@@ -4,12 +4,17 @@ using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Library.Services
 {
     public class EmployeeDataStore : DataStoreService<Employee>, IEmployeeDataStore
     {
+        public EmployeeDataStore(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        {
+        }
+
         public async Task<IEnumerable<Employee>> GetEmployeesOfStore(Guid storeId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetEmployeesOfStore)}/{storeId}");

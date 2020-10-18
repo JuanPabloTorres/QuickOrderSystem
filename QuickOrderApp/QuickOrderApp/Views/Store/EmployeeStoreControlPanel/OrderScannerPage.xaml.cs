@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using Library.Services;
+using Microsoft.Extensions.DependencyInjection;
 using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
 using Syncfusion.XForms.Buttons;
 using System;
@@ -29,7 +30,7 @@ namespace QuickOrderApp.Views.Store.EmployeeStoreControlPanel
         public  void scanView_OnScanResult(Result result)
         {
 
-            OrderDataStore orderDataStore = new OrderDataStore();
+            OrderDataStore orderDataStore = Startup.ServiceProvider.GetRequiredService<OrderDataStore>();
             Device.BeginInvokeOnMainThread(async () =>
             {
                 scanView.IsScanning = false;

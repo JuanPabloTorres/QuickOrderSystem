@@ -11,6 +11,10 @@ namespace Library.Services
 {
     public class StoreDataStore : DataStoreService<Store>, IStoreDataStore
     {
+        public StoreDataStore(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        {
+        }
+
         public async Task<bool> DisableStore(Store store)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(DisableStore)}");

@@ -2,6 +2,7 @@
 using Library.Models;
 using Library.Services;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Plugin.SharedTransitions;
 using QuickOrderApp.ConfigPayment;
 using QuickOrderApp.Services.HubService;
@@ -47,8 +48,8 @@ namespace QuickOrderApp
                     
             Dependencies();
 
-         
-            MainPage = new AppShell();
+
+            MainPage = Startup.ServiceProvider.GetRequiredService<AppShell>();
 
            
 

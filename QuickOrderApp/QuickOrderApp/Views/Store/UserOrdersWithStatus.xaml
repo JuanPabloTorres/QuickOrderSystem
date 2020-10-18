@@ -74,7 +74,7 @@
                                     <StackLayout Margin="8,0,0,0">
 
                                         <StackLayout Orientation="Horizontal">
-                                            <Label Style="{StaticResource DataLabel}" Text="Order ID:" />
+                                            <Label Style="{StaticResource DataLabel}" Text="Order ID: " />
                                             <Label
                                                 Style="{StaticResource DataLabel}"
                                                 Text="{Binding OrderId}"
@@ -82,11 +82,11 @@
                                         </StackLayout>
 
                                         <StackLayout Orientation="Horizontal">
-                                            <Label Style="{StaticResource DataLabel}" Text="Date:" />
+                                            <Label Style="{StaticResource DataLabel}" Text="Date: " />
                                             <Label Style="{StaticResource DataLabel}" Text="{Binding OrderDate}" />
                                         </StackLayout>
                                         <StackLayout Orientation="Horizontal">
-                                            <Label Style="{StaticResource DataLabel}" Text="Order Type:" />
+                                            <Label Style="{StaticResource DataLabel}" Text="Order Type: " />
                                             <Label
                                                 Style="{StaticResource DataLabel}"
                                                 Text="{Binding OrderType}"
@@ -94,7 +94,7 @@
                                         </StackLayout>
 
                                         <StackLayout Orientation="Horizontal">
-                                            <Label Style="{StaticResource DataLabel}" Text="Status:" />
+                                            <Label Style="{StaticResource DataLabel}" Text="Status: " />
                                             <Label
                                                 Style="{StaticResource DataLabel}"
                                                 Text="{Binding OStatus}"
@@ -102,8 +102,13 @@
                                         </StackLayout>
 
                                         <StackLayout Orientation="Horizontal">
-                                            <Label Style="{StaticResource DataLabel}" Text="Items:" />
+                                            <Label Style="{StaticResource DataLabel}" Text="Items: " />
                                             <Label Style="{StaticResource DataLabel}" Text="{Binding OrderItems}" />
+                                        </StackLayout>
+
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Style="{StaticResource DataLabel}" Text="Total: " />
+                                            <Label Style="{StaticResource DataLabel}" Text="{Binding OrderTotal, StringFormat='{0:C}'}" />
                                         </StackLayout>
 
 

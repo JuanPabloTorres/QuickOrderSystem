@@ -9,7 +9,11 @@ namespace QuickOrderApp.Managers
 {
     public class TokenExpManger
     {
-
+        readonly UserConnectedDataStore userConnectedDataStore;
+        public TokenExpManger(UserConnectedDataStore userConnectedDataStore)
+        {
+            this.userConnectedDataStore = userConnectedDataStore;
+        }
 		private DateTime tokenexp;
 
 		public DateTime TokenExp
@@ -44,8 +48,6 @@ namespace QuickOrderApp.Managers
             await Shell.Current.DisplayAlert("Notification", "Token has expired...!", "OK");
 
             await App.ComunicationService.Disconnect();
-
-            UserConnectedDataStore userConnectedDataStore = new UserConnectedDataStore();
 
             if (App.UsersConnected != null)
             {

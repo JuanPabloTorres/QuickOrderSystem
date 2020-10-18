@@ -5,12 +5,17 @@ using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Library.Services
 {
     public class UserDataStore : DataStoreService<User>, IUserDataStore
     {
+        public UserDataStore(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        {
+        }
+
         public async Task<bool> CheckIfUsernameAndPasswordExist(string username, string password)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CheckIfUsernameAndPasswordExist)}/{username}/{password}");

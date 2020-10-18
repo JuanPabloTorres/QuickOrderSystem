@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.DTO;
+using Library.Models;
 using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.ViewModels;
 using System;
@@ -8,7 +9,7 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.Utilities.Presenters
 {
-    public class OrderPresenter : BaseViewModel
+    public class OrderPresenterViewModel : BaseViewModel
     {
         public ICommand DetailCommand { get; set; }
         public ICommand DeleteCommand { get; set; }
@@ -136,10 +137,10 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+        public double OrderTotal { get; set; }
 
-      
 
-        public OrderPresenter(Order order)
+        public OrderPresenterViewModel(Order order)
         {
             OrderId = order.OrderId;
             OrderDate = order.OrderDate;
@@ -173,13 +174,49 @@ namespace QuickOrderApp.Utilities.Presenters
                 if (orderDelete)
                 {
 
-                    MessagingCenter.Send<OrderPresenter, OrderPresenter>(this, "Refresh", this);
+                    MessagingCenter.Send<OrderPresenterViewModel, OrderPresenterViewModel>(this, "Refresh", this);
                 }
 
                 //await Shell.Current.GoToAsync("StoreOrderRoute");
 
             });
         }
+        public OrderPresenterViewModel(OrderDto order)
+        {
+            OrderId = order.OrderId;
+            OrderDate = order.OrderDate;
+            StoreImage = order.StoreImage;
+            OrderItems = order.ProductQuantity;
+            OStatus = order.OrderStatus;
+            OrderType = order.OrderType;
+            StoreName = order.StoreName;
+            OrderTotal = order.OrderTotal;
 
+            if (OStatus == Status.NotSubmited)
+            {
+                IsDeleteEnable = true;
+            }
+
+            //OrderProducts = new ObservableCollection<OrderProduct>(order.OrderProducts);
+
+            DetailCommand = new Command(async () =>
+            {
+                await Shell.Current.GoToAsync($"DetailOrderRoute?OrderId={OrderId}", animate: true);
+                //SelectedOrder.CurrentOrder = order;
+                //await Shell.Current.GoToAsync($"DetailOrderRoute", animate: true);
+
+            });
+
+            DeleteCommand = new Command(async () =>
+            {
+                var orderDelete = await orderDataStore.DisableOrder(OrderId);
+
+                if (orderDelete)
+                {
+                    MessagingCenter.Send(this, "Refresh", this);
+                }
+
+            });
+        }
     }
 }

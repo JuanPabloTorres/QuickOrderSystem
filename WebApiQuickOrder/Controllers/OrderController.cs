@@ -1,4 +1,6 @@
-﻿using Library.Models;
+﻿using Library.DTO;
+using Library.Factories;
+using Library.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,10 +21,12 @@ namespace WebApiQuickOrder.Controllers
     public class OrderController : ControllerBase
     {
         private readonly QOContext _context;
+        private readonly IOrderFactory _orderFactory;
 
-        public OrderController(QOContext context)
+        public OrderController(QOContext context, IOrderFactory orderFactory)
         {
             _context = context;
+            _orderFactory = orderFactory;
         }
 
         // GET: api/Order
@@ -59,29 +63,28 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/Order/5
         [HttpGet("[action]/{userid}/{status}")]
-        [Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status)
+        //[Authorize(Policy = Policies.User)]
+        [AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status)
         {
-            var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status && o.IsDisisble == false).Include(op => op.OrderProducts).ToListAsync();
+            List<OrderDto> orders = new List<OrderDto>();
 
-            List<Order> orders = new List<Order>();
-
-            foreach (var item in result)
+            var data = await (from o in _context.Orders.Include(o=>o.OrderProducts)
+                            join s in _context.Stores on o.StoreId equals s.StoreId
+                            join op in _context.OrderProducts on o.OrderId equals op.OrderId
+                            where o.BuyerId == userid && o.OrderStatus == status && o.IsDisisble == false
+                            select new { o, s}).ToListAsync();
+            foreach (var item in data)
             {
-                orders.Add(item);
-
-                if (orders.Count() == 5)
-                {
-                    return orders.ToList();
-                }
+                orders.Add(_orderFactory.CreateSimpleOrderDto(item.o, item.s,item.o.OrderProducts.ToList()));
             }
 
-            return orders.ToList();
+            return orders;
         }
 
         // GET: api/Order/5
         [HttpPost("[action]/{status}/{userid}")]       
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Order> ordersAdded,Status status,Guid userid)
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Guid> ordersAdded,Status status,Guid userid)
         {
             if (ordersAdded.Count() < _context.Orders.Count())
             {
@@ -95,7 +98,7 @@ namespace WebApiQuickOrder.Controllers
                 {
                     if (!item.IsDisisble)
                     {
-                        if (!ordersAdded.Any(x => x.OrderId == item.OrderId))
+                        if (!ordersAdded.Any(x => x == item.OrderId))
                         {
                             orders.Add(item);
 
@@ -134,10 +137,6 @@ namespace WebApiQuickOrder.Controllers
             return _completeOrders;
 
         }
-
-        // PUT: api/Order/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
 
 
         [HttpPut]
@@ -412,6 +411,14 @@ namespace WebApiQuickOrder.Controllers
 
             return null;
 
+        }
+
+        [HttpGet("[action]/{orderId}")]
+        //[Authorize(Policy = Policies.User)]
+        public async Task<ActionResult<Order>> GetOrderWithProducts(Guid orderId)
+        {
+            var result = await _context.Orders.Where(e => e.OrderId == orderId).Include(o => o.OrderProducts).FirstOrDefaultAsync();
+            return result;
         }
     }
 }

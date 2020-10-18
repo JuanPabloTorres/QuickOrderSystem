@@ -1,4 +1,5 @@
-﻿using Library.Interface;
+﻿using Library.DTO;
+using Library.Interface;
 using Library.Models;
 using Library.Services.Interface;
 using Newtonsoft.Json;
@@ -12,6 +13,10 @@ namespace Library.Services
 {
     public class OrderDataStore : DataStoreService<Order>, IOrderDataStore
     {
+        public OrderDataStore(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        {
+        }
+
         public async Task<bool> DisableOrder(Guid orderId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(DisableOrder)}/{orderId}");
@@ -67,7 +72,7 @@ namespace Library.Services
             return deserializeObject;
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status,string token)
+        public async Task<IEnumerable<OrderDto>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status,string token)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetOrdersOfUserWithSpecificStatus)}/{userid}/{status}");
 
@@ -76,11 +81,11 @@ namespace Library.Services
             var response = await HttpClient.GetStringAsync(FullAPIUri);
 
 
-            IEnumerable<Order> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Order>>(response);
+            IEnumerable<OrderDto> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<OrderDto>>(response);
             return deserializeObject;
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Order> ordersAdded,Status status,Guid userid)
+        public async Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Guid> ordersAdded,Status status,Guid userid)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetOrdersOfUserWithSpecificStatusDifferent)}/{status}/{userid}");
 
@@ -162,6 +167,15 @@ namespace Library.Services
 
             var response = HttpClient.GetStringAsync(FullAPIUri);
             Order deserializeObject = JsonConvert.DeserializeObject<Order>(response.Result);
+            return deserializeObject;
+        }
+
+        public async Task<Order> GetOrderWithProducts(string orderId, string token)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetOrderWithProducts)}/{orderId}");
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            Order deserializeObject = JsonConvert.DeserializeObject<Order>(response);
             return deserializeObject;
         }
     }

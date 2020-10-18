@@ -1,4 +1,5 @@
-﻿using QuickOrderApp.ViewModels.OrderVM;
+﻿using Microsoft.Extensions.DependencyInjection;
+using QuickOrderApp.ViewModels.OrderVM;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -12,7 +13,7 @@ namespace QuickOrderApp.Views.Store
         public StoreOrders()
         {
             InitializeComponent();
-            BindingContext = orderVm = new OrderViewModel();
+            BindingContext = orderVm = Startup.ServiceProvider.GetRequiredService<OrderViewModel>();
         }
 
         //protected override void OnAppearing()

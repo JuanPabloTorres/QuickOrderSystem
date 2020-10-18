@@ -21,6 +21,7 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.OrderVM
 {
+    [QueryProperty("OrderId","OrderId")]
     public class UserDetailOrderViewModel : BaseViewModel
     {
         public ObservableCollection<ProductPresenter> ProductPresenters { get; set; }
@@ -57,9 +58,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 OnPropertyChanged();
             }
         }
-
-
-
 
         public double Total
         {
@@ -164,9 +162,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
-
-
-
         private ImageSource qrcodeimg;
 
         public ImageSource QRCodeImg
@@ -177,13 +172,32 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
+        private string orderId;
+        public string OrderId
+        {
+            get
+            {
+                return orderId;
+            }
+            set
+            {
+                if (value != orderId)
+                {
+                    orderId = value;
+                    OrderDetail = SelectedOrder.CurrentOrder = Task.Run(async () => await orderDataStore.GetOrderWithProducts(OrderId, App.TokenDto.Token)).GetAwaiter().GetResult();
+                    Init();
+                }
+
+            }
+        }
 
         public UserDetailOrderViewModel()
-        {        
+        {
+        }
 
+        void Init()
+        {
             ProductPresenters = new ObservableCollection<ProductPresenter>();
-
-            OrderDetail = SelectedOrder.CurrentOrder;
             OrderStatus = OrderDetail.OrderStatus.ToString();
             OrderQuantity = OrderDetail.OrderProducts.Count();
             isDeliveryFeeAdded = false;
@@ -216,73 +230,73 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                     App.LogUser.PaymentCards = new List<PaymentCard>(cardofUser);
 
-                if (App.LogUser.PaymentCards.Count() > 0)
-                {
-
-                    if (OrderDetail.OrderStatus == Status.NotSubmited)
+                    if (App.LogUser.PaymentCards.Count() > 0)
                     {
-                        if (IsDelivery)
+
+                        if (OrderDetail.OrderStatus == Status.NotSubmited)
                         {
-
-                            OrderDetail.OrderType = Library.Models.Type.Delivery;
-                        }
-                        if (IspickUp)
-                        {
-                            OrderDetail.OrderType = Library.Models.Type.PickUp;
-                        }
-
-                        if (!IsDelivery && !IspickUp)
-                        {
-                            OrderDetail.OrderType = Library.Models.Type.PickUp;
-                        }
-
-                        OrderDetail.OrderStatus = Status.Submited;
-
-                        //List<PaymentCard> paymentCards = new List<PaymentCard>(App.LogUser.PaymentCards);
-
-                        var customercardId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId,App.LogUser.PaymentCards.FirstOrDefault().StripeCardId);
-
-                        var isTransactionSuccess = await stripeServiceDS.MakePaymentWithCard(OrderDetail.StoreId, Total, App.LogUser.PaymentCards.FirstOrDefault().PaymentCardId, OrderDetail.OrderId.ToString());
-
-                        if (isTransactionSuccess)
-                        {
-                           
-                            var orderUpdate = await orderDataStore.UpdateItemAsync(OrderDetail);
-
-                            OrderStatus = OrderDetail.OrderStatus.ToString();
-
-                            if (orderUpdate)
+                            if (IsDelivery)
                             {
 
-                                var orderNotificationToEmployees = await userConnectedDataStore.SendOrdersToEmployees(OrderDetail.StoreId.ToString(), OrderDetail.OrderId.ToString());
-
-                                //await App.ComunicationService.OrderToPrepare(OrderDetail);
-
-                                await App.Current.MainPage.DisplayAlert("Notification", "Order was submited...!", "OK");
-
-                                MessagingCenter.Send<Library.Models.Order>(OrderDetail, "RemoveOrderSubtmitedMsg");
-
+                                OrderDetail.OrderType = Library.Models.Type.Delivery;
                             }
+                            if (IspickUp)
+                            {
+                                OrderDetail.OrderType = Library.Models.Type.PickUp;
+                            }
+
+                            if (!IsDelivery && !IspickUp)
+                            {
+                                OrderDetail.OrderType = Library.Models.Type.PickUp;
+                            }
+
+                            OrderDetail.OrderStatus = Status.Submited;
+
+                            List<PaymentCard> paymentCards = new List<PaymentCard>(App.LogUser.PaymentCards);
+
+                            var customercardId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, App.LogUser.PaymentCards.FirstOrDefault().StripeCardId);
+
+                            var isTransactionSuccess = await stripeServiceDS.MakePaymentWithCard(OrderDetail.StoreId, Total, App.LogUser.PaymentCards.FirstOrDefault().PaymentCardId, OrderDetail.OrderId.ToString());
+
+                            if (isTransactionSuccess)
+                            {
+
+                                var orderUpdate = await orderDataStore.UpdateItemAsync(OrderDetail);
+
+                                OrderStatus = OrderDetail.OrderStatus.ToString();
+
+                                if (orderUpdate)
+                                {
+
+                                    var orderNotificationToEmployees = await userConnectedDataStore.SendOrdersToEmployees(OrderDetail.StoreId.ToString(), OrderDetail.OrderId.ToString());
+
+                                    await App.ComunicationService.OrderToPrepare(OrderDetail);
+
+                                    await App.Current.MainPage.DisplayAlert("Notification", "Order was submited...!", "OK");
+
+                                    MessagingCenter.Send<Library.Models.Order>(OrderDetail, "RemoveOrderSubtmitedMsg");
+
+                                }
+                            }
+                            else
+                            {
+                                await App.Current.MainPage.DisplayAlert("Notification", "Bad Transaction.", "OK");
+                            }
+
+
+
+
+
                         }
                         else
                         {
-                            await App.Current.MainPage.DisplayAlert("Notification", "Bad Transaction.", "OK");
+                            await App.Current.MainPage.DisplayAlert("Notification", "Order was submited.", "OK");
                         }
-
-                       
-
-
-
                     }
                     else
                     {
-                        await App.Current.MainPage.DisplayAlert("Notification", "Order was submited.", "OK");
+                        await App.Current.MainPage.DisplayAlert("Notification", "You dont have a card register, register a card first.", "OK");
                     }
-                }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Notification", "You dont have a card register, register a card first.", "OK");
-                }
                 }
 
 
@@ -290,7 +304,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
             CalculateTotal();
 
-            MessagingCenter.Subscribe<ProductPresenter>(this, "RemoveOrderProduct", async (obj) => 
+            MessagingCenter.Subscribe<ProductPresenter>(this, "RemoveOrderProduct", async (obj) =>
             {
                 ProductPresenters.Remove(obj);
 
@@ -315,7 +329,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
             });
             MessagingCenter.Subscribe<OrderProduct>(this, "OrderProductUpdate", async (obj) =>
             {
-                var oproductToRemove = ProductPresenters.Where(op=>op.ProductId == obj.OrderProductId ).FirstOrDefault();
+                var oproductToRemove = ProductPresenters.Where(op => op.ProductId == obj.OrderProductId).FirstOrDefault();
 
                 ProductPresenters.Remove(oproductToRemove);
 
@@ -327,7 +341,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 }
                 else
                 {
-                updatedOrderProductPrensenter.AreVisible = true;
+                    updatedOrderProductPrensenter.AreVisible = true;
 
                 }
                 ProductPresenters.Add(updatedOrderProductPrensenter);
@@ -337,8 +351,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
             });
 
         }
-
-
 
         public Token stripeToken;
         public TokenService tokenService;

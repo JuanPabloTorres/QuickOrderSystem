@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using QuickOrderApp.Utilities.Presenters;
+using QuickOrderApp.Views.Store;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
     {
         private Order detailOrder;
 
-        public Order DetailOrder
+        public Order Order
         {
             get { return detailOrder; }
             set
@@ -21,7 +22,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 detailOrder = value;
                 OnPropertyChanged();
 
-                EmployeeOrderPresenter = new EmployeeOrderPresenter(DetailOrder);
+                EmployeeOrderPresenter = new EmployeeOrderPresenter(Order);
             }
         }
 
@@ -66,7 +67,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
         public OrderDetailViewModel()
         {
-            
             MessagingCenter.Subscribe<EmployeeOrderPresenter>(this, "OrderDetail", (sender) =>
             {
                 //DetailOrder = sender;
@@ -76,10 +76,13 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
             });
 
+            MessagingCenter.Subscribe<EmployeeOrderPresenter>(this, DetailOrder.LoadOrderDetail, (sender) =>
+            {
+              
+            });
 
             CompleteOrderCommand = new Command(async () =>
             {
-
                 if (EmployeeOrderPresenter.OrderStatus != Status.Completed)
                 {
                     if (EmployeeOrderPresenter.OrderProductsPresenter.All(op => op.IsComplete == true))
@@ -123,13 +126,8 @@ namespace QuickOrderApp.ViewModels.OrderVM
                     await Shell.Current.DisplayAlert("Notification", "Order Completed..!", "OK");
                 }
             });
-
-
-
         }
 
-
-
-
+        
     }
 }

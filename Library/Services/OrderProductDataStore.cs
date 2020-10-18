@@ -3,11 +3,16 @@ using Library.Models;
 using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
+using System.Net.Http;
 
 namespace Library.Services
 {
     public class OrderProductDataStore : DataStoreService<OrderProduct>, IOrderProductDataStore
     {
+        public OrderProductDataStore(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        {
+        }
+
         public bool OrderProductOfUserExistInOrder(Guid userid, Guid productId, Guid orderid)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(OrderProductOfUserExistInOrder)}/{userid}/{productId}/{orderid}");

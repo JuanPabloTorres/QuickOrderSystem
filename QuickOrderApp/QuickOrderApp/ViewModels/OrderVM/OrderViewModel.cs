@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Factories;
+using Library.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Attributes;
@@ -19,24 +20,21 @@ namespace QuickOrderApp.ViewModels.OrderVM
     [QueryProperty("OrderStatus", "status")]
     public class OrderViewModel : BaseViewModel
     {
-        public ObservableCollection<OrderPresenter> UserOrders { get; set; }
+        public ObservableCollection<OrderPresenterViewModel> UserOrders { get; set; }
 
         public ObservableCollection<ProductPresenter> ProductPresenters { get; set; }
-      
+
         public ICommand GetOrdersCommand => new Command<string>(async (arg) =>
             {
 
                 await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}");
 
 
-    });
-      
-        public ICommand MoreCommand => new Command(async() => 
+            });
+
+        public ICommand MoreCommand => new Command(async () =>
         {
             await LoadUserOrderWithStatus(OrderStatus);
-
-           
-
         });
 
         private string orderId;
@@ -48,7 +46,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
             {
                 orderId = value;
                 OnPropertyChanged();
-
             }
         }
 
@@ -57,13 +54,11 @@ namespace QuickOrderApp.ViewModels.OrderVM
         public string OrderStatus
         {
             get { return orderstatus; }
-            set 
+            set
             {
                 orderstatus = value;
 
                 OnPropertyChanged();
-
-                  
 
                 TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
 
@@ -81,11 +76,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                         await LoadOrders(OrderStatus);
                     }).Wait();
-
-
                 }
-             
-
             }
         }
 
@@ -101,9 +92,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
         }
 
-       public LoadingManager LoadingManager { get; set; }
+        public LoadingManager LoadingManager { get; set; }
 
-        Dictionary<string, IEnumerable<Order>> KeyValues { get; set; }
+        Dictionary<string, IEnumerable<Guid>> CurrentOrdersKeys { get; set; }
 
 
         public OrderViewModel()
@@ -113,26 +104,22 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
             MessagingCenter.Subscribe<Order>(this, "RemoveOrderSubtmitedMsg", (sender) =>
             {
-
-
                 var order = UserOrders.Where(op => op.OrderId == sender.OrderId).FirstOrDefault();
 
                 UserOrders.Remove(order);
 
             });
 
-            MessagingCenter.Subscribe<OrderPresenter, OrderPresenter>(this, "Refresh", (sender, arg) =>
+            MessagingCenter.Subscribe<OrderPresenterViewModel, OrderPresenterViewModel>(this, "Refresh", (sender, arg) =>
              {
-
                  UserOrders.Remove(arg);
-               
-            });
+             });
 
             //GetOrdersCommand = new Command<string>(async (arg) =>
             //{
 
             //    await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}");
-              
+
 
             //});
         }
@@ -140,27 +127,27 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
         void PropertiesInitialization()
         {
-            UserOrders = new ObservableCollection<OrderPresenter>();
+            UserOrders = new ObservableCollection<OrderPresenterViewModel>();
             LoadingManager = new LoadingManager();
-            KeyValues = new Dictionary<string, IEnumerable<Order>>();
+            CurrentOrdersKeys = new Dictionary<string, IEnumerable<Guid>>();
         }
 
         public async Task SetOrders()
         {
             var userOrderData = orderDataStore.GetUserOrders(App.LogUser.UserId);
 
-          
+
             UserOrders.Clear();
 
             foreach (var item in userOrderData)
             {
-               
+
                 item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-                var presenter = new OrderPresenter(item);
+                var presenter = new OrderPresenterViewModel(item);
 
                 UserOrders.Add(presenter);
             }
-           
+
         }
 
 
@@ -172,17 +159,15 @@ namespace QuickOrderApp.ViewModels.OrderVM
             var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue, App.TokenDto.Token);
 
 
-            KeyValues.Clear();
-           
-            KeyValues.Add("orderAdded", orderData);
+            CurrentOrdersKeys.Clear();
+
+            CurrentOrdersKeys.Add("orderAdded", orderData.Select(x => x.OrderId));
 
             UserOrders.Clear();
 
             foreach (var item in orderData)
             {
-
-                item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
-                var presenter = new OrderPresenter(item);
+                var presenter = new OrderPresenterViewModel(item);
 
                 UserOrders.Add(presenter);
             }
@@ -191,92 +176,81 @@ namespace QuickOrderApp.ViewModels.OrderVM
         }
 
 
-      
+
         async Task LoadUserOrderWithStatus(string value)
         {
+            List<Guid> tempData = new List<Guid>();
+
             LoadingManager.OnLoading();
             Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
 
-            var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue,App.TokenDto.Token);
+            var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue, App.TokenDto.Token);
 
-            if (!KeyValues.ContainsKey("orderAdded"))
+            if (!CurrentOrdersKeys.ContainsKey("orderAdded"))
             {
 
-            KeyValues.Add("orderAdded", orderData);
+                CurrentOrdersKeys.Add("orderAdded", orderData.Select(o => o.OrderId));
             }
 
-           
+
             switch (_statusvalue)
             {
 
                 case Status.Completed:
                     {
+                        //List<Guid> tempData = new List<Guid>();
 
-                        List<Order> tempData = new List<Order>();
-
-                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"], _statusvalue,App.LogUser.UserId);
+                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(CurrentOrdersKeys["orderAdded"], _statusvalue, App.LogUser.UserId);
 
                         if (data != null)
                         {
-                            foreach (var item in KeyValues["orderAdded"])
+                            foreach (var orderId in CurrentOrdersKeys["orderAdded"])
                             {
-                                if (!tempData.Any(o => o.OrderId == item.OrderId))
+                                if (!tempData.Any(o => o == orderId))
                                 {
-
-                                    tempData.Add(item);
+                                    tempData.Add(orderId);
                                 }
                             }
 
                             foreach (var item in data)
                             {
-                                if (!tempData.Any(s => s.StoreId == item.StoreId))
+                                if (!tempData.Any(s => s == item.StoreId))
                                 {
-
-                                    tempData.Add(item);
-
+                                    tempData.Add(item.StoreId);
                                 }
-
                             }
 
-                            KeyValues.Clear();
-                            KeyValues.Add("orderAdded", tempData);
+                            CurrentOrdersKeys.Clear();
+                            CurrentOrdersKeys.Add("orderAdded", tempData);
 
 
-                            foreach (var item in KeyValues["orderAdded"])
+                            foreach (var item in CurrentOrdersKeys["orderAdded"])
                             {
-
-                                if (!UserOrders.Any(s => s.OrderId == item.OrderId))
+                                if (!UserOrders.Any(s => s.OrderId == item))
                                 {
-
-                                  
-
-                                    item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
-
-                                    var presenter = new OrderPresenter(item);
+                                    var order = new Order
+                                    {
+                                        StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item)
+                                    };
+                                    var presenter = new OrderPresenterViewModel(order);
 
                                     UserOrders.Add(presenter);
-
                                 }
                             }
                         }
-
-
 
                         break;
                     }
 
                 case Status.NotSubmited:
                     {
-
-                        List<Order> tempData = new List<Order>();
-
-                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"],_statusvalue,App.LogUser.UserId);
+                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(CurrentOrdersKeys["orderAdded"], _statusvalue, App.LogUser.UserId);
 
                         if (data != null)
                         {
-                            foreach (var item in KeyValues["orderAdded"])
+                            foreach (var item in CurrentOrdersKeys["orderAdded"])
                             {
-                                if (!tempData.Any(o => o.OrderId == item.OrderId))
+                                if (!tempData.Any(o => o == item))
                                 {
 
                                     tempData.Add(item);
@@ -285,27 +259,30 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                             foreach (var item in data)
                             {
-                                if (!tempData.Any(s => s.OrderId == item.OrderId))
+                                if (!tempData.Any(s => s == item.OrderId))
                                 {
 
-                                    tempData.Add(item);
+                                    tempData.Add(item.OrderId);
 
                                 }
 
                             }
 
-                            KeyValues.Clear();
-                            KeyValues.Add("orderAdded", tempData);
+                            CurrentOrdersKeys.Clear();
+                            CurrentOrdersKeys.Add("orderAdded", tempData);
 
 
-                            foreach (var item in KeyValues["orderAdded"])
+                            foreach (var item in CurrentOrdersKeys["orderAdded"])
                             {
 
-                                if (!UserOrders.Any(s => s.OrderId == item.OrderId))
+                                if (!UserOrders.Any(s => s.OrderId == item))
                                 {
 
-                                    item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
-                                    var presenter = new OrderPresenter(item);
+                                    var order = new Order
+                                    {
+                                        StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item)
+                                    };
+                                    var presenter = new OrderPresenterViewModel(order);
 
                                     UserOrders.Add(presenter);
 
@@ -315,60 +292,52 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                         break;
 
-                      
+
 
                     }
                 case Status.Submited:
                     {
-
-
-                        List<Order> tempData = new List<Order>();
-
-                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(KeyValues["orderAdded"], _statusvalue,App.LogUser.UserId);
+                        var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(CurrentOrdersKeys["orderAdded"], _statusvalue, App.LogUser.UserId);
 
                         if (data != null)
                         {
-                            foreach (var item in KeyValues["orderAdded"])
+                            foreach (var item in CurrentOrdersKeys["orderAdded"])
                             {
-                                if (!tempData.Any(o => o.OrderId == item.OrderId))
+                                if (!tempData.Any(o => o == item))
                                 {
-
                                     tempData.Add(item);
                                 }
                             }
 
                             foreach (var item in data)
                             {
-                                if (!tempData.Any(s => s.OrderId == item.OrderId))
+                                if (!tempData.Any(s => s == item.OrderId))
                                 {
-
-                                    tempData.Add(item);
-
+                                    tempData.Add(item.OrderId);
                                 }
 
                             }
 
-                            KeyValues.Clear();
-                            KeyValues.Add("orderAdded", tempData);
+                            CurrentOrdersKeys.Clear();
+                            CurrentOrdersKeys.Add("orderAdded", tempData);
 
 
-                            foreach (var item in KeyValues["orderAdded"])
+                            foreach (var item in CurrentOrdersKeys["orderAdded"])
                             {
 
-                                if (!UserOrders.Any(s => s.OrderId == item.OrderId))
+                                if (!UserOrders.Any(s => s.OrderId == item))
                                 {
-
-                                    item.StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item.StoreId);
-                                    var presenter = new OrderPresenter(item);
+                                    var order = new Order
+                                    {
+                                        StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item)
+                                    };
+                                    var presenter = new OrderPresenterViewModel(order);
 
                                     UserOrders.Add(presenter);
 
                                 }
                             }
                         }
-
-
-                      
 
                         break;
                     }
@@ -377,10 +346,6 @@ namespace QuickOrderApp.ViewModels.OrderVM
             }
 
             LoadingManager.OffLoading();
-
-
         }
-
-
     }
 }

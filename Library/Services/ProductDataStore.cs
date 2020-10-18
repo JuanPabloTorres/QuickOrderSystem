@@ -11,6 +11,10 @@ namespace Library.Services
 {
     public class ProductDataStore : DataStoreService<Product>, IProductDataStore
     {
+        public ProductDataStore(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+        {
+        }
+
         public async Task<IEnumerable<Product>> GetDifferentProductFromStore(IEnumerable<Product> productsAdded, Guid storeId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetDifferentProductFromStore)}/{storeId}");

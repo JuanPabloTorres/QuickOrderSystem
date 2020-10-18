@@ -33,9 +33,14 @@ namespace QuickOrderApp.iOS
             SfRadioButtonRenderer.Init();
             SfButtonRenderer.Init();
             SfNumericUpDownRenderer.Init();
-            LoadApplication(new App());
+
+            LoadApplication(Startup.Init(ConfigureServices));
 
             return base.FinishedLaunching(app, options);
+        }
+
+        private void ConfigureServices(Microsoft.Extensions.Hosting.HostBuilderContext ctx, Microsoft.Extensions.DependencyInjection.IServiceCollection services)
+        {
         }
     }
 }

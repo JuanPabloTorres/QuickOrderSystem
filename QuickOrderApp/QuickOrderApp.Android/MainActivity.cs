@@ -44,7 +44,11 @@ namespace QuickOrderApp.Droid
 
             CreateNotificationFromIntent(Intent);
 
-            LoadApplication(new App());
+            LoadApplication(Startup.Init(ConfigureServices));
+        }
+
+        private void ConfigureServices(Microsoft.Extensions.Hosting.HostBuilderContext ctx, Microsoft.Extensions.DependencyInjection.IServiceCollection services)
+        {
         }
 
         protected override void OnNewIntent(Intent intent)
