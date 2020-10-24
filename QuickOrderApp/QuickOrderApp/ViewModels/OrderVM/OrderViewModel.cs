@@ -106,9 +106,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
 			});
 
 			MessagingCenter.Subscribe<OrderPresenterViewModel, OrderPresenterViewModel>(this, "Refresh", (sender, arg) =>
-			 {
-				 UserOrders.Remove(arg);
-			 });
+			{
+				UserOrders.Remove(arg);
+			});
 
 			//GetOrdersCommand = new Command<string>(async (arg) =>
 			//{
