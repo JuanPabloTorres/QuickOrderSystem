@@ -8,6 +8,7 @@ namespace QuickOrderApp.Views.Login
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ForgotPasswordPage : ContentPage
     {
+        public static string Route = "ForgotPasswordRoute";
         public ForgotPasswordPage()
         {
             InitializeComponent();

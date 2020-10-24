@@ -18,7 +18,17 @@ namespace QuickOrderApp.LoginBuilder
         protected IStripeServiceDS stripeServiceDS => DependencyService.Get<IStripeServiceDS>();
         public  void CreateLoginToken(string username,string password)
         {
-            UserLoginToken = userDataStore.LoginCredential(username, password);
+            var result  = userDataStore.LoginCredential(username, password);
+
+            if (result != null)
+            {
+                UserLoginToken = result;
+            }
+            else
+            {
+                UserLoginToken = null;
+            }
+
         }
 
         public TokenDTO GetLogin()
@@ -30,6 +40,9 @@ namespace QuickOrderApp.LoginBuilder
         public abstract void MakeHubConnection();
 
         public abstract void GoQuickOrderHome();
+
+        public abstract void ErrorMessage();
+        public abstract void GoEmployeeHome();
 
     }
 }

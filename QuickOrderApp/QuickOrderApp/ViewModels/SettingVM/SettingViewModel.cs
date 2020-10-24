@@ -259,7 +259,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                     }
 
                 }
-               await Shell.Current.GoToAsync("../LoginRoute");
+               await Shell.Current.GoToAsync($"{LoginPage.Route}");
 
             });
 

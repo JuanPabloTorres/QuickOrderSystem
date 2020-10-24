@@ -9,164 +9,164 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.Services.HubService
 {
-    public class ComunicationService
-    {
-        public readonly  HubConnection hubConnection;
-        INotificationManager notificationManager;
+	public class ComunicationService
+	{
+		public readonly HubConnection hubConnection;
+		INotificationManager notificationManager;
 
 
-        public ComunicationService()
-        {
+		public ComunicationService()
+		{
 
-        hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000/comunicationhub").Build();
+			hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000/comunicationhub").Build();
 
-            //hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres9-001-site1.etempurl.com" + "/comunicationhub").Build();
+			//hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres9-001-site1.etempurl.com" + "/comunicationhub").Build();
 
-            notificationManager = DependencyService.Get<INotificationManager>();
+			notificationManager = DependencyService.Get<INotificationManager>();
 
-            notificationManager.NotificationReceived += (sender, eventArgs) =>
-            {
-                var evtData = (NotificationEventArgs)eventArgs;
-                //ShowNotification(evtData.Title, evtData.Message);
-            };
+			notificationManager.NotificationReceived += (sender, eventArgs) =>
+			{
+				var evtData = (NotificationEventArgs)eventArgs;
+							//ShowNotification(evtData.Title, evtData.Message);
+						};
 
-            CompletedOrderNotificationReciever();
-            JobNotificationReciever();
+			CompletedOrderNotificationReciever();
+			JobNotificationReciever();
 
-            OrderToPreparerEmployee();
-          
+			OrderToPreparerEmployee();
 
-        }
 
-        public void CompletedOrderNotificationReciever()
-        {
-            hubConnection.On<string>("SendCompletedOrderNotification", (message) =>
-            {
+		}
 
-                notificationManager.ScheduleNotification("Order Completed", message);
-            });
+		public void CompletedOrderNotificationReciever()
+		{
+			hubConnection.On<string>("SendCompletedOrderNotification", (message) =>
+			{
 
-        }
+				notificationManager.ScheduleNotification("Order Completed", message);
+			});
 
-        public void JobNotificationReciever()
-        {
-            hubConnection.On<string>("SendJobNotification", (message) =>
-            {
+		}
 
-                notificationManager.ScheduleNotification("Job Application", message);
-            });
-        }
+		public void JobNotificationReciever()
+		{
+			hubConnection.On<string>("SendJobNotification", (message) =>
+			{
 
-        public void OrderToPreparerEmployee()
-        {
-            hubConnection.On<string>("OrderPrepareNotification", (message) =>
-            {
+				notificationManager.ScheduleNotification("Job Application", message);
+			});
+		}
 
-                notificationManager.ScheduleNotification("Order To Preparer", message);
-            });
-        }
+		public void OrderToPreparerEmployee()
+		{
+			hubConnection.On<string>("OrderPrepareNotification", (message) =>
+			{
 
-        public async Task Connect()
-        {
-                  await hubConnection.StartAsync();
+				notificationManager.ScheduleNotification("Order To Preparer", message);
+			});
+		}
 
-        }
-        public async Task Disconnect()
-        {
-           
+		public async Task Connect()
+		{
+			await hubConnection.StartAsync();
 
-            if (!String.IsNullOrEmpty(hubConnection.ConnectionId))
-            {
-                await hubConnection.StopAsync();
-            }
-        }
+		}
+		public async Task Disconnect()
+		{
 
-        public async Task SendMessage(string user, string message)
-        {
-            try
-            {
 
-            await hubConnection.InvokeAsync("SendMessage", user, message);
-            }
-            catch (Exception e)
-            {
+			if (!String.IsNullOrEmpty(hubConnection.ConnectionId))
+			{
+				await hubConnection.StopAsync();
+			}
+		}
 
-                Console.WriteLine(e.Message);
-            }
-        }
+		public async Task SendMessage(string user, string message)
+		{
+			try
+			{
 
-        public async Task SendOrder(string user, Order message)
-        {
-            try
-            {
+				await hubConnection.InvokeAsync("SendMessage", user, message);
+			}
+			catch (Exception e)
+			{
 
-                await hubConnection.InvokeAsync("SendOrderToStore", user, message);
-            }
-            catch (Exception e)
-            {
+				Console.WriteLine(e.Message);
+			}
+		}
 
-                Console.WriteLine(e.Message);
-            }
-        }
+		public async Task SendOrder(string user, Order message)
+		{
+			try
+			{
 
-        public async Task SendRequestToUser(string connectionId, UserRequest request)
-        {
-            try
-            {
+				await hubConnection.InvokeAsync("SendOrderToStore", user, message);
+			}
+			catch (Exception e)
+			{
 
-                await hubConnection.InvokeAsync("SenRequestToUser", connectionId, request);
-            }
-            catch (Exception e)
-            {
+				Console.WriteLine(e.Message);
+			}
+		}
 
-                Console.WriteLine(e.Message);
-            }
-        }
+		public async Task SendRequestToUser(string connectionId, UserRequest request)
+		{
+			try
+			{
 
-        public async Task UpdateStoreInventory( Guid storeToUpdate)
-        {
-            try
-            {
-                await hubConnection.InvokeAsync("UpdateStoreInventory", storeToUpdate);
-            }
-            catch (Exception e)
-            {
+				await hubConnection.InvokeAsync("SenRequestToUser", connectionId, request);
+			}
+			catch (Exception e)
+			{
 
-                Console.WriteLine(e.Message);
-            }
-        }
+				Console.WriteLine(e.Message);
+			}
+		}
 
-        public async Task SendCompletedOrderNotification(Guid OrderId,string userdId)
-        {
-            try
-            {
-                string message= $"Order: { OrderId.ToString()}";
+		public async Task UpdateStoreInventory(Guid storeToUpdate)
+		{
+			try
+			{
+				await hubConnection.InvokeAsync("UpdateStoreInventory", storeToUpdate);
+			}
+			catch (Exception e)
+			{
 
-                await hubConnection.InvokeAsync("SendCompletedOrderNotification", message, userdId);
-            }
-            catch (Exception e)
-            {
+				Console.WriteLine(e.Message);
+			}
+		}
 
-                Console.WriteLine(e.Message);
-            }
-        }
+		public async Task SendCompletedOrderNotification(Guid OrderId, string userdId)
+		{
+			try
+			{
+				string message = $"Order: { OrderId.ToString()}";
 
-        public async Task OrderToPrepare(Order order)
-        {
-            try
-            {
-               
-                string Preparemessage = $"Order: { order.OrderId.ToString()}";
+				await hubConnection.InvokeAsync("SendCompletedOrderNotification", message, userdId);
+			}
+			catch (Exception e)
+			{
 
-              
+				Console.WriteLine(e.Message);
+			}
+		}
 
-                await hubConnection.InvokeAsync("OrderToPrepare", Preparemessage, order.StoreId.ToString());
-            }
-            catch (Exception e)
-            {
+		public async Task OrderToPrepare(Order order)
+		{
+			try
+			{
 
-                Console.WriteLine(e.Message);
-            }
-        }
-    }
+				string Preparemessage = $"Order: { order.OrderId.ToString()}";
+
+
+
+				await hubConnection.InvokeAsync("OrderToPrepare", Preparemessage, order.StoreId.ToString());
+			}
+			catch (Exception e)
+			{
+
+				Console.WriteLine(e.Message);
+			}
+		}
+	}
 }

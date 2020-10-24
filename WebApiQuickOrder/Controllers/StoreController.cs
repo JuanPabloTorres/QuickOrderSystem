@@ -128,6 +128,27 @@ namespace WebApiQuickOrder.Controllers
             return store;
         }
 
+
+        // GET: api/Store/5
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<Store>> GetStoreInformation(Guid id)
+        {
+            var store = await _context.Stores.Where(s => s.StoreId == id).Include(p => p.Products).Include(w => w.WorkHours).Select(s =>
+            new Store()
+            {
+                StoreName = s.StoreName,
+                StoreImage = s.StoreImage
+
+            }).FirstOrDefaultAsync();
+
+            if (store == null)
+            {
+                return NotFound();
+            }
+
+            return store;
+        }
+
         // GET: api/Store/5
         [HttpGet("[action]/{id}")]
         public async Task<ActionResult<Store>> GetStoreSimpleInformation(Guid id)

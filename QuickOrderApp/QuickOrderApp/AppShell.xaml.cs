@@ -59,6 +59,12 @@ namespace QuickOrderApp
             Routing.RegisterRoute(EditCardPage.Route, typeof(EditCardPage));
             Routing.RegisterRoute(StoreSettings.Route, typeof(StoreSettings));
             Routing.RegisterRoute(UpdateStorePage.Route, typeof(UpdateStorePage));
+            Routing.RegisterRoute("EmployeeControlPanelRoute", typeof(EmployeeControlPanel));
+            Routing.RegisterRoute(RegisterPage.Route, typeof(RegisterPage));
+            Routing.RegisterRoute(ScannedOrder.Route, typeof(ScannedOrder));
+            Routing.RegisterRoute(OrderScannerPage.Route, typeof(OrderScannerPage));
+            Routing.RegisterRoute("StoreControlEmployee", typeof(StoreControlEmployee));
+            Routing.RegisterRoute(ForgotPasswordPage.Route, typeof(ForgotPasswordPage));
 
         }
     }

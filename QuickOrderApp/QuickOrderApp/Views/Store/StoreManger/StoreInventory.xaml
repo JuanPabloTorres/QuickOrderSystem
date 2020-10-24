@@ -98,7 +98,7 @@
                                 <StackLayout>
                                     <Frame
                                         Padding="0"
-                                        HeightRequest="180"
+                                        HeightRequest="130"
                                         HorizontalOptions="Fill"
                                         IsClippedToBounds="True">
 

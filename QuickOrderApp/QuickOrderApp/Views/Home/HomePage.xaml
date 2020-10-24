@@ -17,7 +17,6 @@
     Shell.NavBarIsVisible="True"
     Shell.TabBarForegroundColor="Orange"
     Shell.TabBarIsVisible="True"
-   
     Shell.TabBarTitleColor="Black"
     Shell.TitleColor="Black"
     mc:Ignorable="d">
@@ -67,6 +66,7 @@
                         CornerRadius="5"
                         FontFamily="RobotoBold"
                         FontSize="18"
+                        HorizontalOptions="Center"
                         Text="More"
                         TextColor="#2F3538" />
                 </CollectionView.Footer>
@@ -84,7 +84,10 @@
 
                             <frame:PancakeView Padding="0" Style="{x:StaticResource frameCakeStyle}">
                                 <frame:PancakeView.Shadow>
-                                    <frame:DropShadow Color="#000000" Offset="5,5" Opacity="0.5" />
+                                    <frame:DropShadow
+                                        Opacity="0.5"
+                                        Offset="5,5"
+                                        Color="#000000" />
                                 </frame:PancakeView.Shadow>
 
                                 <StackLayout BackgroundColor="White">
@@ -99,6 +102,7 @@
                                         <!--<Image Aspect="Fill" Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />-->
                                     </frame:PancakeView>
                                     <Label Style="{StaticResource TitleLabel}" Text="{Binding StoreName}" />
+
                                     <BoxView
                                         Margin="10,0,10,0"
                                         BackgroundColor="LightGray"

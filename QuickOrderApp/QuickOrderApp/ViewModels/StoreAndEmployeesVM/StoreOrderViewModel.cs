@@ -1,4 +1,5 @@
 ﻿using Library.Models;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Presenters;
 using System;
@@ -64,7 +65,9 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         public LoadingManager LoadingManager { get; set; }
 
 
-        Dictionary<string, IEnumerable<Order>> KeyValues { get; set; }
+      
+        private MoreManager<Order> MoreManager;
+      
 
         public ICommand MoreCommand => new Command(async() =>
         {
@@ -73,35 +76,16 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             var storeIdGuid =  Guid.Parse(StoreId);
 
-            var results = await orderDataStore.GetDifferentStoreOrders(KeyValues[keyname], storeIdGuid);
+            var results = await orderDataStore.GetDifferentStoreOrders(MoreManager.GetValues(keyname), storeIdGuid);
 
             if (results != null)
             {
-                List<Order> tempData = new List<Order>();
+                var differentValue = MoreManager.InsertDifferentDataValue(results, keyname);
 
-                foreach (var item in KeyValues[keyname])
-                {
-                    if (!tempData.Any(s => s.OrderId == item.OrderId))
-                    {
+                MoreManager.ModifyDictionary(keyname, differentValue);
 
-                        tempData.Add(item);
 
-                    }
-                }
-                foreach (var item in results)
-                {
-                    if (!tempData.Any(s => s.OrderId == item.OrderId))
-                    {
-
-                        tempData.Add(item);
-
-                    }
-                }
-
-                KeyValues.Clear();
-                KeyValues.Add(keyname, tempData);
-
-                foreach (var item in KeyValues[keyname])
+                foreach (var item in MoreManager.GetValues(keyname))
                 {
 
                     if (!StoreOrderPresenters.Any(s => s.DetailOrder.OrderId == item.OrderId))
@@ -126,7 +110,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             LoadingManager = new LoadingManager();
             StoreOrderPresenters = new ObservableCollection<StoreOrderPresenter>();
             Orders = new ObservableCollection<Order>();
-            KeyValues = new Dictionary<string, IEnumerable<Order>>();
+            MoreManager = new MoreManager<Order>();
             MessagingCenter.Subscribe<EmployeeOrderPresenter>(this, "RemoveEmpOrderPrensenter", (sender) =>
             {
               
@@ -141,17 +125,21 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         public async Task ExecuteLoadItems(Guid storeId)
         {
+
+            var orderData = await orderDataStore.GetStoreOrders(storeId, App.TokenDto.Token);
+
+
+            if (!MoreManager.ExistKey(keyname))
+            {
+                MoreManager.AddKeyAndValues(keyname, orderData);
+            }
            
-            var orderData =await orderDataStore.GetStoreOrders(storeId, App.TokenDto.Token);
-
-
-            KeyValues.Add(keyname, orderData);
 
 
             //var orderssubmited = orderData.Where(o => o.OrderStatus == Status.Submited ).OrderByDescending(date => date.OrderDate);
-            if (StoreOrderPresenters.Count() > 0 )
+            if (StoreOrderPresenters.Count() > 0)
             {
-            StoreOrderPresenters.Clear();
+                StoreOrderPresenters.Clear();
 
             }
 
@@ -160,10 +148,10 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 var detailOrderPresenter = new StoreOrderPresenter(item);
                 StoreOrderPresenters.Add(detailOrderPresenter);
 
-               
+
             }
 
-           
+
         }
     }
 }

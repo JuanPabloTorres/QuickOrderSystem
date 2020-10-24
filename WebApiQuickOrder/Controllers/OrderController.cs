@@ -15,410 +15,404 @@ using WebApiQuickOrder.Models;
 
 namespace WebApiQuickOrder.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class OrderController : ControllerBase
-    {
-        private readonly QOContext _context;
-        private readonly IOrderFactory _orderFactory;
-
-        public OrderController(QOContext context, IOrderFactory orderFactory)
-        {
-            _context = context;
-            _orderFactory = orderFactory;
-        }
-
-        // GET: api/Order
-        [HttpGet]
-       
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
-        {
-            return await _context.Orders.ToListAsync();
-        }
-
-        // GET: api/Order/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(Guid id)
-        {
-            var order = _context.Orders.Where(o => o.OrderId == id).Include(op => op.OrderProducts).FirstOrDefault();
-
-           
-
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return order;
-        }
-
-        // GET: api/Order/5
-        [HttpGet("[action]/{userid}/{storeid}/{status}")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfStoreOfUserWithSpecifiStatus(Guid userid, Guid storeid,Status status)
-        {
-            var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == status).Include(op => op.OrderProducts).ToListAsync();
-            return _completeOrders;
-        }
-
-        // GET: api/Order/5
-        [HttpGet("[action]/{userid}/{status}")]
-        //[Authorize(Policy = Policies.User)]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status)
-        {
-            List<OrderDto> orders = new List<OrderDto>();
-
-            var data = await (from o in _context.Orders.Include(o=>o.OrderProducts)
-                            join s in _context.Stores on o.StoreId equals s.StoreId
-                            join op in _context.OrderProducts on o.OrderId equals op.OrderId
-                            where o.BuyerId == userid && o.OrderStatus == status && o.IsDisisble == false
-                            select new { o, s}).ToListAsync();
-            foreach (var item in data)
-            {
-                orders.Add(_orderFactory.CreateSimpleOrderDto(item.o, item.s,item.o.OrderProducts.ToList()));
-            }
-
-            return orders;
-        }
-
-        // GET: api/Order/5
-        [HttpPost("[action]/{status}/{userid}")]       
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Guid> ordersAdded,Status status,Guid userid)
-        {
-            if (ordersAdded.Count() < _context.Orders.Count())
-            {
-
-                List<Order> orders = new List<Order>();
-
-
-                var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status).Include(op=>op.OrderProducts).ToListAsync();
-
-                foreach (var item in result)
-                {
-                    if (!item.IsDisisble)
-                    {
-                        if (!ordersAdded.Any(x => x == item.OrderId))
-                        {
-                            orders.Add(item);
-
-                            if (orders.Count == 5)
-                            {
-                                return orders;
-                            }
-                        }
+	[Route("api/[controller]")]
+	[ApiController]
+	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	public class OrderController : ControllerBase
+	{
+		private readonly QOContext _context;
+		private readonly IOrderFactory _orderFactory;
+
+		public OrderController(QOContext context, IOrderFactory orderFactory)
+		{
+			_context = context;
+			_orderFactory = orderFactory;
+		}
+
+		// GET: api/Order
+		[HttpGet]
+
+		public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
+		{
+			return await _context.Orders.ToListAsync();
+		}
+
+		// GET: api/Order/5
+		[HttpGet("{id}")]
+		public async Task<ActionResult<Order>> GetOrder(Guid id)
+		{
+			var order = _context.Orders.Where(o => o.OrderId == id).Include(op => op.OrderProducts).FirstOrDefault();
+
+
+
+			if (order == null)
+			{
+				return NotFound();
+			}
+
+			return order;
+		}
+
+		// GET: api/Order/5
+		[HttpGet("[action]/{userid}/{storeid}/{status}")]
+		public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfStoreOfUserWithSpecifiStatus(Guid userid, Guid storeid, Status status)
+		{
+			var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == status).Include(op => op.OrderProducts).ToListAsync();
+			return _completeOrders;
+		}
+
+		// GET: api/Order/5
+		[HttpGet("[action]/{userid}/{status}")]
+		//[Authorize(Policy = Policies.User)]
+		[AllowAnonymous]
+		public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status)
+		{
+			List<OrderDto> orders = new List<OrderDto>();
+
+			var data = await (from o in _context.Orders.Include(o => o.OrderProducts)
+												join s in _context.Stores on o.StoreId equals s.StoreId
+												join op in _context.OrderProducts on o.OrderId equals op.OrderId
+												where o.BuyerId == userid && o.OrderStatus == status && o.IsDisisble == false
+												select new { o, s }).ToListAsync();
+			foreach (var item in data)
+			{
+				orders.Add(_orderFactory.CreateSimpleOrderDto(item.o, item.s, item.o.OrderProducts.ToList()));
+			}
+
+			return orders;
+		}
+
+		// GET: api/Order/5
+		[HttpPost("[action]/{status}/{userid}")]
+		public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Guid> ordersAdded, Status status, Guid userid)
+		{
+			if (ordersAdded.Count() < _context.Orders.Count())
+			{
+
+				List<Order> orders = new List<Order>();
+
 
-                    }
-                }
+				var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status && o.IsDisisble == false).Include(op => op.OrderProducts).ToListAsync();
+
+				foreach (var item in result)
+				{
+					if (!item.IsDisisble)
+					{
+						if (!ordersAdded.Any(x => x == item.OrderId))
+						{
+							orders.Add(item);
 
+							if (orders.Count == 5)
+							{
+								return orders;
+							}
+						}
+					}
 
+					return orders.ToList();
+				}
+			}
+			return null;
+		}
 
-                return orders.ToList();
-            }
+		// GET: api/Order/5
+		[HttpGet("[action]/{userid}/{storeid}")]
+		public async Task<ActionResult<IEnumerable<Order>>> GetSubmitedOrderOfStoreSpecificUser(Guid userid, Guid storeid)
+		{
+			var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == Status.Submited).Include(op => op.OrderProducts).ToListAsync();
+			return _completeOrders;
 
-            return null;
-        }
+		}
 
+		[HttpGet("[action]/{userid}/{storeid}")]
+		public async Task<ActionResult<IEnumerable<Order>>> GetNotSubmitedOrderOfStoreSpecificUser(Guid userid, Guid storeid)
+		{
+			var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == Status.NotSubmited).Include(op => op.OrderProducts).ToListAsync();
+			return _completeOrders;
 
+		}
 
-        // GET: api/Order/5
-        [HttpGet("[action]/{userid}/{storeid}")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetSubmitedOrderOfStoreSpecificUser(Guid userid, Guid storeid)
-        {
-            var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == Status.Submited).Include(op => op.OrderProducts).ToListAsync();
-            return _completeOrders;
 
-        }
+		[HttpPut]
+		public async Task<ActionResult<bool>> PutOrder(Order orderupdated)
+		{
+			_context.Entry(orderupdated).State = EntityState.Modified;
 
-        [HttpGet("[action]/{userid}/{storeid}")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetNotSubmitedOrderOfStoreSpecificUser(Guid userid, Guid storeid)
-        {
-            var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == Status.NotSubmited).Include(op => op.OrderProducts).ToListAsync();
-            return _completeOrders;
+			try
+			{
+				await _context.SaveChangesAsync();
 
-        }
 
 
-        [HttpPut]
-        public async Task<ActionResult<bool>> PutOrder(Order orderupdated)
-        {
-            _context.Entry(orderupdated).State = EntityState.Modified;
+				if (orderupdated.OrderStatus == Status.Submited)
+				{
+					foreach (var item in orderupdated.OrderProducts)
+					{
+						var product = _context.Products.Where(p => p.StoreId == item.StoreId && p.ProductId == item.ProductIdReference).FirstOrDefault();
 
-            try
-            {
-                await _context.SaveChangesAsync();
+						if (product != null && product.InventoryQuantity > 0)
+						{
+							product.InventoryQuantity -= item.Quantity;
 
-                
+							_context.Entry(product).State = EntityState.Modified;
 
-                if (orderupdated.OrderStatus == Status.Submited)
-                {
-                    foreach (var item in orderupdated.OrderProducts)
-                    {
-                        var product = _context.Products.Where(p => p.StoreId == item.StoreId && p.ProductId == item.ProductIdReference).FirstOrDefault();
+							await _context.SaveChangesAsync();
 
-                        if (product != null && product.InventoryQuantity > 0)
-                        {
-                            product.InventoryQuantity -= item.Quantity;
 
-                            _context.Entry(product).State = EntityState.Modified;
+						}
+					}
+				}
 
-                           await _context.SaveChangesAsync();
-                          
+				//_context.SaveChanges();
 
-                        }
-                    }
-                }
+				return true;
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!OrderExists(orderupdated.OrderId))
+				{
+					return NotFound();
+				}
+				else
+				{
+					return false;
+				}
+			}
 
-                //_context.SaveChanges();
 
-                return true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderExists(orderupdated.OrderId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return false;
-                }
-            }
+		}
 
-           
-        }
+		//[HttpPut]
+		//public async Task<bool> PutOrder(Order order)
+		//{
 
-        //[HttpPut]
-        //public async Task<bool> PutOrder(Order order)
-        //{
 
-            
-        //    var oldOrder = _context.Orders.Where(o => o.OrderId == order.OrderId).FirstOrDefault();
+		//    var oldOrder = _context.Orders.Where(o => o.OrderId == order.OrderId).FirstOrDefault();
 
 
 
-        //    if (oldOrder != null)
-        //    {
+		//    if (oldOrder != null)
+		//    {
 
-        //        try
-        //        {
+		//        try
+		//        {
 
-        //            _context.Orders.Remove(oldOrder);
+		//            _context.Orders.Remove(oldOrder);
 
-        //            _context.SaveChanges();
+		//            _context.SaveChanges();
 
-        //            _context.Add(order);
+		//            _context.Add(order);
 
-        //            //order.StoreOrder= null;
+		//            //order.StoreOrder= null;
 
-        //            if (order.StoreOrder != null)
-        //            {
+		//            if (order.StoreOrder != null)
+		//            {
 
-        //                _context.Attach(order.StoreOrder);
+		//                _context.Attach(order.StoreOrder);
 
-        //                if (order.StoreOrder.Products != null)
-        //                {
+		//                if (order.StoreOrder.Products != null)
+		//                {
 
-        //                    foreach (var item in order.StoreOrder.Products)
-        //                    {
+		//                    foreach (var item in order.StoreOrder.Products)
+		//                    {
 
-        //                        _context.Attach(item);
-        //                    }
-        //                }
+		//                        _context.Attach(item);
+		//                    }
+		//                }
 
 
-        //                order.StoreOrder.WorkHours = null;
+		//                order.StoreOrder.WorkHours = null;
 
-        //                if (order.StoreOrder.WorkHours != null)
-        //                {
+		//                if (order.StoreOrder.WorkHours != null)
+		//                {
 
-        //                    foreach (var item in order.StoreOrder.WorkHours)
-        //                    {
-        //                        _context.Attach(item);
-        //                    }
-        //                }
-        //            }
+		//                    foreach (var item in order.StoreOrder.WorkHours)
+		//                    {
+		//                        _context.Attach(item);
+		//                    }
+		//                }
+		//            }
 
-        //            ProductController productController = new ProductController(_context);
-        //            if (order.OrderStatus == Status.Submited)
-        //            {
-        //                foreach (var item in order.OrderProducts)
-        //                {
-        //                    var product = _context.Products.Where(p => p.StoreId == item.StoreId && p.ProductName == item.ProductName).FirstOrDefault();
+		//            ProductController productController = new ProductController(_context);
+		//            if (order.OrderStatus == Status.Submited)
+		//            {
+		//                foreach (var item in order.OrderProducts)
+		//                {
+		//                    var product = _context.Products.Where(p => p.StoreId == item.StoreId && p.ProductName == item.ProductName).FirstOrDefault();
 
-        //                    if (product != null && product.InventoryQuantity > 0)
-        //                    {
+		//                    if (product != null && product.InventoryQuantity > 0)
+		//                    {
 
-        //                        var result = productController.UpdateInventoryFromOrderSubmited(product.ProductId, item.Quantity);
+		//                        var result = productController.UpdateInventoryFromOrderSubmited(product.ProductId, item.Quantity);
 
-        //                    }
+		//                    }
 
 
-        //                }
-        //            }
+		//                }
+		//            }
 
 
 
 
-        //            _context.SaveChanges();
-        //        }
-        //        catch (Exception e)
-        //        {
+		//            _context.SaveChanges();
+		//        }
+		//        catch (Exception e)
+		//        {
 
-        //            Console.WriteLine(e);
-        //        }
+		//            Console.WriteLine(e);
+		//        }
 
 
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
+		//        return true;
+		//    }
+		//    else
+		//    {
+		//        return false;
+		//    }
 
-        //}
+		//}
 
 
-        [HttpGet("[action]/{orderId}")]
-        public async Task<bool> DisableOrder(Guid orderId)
-        {
+		[HttpGet("[action]/{orderId}")]
+		public async Task<bool> DisableOrder(Guid orderId)
+		{
 
-            var orderToDisable = await _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefaultAsync();
+			var orderToDisable = await _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefaultAsync();
 
-            orderToDisable.IsDisisble = true;
-            _context.Entry(orderToDisable).State = EntityState.Modified;
+			orderToDisable.IsDisisble = true;
+			_context.Entry(orderToDisable).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OrderExists(orderToDisable.OrderId))
-                {
-                    return false;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			try
+			{
+				await _context.SaveChangesAsync();
+				return true;
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!OrderExists(orderToDisable.OrderId))
+				{
+					return false;
+				}
+				else
+				{
+					throw;
+				}
+			}
 
-           
-        }
 
-        // POST: api/Order
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder(Order order)
-        {
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
+		}
 
-            return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
-        }
+		// POST: api/Order
+		// To protect from overposting attacks, please enable the specific properties you want to bind to, for
+		// more details see https://aka.ms/RazorPagesCRUD.
+		[HttpPost]
+		public async Task<ActionResult<Order>> PostOrder(Order order)
+		{
+			_context.Orders.Add(order);
+			await _context.SaveChangesAsync();
 
-        // DELETE: api/Order/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Order>> DeleteOrder(Guid id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
+			return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
+		}
 
-            _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
+		// DELETE: api/Order/5
+		[HttpDelete("{id}")]
+		public async Task<ActionResult<Order>> DeleteOrder(Guid id)
+		{
+			var order = await _context.Orders.FindAsync(id);
+			if (order == null)
+			{
+				return NotFound();
+			}
 
-            return order;
-        }
+			_context.Orders.Remove(order);
+			await _context.SaveChangesAsync();
 
-        private bool OrderExists(Guid id)
-        {
-            return _context.Orders.Any(e => e.OrderId == id);
-        }
+			return order;
+		}
 
-        [HttpGet("[action]/{userid}/{storeid}")]
-        [Authorize(Policy = Policies.User)]
-        public Order HaveOrderOfSpecificStore(Guid userid, Guid storeid)
-        {
-            return _context.Orders.Where(e => e.BuyerId == userid && e.StoreId == storeid).FirstOrDefault();
-        }
+		private bool OrderExists(Guid id)
+		{
+			return _context.Orders.Any(e => e.OrderId == id);
+		}
 
-        [HttpGet("[action]/{userid}")]
-        [Authorize(Policy = Policies.User)]
-        public IEnumerable<Order> GetUserOrders(Guid userid)
-        {
-            return _context.Orders.Where(e => e.BuyerId == userid).Include(o => o.OrderProducts).ToList();
-        }
+		[HttpGet("[action]/{userid}/{storeid}")]
+		[Authorize(Policy = Policies.User)]
+		public Order HaveOrderOfSpecificStore(Guid userid, Guid storeid)
+		{
+			return _context.Orders.Where(e => e.BuyerId == userid && e.StoreId == storeid).FirstOrDefault();
+		}
 
-        [HttpGet("[action]/{userid}/{storeid}")]
-        public IEnumerable<Order> GetUserOrdersOfStore(Guid userid,Guid storeid)
-        {
-            return _context.Orders.Where(e => e.BuyerId == userid && e.StoreId == storeid).Include(o => o.OrderProducts).ToList();
-        }
+		[HttpGet("[action]/{userid}")]
+		[Authorize(Policy = Policies.User)]
+		public IEnumerable<Order> GetUserOrders(Guid userid)
+		{
+			return _context.Orders.Where(e => e.BuyerId == userid).Include(o => o.OrderProducts).ToList();
+		}
 
-        [HttpGet("[action]/{userid}")]
-        [Authorize(Policy = Policies.User)]
-        public IEnumerable<Order> GetUserOrdersWithToken(Guid userid)
-        {
-            return _context.Orders.Where(e => e.BuyerId == userid).Include(o => o.OrderProducts).ToList();
-        }
+		[HttpGet("[action]/{userid}/{storeid}")]
+		public IEnumerable<Order> GetUserOrdersOfStore(Guid userid, Guid storeid)
+		{
+			return _context.Orders.Where(e => e.BuyerId == userid && e.StoreId == storeid).Include(o => o.OrderProducts).ToList();
+		}
 
-        [HttpGet("[action]/{storeId}")]
-        [Authorize(Policy  = Policies.StoreControl)]       
-        public async Task<IEnumerable<Order>> GetStoreOrders(Guid storeId)
-        {
-            var result = await _context.Orders.Where(e => e.StoreId == storeId && e.OrderStatus == Status.Submited).Include(o => o.OrderProducts).Take(5).ToListAsync();
+		[HttpGet("[action]/{userid}")]
+		[Authorize(Policy = Policies.User)]
+		public IEnumerable<Order> GetUserOrdersWithToken(Guid userid)
+		{
+			return _context.Orders.Where(e => e.BuyerId == userid).Include(o => o.OrderProducts).ToList();
+		}
 
+		[HttpGet("[action]/{storeId}")]
+		[Authorize(Policy = Policies.StoreControl)]
+		public async Task<IEnumerable<Order>> GetStoreOrders(Guid storeId)
+		{
+			var result = await _context.Orders.Where(e => e.StoreId == storeId && e.OrderStatus == Status.Submited).Include(o => o.OrderProducts).Take(5).ToListAsync();
 
-            return result;
-        }
 
-        [HttpPost("[action]/{storeId}")]
-        public async Task<IEnumerable<Order>> GetDifferentStoreOrders(IEnumerable<Order> orders, Guid storeId)
-        {
+			return result;
+		}
 
+		[HttpPost("[action]/{storeId}")]
+		public async Task<IEnumerable<Order>> GetDifferentStoreOrders(IEnumerable<Order> orders, Guid storeId)
+		{
 
-            if (orders != null)
-            {
-                List<Order> differentOrders = new List<Order>();
 
-                var results = _context.Orders.Where(o => o.OrderStatus == Status.Submited && o.StoreId == storeId).Include(op => op.OrderProducts);
+			if (orders != null)
+			{
+				List<Order> differentOrders = new List<Order>();
 
-                foreach (var item in results)
-                {
+				var results = _context.Orders.Where(o => o.OrderStatus == Status.Submited && o.StoreId == storeId).Include(op => op.OrderProducts);
 
-                    if (!orders.Any(x => x.OrderId == item.OrderId))
-                    {
-                        differentOrders.Add(item);
+				foreach (var item in results)
+				{
 
-                        if (differentOrders.Count == 5)
-                        {
-                            return differentOrders;
-                        }
-                    }
+					if (!orders.Any(x => x.OrderId == item.OrderId))
+					{
+						differentOrders.Add(item);
 
-                }
+						if (differentOrders.Count == 5)
+						{
+							return differentOrders;
+						}
+					}
 
+				}
 
-                return differentOrders;
 
-            }
+				return differentOrders;
 
-            return null;
+			}
 
-        }
+			return null;
 
-        [HttpGet("[action]/{orderId}")]
-        //[Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<Order>> GetOrderWithProducts(Guid orderId)
-        {
-            var result = await _context.Orders.Where(e => e.OrderId == orderId).Include(o => o.OrderProducts).FirstOrDefaultAsync();
-            return result;
-        }
-    }
+		}
+
+		[HttpGet("[action]/{orderId}")]
+		//[Authorize(Policy = Policies.User)]
+		public async Task<ActionResult<Order>> GetOrderWithProducts(Guid orderId)
+		{
+			var result = await _context.Orders.Where(e => e.OrderId == orderId).Include(o => o.OrderProducts).FirstOrDefaultAsync();
+			return result;
+		}
+	}
 }

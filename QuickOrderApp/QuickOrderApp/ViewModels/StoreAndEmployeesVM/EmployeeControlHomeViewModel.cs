@@ -1,6 +1,7 @@
 ﻿using Library.Models;
 using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Presenters;
+using QuickOrderApp.Views.Login;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,16 +30,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         private Store employeeSelectedStore;
 
-        //public Store EmployeeSelectedStore
-        //{
-        //    get { return employeeSelectedStore; }
-        //    set
-        //    {
-        //        employeeSelectedStore = value;
-        //        OnPropertyChanged();
-        //        EmployeeShell.Current.GoToAsync($"StoreControlEmployee?EmpStoreId={EmployeeSelectedStore.StoreId.ToString()}", animate: true);
-        //    }
-        //}
+       
 
         private Employee storeEmployeeSelected;
 
@@ -90,7 +82,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                     }
 
                 }
-               await Shell.Current.GoToAsync("../LoginRoute");
+                await Shell.Current.GoToAsync($"{LoginPage.Route}");
 
             });
         }

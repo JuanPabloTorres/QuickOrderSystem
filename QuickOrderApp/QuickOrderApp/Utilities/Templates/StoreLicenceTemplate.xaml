@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentView
+    x:Class="QuickOrderApp.Utilities.Templates.StoreLicenceTemplate"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <ContentView.Content>
+        <StackLayout>
+            <Frame
+                Margin="4"
+                Padding="0"
+                BorderColor="LightGray"
+                CornerRadius="4"
+                HasShadow="True">
+
+                <StackLayout BackgroundColor="White">
+
+
+                    <Label Style="{StaticResource TitleLabel}" Text="{Binding RequestTitle}" />
+                    <BoxView
+                        Margin="4"
+                        BackgroundColor="LightGray"
+                        HeightRequest="0.1"
+                        HorizontalOptions="Fill" />
+
+
+                    <Label
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding HaveMsg}"
+                        Style="{StaticResource DataLabel}"
+                        Text="{Binding Msg}">
+
+                        <Label.GestureRecognizers>
+
+                            <TapGestureRecognizer Command="{Binding CopyMsgCommand}" />
+
+                        </Label.GestureRecognizers>
+
+                    </Label>
+
+                    <button:SfButton
+                        Margin="2"
+                        BackgroundColor="LimeGreen"
+                        Command="{Binding MarkAsReadCommand}"
+                        CommandParameter="Accept"
+                        CornerRadius="5"
+                        FontAttributes="Bold"
+                        FontFamily="RobotoBold"
+                        FontSize="Medium"
+                        HasShadow="True"
+                        Text="Mark As Read"
+                        TextColor="#2F3538" />
+
+
+
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

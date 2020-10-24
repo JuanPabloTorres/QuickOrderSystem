@@ -3,10 +3,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _202091100 : Migration
+    public partial class _20201015100 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "EmailValidations",
+                columns: table => new
+                {
+                    EmailValidationId = table.Column<Guid>(nullable: false),
+                    ValidationCode = table.Column<string>(nullable: true),
+                    ExpDate = table.Column<DateTime>(nullable: false),
+                    Email = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailValidations", x => x.EmailValidationId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "ForgotPasswords",
                 columns: table => new
@@ -83,7 +98,9 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     HubConnectionID = table.Column<string>(nullable: false),
-                    UserID = table.Column<Guid>(nullable: false)
+                    UserID = table.Column<Guid>(nullable: false),
+                    IsDisable = table.Column<bool>(nullable: false),
+                    ConnecteDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -101,7 +118,8 @@ namespace WebApiQuickOrder.Migrations
                     Phone = table.Column<string>(nullable: true),
                     Gender = table.Column<int>(nullable: false),
                     LoginId = table.Column<Guid>(nullable: false),
-                    StripeUserId = table.Column<string>(nullable: true)
+                    StripeUserId = table.Column<string>(nullable: true),
+                    IsValidUser = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -306,7 +324,8 @@ namespace WebApiQuickOrder.Migrations
                     StoreId = table.Column<Guid>(nullable: false),
                     OrderId = table.Column<Guid>(nullable: false),
                     ProductImage = table.Column<byte[]>(nullable: true),
-                    Type = table.Column<int>(nullable: false)
+                    Type = table.Column<int>(nullable: false),
+                    ProductIdReference = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -382,6 +401,9 @@ namespace WebApiQuickOrder.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "EmailValidations");
+
             migrationBuilder.DropTable(
                 name: "EmployeeWorkHours");
 

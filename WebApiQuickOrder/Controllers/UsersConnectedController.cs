@@ -25,8 +25,8 @@ namespace WebApiQuickOrder.Controllers
 
             _context = context;
 
-            //hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres9-001-site1.etempurl.com" + "/comunicationhub").Build();
-            hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000" + "/comunicationhub").Build();
+            hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres9-001-site1.etempurl.com" + "/comunicationhub").Build();
+            //hubConnection = new HubConnectionBuilder().WithUrl("http://localhost:5000" + "/comunicationhub").Build();
         }
 
         // GET: api/UsersConnected
@@ -40,6 +40,11 @@ namespace WebApiQuickOrder.Controllers
         public async Task<ActionResult<bool>> ModifyOldConnections(UsersConnected usersConnected)
         {
             var userconnections = await _context.usersConnecteds.Where(usc => usc.UserID == usersConnected.UserID && usc.IsDisable == false).ToListAsync();
+
+            if (userconnections.Count == 0)
+            {
+                return true;
+            }
 
 
             if (userconnections.Count() > 0)
@@ -57,19 +62,18 @@ namespace WebApiQuickOrder.Controllers
 
                 return true;
             }
-            else
-            {
-                return NotFound();
-            }
+
+
+            return NotFound();
         }
 
 
         [HttpGet("[action]/{storeId}/{orderId}")]
-        public async Task<bool> SendOrdersToEmployees(string storeId,string orderId)
+        public async Task<bool> SendOrdersToEmployees(string storeId, string orderId)
         {
 
             await hubConnection.StartAsync();
-            var employees =await  _context.Employees.Where(emp => emp.StoreId.ToString() == storeId).ToListAsync();
+            var employees = await _context.Employees.Where(emp => emp.StoreId.ToString() == storeId).ToListAsync();
 
             List<UsersConnected> usersConnecteds = new List<UsersConnected>();
 
@@ -129,7 +133,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPut]
         public async Task<ActionResult<bool>> PutUsersConnected(UsersConnected usersConnected)
         {
-           
+
 
             _context.Entry(usersConnected).State = EntityState.Modified;
 
@@ -151,8 +155,9 @@ namespace WebApiQuickOrder.Controllers
                 }
             }
 
-           
+
         }
+
 
         // POST: api/UsersConnected
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -161,25 +166,62 @@ namespace WebApiQuickOrder.Controllers
         public async Task<ActionResult<UsersConnected>> PostUsersConnected(UsersConnected usersConnected)
         {
 
-            _context.usersConnecteds.Add(usersConnected);
-            try
+            var result = await ModifyOldConnections(usersConnected);
+
+
+            if (result.Value)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UsersConnectedExists(usersConnected.HubConnectionID))
+                _context.usersConnecteds.Add(usersConnected);
+                try
                 {
-                    return Conflict();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateException)
                 {
-                    throw;
+                    if (UsersConnectedExists(usersConnected.HubConnectionID))
+                    {
+                        return Conflict();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+
+                return CreatedAtAction("GetUsersConnected", new { id = usersConnected.HubConnectionID }, usersConnected);
+
             }
 
-            return CreatedAtAction("GetUsersConnected", new { id = usersConnected.HubConnectionID }, usersConnected);
+            return null;
         }
+
+
+        //// POST: api/UsersConnected
+        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
+        //// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        //[HttpPost]
+        //public async Task<ActionResult<UsersConnected>> PostUsersConnected(UsersConnected usersConnected)
+        //{
+
+        //    _context.usersConnecteds.Add(usersConnected);
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateException)
+        //    {
+        //        if (UsersConnectedExists(usersConnected.HubConnectionID))
+        //        {
+        //            return Conflict();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return CreatedAtAction("GetUsersConnected", new { id = usersConnected.HubConnectionID }, usersConnected);
+        //}
 
         // DELETE: api/UsersConnected/5
         [HttpDelete("{id}")]
@@ -194,7 +236,7 @@ namespace WebApiQuickOrder.Controllers
             _context.usersConnecteds.Remove(usersConnected);
             await _context.SaveChangesAsync();
 
-            if (_context.usersConnecteds.Any(u=>u.HubConnectionID == id))
+            if (_context.usersConnecteds.Any(u => u.HubConnectionID == id))
             {
                 return true;
             }
@@ -202,7 +244,7 @@ namespace WebApiQuickOrder.Controllers
             {
                 return false;
             }
-            
+
         }
 
         private bool UsersConnectedExists(string id)

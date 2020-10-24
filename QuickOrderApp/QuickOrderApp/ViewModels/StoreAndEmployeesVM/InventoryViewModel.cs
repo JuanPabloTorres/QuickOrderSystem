@@ -1,5 +1,6 @@
 ﻿using Library.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,11 +33,17 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         public ICommand MoreCommand { get; set; }
 
 
-        public Dictionary<string,IEnumerable<Product>> keyValues { get; set; }
+      
+        private MoreManager<Product> MoreManager;
+
+        private string keyname = "productAdded";
+
         public InventoryViewModel()
         {
             StoreInventory = new ObservableCollection<ProductPresenter>();
-            keyValues = new Dictionary<string, IEnumerable<Product>>();
+         
+
+            MoreManager = new MoreManager<Product>();
 
             SearchItemCommand = new Command(async () => 
             {
@@ -97,40 +104,16 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             MoreCommand = new Command(async() =>
             {
 
-                var result = await productDataStore.GetDifferentProductFromStore(keyValues["productAdded"],StoreControlPanelViewModel.YourSelectedStore.StoreId);
+                var result = await productDataStore.GetDifferentProductFromStore(MoreManager.GetValues(keyname),StoreControlPanelViewModel.YourSelectedStore.StoreId);
 
 
                 if (result != null)
                 {
-                    List<Product> tempData = new List<Product>();
+                    var differentValue = MoreManager.InsertDifferentDataValue(result, keyname);
 
-                    foreach (var item in keyValues["productAdded"])
-                    {
+                    MoreManager.ModifyDictionary(keyname, differentValue);
 
-                        if (!tempData.Any(s => s.ProductId == item.ProductId))
-                        {
-
-                            tempData.Add(item);
-
-                        }
-                    }
-
-                    foreach (var item in result)
-                    {
-                        if (!tempData.Any(s => s.ProductId == item.ProductId))
-                        {
-
-                            tempData.Add(item);
-
-                        }
-
-                    }
-
-
-                    keyValues.Clear();
-                    keyValues.Add("productAdded", tempData);
-
-                    foreach (var item in keyValues["productAdded"])
+                    foreach (var item in MoreManager.GetValues(keyname))
                     {
 
                         if (!StoreInventory.Any(s => s.ProductId == item.ProductId))
@@ -159,9 +142,9 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             var data = productDataStore.GetProductFromStore(StoreControlPanelViewModel.YourSelectedStore.StoreId);
 
-            if (!keyValues.ContainsKey("productAdded"))
+            if (!MoreManager.ExistKey(keyname))
             {
-                keyValues.Add("productAdded", data);
+                MoreManager.AddKeyAndValues(keyname, data);
 
             }
 

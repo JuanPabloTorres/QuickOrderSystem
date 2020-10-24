@@ -407,6 +407,9 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("FromStore")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("RequestAnswer")
                         .HasColumnType("int");
 

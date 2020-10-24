@@ -9,15 +9,28 @@ using System.Threading.Tasks;
 using System.Linq;
 using Library.Models;
 using Library.Services;
+using QuickOrderApp.Views.Store.EmployeeStoreControlPanel;
 
 namespace QuickOrderApp.LoginBuilder
 {
     public class ConcreteLoginTokenBuilder:LoginTokenBuilder
     {
+        public async override void ErrorMessage()
+        {
+            await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login...!", "OK");
+        }
+
         public async override void GoQuickOrderHome()
         {
             App.Current.MainPage = new AppShell();
             await Shell.Current.GoToAsync("//RouteName");
+        }
+
+        public  async override void GoEmployeeHome()
+        {
+            App.Current.MainPage = new AppShell();
+            await Shell.Current.GoToAsync("EmployeeControlPanelRoute");
+
         }
 
         public async override void MakeHubConnection()
@@ -38,7 +51,7 @@ namespace QuickOrderApp.LoginBuilder
                     ConnecteDate = DateTime.Now
                 };
 
-                var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+                //var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
 
                 var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
             }
@@ -46,8 +59,7 @@ namespace QuickOrderApp.LoginBuilder
 
         public async override void VerifyLogin()
         {
-            if (UserLoginToken != null)
-            {
+           
 
                 var loginresult = UserLoginToken.UserDetail;
 
@@ -80,19 +92,10 @@ namespace QuickOrderApp.LoginBuilder
                         App.CardPaymentToken.CardTokenId = userCardTokenId;
 
                     }
-
-
-                  
                     
                 }
 
-            }
-            else
-            {
-                
-                await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login...!", "OK");
-
-            }
+           
         }
     }
 }

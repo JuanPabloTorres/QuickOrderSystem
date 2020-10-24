@@ -73,7 +73,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
            
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
 
-            //IsLoading = false;
+          
 
             LoginCommand = new Command(async () =>
             {
@@ -91,7 +91,14 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                         ConcreteLoginTokenBuilder userlog = new ConcreteLoginTokenBuilder();
 
-                        App.TokenDto = LoginDirector.MakeLogin(userlog, Username, Password);
+                        var result = LoginDirector.MakeLogin(userlog, Username, Password);
+
+                        if (result != null)
+                        {
+                            App.TokenDto = result;
+
+                            userlog.GoQuickOrderHome();
+                        }
 
                         IsLoading = false;
 
@@ -106,178 +113,43 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             });
 
-            //LoginCommand = new Command(async () =>
-            //{
-               
-            //    //var currentuserID = Xamarin.Forms.Application.Current.Properties["loginId "].ToString();
-            //    IsLoading = true;
-
-            //    if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
-            //    {
-            //        //Verifica si el telefono tiene acceso a internet
-                   
-
-            //        if (Connectivity.NetworkAccess == NetworkAccess.Internet)
-            //        {
-            //            //Obtine los credenciales del usuario
-            //            //var loginresult = userDataStore.CheckUserCredential(Username, Password);
-            //            //Obtiene el token de acceso 
-            //            App.TokenDto = userDataStore.LoginCredential(Username, Password);
-                       
-
-            //            //Verifica si el resultado del login no es vacio. 
-            //            if (App.TokenDto != null)
-            //            {
-
-            //                var loginresult = App.TokenDto.UserDetail;
-            //                if (!loginresult.IsValidUser)
-            //                {
-            //                    App.LogUser = loginresult;
-            //                    await popupNavigation.PushAsync(new ValidateEmailCode());
-            //                    IsLoading = false;
-
-            //                }
-            //                else
-            //                {
-
-            //                    Task.Run(async () =>
-            //                    {
-            //                        await App.ComunicationService.Connect();
-            //                    }).Wait();
-
-            //                    App.LogUser = loginresult;
-
-            //                bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
-
-            //                //Verfico si hay tarjetas registradas con el usuario
-            //                if (hasPaymentCard)
-            //                {
-            //                    var data = App.LogUser.PaymentCards;
-            //                    var card = new List<PaymentCard>(data);
 
 
-            //                    var userCardTokenId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, card[0].StripeCardId);
-
-
-            //                    App.CardPaymentToken.CardTokenId = userCardTokenId;
-                               
-            //                }
-                            
-
-            //                if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
-            //                {
-
-            //                App.UsersConnected = new UsersConnected()
-            //                {
-            //                    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-            //                    UserID = App.LogUser.UserId,
-            //                    IsDisable=false,
-            //                    ConnecteDate = DateTime.Now
-            //                };
-
-            //                var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
-
-            //                var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-            //                }
-
-
-
-            //                    App.Current.MainPage = new AppShell();                          
-            //                    await Shell.Current.GoToAsync("//RouteName");
-            //                IsLoading = false;
-            //                }
-                           
-            //            }
-            //            else
-            //            {
-            //                IsLoading = false;
-            //                await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login...!", "OK");
-
-            //            }
-
-            //        }
-            //    }
-            //    else
-            //    {
-            //        IsLoading = false;
-            //        await App.Current.MainPage.DisplayAlert("Notification", "Empty values...!", "OK");
-
-            //    }
-
-            //});
 
             LoginEmployeeCommand = new Command(async () =>
             {
+                //var currentuserID = Xamarin.Forms.Application.Current.Properties["loginId "].ToString();
                 IsLoading = true;
+
                 if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
                 {
+                    //Verifica si el telefono tiene acceso a internet
 
-                    //var loginresult = userDataStore.CheckUserCredential(Username, Password);
-                    App.TokenDto = userDataStore.LoginCredential(Username, Password);
-                    if (App.TokenDto != null)
+
+                    if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-                        var loginresult = App.TokenDto.UserDetail;
-                        if (loginresult != null)
+
+                        LoginTokenDirector LoginDirector = new LoginTokenDirector();
+
+                        ConcreteLoginTokenBuilder userlog = new ConcreteLoginTokenBuilder();
+
+                        var result = LoginDirector.MakeLogin(userlog, Username, Password);
+
+                        if (result != null)
                         {
-                            Task.Run(async () =>
-                            {
-                                await App.ComunicationService.Connect();
-                            }).Wait();
+                            App.TokenDto = result;
 
-                            var userEmployees = await EmployeeDataStore.GetUserEmployees(loginresult.UserId.ToString());
-                            App.LogUser = loginresult;
-
-
-                            if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
-                            {
-
-                                App.UsersConnected = new UsersConnected()
-                                {
-                                    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                    UserID = App.LogUser.UserId,
-                                    IsDisable = false,
-                                    ConnecteDate = DateTime.Now
-                                };
-
-                                var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
-
-                                var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-                            }
-
-                            //App.UsersConnected = new UsersConnected()
-                            //{
-                            //    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                            //    UserID = App.LogUser.UserId,
-                            //    IsDisable = false,
-                            //    ConnecteDate = DateTime.Now
-                            //};
-                            //var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
-
-
-                            //var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-
-                            App.Current.MainPage = new EmployeeShell();
-                            IsLoading = false;
-
+                            userlog.GoEmployeeHome();
                         }
-                        else
-                        {
-                            await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login.", "OK");
 
-                        }
-                    }
-                    else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Notification", "Some error has ocurred, try againg.", "OK");
                         IsLoading = false;
-                    }
 
-                   
+                    }
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Notification", "Empty inputs.", "OK");
                     IsLoading = false;
+                    await App.Current.MainPage.DisplayAlert("Notification", "Empty values...!", "OK");
 
                 }
 
@@ -285,9 +157,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             RegisterCommand = new Command(async () =>
             {
+                await Shell.Current.GoToAsync($"//{LoginPage.Route}/{ RegisterPage.Route}");
 
-
-                await App.Current.MainPage.Navigation.PushAsync(new RegisterPage());
+                //await App.Current.MainPage.Navigation.PushAsync(new RegisterPage());
 
             });
 
@@ -322,6 +194,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                             Gender value;
                             Enum.TryParse(GenderSelected, out value);
+
                             var newUser = new User()
                             {
                                 UserId = Guid.NewGuid(),
@@ -374,21 +247,21 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                                         App.LogUser = App.TokenDto.UserDetail;
 
-                                        if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
-                                        {
+                                        //if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
+                                        //{
 
-                                            App.UsersConnected = new UsersConnected()
-                                            {
-                                                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                                UserID = App.LogUser.UserId,
-                                                IsDisable = false,
-                                                ConnecteDate = DateTime.Now
-                                            };
+                                        //    App.UsersConnected = new UsersConnected()
+                                        //    {
+                                        //        HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                        //        UserID = App.LogUser.UserId,
+                                        //        IsDisable = false,
+                                        //        ConnecteDate = DateTime.Now
+                                        //    };
 
-                                            //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+                                        //    //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
 
-                                            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-                                        }
+                                        //    var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                                        //}
 
 
                                         try
@@ -443,8 +316,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             GoForgotPasswordCommand = new Command(async () =>
             {
-
-                await App.Current.MainPage.Navigation.PushAsync(new ForgotPasswordPage());
+                await Shell.Current.GoToAsync($"//{LoginPage.Route}/{ ForgotPasswordPage.Route}");
+                //await App.Current.MainPage.Navigation.PushAsync(new ForgotPasswordPage());
 
             });
 
