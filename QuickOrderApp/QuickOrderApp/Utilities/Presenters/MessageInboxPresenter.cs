@@ -1,13 +1,15 @@
 ﻿using Library.Models;
+using QuickOrderApp.Utilities.Templates;
 using QuickOrderApp.ViewModels;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.Utilities.Presenters
 {
-    public class RequestPresenter : BaseViewModel
+    public class MessageInboxPresenter : BaseViewModel
     {
         private string store;
 
@@ -28,6 +30,7 @@ namespace QuickOrderApp.Utilities.Presenters
             get { return title; }
             set { title = value; }
         }
+
         private Guid requestid;
 
         public Guid RequestId
@@ -52,19 +55,64 @@ namespace QuickOrderApp.Utilities.Presenters
         }
 
 
+       
+
+        private string msg;
+
+        public string Msg
+        {
+            get { return msg; }
+            set { msg = value;
+                OnPropertyChanged();
+            }
+        }
 
 
+        public ICommand CopyMsgCommand => new Command(async() => 
+        {
+
+
+            await Clipboard.SetTextAsync(Msg);
+
+            if (Clipboard.HasText)
+            {
+                var text = await Clipboard.GetTextAsync();
+
+                await Shell.Current.DisplayAlert("Success", string.Format("Your copied text is({0})", text), "OK");
+            }
+
+        });
         public ICommand RequestAnswerCommand { get; set; }
 
-        public RequestPresenter(UserRequest userRequest)
+        public ICommand MarkAsReadCommand { get; set; }
+        public MessageInboxPresenter(UserRequest userRequest)
         {
             RequestId = userRequest.RequestId;
+
             var store = GetStore(userRequest.FromStore.ToString());
 
             if (userRequest.Type == RequestType.JobRequest)
             {
                 RequestTitle = store.Result.StoreName + " Send Job Request";
+                
             }
+            if (userRequest.Type == RequestType.StoreLicensesRequest)
+            {
+                RequestTitle = "Store License";
+                Msg = userRequest.Message;
+               
+            }
+
+            MarkAsReadCommand = new Command(async()=>
+            {
+
+                userRequest.RequestAnswer = Answer.Read;
+
+                await requestDataStore.UpdateItemAsync(userRequest);
+
+                MessagingCenter.Send<MessageInboxPresenter>(this, "RefreshInbox");
+
+            });
 
             RequestAnswerCommand = new Command<string>(async (e) =>
             {
@@ -73,12 +121,13 @@ namespace QuickOrderApp.Utilities.Presenters
                 {
 
                     userRequest.RequestAnswer = Answer.Accept;
+
                     var requestUpdated = await requestDataStore.UpdateItemAsync(userRequest);
 
                     if (requestUpdated)
                     {
 
-                        MessagingCenter.Send<RequestPresenter>(this, "RefreshInbox");
+                        MessagingCenter.Send<MessageInboxPresenter>(this, "RefreshInbox");
 
                         var newStoreEmployee = new Employee()
                         {
@@ -94,13 +143,10 @@ namespace QuickOrderApp.Utilities.Presenters
                 }
                 if (Answer.Decline.ToString() == e)
                 {
-
-                    //userRequest.RequestAnswer = Answer.Decline;
-                    //var requestUpdated = await requestDataStore.UpdateItemAsync(userRequest);
-                    //MessagingCenter.Send<RequestPresenter>(this, "RefreshInbox");
+                    
                     var deleted = await requestDataStore.DeleteItemAsync(RequestId.ToString());
 
-                    MessagingCenter.Send<RequestPresenter>(this, "RefreshInbox");
+                    MessagingCenter.Send<MessageInboxPresenter>(this, "RefreshInbox");
                 }
 
             });

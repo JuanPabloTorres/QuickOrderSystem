@@ -16,7 +16,7 @@ namespace Library.Interface
         //public static string LocalBackendUrl = "http://192.168.1.144:5000/api";
 
         public static string LocalBackendUrl = "http://juantorres9-001-site1.etempurl.com/api";
-             
+
 
         protected Uri FullAPIUri { get; set; }
 
@@ -46,6 +46,7 @@ namespace Library.Interface
 
             if (response.IsSuccessStatusCode)
             {
+
                 return true;
             }
 

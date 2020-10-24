@@ -2,7 +2,7 @@
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _202091101 : Migration
+    public partial class _20201019100 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

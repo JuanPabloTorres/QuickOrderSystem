@@ -15,17 +15,23 @@ namespace Library.Models
         public RequestType Type { get; set; }
 
         public Answer RequestAnswer { get; set; }
+
+        public string Message { get; set; } 
+
+
     }
 
     public enum RequestType
     {
-        JobRequest
+        JobRequest,
+        StoreLicensesRequest
     }
 
     public enum Answer
     {
         None,
         Accept,
-        Decline
+        Decline,
+        Read
     }
 }

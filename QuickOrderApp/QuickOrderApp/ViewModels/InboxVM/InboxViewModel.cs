@@ -4,7 +4,9 @@ using Newtonsoft.Json;
 using QuickOrderApp.Managers;
 using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Presenters;
+using QuickOrderApp.Utilities.Templates;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -15,30 +17,75 @@ namespace QuickOrderApp.ViewModels.InboxVM
 {
     public class InboxViewModel : BaseViewModel
     {
-        public ObservableCollection<RequestPresenter> UserRequests { get; set; }
+
+        public Dictionary<string,ContentView> InboxViewTemplatesDictionary { get; set; }
+        public ObservableCollection<MessageInboxPresenter> UserRequests { get; set; }
+        public ObservableCollection<ContentView> InboxViewTemplates { get; set; }
 
         public InboxViewModel()
         {
-            UserRequests = new ObservableCollection<RequestPresenter>();
+            UserRequests = new ObservableCollection<MessageInboxPresenter>();
+
+            InboxViewTemplates = new ObservableCollection<ContentView>();
+
+            InboxViewTemplatesDictionary = new Dictionary<string, ContentView>();
 
             ExecuteLoadItemsCommand();
 
-            MessagingCenter.Subscribe<RequestPresenter>(this, "RefreshInbox", (sender) =>
+            MessagingCenter.Subscribe<MessageInboxPresenter>(this, "RefreshInbox", (sender) =>
             {
-                UserRequests.Remove(sender);
-               
+
+                if (InboxViewTemplatesDictionary.Count() > 0)
+                {
+
+                    if (InboxViewTemplatesDictionary.ContainsKey(sender.RequestId.ToString()))
+                    {
+
+                        InboxViewTemplates.Remove(InboxViewTemplatesDictionary[sender.RequestId.ToString()]);
+
+                        InboxViewTemplatesDictionary.Remove(sender.RequestId.ToString());
+
+
+                    }
+
+                }
+
             });
-       
+
 
             App.ComunicationService.hubConnection.On<string>("ReceiveMessage", (message) =>
             {
-
                 UserRequest deseralized = JsonConvert.DeserializeObject<UserRequest>(message);
-                var requestPresenter = new RequestPresenter(deseralized);
+
+                var requestPresenter = new MessageInboxPresenter(deseralized);
+
                 UserRequests.Add(requestPresenter);
             });
         }
 
+
+        public ContentView SetInboxTemplate(UserRequest request)
+        {
+            ContentView viewtemplate;
+
+            MessageInboxPresenter messageInboxPresenter = new MessageInboxPresenter(request);
+
+            if (request.Type == RequestType.StoreLicensesRequest)
+            {
+
+              return  viewtemplate = new StoreLicenceTemplate(messageInboxPresenter);
+                
+            }
+
+            if (request.Type == RequestType.JobRequest)
+            {
+               return  viewtemplate = new JobRequestTemplate(messageInboxPresenter);
+               
+            }
+
+            return null;
+
+        }
 
         public async Task ExecuteLoadItemsCommand()
         {
@@ -49,34 +96,53 @@ namespace QuickOrderApp.ViewModels.InboxVM
             }
             else
             {
-            IsBusy = true;
+                IsBusy = true;
 
-            try
-            {
-                UserRequests.Clear();
-                
-                var requestData = await requestDataStore.GetRequestOfUser(App.LogUser.UserId);
-
-                foreach (var item in requestData)
+                try
                 {
-                    if (item.RequestAnswer == Answer.None)
-                    {
-                        var presenter = new RequestPresenter(item);
 
-                        UserRequests.Add(presenter);
+                    if (InboxViewTemplatesDictionary.Count() > 0)
+                    {
+                        InboxViewTemplates.Clear();
 
                     }
+
+                    InboxViewTemplates.Clear();
+
+
+                    var requestData = await requestDataStore.GetRequestOfUser(App.LogUser.UserId);
+
+                    foreach (var item in requestData)
+                    {
+
+                        var _template = SetInboxTemplate(item);
+
+                        if (_template != null)
+                        {
+
+                            InboxViewTemplates.Add(_template);
+
+                            if (!InboxViewTemplatesDictionary.ContainsKey(item.RequestId.ToString()))
+                            {
+                                InboxViewTemplatesDictionary.Add(item.RequestId.ToString(), _template);
+                            }
+
+
+
+                        }
+
+
+                    }
+
                 }
-               
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
 
             }
 

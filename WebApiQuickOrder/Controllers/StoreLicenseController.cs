@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -48,9 +49,9 @@ namespace WebApiQuickOrder.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-        public async Task<bool> PutStoreLicense( StoreLicense storeLicense)
+        public async Task<bool> PutStoreLicense(StoreLicense storeLicense)
         {
-           
+
 
             _context.Entry(storeLicense).State = EntityState.Modified;
 
@@ -71,14 +72,14 @@ namespace WebApiQuickOrder.Controllers
                 }
             }
 
-            
+
         }
 
         [HttpGet("[action]/{id}")]
         public async Task<bool> UpdateLicenceInCode(Guid id)
         {
 
-            var storeLicense = await  _context.StoreLicenses.Where(st => st.LicenseId == id).FirstOrDefaultAsync();
+            var storeLicense = await _context.StoreLicenses.Where(st => st.LicenseId == id).FirstOrDefaultAsync();
 
             storeLicense.IsUsed = true;
             _context.Entry(storeLicense).State = EntityState.Modified;
@@ -130,76 +131,117 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            if (_context.StoreLicenses.Where(l => l.LicenseId == newStoreLicense.LicenseId).FirstOrDefault() != null)
+            if (_context.StoreLicenses.Where(l => l.LicenseId == newStoreLicense.LicenseId).Any())
             {
+
+                //var userResult = await _context.Users.Where(u => u.Email == email).FirstOrDefaultAsync();
+
+                //var LicenseRequest = new UserRequest()
+                //{
+                //    RequestId = Guid.NewGuid(),
+                //    ToUser = userResult.UserId,
+                //    Type = RequestType.StoreLicensesRequest,
+                //    RequestAnswer = Answer.None,
+                //    Message = newStoreLicense.LicenseId.ToString()
+
+                //};
+                //_context.Requests.Add(LicenseRequest);
+                //await _context.SaveChangesAsync();
+
+                //if (_context.Requests.Where(ur=>ur.RequestId == LicenseRequest.RequestId).Any())
+                //{
+                //    return true;
+                //}
+                //else
+                //{
+                //    return false;
+                //}
+
+
+
+                //SmtpClient smtpClient = new SmtpClient("domain.a2hosted.com", 25);
+
+                //smtpClient.Credentials = new System.Net.NetworkCredential("user@example.com", "password");
+                //smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+                //MailMessage mailMessage = new MailMessage(txtFrom.Text, txtTo.Text);
+                //mailMessage.Subject = "Quick Order";
+                //mailMessage.Body = txtBody.Text;
+
+                //try
+                //{
+                //    smtpClient.Send(mailMessage);
+                //    Label1.Text = "Message sent";
+                //}
+                //catch (Exception ex)
+                //{
+                //    Label1.Text = ex.ToString();
+                //}
+
 
                 try
                 {
 
-                    ////create the mail message 
-                    //MailMessage mail = new MailMessage();
+                    SmtpClient smtpClient = new SmtpClient("smtp-mail.outlook.com", 587); //587
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Credentials = new System.Net.NetworkCredential("quickorderpr@outlook.com", "jp199494tt");
 
-                    ////set the addresses 
-                    //mail.From = new MailAddress("est.juanpablotorres@gmail.com"); //IMPORTANT: This must be same as your smtp authentication address.
-                    //mail.To.Add(email);
+                    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtpClient.EnableSsl = true;
 
-                    ////set the content 
-                    //mail.Subject = "This is an email";
-                    //mail.Body = "This is from system.net.mail using C sharp with smtp authentication.";
-                    ////send the message 
-                    //SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+                    MailMessage mail = new MailMessage();
 
-                    ////IMPORANT:  Your smtp login email MUST be same as your FROM address. 
-                    //NetworkCredential Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt");
-                    //smtp.UseDefaultCredentials = false;
-                    //smtp.Credentials = Credentials;
-                    //smtp.Port = 587;    //alternative port number is 8889
-                    //smtp.EnableSsl = true;
-                    //smtp.Send(mail);
+                    mail.From = new MailAddress("quickorderpr@outlook.com", "Quick Order");
+                    mail.To.Add(new MailAddress(email));
+                    mail.IsBodyHtml = true;
+                    mail.Subject = "Quick Order Lincense Code";
+                    mail.Body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
 
-
-
-
-
-
-
-                    var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
-                    var receiverEmail = new MailAddress(email, username);
-
-                    var sub = "Quick Order Lincense Code";
-
-                    var body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
-
-                    var smtp = new SmtpClient
-                    {
-                        Host = "smtp.gmail.com",
-                        Port = 587,
-                        EnableSsl = true,
-                        UseDefaultCredentials = false,
-                        DeliveryMethod = SmtpDeliveryMethod.Network,
-                        Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
-                    };
-                    using (var mess = new MailMessage(senderEmail, receiverEmail)
-                    {
-                        IsBodyHtml = true,
-                        Subject = sub,
-                        Body = body
-                    })
-                    {
-                        smtp.Send(mess);
-                    }
+                    smtpClient.Send(mail);
 
                     return true;
+
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
 
-                    throw new Exception(e.Message);
-                   
-                   
+                    throw;
+
                 }
 
-                return false;
+
+
+
+                //var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
+                //var receiverEmail = new MailAddress(email, username);
+
+                //var sub = "Quick Order Lincense Code";
+                //var body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
+                //var smtp = new SmtpClient
+                //{
+                //    Host = "smtp.gmail.com",
+                //    Port = 587,
+                //    EnableSsl = true,
+                //    DeliveryMethod = SmtpDeliveryMethod.Network,
+                //    UseDefaultCredentials = false,
+                //    Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
+                //};
+                //using (var mess = new MailMessage(senderEmail, receiverEmail)
+                //{
+                //    IsBodyHtml = true,
+                //    Subject = sub,
+                //    Body = body
+                //})
+                //{
+                //    smtp.Send(mess);
+
+                //    return true;
+                //}
+
+
+
+
 
             }
             else

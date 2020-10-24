@@ -11,14 +11,14 @@ namespace QuickOrderApp.Services.HubService
 {
     public class ComunicationService
     {
-        public readonly  HubConnection hubConnection;
+        public readonly HubConnection hubConnection;
         INotificationManager notificationManager;
 
 
         public ComunicationService()
         {
 
-        //hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.144:5000" + "/comunicationhub").Build();
+            //hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.144:5000" + "/comunicationhub").Build();
 
             hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres9-001-site1.etempurl.com" + "/comunicationhub").Build();
 
@@ -34,7 +34,7 @@ namespace QuickOrderApp.Services.HubService
             JobNotificationReciever();
 
             OrderToPreparerEmployee();
-          
+
 
         }
 
@@ -68,12 +68,12 @@ namespace QuickOrderApp.Services.HubService
 
         public async Task Connect()
         {
-                  await hubConnection.StartAsync();
+            await hubConnection.StartAsync();
 
         }
         public async Task Disconnect()
         {
-           
+
 
             if (!String.IsNullOrEmpty(hubConnection.ConnectionId))
             {
@@ -86,7 +86,7 @@ namespace QuickOrderApp.Services.HubService
             try
             {
 
-            await hubConnection.InvokeAsync("SendMessage", user, message);
+                await hubConnection.InvokeAsync("SendMessage", user, message);
             }
             catch (Exception e)
             {
@@ -123,7 +123,7 @@ namespace QuickOrderApp.Services.HubService
             }
         }
 
-        public async Task UpdateStoreInventory( Guid storeToUpdate)
+        public async Task UpdateStoreInventory(Guid storeToUpdate)
         {
             try
             {
@@ -136,11 +136,11 @@ namespace QuickOrderApp.Services.HubService
             }
         }
 
-        public async Task SendCompletedOrderNotification(Guid OrderId,string userdId)
+        public async Task SendCompletedOrderNotification(Guid OrderId, string userdId)
         {
             try
             {
-                string message= $"Order: { OrderId.ToString()}";
+                string message = $"Order: { OrderId.ToString()}";
 
                 await hubConnection.InvokeAsync("SendCompletedOrderNotification", message, userdId);
             }
@@ -155,10 +155,10 @@ namespace QuickOrderApp.Services.HubService
         {
             try
             {
-               
+
                 string Preparemessage = $"Order: { order.OrderId.ToString()}";
 
-              
+
 
                 await hubConnection.InvokeAsync("OrderToPrepare", Preparemessage, order.StoreId.ToString());
             }

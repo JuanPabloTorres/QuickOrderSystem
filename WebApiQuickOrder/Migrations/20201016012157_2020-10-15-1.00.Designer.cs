@@ -10,8 +10,8 @@ using WebApiQuickOrder.Context;
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    [Migration("20200902220614_2020-9-2-1.02")]
-    partial class _202092102
+    [Migration("20201016012157_2020-10-15-1.00")]
+    partial class _20201015100
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,29 @@ namespace WebApiQuickOrder.Migrations
                 .HasAnnotation("ProductVersion", "3.1.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Library.Models.EmailValidation", b =>
+                {
+                    b.Property<Guid>("EmailValidationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ValidationCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EmailValidationId");
+
+                    b.ToTable("EmailValidations");
+                });
 
             modelBuilder.Entity("Library.Models.Employee", b =>
                 {
@@ -354,6 +377,9 @@ namespace WebApiQuickOrder.Migrations
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsValidUser")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("LoginId")
                         .HasColumnType("uniqueidentifier");

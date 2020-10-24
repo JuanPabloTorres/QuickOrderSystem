@@ -2,22 +2,21 @@
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _9152020101 : Migration
+    public partial class _20201015101 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsValidUser",
-                table: "Users",
-                nullable: false,
-                defaultValue: false);
+            migrationBuilder.AddColumn<string>(
+                name: "Message",
+                table: "Requests",
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsValidUser",
-                table: "Users");
+                name: "Message",
+                table: "Requests");
         }
     }
 }

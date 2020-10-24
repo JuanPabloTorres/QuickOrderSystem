@@ -61,7 +61,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{name}")]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserWithName(string name)
         {
-            var _users = await _context.Users.Where(user=>user.Name == name).ToListAsync();
+            var _users = await _context.Users.Where(user => user.Name == name).ToListAsync();
 
             if (_users == null)
             {
@@ -95,16 +95,16 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{email}")]
         public async Task<bool> EmailExist(string email)
         {
-         var result=   await _context.Users.AnyAsync(e => e.Email == email);
+            var result = await _context.Users.AnyAsync(e => e.Email == email);
 
             return result;
 
         }
 
         [HttpGet("[action]/{code}/{userid}")]
-        public async Task<ActionResult<bool>> ValidateEmail(string code,string userid)
+        public async Task<ActionResult<bool>> ValidateEmail(string code, string userid)
         {
-            var validate =await  _context.EmailValidations.Where(email => email.ValidationCode == code && email.UserId.ToString() == userid &&  DateTime.Now <= email.ExpDate).FirstOrDefaultAsync();
+            var validate = await _context.EmailValidations.Where(email => email.ValidationCode == code && email.UserId.ToString() == userid && DateTime.Now <= email.ExpDate).FirstOrDefaultAsync();
 
 
             if (validate != null)
@@ -162,7 +162,7 @@ namespace WebApiQuickOrder.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-      
+
         public async Task<ActionResult<User>> PutUser(User user)
         {
 
@@ -221,7 +221,7 @@ namespace WebApiQuickOrder.Controllers
             //}
         }
 
-      
+
 
 
         [HttpPost]
@@ -278,7 +278,7 @@ namespace WebApiQuickOrder.Controllers
 
         //Genera token de seguridad para los distintos action a los que se tendra acceso.
         //===========================================================================================
-        string GenerateJWTTokenWithRole(User userInfo,string role)
+        string GenerateJWTTokenWithRole(User userInfo, string role)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -288,11 +288,11 @@ namespace WebApiQuickOrder.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserId.ToString()),
                 new Claim("fullName", userInfo.Name.ToString()),
                 new Claim("role",Policies.User),
-                
+
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-            
+
             if (!string.IsNullOrEmpty(role))
             {
 
@@ -313,15 +313,15 @@ namespace WebApiQuickOrder.Controllers
                     default:
                         break;
                 }
-               
+
             }
-           
+
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),                
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -363,7 +363,7 @@ namespace WebApiQuickOrder.Controllers
             {
                 if (_context.Users.Count() > 0)
                 {
-                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).Include(c=>c.PaymentCards).FirstOrDefault();
+                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).Include(c => c.PaymentCards).FirstOrDefault();
 
                     return user;
                 }
@@ -376,7 +376,7 @@ namespace WebApiQuickOrder.Controllers
             {
                 return null;
             }
-           
+
 
         }
 
@@ -394,7 +394,7 @@ namespace WebApiQuickOrder.Controllers
                 if (_context.Users.Count() > 0)
                 {
 
-                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).Include(c=>c.PaymentCards).FirstOrDefault();
+                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).Include(c => c.PaymentCards).FirstOrDefault();
 
                     var isAdministrator = _context.Stores.Any(s => s.UserId == user.UserId);
                     string tokenString;
@@ -404,7 +404,7 @@ namespace WebApiQuickOrder.Controllers
                     {
 
                         tokenString = GenerateJWTTokenWithRole(user, "Admin");
-                       
+
                         var obj = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
                         tokenDTO = new TokenDTO()
                         {
@@ -412,7 +412,7 @@ namespace WebApiQuickOrder.Controllers
                             UserDetail = user,
                             Exp = DateTime.Now.AddMinutes(30)
 
-                    };
+                        };
 
                         return tokenDTO;
 
@@ -430,7 +430,7 @@ namespace WebApiQuickOrder.Controllers
                             UserDetail = user,
                             Exp = DateTime.Now.AddMinutes(30)
 
-                    };
+                        };
                         return tokenDTO;
                     }
 
@@ -442,7 +442,7 @@ namespace WebApiQuickOrder.Controllers
                         Exp = DateTime.Now.AddMinutes(30)
                     };
                     return tokenDTO;
-                   
+
                 }
                 else
                 {
@@ -458,7 +458,7 @@ namespace WebApiQuickOrder.Controllers
 
 
 
-        
+
 
         [HttpGet("[action]/{email}")]
         public bool ForgotCodeSend(string email)
@@ -478,31 +478,75 @@ namespace WebApiQuickOrder.Controllers
 
                 _context.SaveChangesAsync();
 
-                var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
-                var receiverEmail = new MailAddress(result.Email, result.Name);
 
-                var sub = "Quick Order Forgot Password Code";
-                var body = "<b>Forgot Secret Code:</b>" + forgotpassword.Code;
-                var smtp = new SmtpClient
+                try
                 {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
-                };
-                using (var mess = new MailMessage(senderEmail, receiverEmail)
+
+                    SmtpClient smtpClient = new SmtpClient("smtp-mail.outlook.com", 587); //587
+
+                    smtpClient.UseDefaultCredentials = false;
+
+                    smtpClient.Credentials = new System.Net.NetworkCredential("quickorderpr@outlook.com", "jp199494tt");
+
+                    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+                    smtpClient.EnableSsl = true;
+
+                    MailMessage mail = new MailMessage();
+
+                    mail.From = new MailAddress("quickorderpr@outlook.com", "Quick Order");
+
+                    mail.To.Add(new MailAddress(result.Email, result.Name));
+
+                    mail.IsBodyHtml = true;
+
+                    mail.Subject = "Quick Order Forgot Password Code";
+
+                    mail.Body = "<b>Forgot Secret Code:</b>" + forgotpassword.Code;
+
+
+                    smtpClient.Send(mail);
+
+                    return true;
+
+                }
+                catch (Exception e)
                 {
-                    IsBodyHtml = true,
-                    Subject = sub,
-                    Body = body
-                })
-                {
-                    smtp.Send(mess);
+                    Console.WriteLine(e.Message);
+
+                    throw;
+
                 }
 
-                return true;
+
+
+
+
+                //var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
+                //var receiverEmail = new MailAddress(result.Email, result.Name);
+
+                //var sub = "Quick Order Forgot Password Code";
+                //var body = "<b>Forgot Secret Code:</b>" + forgotpassword.Code;
+                //var smtp = new SmtpClient
+                //{
+                //    Host = "smtp.gmail.com",
+                //    Port = 587,
+                //    EnableSsl = true,
+                //    DeliveryMethod = SmtpDeliveryMethod.Network,
+                //    UseDefaultCredentials = false,
+                //    Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
+                //};
+                //using (var mess = new MailMessage(senderEmail, receiverEmail)
+                //{
+                //    IsBodyHtml = true,
+                //    Subject = sub,
+                //    Body = body
+                //})
+                //{
+                //    smtp.Send(mess);
+                //}
+
+                //return true;
 
             }
             else
@@ -516,30 +560,63 @@ namespace WebApiQuickOrder.Controllers
         {
 
 
-            var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
-            var receiverEmail = new MailAddress(emailValidation.Email, emailValidation.UserId.ToString());
 
-            var sub = "Validation Email Code";
-            var body = "<div><b>Code:</b>" + emailValidation.ValidationCode;
-            var smtp = new SmtpClient
+            try
             {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
-            };
-            using (var mess = new MailMessage(senderEmail, receiverEmail)
-            {
-                IsBodyHtml = true,
-                Subject = sub,
-                Body = body
-            })
-            {
-                smtp.Send(mess);
+
+                SmtpClient smtpClient = new SmtpClient("smtp-mail.outlook.com", 587); //587
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = new System.Net.NetworkCredential("quickorderpr@outlook.com", "jp199494tt");
+
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtpClient.EnableSsl = true;
+
+                MailMessage mail = new MailMessage();
+
+                mail.From = new MailAddress("quickorderpr@outlook.com", "Quick Order");
+                mail.To.Add(new MailAddress(emailValidation.Email, emailValidation.UserId.ToString()));
+                mail.IsBodyHtml = true;
+                mail.Subject = "Validation Email Code";
+                mail.Body = "<div><b>Code:</b>" + emailValidation.ValidationCode;
+
+                smtpClient.Send(mail);
+
                 return true;
+
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+
+                throw;
+
+            }
+
+
+            //var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
+            //var receiverEmail = new MailAddress(emailValidation.Email, emailValidation.UserId.ToString());
+
+            //var sub = "Validation Email Code";
+            //var body = "<div><b>Code:</b>" + emailValidation.ValidationCode;
+            //var smtp = new SmtpClient
+            //{
+            //    Host = "smtp.gmail.com",
+            //    Port = 587,
+            //    EnableSsl = true,
+            //    DeliveryMethod = SmtpDeliveryMethod.Network,
+            //    UseDefaultCredentials = false,
+            //    Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
+            //};
+            //using (var mess = new MailMessage(senderEmail, receiverEmail)
+            //{
+            //    IsBodyHtml = true,
+            //    Subject = sub,
+            //    Body = body
+            //})
+            //{
+            //    smtp.Send(mess);
+            //    return true;
+            //}
 
 
         }
@@ -548,39 +625,86 @@ namespace WebApiQuickOrder.Controllers
         public bool ConfirmCode(string code)
         {
             var result = _context.ForgotPasswords.Where(u => u.Code == code).FirstOrDefault();
+
             var userInfo = _context.Users.Where(u => u.Email == result.Email).Include(l => l.UserLogin).FirstOrDefault();
 
             if (result != null)
             {
 
-                var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
-                var receiverEmail = new MailAddress(userInfo.Email, userInfo.Name);
 
-                var sub = "Loging Credials";
-                var body = "<div>Username" + userInfo.UserLogin.Username + "</div>" + "<div>Password" + userInfo.UserLogin.Password + "</div>";
-                var smtp = new SmtpClient
+
+
+
+                try
                 {
-                    Host = "smtp.gmail.com",
-                    Port = 587,
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false,
-                    Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
-                };
-                using (var mess = new MailMessage(senderEmail, receiverEmail)
+
+                    SmtpClient smtpClient = new SmtpClient("smtp-mail.outlook.com", 587); //587
+
+                    smtpClient.UseDefaultCredentials = false;
+
+                    smtpClient.Credentials = new System.Net.NetworkCredential("quickorderpr@outlook.com", "jp199494tt");
+
+                    smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+                    smtpClient.EnableSsl = true;
+
+                    MailMessage mail = new MailMessage();
+
+                    mail.From = new MailAddress("quickorderpr@outlook.com", "Quick Order");
+
+                    mail.To.Add(new MailAddress(userInfo.Email, userInfo.UserId.ToString()));
+
+                    mail.IsBodyHtml = true;
+
+                    mail.Subject = "Loging Credials";
+
+                    mail.Body = "<div>Username" + userInfo.UserLogin.Username + "</div>" + "<div>Password" + userInfo.UserLogin.Password + "</div>";
+
+                    smtpClient.Send(mail);
+
+                    _context.ForgotPasswords.Remove(result);
+
+                    _context.SaveChangesAsync();
+
+                    return true;
+
+                }
+                catch (Exception e)
                 {
-                    IsBodyHtml = true,
-                    Subject = sub,
-                    Body = body
-                })
-                {
-                    smtp.Send(mess);
+                    Console.WriteLine(e.Message);
+
+                    throw;
+
                 }
 
-                _context.ForgotPasswords.Remove(result);
-                _context.SaveChangesAsync();
 
-                return true;
+                //var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
+                //var receiverEmail = new MailAddress(userInfo.Email, userInfo.Name);
+
+                //var sub = "Loging Credials";
+                //var body = "<div>Username" + userInfo.UserLogin.Username + "</div>" + "<div>Password" + userInfo.UserLogin.Password + "</div>";
+                //var smtp = new SmtpClient
+                //{
+                //    Host = "smtp.gmail.com",
+                //    Port = 587,
+                //    EnableSsl = true,
+                //    DeliveryMethod = SmtpDeliveryMethod.Network,
+                //    UseDefaultCredentials = false,
+                //    Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
+                //};
+                //using (var mess = new MailMessage(senderEmail, receiverEmail)
+                //{
+                //    IsBodyHtml = true,
+                //    Subject = sub,
+                //    Body = body
+                //})
+                //{
+                //    smtp.Send(mess);
+                //}
+
+
+
+
 
             }
             else

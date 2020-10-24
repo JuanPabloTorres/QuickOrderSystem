@@ -43,13 +43,6 @@ namespace WebApiQuickOrder
             services.AddMvc();
 
 
-            //services.AddIdentity<IdentityUser, IdentityRole>(options =>
-            //{
-            //    options.Password.RequireDigit = true;
-            //    options.Password.RequireLowercase = true;
-            //    options.Password.RequiredLength = 5;
-            //}).AddEntityFrameworkStores<QOContext>()
-            //   .AddDefaultTokenProviders();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -91,7 +84,7 @@ namespace WebApiQuickOrder
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsProduction())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }

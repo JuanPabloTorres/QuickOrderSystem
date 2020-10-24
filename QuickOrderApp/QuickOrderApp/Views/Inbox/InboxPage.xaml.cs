@@ -15,10 +15,10 @@ namespace QuickOrderApp.Views.Inbox
             BindingContext = InboxViewModel = new InboxViewModel();
         }
 
-        protected override void OnAppearing()
+        protected async override void OnAppearing()
         {
             base.OnAppearing();
-            InboxViewModel.ExecuteLoadItemsCommand();
+            await InboxViewModel.ExecuteLoadItemsCommand();
         }
     }
 }

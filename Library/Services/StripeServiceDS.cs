@@ -17,11 +17,11 @@ namespace Library.Services
         protected readonly Uri BaseAPIUri;
         //protected readonly INetworkService NetworkService;
 
-        //public static string LocalBackendUrl = "http://juantorres9-001-site1.etempurl.com/api";
-        
-        
-        public static string LocalBackendUrl = "http://192.168.1.144:5000/api";
-      
+        public static string LocalBackendUrl = "http://juantorres9-001-site1.etempurl.com/api";
+
+
+        //public static string LocalBackendUrl = "http://192.168.1.144:5000/api";
+
 
         protected Uri FullAPIUri { get; set; }
         public StripeServiceDS()
@@ -46,18 +46,19 @@ namespace Library.Services
             var buffer = System.Text.Encoding.UTF8.GetBytes(serializeObj);
             var byteContent = new ByteArrayContent(buffer);
             byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            var response =await HttpClient.PostAsync(FullAPIUri,byteContent);
+            var response = await HttpClient.PostAsync(FullAPIUri, byteContent);
 
 
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsStringAsync();
-            }else
+            }
+            else
             {
                 return string.Empty;
             }
 
-           
+
         }
 
         public async Task<string> InsertStripeCardToCustomer(PaymentCard paymentCard, string stripeuserId)
@@ -93,7 +94,7 @@ namespace Library.Services
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetCustomerCardId)}/{customerId}/{customercardId}");
 
-          
+
             var response = await HttpClient.GetAsync(FullAPIUri);
 
 
@@ -112,9 +113,9 @@ namespace Library.Services
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(MakePayment)}/{storeId}/{total}/{customerId}/{orderId}");
 
 
-            var response =  HttpClient.GetStringAsync(FullAPIUri);
+            var response = HttpClient.GetStringAsync(FullAPIUri);
 
-            
+
             bool deserialized = JsonConvert.DeserializeObject<bool>(response.Result);
 
             return deserialized;
@@ -141,7 +142,7 @@ namespace Library.Services
 
             if (response.IsSuccessStatusCode)
             {
-                 StripePaymentCardResult deserialized = JsonConvert.DeserializeObject<StripePaymentCardResult>(response.Content.ReadAsStringAsync().Result);
+                StripePaymentCardResult deserialized = JsonConvert.DeserializeObject<StripePaymentCardResult>(response.Content.ReadAsStringAsync().Result);
 
                 return deserialized;
             }
@@ -182,7 +183,7 @@ namespace Library.Services
             return deserialized;
         }
 
-        public  async Task<StripePaymentCardResult> InsertStripeCardToStripeUser(PaymentCard paymentCard, string stripeuserId)
+        public async Task<StripePaymentCardResult> InsertStripeCardToStripeUser(PaymentCard paymentCard, string stripeuserId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(InsertStripeCardToStripeUser)}/{stripeuserId}");
 
@@ -245,7 +246,7 @@ namespace Library.Services
 
             if (response.IsSuccessStatusCode)
             {
-                 bool deserialized = JsonConvert.DeserializeObject<bool>(response.Content.ReadAsStringAsync().Result);
+                bool deserialized = JsonConvert.DeserializeObject<bool>(response.Content.ReadAsStringAsync().Result);
 
                 return deserialized;
             }
@@ -256,7 +257,7 @@ namespace Library.Services
 
         }
 
-        public async Task<string> TransferQuickOrderFeeFromStore(string storestripeAccId, string quickOrderFee,string storeId)
+        public async Task<string> TransferQuickOrderFeeFromStore(string storestripeAccId, string quickOrderFee, string storeId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(TransferQuickOrderFeeFromStore)}/{storestripeAccId}/{quickOrderFee}/{storeId}");
 

@@ -252,21 +252,21 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                                         App.LogUser = App.TokenDto.UserDetail;
 
-                                        if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
-                                        {
+                                        //if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
+                                        //{
 
-                                            App.UsersConnected = new UsersConnected()
-                                            {
-                                                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                                UserID = App.LogUser.UserId,
-                                                IsDisable = false,
-                                                ConnecteDate = DateTime.Now
-                                            };
+                                        //    App.UsersConnected = new UsersConnected()
+                                        //    {
+                                        //        HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                        //        UserID = App.LogUser.UserId,
+                                        //        IsDisable = false,
+                                        //        ConnecteDate = DateTime.Now
+                                        //    };
 
-                                            //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+                                        //    //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
 
-                                            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-                                        }
+                                        //    var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                                        //}
 
 
                                         try

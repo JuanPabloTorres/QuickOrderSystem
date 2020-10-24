@@ -69,11 +69,11 @@ namespace WebApiQuickOrder.Controllers
 
 
         [HttpGet("[action]/{storeId}/{orderId}")]
-        public async Task<bool> SendOrdersToEmployees(string storeId,string orderId)
+        public async Task<bool> SendOrdersToEmployees(string storeId, string orderId)
         {
 
             await hubConnection.StartAsync();
-            var employees =await  _context.Employees.Where(emp => emp.StoreId.ToString() == storeId).ToListAsync();
+            var employees = await _context.Employees.Where(emp => emp.StoreId.ToString() == storeId).ToListAsync();
 
             List<UsersConnected> usersConnecteds = new List<UsersConnected>();
 
@@ -133,7 +133,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPut]
         public async Task<ActionResult<bool>> PutUsersConnected(UsersConnected usersConnected)
         {
-           
+
 
             _context.Entry(usersConnected).State = EntityState.Modified;
 
@@ -155,7 +155,7 @@ namespace WebApiQuickOrder.Controllers
                 }
             }
 
-           
+
         }
 
 
@@ -236,7 +236,7 @@ namespace WebApiQuickOrder.Controllers
             _context.usersConnecteds.Remove(usersConnected);
             await _context.SaveChangesAsync();
 
-            if (_context.usersConnecteds.Any(u=>u.HubConnectionID == id))
+            if (_context.usersConnecteds.Any(u => u.HubConnectionID == id))
             {
                 return true;
             }
@@ -244,7 +244,7 @@ namespace WebApiQuickOrder.Controllers
             {
                 return false;
             }
-            
+
         }
 
         private bool UsersConnectedExists(string id)

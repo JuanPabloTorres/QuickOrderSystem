@@ -45,7 +45,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{userId}")]
         public async Task<IEnumerable<UserRequest>> GetRequestOfUser(Guid userId)
         {
-            var userRequest = _context.Requests.Where(r => r.ToUser == userId);
+            var userRequest = await _context.Requests.Where(r => r.ToUser == userId && r.RequestAnswer == Answer.None).ToListAsync();
 
             return userRequest;
         }
