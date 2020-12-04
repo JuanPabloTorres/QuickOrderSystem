@@ -384,7 +384,7 @@ namespace WebApiQuickOrder.Controllers
         public TokenDTO LoginCredential(string username, string password)
         {
 
-            IActionResult response = Unauthorized();
+
 
             var loginOfUser = _context.Logins.Where(c => c.Username == username && c.Password == password).FirstOrDefault();
 

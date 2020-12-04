@@ -23,12 +23,12 @@ namespace WebApiQuickOrder
     public class Startup
     {
 
-       
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-          
-            StripeConfiguration.ApiKey=Configuration.GetSection("Stripe")["SecretKey"];
+
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
         }
 
         public IConfiguration Configuration { get; }
@@ -36,7 +36,7 @@ namespace WebApiQuickOrder
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<QOContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:DevelopmentDBLocal"]));
+            services.AddDbContext<QOContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:DevelopmentDB"]));
             services.AddSignalR();
 
             services.Configure<OktaSettings>(Configuration.GetSection("Okta"));
@@ -68,11 +68,11 @@ namespace WebApiQuickOrder
 
             });
 
-           
+
 
             services.AddAuthorization(config =>
             {
-              
+
                 //config.AddPolicy("AdmindAndEmployees", policy => policy.RequireRole("Admin","Employee"));
                 config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
@@ -81,7 +81,7 @@ namespace WebApiQuickOrder
                 config.AddPolicy(Policies.StoreControl, Policies.StoreControlPolicy());
 
             });
-          
+
             services.AddControllers();
         }
 

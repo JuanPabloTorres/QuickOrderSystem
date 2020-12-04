@@ -17,14 +17,15 @@
 
 
 
-        <forms:AnimationView
-            Animation="loading.json"
-            AutoPlay="True"
-            HeightRequest="80"
-            HorizontalOptions="Center"
-            IsVisible="{Binding IsLoading}"
-            Loop="True"
-            WidthRequest="80" />
+        <!--<forms:animationview
+            animation="loading.json"
+            autoplay="true"
+            heightrequest="80"
+            horizontaloptions="center"
+            isvisible="{binding isloading}"
+            loop="true"
+            
+            widthrequest="80" />-->
 
 
         <Label

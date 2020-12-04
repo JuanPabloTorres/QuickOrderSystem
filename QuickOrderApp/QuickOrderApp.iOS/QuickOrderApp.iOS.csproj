@@ -123,28 +123,72 @@
     <BundleResource Include="Resources\xamarin_logo%402x.png" />
     <BundleResource Include="Resources\xamarin_logo%403x.png" />
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
-    <ImageAsset Include="Assets.xcassets\QOBackground.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\imgPlaceholder.jpg" />
-    <ImageAsset Include="Assets.xcassets\inbox.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\settings.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\Background.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\Background.imageset\Background.jpg" />
-    <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\imgPlaceholder-1.jpg" />
-    <ImageAsset Include="Assets.xcassets\Background.imageset\Background-1.jpg" />
-    <ImageAsset Include="Assets.xcassets\bag.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\QOBackground.imageset\QOBackground-2.jpg" />
-    <ImageAsset Include="Assets.xcassets\QOBackground.imageset\QOBackground.jpg" />
-    <ImageAsset Include="Assets.xcassets\home.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\home.imageset\home.png" />
-    <ImageAsset Include="Assets.xcassets\home.imageset\home-1.png" />
-    <ImageAsset Include="Assets.xcassets\home.imageset\home-2.png" />
-    <ImageAsset Include="Assets.xcassets\home.imageset\home-3.png" />
-    <ImageAsset Include="Assets.xcassets\home.imageset\home-4.png" />
-    <ImageAsset Include="Assets.xcassets\inbox.imageset\inbox.png" />
-    <ImageAsset Include="Assets.xcassets\inbox.imageset\inbox-1.png" />
-    <ImageAsset Include="Assets.xcassets\bag.imageset\bag.png" />
-    <ImageAsset Include="Assets.xcassets\settings.imageset\settings.png" />
+    <ImageAsset Include="Assets.xcassets\QOBackground.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\imgPlaceholder.jpg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\inbox.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\settings.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\Background.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\Background.imageset\Background.jpg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\imgPlaceHolder.imageset\imgPlaceholder-1.jpg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\Background.imageset\Background-1.jpg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\bag.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\QOBackground.imageset\QOBackground-2.jpg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\QOBackground.imageset\QOBackground.jpg">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\home.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\home.imageset\home.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\home.imageset\home-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\home.imageset\home-2.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\home.imageset\home-3.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\home.imageset\home-4.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\inbox.imageset\inbox.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\inbox.imageset\inbox-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\bag.imageset\bag.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\settings.imageset\settings.png">
+      <Visible>false</Visible>
+    </ImageAsset>
     <BundleResource Include="loading.json" />
   </ItemGroup>
   <ItemGroup>

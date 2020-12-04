@@ -42,7 +42,7 @@
 
         <StackLayout>
 
-            <forms:AnimationView
+            <!--<forms:AnimationView
                 Animation="loading.json"
                 AutoPlay="True"
                 HeightRequest="40"
@@ -50,7 +50,7 @@
                 IsVisible="{Binding LoadingManager.IsLoading}"
                 Loop="True"
                 VerticalOptions="Center"
-                WidthRequest="40" />
+                WidthRequest="40" />-->
 
 
 

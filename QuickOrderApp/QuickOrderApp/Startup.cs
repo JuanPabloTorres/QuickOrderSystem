@@ -81,21 +81,21 @@ namespace QuickOrderApp
 
             #region DataStoreServices
 
-            services.AddSingleton<IProductDataStore,ProductDataStore>();
-            services.AddSingleton<IUserDataStore,UserDataStore>();
-            services.AddSingleton<IStoreDataStore,StoreDataStore>();
-            services.AddSingleton<IOrderProductDataStore,OrderProductDataStore>();
-            services.AddSingleton<IOrderDataStore,OrderDataStore>();
-            services.AddSingleton<IRequestDataStore,RequestDataStore>();
-            services.AddSingleton<IEmployeeDataStore,EmployeeDataStore>();
-            services.AddSingleton<IStoreLicenseDataStore,StoreLicenceDataStore>();
-            services.AddSingleton<IWorkHourDataStore,WorkHourDataStore>();
-            services.AddSingleton<IEmployeeWorkHourDataStore,EmployeeWorkHourDataStore>();
-            services.AddSingleton<ICardDataStore,CardDataStore>();
-            services.AddSingleton<IUserConnectedDataStore,UserConnectedDataStore>();
-            services.AddSingleton<IRequestDataStore,RequestDataStore>();
-            services.AddSingleton<IStripeServiceDS,StripeServiceDS>();
-            services.AddSingleton<ISubcriptionDataStore,SubcriptionDataStore>();
+            services.AddSingleton<IProductDataStore, ProductDataStore>();
+            services.AddSingleton<IUserDataStore, UserDataStore>();
+            services.AddSingleton<IStoreDataStore, StoreDataStore>();
+            services.AddSingleton<IOrderProductDataStore, OrderProductDataStore>();
+            services.AddSingleton<IOrderDataStore, OrderDataStore>();
+            services.AddSingleton<IRequestDataStore, RequestDataStore>();
+            services.AddSingleton<IEmployeeDataStore, EmployeeDataStore>();
+            services.AddSingleton<IStoreLicenseDataStore, StoreLicenceDataStore>();
+            services.AddSingleton<IWorkHourDataStore, WorkHourDataStore>();
+            services.AddSingleton<IEmployeeWorkHourDataStore, EmployeeWorkHourDataStore>();
+            services.AddSingleton<ICardDataStore, CardDataStore>();
+            services.AddSingleton<IUserConnectedDataStore, UserConnectedDataStore>();
+            services.AddSingleton<IRequestDataStore, RequestDataStore>();
+            services.AddSingleton<IStripeServiceDS, StripeServiceDS>();
+            services.AddSingleton<ISubcriptionDataStore, SubcriptionDataStore>();
 
             #endregion DataStoreServices
 
@@ -205,7 +205,7 @@ namespace QuickOrderApp
                DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.10.120:44100/api" : "http://192.168.10.120:44100/api";
 
             public static string LocalBackendUrl =
-                DeviceInfo.Platform == DevicePlatform.Android ? "http://localhost:5000/api" : "http://localhost:5000/api";
+                DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.1.144:5000/api" : "http://192.168.1.144:5000/api";
 
             //public static string LocalBackendUrl =
             //    DeviceInfo.Platform == DevicePlatform.Android ? "http://10.11.6.188:5000/api" : "http://10.11.6.188:5000/api";

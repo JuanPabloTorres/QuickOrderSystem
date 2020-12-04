@@ -19,7 +19,7 @@
         <StackLayout>
 
 
-            <forms:AnimationView
+            <!--<forms:AnimationView
                 Animation="loading.json"
                 AutoPlay="True"
                 HeightRequest="40"
@@ -27,7 +27,7 @@
                 IsVisible="{Binding LoadingManager.IsLoading}"
                 Loop="True"
                 VerticalOptions="Center"
-                WidthRequest="40" />
+                WidthRequest="40" />-->
 
 
             <CollectionView
@@ -58,7 +58,7 @@
                         <ContentView Margin="3">
 
                             <frame:PancakeView Padding="0" Style="{x:StaticResource frameCakeStyle}">
-                                 <frame:PancakeView.Shadow>
+                                <frame:PancakeView.Shadow>
                                     <frame:DropShadow Color="#000000" Offset="5,5" Opacity="0.5" />
                                 </frame:PancakeView.Shadow>
 

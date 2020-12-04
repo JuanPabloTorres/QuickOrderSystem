@@ -101,7 +101,9 @@ namespace QuickOrderApp.Utilities.Presenters
         public string ProductType
         {
             get { return producttype; }
-            set { producttype = value;
+            set
+            {
+                producttype = value;
                 OnPropertyChanged();
             }
         }
@@ -111,7 +113,9 @@ namespace QuickOrderApp.Utilities.Presenters
         public bool AreVisible
         {
             get { return areVisible; }
-            set { areVisible = value;
+            set
+            {
+                areVisible = value;
                 OnPropertyChanged();
             }
         }
@@ -146,136 +150,139 @@ namespace QuickOrderApp.Utilities.Presenters
                 else
                 {
 
-                if (ItemLeft > 0)
-                {
-
-                    if (Quantity > 0)
+                    if (ItemLeft > 0)
                     {
 
-                        int left = ItemLeft - (int)Quantity;
-
-                        if (Quantity <= ItemLeft)
+                        if (Quantity > 0)
                         {
 
-                            await Cart.OrderManger(this);
+                            int left = ItemLeft - (int)Quantity;
+
+                            if (Quantity <= ItemLeft)
+                            {
+
+                                Cart cartmanager = new Cart();
+
+                                await cartmanager.OrderManger(this);
+                                //await Cart.OrderManger(this);
+                            }
+                            else
+                            {
+                                await Shell.Current.DisplayAlert("Notification", "Item dont have to many in stock selecte a less quantity.", "OK");
+                            }
+
+
+
+                            #region OrderManger
+                            //               var userhaveorder =  orderDataStore.HaveOrder(App.LogUser.UserId, App.CurrentStore.StoreId);
+
+                            //if (userhaveorder == null)
+                            //{
+                            //	Order order = new Order()
+                            //	{
+                            //		OrderId = Guid.NewGuid(),
+                            //		BuyerId = App.LogUser.UserId,
+                            //		StoreId = App.CurrentStore.StoreId,
+                            //		OrderType = Library.Models.Type.None,
+                            //		OrderDate = DateTime.Today,
+                            //		OrderStatus = Status.NotSubmited,
+
+
+                            //	};
+
+                            //	var orderadded = await orderDataStore.AddItemAsync(order);
+
+                            //	OrderProduct orderProduct = new OrderProduct()
+                            //	{
+                            //		OrderProductId = Guid.NewGuid(),
+                            //		Price = ProductPrice,
+                            //		ProductName = ProductName,
+                            //		Quantity = (int)Quantity,
+                            //		BuyerId = App.LogUser.UserId,
+                            //		StoreId = App.CurrentStore.StoreId,
+                            //		OrderId = order.OrderId,
+                            //		ProductImage = ProductImg
+                            //	};
+
+                            //	var result = orderProductDataStore.OrderProductOfUserExist(App.LogUser.UserId, orderProduct.ProductName);
+                            //	if (result == false)
+                            //	{
+
+                            //		var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
+
+                            //		if (orderProductAdded)
+                            //		{
+                            //			Cart.OrderProducts.Add(orderProduct);
+                            //		}
+                            //	}
+                            //	else
+                            //	{
+
+                            //		var toupdate = orderProductDataStore.OrderProductOfUserExistWith(ProductName);
+
+                            //		if (toupdate.Quantity != orderProduct.Quantity)
+                            //		{
+
+                            //			toupdate.Quantity = orderProduct.Quantity;
+                            //			var uptedResult = await orderProductDataStore.UpdateItemAsync(toupdate);
+                            //		}
+                            //	}
+
+                            //}
+                            //else
+                            //{
+
+                            //	OrderProduct orderProduct = new OrderProduct()
+                            //	{
+                            //		OrderProductId = Guid.NewGuid(),
+                            //		Price = ProductPrice,
+                            //		ProductName = ProductName,
+                            //		Quantity = (int)Quantity,
+                            //		BuyerId = App.LogUser.UserId,
+                            //		StoreId = App.CurrentStore.StoreId,
+                            //		 OrderId = userhaveorder.OrderId,
+                            //		ProductImage = ProductImg
+                            //	};
+
+                            //	var result = orderProductDataStore.OrderProductOfUserExist(App.LogUser.UserId, orderProduct.ProductName);
+                            //	if (result == false)
+                            //	{
+
+                            //		var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
+
+                            //		if (orderProductAdded)
+                            //		{
+                            //			Cart.OrderProducts.Add(orderProduct);
+                            //			Cart.Total += Cart.OrderProducts.Sum(o => o.Price * o.Quantity);
+                            //		}
+                            //	}
+                            //	else
+                            //	{
+
+                            //		var toupdate = orderProductDataStore.OrderProductOfUserExistWith(ProductName);
+
+                            //		if (toupdate.Quantity != orderProduct.Quantity)
+                            //		{
+
+                            //			toupdate.Quantity = orderProduct.Quantity;
+                            //			var uptedResult = await orderProductDataStore.UpdateItemAsync(toupdate);
+                            //		}
+                            //	}
+                            //}
+                            #endregion
+
+
                         }
                         else
                         {
-                            await Shell.Current.DisplayAlert("Notification", "Item dont have to many in stock selecte a less quantity.", "OK");
+                            await Shell.Current.DisplayAlert("Notification", "Quantiy selected is 0.", "OK");
                         }
-
-
-
-                        #region OrderManger
-                        //               var userhaveorder =  orderDataStore.HaveOrder(App.LogUser.UserId, App.CurrentStore.StoreId);
-
-                        //if (userhaveorder == null)
-                        //{
-                        //	Order order = new Order()
-                        //	{
-                        //		OrderId = Guid.NewGuid(),
-                        //		BuyerId = App.LogUser.UserId,
-                        //		StoreId = App.CurrentStore.StoreId,
-                        //		OrderType = Library.Models.Type.None,
-                        //		OrderDate = DateTime.Today,
-                        //		OrderStatus = Status.NotSubmited,
-
-
-                        //	};
-
-                        //	var orderadded = await orderDataStore.AddItemAsync(order);
-
-                        //	OrderProduct orderProduct = new OrderProduct()
-                        //	{
-                        //		OrderProductId = Guid.NewGuid(),
-                        //		Price = ProductPrice,
-                        //		ProductName = ProductName,
-                        //		Quantity = (int)Quantity,
-                        //		BuyerId = App.LogUser.UserId,
-                        //		StoreId = App.CurrentStore.StoreId,
-                        //		OrderId = order.OrderId,
-                        //		ProductImage = ProductImg
-                        //	};
-
-                        //	var result = orderProductDataStore.OrderProductOfUserExist(App.LogUser.UserId, orderProduct.ProductName);
-                        //	if (result == false)
-                        //	{
-
-                        //		var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
-
-                        //		if (orderProductAdded)
-                        //		{
-                        //			Cart.OrderProducts.Add(orderProduct);
-                        //		}
-                        //	}
-                        //	else
-                        //	{
-
-                        //		var toupdate = orderProductDataStore.OrderProductOfUserExistWith(ProductName);
-
-                        //		if (toupdate.Quantity != orderProduct.Quantity)
-                        //		{
-
-                        //			toupdate.Quantity = orderProduct.Quantity;
-                        //			var uptedResult = await orderProductDataStore.UpdateItemAsync(toupdate);
-                        //		}
-                        //	}
-
-                        //}
-                        //else
-                        //{
-
-                        //	OrderProduct orderProduct = new OrderProduct()
-                        //	{
-                        //		OrderProductId = Guid.NewGuid(),
-                        //		Price = ProductPrice,
-                        //		ProductName = ProductName,
-                        //		Quantity = (int)Quantity,
-                        //		BuyerId = App.LogUser.UserId,
-                        //		StoreId = App.CurrentStore.StoreId,
-                        //		 OrderId = userhaveorder.OrderId,
-                        //		ProductImage = ProductImg
-                        //	};
-
-                        //	var result = orderProductDataStore.OrderProductOfUserExist(App.LogUser.UserId, orderProduct.ProductName);
-                        //	if (result == false)
-                        //	{
-
-                        //		var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
-
-                        //		if (orderProductAdded)
-                        //		{
-                        //			Cart.OrderProducts.Add(orderProduct);
-                        //			Cart.Total += Cart.OrderProducts.Sum(o => o.Price * o.Quantity);
-                        //		}
-                        //	}
-                        //	else
-                        //	{
-
-                        //		var toupdate = orderProductDataStore.OrderProductOfUserExistWith(ProductName);
-
-                        //		if (toupdate.Quantity != orderProduct.Quantity)
-                        //		{
-
-                        //			toupdate.Quantity = orderProduct.Quantity;
-                        //			var uptedResult = await orderProductDataStore.UpdateItemAsync(toupdate);
-                        //		}
-                        //	}
-                        //}
-                        #endregion
-
 
                     }
                     else
                     {
-                        await Shell.Current.DisplayAlert("Notification", "Quantiy selected is 0.", "OK");
+                        await Shell.Current.DisplayAlert("Notification", "There are no products.", "OK");
                     }
-
-                }
-                else
-                {
-                    await Shell.Current.DisplayAlert("Notification", "There are no products.", "OK");
-                }
                 }
 
 
@@ -283,9 +290,9 @@ namespace QuickOrderApp.Utilities.Presenters
 
             });
 
-          
 
-            DeleteCommand = new Command(async() => 
+
+            DeleteCommand = new Command(async () =>
             {
 
 
@@ -298,22 +305,22 @@ namespace QuickOrderApp.Utilities.Presenters
                 else
                 {
 
-                var answer =await Shell.Current.DisplayAlert("Notification", "Are you sure that you want to delete this item?", "Yes", "No");
+                    var answer = await Shell.Current.DisplayAlert("Notification", "Are you sure that you want to delete this item?", "Yes", "No");
 
-                if (answer)
-                {
-                    var result = await productDataStore.DeleteItemAsync(this.ProductId.ToString());
-
-                    if (result)
+                    if (answer)
                     {
-                        MessagingCenter.Send<ProductPresenter>(this, "DeleteProductInventory");
+                        var result = await productDataStore.DeleteItemAsync(this.ProductId.ToString());
+
+                        if (result)
+                        {
+                            MessagingCenter.Send<ProductPresenter>(this, "DeleteProductInventory");
+                        }
+
                     }
-
-                }
                 }
 
 
-            
+
 
             });
 
@@ -328,7 +335,7 @@ namespace QuickOrderApp.Utilities.Presenters
                 else
                 {
 
-                await Shell.Current.GoToAsync($"{EditProductPage.Route}?pId={ProductId.ToString()}", animate: true);
+                    await Shell.Current.GoToAsync($"{EditProductPage.Route}?pId={ProductId.ToString()}", animate: true);
                 }
 
 
@@ -358,14 +365,14 @@ namespace QuickOrderApp.Utilities.Presenters
                 else
                 {
 
-                var orderProductRemovedResult = await orderProductDataStore.DeleteItemAsync(ProductId.ToString());
+                    var orderProductRemovedResult = await orderProductDataStore.DeleteItemAsync(ProductId.ToString());
 
-                if (orderProductRemovedResult)
-                {
-                    await Shell.Current.DisplayAlert("Notification", "Product Removed succefully.", "OK");
+                    if (orderProductRemovedResult)
+                    {
+                        await Shell.Current.DisplayAlert("Notification", "Product Removed succefully.", "OK");
 
-                    MessagingCenter.Send<ProductPresenter>(this,"RemoveOrderProduct");
-                }
+                        MessagingCenter.Send<ProductPresenter>(this, "RemoveOrderProduct");
+                    }
 
                 }
 

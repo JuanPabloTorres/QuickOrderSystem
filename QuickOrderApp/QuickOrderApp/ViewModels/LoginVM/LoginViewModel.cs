@@ -24,7 +24,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 {
     public class LoginViewModel : BaseViewModel
     {
-      
+
 
         #region Commandos
         public ICommand LoginCommand { get; set; }
@@ -57,7 +57,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
 
-        IPopupNavigation popupNavigation;           
+        IPopupNavigation popupNavigation;
         public LoginViewModel()
         {
             popupNavigation = PopupNavigation.Instance;
@@ -70,10 +70,10 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             ValidatorsInitializer();
 
-           
+
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
 
-          
+
 
             LoginCommand = new Command(async () =>
             {
@@ -84,25 +84,24 @@ namespace QuickOrderApp.ViewModels.LoginVM
                     //Verifica si el telefono tiene acceso a internet
 
 
-                    if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+
+
+                    LoginTokenDirector LoginDirector = new LoginTokenDirector();
+
+                    ConcreteLoginTokenBuilder userlog = new ConcreteLoginTokenBuilder();
+
+                    var result = LoginDirector.MakeLogin(userlog, Username, Password);
+
+                    if (result != null)
                     {
+                        App.TokenDto = result;
 
-                        LoginTokenDirector LoginDirector = new LoginTokenDirector();
-
-                        ConcreteLoginTokenBuilder userlog = new ConcreteLoginTokenBuilder();
-
-                        var result = LoginDirector.MakeLogin(userlog, Username, Password);
-
-                        if (result != null)
-                        {
-                            App.TokenDto = result;
-
-                            userlog.GoQuickOrderHome();
-                        }
-
-                        IsLoading = false;
-
+                        userlog.GoQuickOrderHome();
                     }
+
+                    IsLoading = false;
+
+
                 }
                 else
                 {
@@ -126,25 +125,24 @@ namespace QuickOrderApp.ViewModels.LoginVM
                     //Verifica si el telefono tiene acceso a internet
 
 
-                    if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+
+
+                    LoginTokenDirector LoginDirector = new LoginTokenDirector();
+
+                    ConcreteLoginTokenBuilder userlog = new ConcreteLoginTokenBuilder();
+
+                    var result = LoginDirector.MakeLogin(userlog, Username, Password);
+
+                    if (result != null)
                     {
+                        App.TokenDto = result;
 
-                        LoginTokenDirector LoginDirector = new LoginTokenDirector();
-
-                        ConcreteLoginTokenBuilder userlog = new ConcreteLoginTokenBuilder();
-
-                        var result = LoginDirector.MakeLogin(userlog, Username, Password);
-
-                        if (result != null)
-                        {
-                            App.TokenDto = result;
-
-                            userlog.GoEmployeeHome();
-                        }
-
-                        IsLoading = false;
-
+                        userlog.GoEmployeeHome();
                     }
+
+                    IsLoading = false;
+
+
                 }
                 else
                 {
@@ -163,7 +161,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             });
 
-            
+
 
             DoneCommand = new Command(async () =>
             {
@@ -176,124 +174,124 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                     if (!await userDataStore.EmailExist(Email))
                     {
-                    ConfirmAndPasswordValidator = ValidatorRules.PasswordAndConfirmPasswordEquals(Password, ConfirmPassword);
+                        ConfirmAndPasswordValidator = ValidatorRules.PasswordAndConfirmPasswordEquals(Password, ConfirmPassword);
 
-                    //Verificamos que el password y el confirmpassword matcheen
-                    if (!ConfirmAndPasswordValidator.HasError)
-                    {
-                        //Si el username y password existen tendra que reinsertar esa informacion
-                        if (!await userDataStore.CheckIfUsernameAndPasswordExist(Username, Password))
+                        //Verificamos que el password y el confirmpassword matcheen
+                        if (!ConfirmAndPasswordValidator.HasError)
                         {
-                            var userlogin = new Login()
+                            //Si el username y password existen tendra que reinsertar esa informacion
+                            if (!await userDataStore.CheckIfUsernameAndPasswordExist(Username, Password))
                             {
-                                LoginId = Guid.NewGuid(),
-                                IsConnected = false,
-                                Password = Password,
-                                Username = Username
-                            };
-
-                            Gender value;
-                            Enum.TryParse(GenderSelected, out value);
-
-                            var newUser = new User()
-                            {
-                                UserId = Guid.NewGuid(),
-                                Email = Email,
-                                Name = Fullname,
-                                LoginId = userlogin.LoginId,
-                                Phone = Phone,
-                                Address = Address,
-                                Gender = value,
-                                UserLogin = userlogin,
-                            };
-
-                           userlogin.UserId = newUser.UserId;
-
-                            try
-                            {
-                                var optionsCustomers = new UserDTO
+                                var userlogin = new Login()
                                 {
-
-                                    Name = Fullname,
-                                    Email = Email,
-                                    Phone = Phone,
-                                    Address = Address
-
+                                    LoginId = Guid.NewGuid(),
+                                    IsConnected = false,
+                                    Password = Password,
+                                    Username = Username
                                 };
 
+                                Gender value;
+                                Enum.TryParse(GenderSelected, out value);
 
-                                //Create Customer
-                                var customertokenId = await stripeServiceDS.CreateStripeCustomer(optionsCustomers);
-
-
-                                if (!string.IsNullOrEmpty(customertokenId))
+                                var newUser = new User()
                                 {
-                                    Task.Run(async() => 
-                                    { 
+                                    UserId = Guid.NewGuid(),
+                                    Email = Email,
+                                    Name = Fullname,
+                                    LoginId = userlogin.LoginId,
+                                    Phone = Phone,
+                                    Address = Address,
+                                    Gender = value,
+                                    UserLogin = userlogin,
+                                };
 
-                                     await App.ComunicationService.Connect();
+                                userlogin.UserId = newUser.UserId;
 
-                                    }).Wait();
-
-                                    newUser.StripeUserId = customertokenId;
-                                    var result = await userDataStore.AddItemAsync(newUser);
-
-                                    //var credentialsResult = userDataStore.CheckUserCredential(Username, Password);
-                                    App.TokenDto = userDataStore.LoginCredential(Username, Password);
-
-                                    if (result)
+                                try
+                                {
+                                    var optionsCustomers = new UserDTO
                                     {
-                                        
 
-                                        App.LogUser = App.TokenDto.UserDetail;
+                                        Name = Fullname,
+                                        Email = Email,
+                                        Phone = Phone,
+                                        Address = Address
 
-                                        //if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
-                                        //{
-
-                                        //    App.UsersConnected = new UsersConnected()
-                                        //    {
-                                        //        HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                        //        UserID = App.LogUser.UserId,
-                                        //        IsDisable = false,
-                                        //        ConnecteDate = DateTime.Now
-                                        //    };
-
-                                        //    //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
-
-                                        //    var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-                                        //}
+                                    };
 
 
-                                        try
+                                    //Create Customer
+                                    var customertokenId = await stripeServiceDS.CreateStripeCustomer(optionsCustomers);
+
+
+                                    if (!string.IsNullOrEmpty(customertokenId))
+                                    {
+                                        Task.Run(async () =>
                                         {
-                                            await SecureStorage.SetAsync("username", Username);
-                                            await SecureStorage.SetAsync("password", Password);
-                                        }
-                                        catch (Exception ex)
+
+                                            await App.ComunicationService.Connect();
+
+                                        }).Wait();
+
+                                        newUser.StripeUserId = customertokenId;
+                                        var result = await userDataStore.AddItemAsync(newUser);
+
+                                        //var credentialsResult = userDataStore.CheckUserCredential(Username, Password);
+                                        App.TokenDto = userDataStore.LoginCredential(Username, Password);
+
+                                        if (result)
                                         {
-                                            // Possible that device doesn't support secure storage on device.
+
+
+                                            App.LogUser = App.TokenDto.UserDetail;
+
+                                            //if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
+                                            //{
+
+                                            //    App.UsersConnected = new UsersConnected()
+                                            //    {
+                                            //        HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                            //        UserID = App.LogUser.UserId,
+                                            //        IsDisable = false,
+                                            //        ConnecteDate = DateTime.Now
+                                            //    };
+
+                                            //    //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
+                                            //    var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                                            //}
+
+
+                                            try
+                                            {
+                                                await SecureStorage.SetAsync("username", Username);
+                                                await SecureStorage.SetAsync("password", Password);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                // Possible that device doesn't support secure storage on device.
+                                            }
+
+
+                                            await popupNavigation.PushAsync(new RegisterValidationEmail());
+
+
                                         }
-
-                                      
-                                        await popupNavigation.PushAsync(new RegisterValidationEmail());
-                                        
-
                                     }
                                 }
+                                catch (Exception e)
+                                {
+
+                                    await App.Current.MainPage.DisplayAlert("Notification", e.Message, "OK");
+                                }
+
+
                             }
-                            catch (Exception e)
+                            else
                             {
-
-                                await App.Current.MainPage.DisplayAlert("Notification", e.Message, "OK");
+                                await App.Current.MainPage.DisplayAlert("Notification", "Username or password exist try to change to other one.", "OK");
                             }
-
-
                         }
-                        else
-                        {
-                            await App.Current.MainPage.DisplayAlert("Notification", "Username or password exist try to change to other one.", "OK");
-                        }
-                    }
 
                     }
                     else
@@ -311,7 +309,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
             });
-           
+
 
 
             GoForgotPasswordCommand = new Command(async () =>
@@ -584,7 +582,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
         public Validator EmailPatternValidator
         {
             get { return emailPatternValidator; }
-            set { emailPatternValidator = value;
+            set
+            {
+                emailPatternValidator = value;
                 OnPropertyChanged();
             }
         }

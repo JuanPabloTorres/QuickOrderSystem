@@ -2,6 +2,7 @@
 using Library.Services.Interface;
 using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
+using QuickOrderApp.ViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,10 +13,9 @@ using Xamarin.Forms.Xaml;
 namespace QuickOrderApp.Utilities.Shopping
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public static class Cart
+    public class Cart : BaseViewModel
     {
-        public static IOrderProductDataStore orderProductDataStore => DependencyService.Get<IOrderProductDataStore>();
-        public static IOrderDataStore orderDataStore => DependencyService.Get<IOrderDataStore>();
+
         public static ObservableCollection<OrderProduct> OrderProducts { get; set; } = new ObservableCollection<OrderProduct>();
 
 
@@ -30,9 +30,10 @@ namespace QuickOrderApp.Utilities.Shopping
             }
         }
 
-        public static async Task<bool> OrderManger(ProductPresenter product)
+        public async Task<bool> OrderManger(ProductPresenter product)
         {
 
+            Cart cartManager = new Cart();
 
             TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
             if (tokenExpManger.IsExpired())
@@ -43,131 +44,54 @@ namespace QuickOrderApp.Utilities.Shopping
             else
             {
 
-            var ordersOfuser = orderDataStore.GetUserOrdersOfStore(App.LogUser.UserId, App.CurrentStore.StoreId);
-          
+                var ordersOfuser = orderDataStore.GetUserOrdersOfStore(App.LogUser.UserId, App.CurrentStore.StoreId);
 
-            Order orderOfuser= ordersOfuser.Where(o => o.OrderStatus == Status.NotSubmited && o.IsDisisble == false).FirstOrDefault();
-           
-           
-            //Crear por primera vez la orden
-            if (orderOfuser == null)
-            {
-                //Create a new order
-                Order order = new Order()
+
+                Order orderOfuser = ordersOfuser.Where(o => o.OrderStatus == Status.NotSubmited && o.IsDisisble == false).FirstOrDefault();
+
+
+                //Crear por primera vez la orden
+                if (orderOfuser == null)
                 {
-                    OrderId = Guid.NewGuid(),
-                    BuyerId = App.LogUser.UserId,
-                    StoreId = App.CurrentStore.StoreId,
-                    OrderType = Library.Models.Type.None,
-                    OrderDate = DateTime.Now,
-                    OrderStatus = Status.NotSubmited,
-                };
-
-                //Add order to DB
-                var orderadded = await orderDataStore.AddItemAsync(order);
-
-                //Create a new order product to the order that was created
-                OrderProduct orderProduct = new OrderProduct()
-                {
-                    OrderProductId = Guid.NewGuid(),
-                    Price = product.ProductPrice,
-                    ProductName = product.ProductName,
-                    Quantity = (int)product.Quantity,
-                    BuyerId = App.LogUser.UserId,
-                    StoreId = App.CurrentStore.StoreId,
-                    OrderId = order.OrderId,
-                    ProductImage = product.ProductImg,
-                    ProductIdReference = product.ProductId
-                };
-
-                //Check id orderproduct exist in the order
-                var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductIdReference, order.OrderId);
-                if (!_productoExisteEnOrden)
-                {
-                    //Add orderproduct to order
-                    var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
-
-                    if (orderProductAdded)
+                    //Create a new order
+                    Order order = new Order()
                     {
-                        Cart.OrderProducts.Add(orderProduct);
-                        return true;
-                    }
-                    else
+                        OrderId = Guid.NewGuid(),
+                        BuyerId = App.LogUser.UserId,
+                        StoreId = App.CurrentStore.StoreId,
+                        OrderType = Library.Models.Type.None,
+                        OrderDate = DateTime.Now,
+                        OrderStatus = Status.NotSubmited,
+                    };
+
+                    //Add order to DB
+                    var orderadded = await orderDataStore.AddItemAsync(order);
+
+                    //Create a new order product to the order that was created
+                    OrderProduct orderProduct = new OrderProduct()
                     {
-                        return false;
-                    }
-                }
-                else
-                {
+                        OrderProductId = Guid.NewGuid(),
+                        Price = product.ProductPrice,
+                        ProductName = product.ProductName,
+                        Quantity = (int)product.Quantity,
+                        BuyerId = App.LogUser.UserId,
+                        StoreId = App.CurrentStore.StoreId,
+                        OrderId = order.OrderId,
+                        ProductImage = product.ProductImg,
+                        ProductIdReference = product.ProductId
+                    };
 
-                    var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, order.OrderId);
-
-                    if (orderProducttoUpdate.Quantity != orderProduct.Quantity)
+                    //Check id orderproduct exist in the order
+                    var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductIdReference, order.OrderId);
+                    if (!_productoExisteEnOrden)
                     {
+                        //Add orderproduct to order
+                        var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
 
-                        orderProducttoUpdate.Quantity = orderProduct.Quantity;
-                        var uptedResult = await orderProductDataStore.UpdateItemAsync(orderProducttoUpdate);
-
-                        return uptedResult;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-
-            }
-            else
-            {
-
-                OrderProduct orderProduct = new OrderProduct()
-                {
-                    OrderProductId = Guid.NewGuid(),
-                    Price = product.ProductPrice,
-                    ProductName = product.ProductName,
-                    Quantity = (int)product.Quantity,
-                    BuyerId = App.LogUser.UserId,
-                    StoreId = App.CurrentStore.StoreId,
-                    OrderId = orderOfuser.OrderId,
-                    ProductImage = product.ProductImg,
-                    ProductIdReference = product.ProductId
-                };
-
-                var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductIdReference, orderOfuser.OrderId);
-                if (!_productoExisteEnOrden)
-                {
-
-                    var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
-
-                    if (orderProductAdded)
-                    {
-                        Cart.OrderProducts.Add(orderProduct);
-                        Cart.Total += Cart.OrderProducts.Sum(o => o.Price * o.Quantity);
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-
-                    var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, orderOfuser.OrderId);
-
-                    if (orderProducttoUpdate.Quantity != orderProduct.Quantity)
-                    {
-                        if (orderOfuser.OrderStatus == Status.NotSubmited)
+                        if (orderProductAdded)
                         {
-
-                            orderProducttoUpdate.Quantity = orderProduct.Quantity;
-                            var updateResult = await orderProductDataStore.UpdateItemAsync(orderProducttoUpdate);
-
-                            if (updateResult)
-                            {
-                                MessagingCenter.Send<OrderProduct>(orderProducttoUpdate, "OrderProductUpdate");
-                            }
-                            return updateResult;
+                            Cart.OrderProducts.Add(orderProduct);
+                            return true;
                         }
                         else
                         {
@@ -176,12 +100,89 @@ namespace QuickOrderApp.Utilities.Shopping
                     }
                     else
                     {
-                        return false;
+
+                        var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, order.OrderId);
+
+                        if (orderProducttoUpdate.Quantity != orderProduct.Quantity)
+                        {
+
+                            orderProducttoUpdate.Quantity = orderProduct.Quantity;
+                            var uptedResult = await cartManager.orderProductDataStore.UpdateItemAsync(orderProducttoUpdate);
+
+                            return uptedResult;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                }
+                else
+                {
+
+                    OrderProduct orderProduct = new OrderProduct()
+                    {
+                        OrderProductId = Guid.NewGuid(),
+                        Price = product.ProductPrice,
+                        ProductName = product.ProductName,
+                        Quantity = (int)product.Quantity,
+                        BuyerId = App.LogUser.UserId,
+                        StoreId = App.CurrentStore.StoreId,
+                        OrderId = orderOfuser.OrderId,
+                        ProductImage = product.ProductImg,
+                        ProductIdReference = product.ProductId
+                    };
+
+                    var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductIdReference, orderOfuser.OrderId);
+                    if (!_productoExisteEnOrden)
+                    {
+
+                        var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
+
+                        if (orderProductAdded)
+                        {
+                            Cart.OrderProducts.Add(orderProduct);
+                            Cart.Total += Cart.OrderProducts.Sum(o => o.Price * o.Quantity);
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+
+                        var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, orderOfuser.OrderId);
+
+                        if (orderProducttoUpdate.Quantity != orderProduct.Quantity)
+                        {
+                            if (orderOfuser.OrderStatus == Status.NotSubmited)
+                            {
+
+                                orderProducttoUpdate.Quantity = orderProduct.Quantity;
+                                var updateResult = await cartManager.orderProductDataStore.UpdateItemAsync(orderProducttoUpdate);
+
+                                if (updateResult)
+                                {
+                                    MessagingCenter.Send<OrderProduct>(orderProducttoUpdate, "OrderProductUpdate");
+                                }
+                                return updateResult;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
             }
-            }
-          
+
 
 
 
