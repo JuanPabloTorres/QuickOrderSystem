@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.DTO;
+using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -46,12 +47,12 @@ namespace WebApiQuickOrder.Controllers
                 if (!item.IsDisable)
                 {
 
-                stores.Add(item);
+                    stores.Add(item);
 
-                if (stores.Count() == 5)
-                {
-                    return stores;
-                }
+                    if (stores.Count() == 5)
+                    {
+                        return stores;
+                    }
                 }
             }
 
@@ -64,9 +65,9 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/Store
         [HttpPost("[action]")]
-        public  ActionResult<IEnumerable<Store>> GetDifferentStore(IEnumerable<Store> storesAdded)
+        public ActionResult<IEnumerable<Store>> GetDifferentStore(IEnumerable<Store> storesAdded)
         {
-            
+
             if (storesAdded.Count() < _context.Stores.Count())
             {
 
@@ -77,20 +78,20 @@ namespace WebApiQuickOrder.Controllers
                 {
                     if (!item.IsDisable)
                     {
-                    if (!storesAdded.Any(x=>x.StoreId == item.StoreId))
-                    {
-                        stores.Add(item);
-
-                        if (stores.Count == 5)
+                        if (!storesAdded.Any(x => x.StoreId == item.StoreId))
                         {
-                            return stores;
+                            stores.Add(item);
+
+                            if (stores.Count == 5)
+                            {
+                                return stores;
+                            }
                         }
-                    }
 
                     }
                 }
 
-                
+
 
                 return stores.ToList();
             }
@@ -157,11 +158,39 @@ namespace WebApiQuickOrder.Controllers
 
             if (store == null)
             {
-                return NotFound();
+                return null;
             }
 
             return store;
         }
+
+
+        // GET: api/Store/5
+        [HttpGet("[action]/{orderid}")]
+        public async Task<ActionResult<StoreDTO>> GetStoreSimpleInformationWithOrderId(Guid orderid)
+        {
+            var data = await _context.Orders.Where(s => s.OrderId == orderid).FirstOrDefaultAsync();
+
+
+            var storeResult = await _context.Stores.Where(s => s.StoreId == data.StoreId).FirstOrDefaultAsync();
+
+            if (storeResult == null)
+            {
+                return null;
+            }
+
+            var Storedto = new StoreDTO()
+            {
+                StoreImage = storeResult.StoreImage,
+                StoreName = storeResult.StoreName,
+                StoreId = storeResult.StoreId,
+                UserId = storeResult.UserId,
+                StoreDescription = storeResult.StoreDescription
+            };
+
+            return Storedto;
+        }
+
 
         // GET: api/Store/5
         [HttpGet("[action]/{id}")]
@@ -181,8 +210,8 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{storeId}")]
         public async Task<ActionResult<string>> GetStoreDestinationPaymentKey(Guid storeId)
         {
-            var keyResult =  _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().SKKey;
-            
+            var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().SKKey;
+
             if (keyResult == null)
             {
                 return NotFound();
@@ -227,8 +256,8 @@ namespace WebApiQuickOrder.Controllers
 
                 _context.WorkHours.AddRange(store.WorkHours);
 
-               await _context.SaveChangesAsync();
-               
+                await _context.SaveChangesAsync();
+
 
                 return true;
             }
@@ -256,7 +285,7 @@ namespace WebApiQuickOrder.Controllers
                 _context.Entry(store).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-               
+
                 return true;
             }
             catch (DbUpdateConcurrencyException)
@@ -290,7 +319,7 @@ namespace WebApiQuickOrder.Controllers
             return CreatedAtAction("GetStore", new { id = store.StoreId }, store);
         }
 
-        
+
 
         // DELETE: api/Store/5
         [HttpDelete("{id}")]
@@ -311,7 +340,8 @@ namespace WebApiQuickOrder.Controllers
             if (result)
             {
                 return true;
-            }else
+            }
+            else
             {
                 return false;
             }

@@ -231,7 +231,7 @@
     <PackageReference Include="Xamarin.FFImageLoading.Transformations">
       <Version>2.4.11.982</Version>
     </PackageReference>
-    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1451" />
+    <PackageReference Include="Xamarin.Forms" Version="4.8.0.1687" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
     <PackageReference Include="Xamarin.Plugin.SharedTransitions">
@@ -252,12 +252,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Assets.xcassets\QOBackground.imageset\" />
-    <Folder Include="Assets.xcassets\imgPlaceHolder.imageset\" />
-    <Folder Include="Assets.xcassets\inbox.imageset\" />
-    <Folder Include="Assets.xcassets\settings.imageset\" />
     <Folder Include="Assets.xcassets\Background.imageset\" />
     <Folder Include="Assets.xcassets\bag.imageset\" />
     <Folder Include="Assets.xcassets\home.imageset\" />
+    <Folder Include="Assets.xcassets\imgPlaceHolder.imageset\" />
+    <Folder Include="Assets.xcassets\inbox.imageset\" />
+    <Folder Include="Assets.xcassets\QOBackground.imageset\" />
+    <Folder Include="Assets.xcassets\settings.imageset\" />
   </ItemGroup>
 </Project>

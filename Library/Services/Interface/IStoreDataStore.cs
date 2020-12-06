@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.DTO;
+using Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,5 +26,7 @@ namespace Library.Services.Interface
         Task<Store> GetStoreSimpleInformation(Guid id);
 
         Task<Store> GetStoreInformation(Guid id);
+
+        Task<StoreDTO> GetStoreSimpleInformationWithOrderId(Guid orderid);
     }
 }

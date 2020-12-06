@@ -14,6 +14,8 @@ namespace Library.DTO
         public double OrderTotal { get; set; }
         public Models.Type OrderType { get; set; }
 
+        public Guid StoreId { get; set; }
+
         public OrderDto()
         {
         }

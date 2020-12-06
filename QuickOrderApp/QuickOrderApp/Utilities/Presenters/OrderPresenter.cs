@@ -4,6 +4,7 @@ using QuickOrderApp.Utilities.Static;
 using QuickOrderApp.ViewModels;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -138,6 +139,15 @@ namespace QuickOrderApp.Utilities.Presenters
             }
         }
 
+        private Guid storeId;
+
+        public Guid StoreId
+        {
+            get { return storeId; }
+            set { storeId = value; }
+        }
+
+
         public double OrderTotal { get; set; }
 
 
@@ -151,6 +161,8 @@ namespace QuickOrderApp.Utilities.Presenters
             OStatus = order.OrderStatus;
             OrderType = order.OrderType;
             StoreName = order.StoreOrder.StoreName;
+            OrderTotal = order.OrderProducts.Sum(ot => ot.Price * ot.Quantity);
+            StoreId = order.StoreOrder.StoreId;
 
             if (OStatus == Status.NotSubmited)
             {
@@ -194,6 +206,8 @@ namespace QuickOrderApp.Utilities.Presenters
             OrderType = order.OrderType;
             StoreName = order.StoreName;
             OrderTotal = order.OrderTotal;
+            StoreId = order.StoreId;
+
 
             if (OStatus == Status.NotSubmited)
             {

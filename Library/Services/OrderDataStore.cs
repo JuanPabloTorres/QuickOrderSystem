@@ -30,7 +30,7 @@ namespace Library.Services
             return deserializeObject;
         }
 
-        public async Task<IEnumerable<Order>> GetDifferentStoreOrders(IEnumerable<Order> orders,Guid storeId)
+        public async Task<IEnumerable<Order>> GetDifferentStoreOrders(IEnumerable<Order> orders, Guid storeId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetDifferentStoreOrders)}/{storeId}");
 
@@ -72,7 +72,7 @@ namespace Library.Services
             return deserializeObject;
         }
 
-        public async Task<IEnumerable<OrderDto>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status,string token)
+        public async Task<IEnumerable<OrderDto>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status, string token)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetOrdersOfUserWithSpecificStatus)}/{userid}/{status}");
 
@@ -85,7 +85,7 @@ namespace Library.Services
             return deserializeObject;
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Guid> ordersAdded,Status status,Guid userid)
+        public async Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Guid> ordersAdded, Status status, Guid userid)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetOrdersOfUserWithSpecificStatusDifferent)}/{status}/{userid}");
 
@@ -114,25 +114,25 @@ namespace Library.Services
             }
         }
 
-        public async Task<IEnumerable<Order>> GetStoreOrders(Guid storeId,string token)
+        public async Task<IEnumerable<Order>> GetStoreOrders(Guid storeId, string token)
         {
-           
-                FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoreOrders)}/{storeId}");
 
-                HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoreOrders)}/{storeId}");
 
-                var response = await HttpClient.GetStringAsync(FullAPIUri);
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
 
 
-                IEnumerable<Order> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Order>>(response);
-                return deserializeObject;
+            IEnumerable<Order> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Order>>(response);
+            return deserializeObject;
         }
 
         public IEnumerable<Order> GetUserOrders(Guid userid)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetUserOrders)}/{userid}");
 
-           
+
             var response = HttpClient.GetStringAsync(FullAPIUri);
             IEnumerable<Order> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Order>>(response.Result);
             return deserializeObject;
@@ -146,11 +146,11 @@ namespace Library.Services
             return deserializeObject;
         }
 
-        public IEnumerable<Order> GetUserOrdersWithToken(Guid userid,string token)
+        public IEnumerable<Order> GetUserOrdersWithToken(Guid userid, string token)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetUserOrders)}/{userid}");
 
-         
+
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = HttpClient.GetStringAsync(FullAPIUri);
@@ -160,7 +160,7 @@ namespace Library.Services
             return deserializeObject;
         }
 
-        public Order HaveOrderOfSpecificStore(Guid userid, Guid storeid,string token)
+        public Order HaveOrderOfSpecificStore(Guid userid, Guid storeid, string token)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(HaveOrderOfSpecificStore)}/{userid}/{storeid}");
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -176,6 +176,14 @@ namespace Library.Services
             HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             var response = await HttpClient.GetStringAsync(FullAPIUri);
             Order deserializeObject = JsonConvert.DeserializeObject<Order>(response);
+            return deserializeObject;
+        }
+
+        public async Task<IEnumerable<OrderProduct>> GetOrderProductOfOrders(Guid id)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetOrderProductOfOrders)}/{id}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            IEnumerable<OrderProduct> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<OrderProduct>>(response);
             return deserializeObject;
         }
     }

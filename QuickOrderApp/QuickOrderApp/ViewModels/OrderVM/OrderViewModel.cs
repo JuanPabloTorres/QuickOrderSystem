@@ -13,379 +13,390 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.OrderVM
 {
-	[QueryProperty("OrderStatus", "status")]
-	public class OrderViewModel : BaseViewModel
-	{
-		public ObservableCollection<OrderPresenterViewModel> UserOrders { get; set; }
+    [QueryProperty("OrderStatus", "status")]
+    public class OrderViewModel : BaseViewModel
+    {
+        public ObservableCollection<OrderPresenterViewModel> UserOrders { get; set; }
 
-		public ObservableCollection<ProductPresenter> ProductPresenters { get; set; }
+        public ObservableCollection<ProductPresenter> ProductPresenters { get; set; }
 
-		public ICommand GetOrdersCommand => new Command<string>(async (arg) =>
-		{
-			await Device.InvokeOnMainThreadAsync(async () => await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}"));
-		});
+        public ICommand GetOrdersCommand => new Command<string>(async (arg) =>
+        {
+            await Device.InvokeOnMainThreadAsync(async () => await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}"));
+        });
 
-		public ICommand MoreCommand => new Command(async () =>
-		{
-			await LoadUserOrderWithStatus(OrderStatus);
-		});
+        public ICommand MoreCommand => new Command(async () =>
+        {
+            await LoadUserOrderWithStatus(OrderStatus);
+        });
 
-		private string orderId;
+        private string orderId;
 
-		public string OrderId
-		{
-			get { return orderId; }
-			set
-			{
-				orderId = value;
-				OnPropertyChanged();
-			}
-		}
+        public string OrderId
+        {
+            get { return orderId; }
+            set
+            {
+                orderId = value;
+                OnPropertyChanged();
+            }
+        }
 
-		private string orderstatus;
+        private string orderstatus;
 
-		public string OrderStatus
-		{
-			get { return orderstatus; }
-			set
-			{
-				orderstatus = value;
+        public string OrderStatus
+        {
+            get { return orderstatus; }
+            set
+            {
+                orderstatus = value;
 
-				OnPropertyChanged();
+                OnPropertyChanged();
 
-				TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
 
-				if (tokenExpManger.IsExpired())
-				{
+                if (tokenExpManger.IsExpired())
+                {
 
-					tokenExpManger.CloseSession();
-					//DisplayNotification();
+                    tokenExpManger.CloseSession();
+                    //DisplayNotification();
 
-				}
-				else
-				{
-					Task.Run(async () =>
-					{
+                }
+                else
+                {
+                    Task.Run(async () =>
+                    {
 
-						await LoadOrders(OrderStatus);
-					}).Wait();
-				}
-			}
-		}
+                        await LoadOrders(OrderStatus);
+                    }).Wait();
+                }
+            }
+        }
 
-		private bool checkoutEnable;
+        private bool checkoutEnable;
 
-		public bool CheckOutEnable
-		{
-			get { return checkoutEnable; }
-			set
-			{
-				checkoutEnable = value;
-				OnPropertyChanged();
-			}
-		}
+        public bool CheckOutEnable
+        {
+            get { return checkoutEnable; }
+            set
+            {
+                checkoutEnable = value;
+                OnPropertyChanged();
+            }
+        }
 
-		public LoadingManager LoadingManager { get; set; }
+        public LoadingManager LoadingManager { get; set; }
 
-		Dictionary<string, IEnumerable<Guid>> CurrentOrdersKeys { get; set; }
+        Dictionary<string, IEnumerable<Guid>> CurrentOrdersKeys { get; set; }
 
-		private MoreManager<Guid> MoreManager;
+        private MoreManager<Guid> MoreManager;
 
-		private string keyname = "orderAdded";
-		public OrderViewModel()
-		{
+        private string keyname = "orderAdded";
+        public OrderViewModel()
+        {
 
-			PropertiesInitialization();
+            PropertiesInitialization();
 
-			MessagingCenter.Subscribe<Order>(this, "RemoveOrderSubtmitedMsg", (sender) =>
-			{
-				var order = UserOrders.Where(op => op.OrderId == sender.OrderId).FirstOrDefault();
+            MessagingCenter.Subscribe<Order>(this, "RemoveOrderSubtmitedMsg", (sender) =>
+            {
+                var order = UserOrders.Where(op => op.OrderId == sender.OrderId).FirstOrDefault();
 
-				UserOrders.Remove(order);
+                UserOrders.Remove(order);
 
-			});
+            });
 
-			MessagingCenter.Subscribe<OrderPresenterViewModel, OrderPresenterViewModel>(this, "Refresh", (sender, arg) =>
-			{
-				UserOrders.Remove(arg);
-			});
+            MessagingCenter.Subscribe<OrderPresenterViewModel, OrderPresenterViewModel>(this, "Refresh", (sender, arg) =>
+            {
+                UserOrders.Remove(arg);
+            });
 
-			//GetOrdersCommand = new Command<string>(async (arg) =>
-			//{
+            //GetOrdersCommand = new Command<string>(async (arg) =>
+            //{
 
-			//    await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}");
+            //    await Shell.Current.GoToAsync($"{UserOrdersWithStatus.Route}?status={arg}");
 
 
-			//});
-		}
+            //});
+        }
 
 
-		void PropertiesInitialization()
-		{
-			UserOrders = new ObservableCollection<OrderPresenterViewModel>();
-			LoadingManager = new LoadingManager();
-			CurrentOrdersKeys = new Dictionary<string, IEnumerable<Guid>>();
-			MoreManager = new MoreManager<Guid>();
-		}
+        void PropertiesInitialization()
+        {
+            UserOrders = new ObservableCollection<OrderPresenterViewModel>();
+            LoadingManager = new LoadingManager();
+            CurrentOrdersKeys = new Dictionary<string, IEnumerable<Guid>>();
+            MoreManager = new MoreManager<Guid>();
+        }
 
-		public async Task SetOrders()
-		{
-			var userOrderData = orderDataStore.GetUserOrders(App.LogUser.UserId);
+        public async Task SetOrders()
+        {
+            var userOrderData = orderDataStore.GetUserOrders(App.LogUser.UserId);
 
 
-			UserOrders.Clear();
+            UserOrders.Clear();
 
-			foreach (var item in userOrderData)
-			{
+            foreach (var item in userOrderData)
+            {
 
-				item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
-				var presenter = new OrderPresenterViewModel(item);
+                item.StoreOrder = await StoreDataStore.GetItemAsync(item.StoreId.ToString());
+                var presenter = new OrderPresenterViewModel(item);
 
-				UserOrders.Add(presenter);
-			}
+                UserOrders.Add(presenter);
+            }
 
-		}
+        }
 
 
-		async Task LoadOrders(string value)
-		{
-			LoadingManager.OnLoading();
-			Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
+        async Task LoadOrders(string value)
+        {
+            LoadingManager.OnLoading();
+            //Convertimos el value o su valor enum
+            Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
 
-			var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue, App.TokenDto.Token);
+            //obtenemos las ordenes del usuario del tipo de status solicitado
+            var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue, App.TokenDto.Token);
 
+            //Limpiamos el diccionario de valores y llaves
+            CurrentOrdersKeys.Clear();
 
-			CurrentOrdersKeys.Clear();
 
-			CurrentOrdersKeys.Add("orderAdded", orderData.Select(x => x.OrderId));
-			if (!MoreManager.ExistKey(keyname))
-			{
-				MoreManager.AddKeyAndValues(keyname, orderData.Select(x => x.OrderId));
-			}
 
-			UserOrders.Clear();
+            //Verificamo si la llave existe si no existe la insertamos junto con los valores que son los id de la tienda
+            if (!MoreManager.ExistKey(keyname))
+            {
+                MoreManager.AddKeyAndValues(keyname, orderData.Select(x => x.OrderId).Take(5));
+            }
 
-			foreach (var item in orderData)
-			{
-				var presenter = new OrderPresenterViewModel(item);
+            UserOrders.Clear();
 
-				//item.Stor = await StoreDataStore.GetStoreInformation(item.OrderId);
-				//var presenter = new OrderPresenter(item);
+            foreach (var item in orderData)
+            {
+                var presenter = new OrderPresenterViewModel(item);
 
-				UserOrders.Add(presenter);
-			}
+                //item.Stor = await StoreDataStore.GetStoreInformation(item.OrderId);
+                //var presenter = new OrderPresenter(item);
 
-			LoadingManager.OffLoading();
-		}
+                UserOrders.Add(presenter);
 
 
+            }
 
-		async Task LoadUserOrderWithStatus(string value)
-		{
-			List<Guid> tempData = new List<Guid>();
+            LoadingManager.OffLoading();
+        }
 
-			LoadingManager.OnLoading();
-			Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
 
-			var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue, App.TokenDto.Token);
 
-			if (!CurrentOrdersKeys.ContainsKey("orderAdded"))
-			{
+        async Task LoadUserOrderWithStatus(string value)
+        {
+            List<Guid> tempData = new List<Guid>();
 
-				CurrentOrdersKeys.Add("orderAdded", orderData.Select(o => o.OrderId));
-				if (!MoreManager.ExistKey(keyname))
-				{
-					MoreManager.AddKeyAndValues(keyname, orderData.Select(o => o.OrderId));
-				}
+            LoadingManager.OnLoading();
 
+            Status _statusvalue = (Status)Enum.Parse(typeof(Status), value);
 
-				switch (_statusvalue)
-				{
+            var orderData = await orderDataStore.GetOrdersOfUserWithSpecificStatus(App.LogUser.UserId, _statusvalue, App.TokenDto.Token);
 
-					case Status.Completed:
-						{
-							//List<Guid> tempData = new List<Guid>();
 
-							var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(CurrentOrdersKeys["orderAdded"], _statusvalue, App.LogUser.UserId);
 
-							if (data != null)
-							{
-								foreach (var orderId in CurrentOrdersKeys["orderAdded"])
-								{
-									if (!tempData.Any(o => o == orderId))
-									{
-										tempData.Add(orderId);
-									}
-								}
 
-								foreach (var item in data)
-								{
-									if (!tempData.Any(s => s == item.StoreId))
-									{
-										tempData.Add(item.StoreId);
-									}
-								}
 
-								CurrentOrdersKeys.Clear();
-								CurrentOrdersKeys.Add("orderAdded", tempData);
+            if (!MoreManager.ExistKey(keyname))
+            {
+                MoreManager.AddKeyAndValues(keyname, orderData.Select(o => o.OrderId));
+            }
 
 
-								foreach (var item in CurrentOrdersKeys["orderAdded"])
-								{
-									var orderdata = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(MoreManager.DataValues[keyname], _statusvalue, App.LogUser.UserId);
-									if (orderdata != null)
-									{
-										var differentValue = MoreManager.InsertDifferentDataValue(orderdata.Select(o => o.OrderId), keyname);
-										MoreManager.ModifyDictionary(keyname, differentValue);
-									}
-								}
-								foreach (var item in MoreManager.DataValues[keyname])
-								{
-									if (!UserOrders.Any(s => s.OrderId == item))
-									{
-										var order = new Order
-										{
-											StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item)
-										};
-										var presenter = new OrderPresenterViewModel(order);
+            switch (_statusvalue)
+            {
 
-										UserOrders.Add(presenter);
-									}
-								}
-							}
-							break;
-						}
+                case Status.Completed:
+                    {
+                        var datanewValues = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(MoreManager.DataValues[keyname], _statusvalue, App.LogUser.UserId);
 
-					case Status.NotSubmited:
-						{
-							var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(CurrentOrdersKeys["orderAdded"], _statusvalue, App.LogUser.UserId);
+                        if (datanewValues != null)
+                        {
+                            foreach (var item in MoreManager.DataValues[keyname])
+                            {
+                                if (!tempData.Any(o => o == item))
+                                {
+                                    tempData.Add(item);
+                                }
+                            }
 
+                            foreach (var item in datanewValues)
+                            {
+                                if (!tempData.Any(s => s == item.OrderId))
+                                {
+                                    tempData.Add(item.OrderId);
+                                }
 
-							var orderdata = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(MoreManager.DataValues[keyname], _statusvalue, App.LogUser.UserId);
-							if (orderdata != null)
-							{
-								foreach (var item in CurrentOrdersKeys["orderAdded"])
-								{
-									if (!tempData.Any(o => o == item))
-									{
+                            }
 
-										tempData.Add(item);
-									}
-								}
 
-								foreach (var item in data)
-								{
-									if (!tempData.Any(s => s == item.OrderId))
-									{
 
-										tempData.Add(item.OrderId);
+                            MoreManager.ModifyDictionary(keyname, tempData);
 
-									}
 
-								}
 
-								CurrentOrdersKeys.Clear();
-								CurrentOrdersKeys.Add("orderAdded", tempData);
+                            foreach (var item in MoreManager.DataValues[keyname])
+                            {
 
+                                if (!UserOrders.Any(s => s.OrderId == item))
+                                {
 
-								foreach (var item in CurrentOrdersKeys["orderAdded"])
-								{
-									var differentValue = MoreManager.InsertDifferentDataValue(orderdata.Select(o => o.OrderId), keyname);
 
-									MoreManager.ModifyDictionary(keyname, differentValue);
+                                    //var storeresult = await StoreDataStore.GetStoreSimpleInformationWithOrderId(item);
 
-								}
-								foreach (var item in MoreManager.DataValues[keyname])
-								{
+                                    var order = await orderDataStore.GetItemAsync(item.ToString());
 
-									if (!UserOrders.Any(s => s.OrderId == item))
-									{
 
-										var order = new Order
-										{
-											StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item)
-										};
-										var presenter = new OrderPresenterViewModel(order);
+                                    if (order != null)
+                                    {
+                                        order.StoreOrder = await StoreDataStore.GetItemAsync(order.StoreId.ToString());
 
-										// item.StoreOrder = await StoreDataStore.GetStoreInformation(item.StoreId);
-										// var presenter = new OrderPresenter(item);
-										UserOrders.Add(presenter);
+                                        var presenter = new OrderPresenterViewModel(order);
+                                        UserOrders.Add(presenter);
 
-									}
-								}
-							}
+                                    }
 
-							break;
 
 
 
-						}
-					case Status.Submited:
-						{
-							var data = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(CurrentOrdersKeys["orderAdded"], _statusvalue, App.LogUser.UserId);
 
-							if (data != null)
-							{
-								foreach (var item in CurrentOrdersKeys["orderAdded"])
-								{
-									if (!tempData.Any(o => o == item))
-									{
-										tempData.Add(item);
-									}
-								}
+                                }
+                            }
+                        }
+                        break;
+                    }
 
-								foreach (var item in data)
-								{
-									if (!tempData.Any(s => s == item.OrderId))
-									{
-										tempData.Add(item.OrderId);
-									}
+                case Status.NotSubmited:
+                    {
+                        var datanewValues = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(MoreManager.DataValues[keyname], _statusvalue, App.LogUser.UserId);
 
-								}
+                        if (datanewValues != null)
+                        {
+                            foreach (var item in MoreManager.DataValues[keyname])
+                            {
+                                if (!tempData.Any(o => o == item))
+                                {
+                                    tempData.Add(item);
+                                }
+                            }
 
-								CurrentOrdersKeys.Clear();
-								CurrentOrdersKeys.Add("orderAdded", tempData);
+                            foreach (var item in datanewValues)
+                            {
+                                if (!tempData.Any(s => s == item.OrderId))
+                                {
+                                    tempData.Add(item.OrderId);
+                                }
 
+                            }
 
-								foreach (var item in CurrentOrdersKeys["orderAdded"])
-								{
-									var orderdata = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(MoreManager.DataValues[keyname], _statusvalue, App.LogUser.UserId);
 
-									if (orderdata != null)
-									{
-										var differentValue = MoreManager.InsertDifferentDataValue(orderdata.Select(o => o.OrderId), keyname);
 
-										MoreManager.ModifyDictionary(keyname, differentValue);
-									}
-								}
-								foreach (var item in MoreManager.DataValues[keyname])
-								{
+                            MoreManager.ModifyDictionary(keyname, tempData);
 
-									if (!UserOrders.Any(s => s.OrderId == item))
-									{
-										var order = new Order
-										{
-											StoreOrder = await StoreDataStore.GetStoreSimpleInformation(item)
-										};
-										var presenter = new OrderPresenterViewModel(order);
 
 
-										// item.StoreOrder = await StoreDataStore.GetStoreInformation(item.StoreId);
-										// var presenter = new OrderPresenter(item);
-										UserOrders.Add(presenter);
+                            foreach (var item in MoreManager.DataValues[keyname])
+                            {
 
-									}
-								}
-							}
+                                if (!UserOrders.Any(s => s.OrderId == item))
+                                {
 
-							break;
-						}
-					default:
-						break;
-				}
 
-				LoadingManager.OffLoading();
-			}
-		}
-	}
+                                    //var storeresult = await StoreDataStore.GetStoreSimpleInformationWithOrderId(item);
+
+                                    var order = await orderDataStore.GetItemAsync(item.ToString());
+
+
+                                    if (order != null)
+                                    {
+                                        order.StoreOrder = await StoreDataStore.GetItemAsync(order.StoreId.ToString());
+
+                                        var presenter = new OrderPresenterViewModel(order);
+                                        UserOrders.Add(presenter);
+
+                                    }
+
+
+
+
+
+                                }
+                            }
+                        }
+                        break;
+
+
+
+                    }
+                case Status.Submited:
+                    {
+                        var datanewValues = await orderDataStore.GetOrdersOfUserWithSpecificStatusDifferent(MoreManager.DataValues[keyname], _statusvalue, App.LogUser.UserId);
+
+                        if (datanewValues != null)
+                        {
+                            foreach (var item in MoreManager.DataValues[keyname])
+                            {
+                                if (!tempData.Any(o => o == item))
+                                {
+                                    tempData.Add(item);
+                                }
+                            }
+
+                            foreach (var item in datanewValues)
+                            {
+                                if (!tempData.Any(s => s == item.OrderId))
+                                {
+                                    tempData.Add(item.OrderId);
+                                }
+
+                            }
+
+
+
+                            MoreManager.ModifyDictionary(keyname, tempData);
+
+
+
+                            foreach (var item in MoreManager.DataValues[keyname])
+                            {
+
+                                if (!UserOrders.Any(s => s.OrderId == item))
+                                {
+
+
+                                    //var storeresult = await StoreDataStore.GetStoreSimpleInformationWithOrderId(item);
+
+                                    var order = await orderDataStore.GetItemAsync(item.ToString());
+
+
+                                    if (order != null)
+                                    {
+                                        order.StoreOrder = await StoreDataStore.GetItemAsync(order.StoreId.ToString());
+
+                                        var presenter = new OrderPresenterViewModel(order);
+                                        UserOrders.Add(presenter);
+
+                                    }
+
+
+
+
+
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+                default:
+                    break;
+            }
+
+            LoadingManager.OffLoading();
+
+        }
+    }
 }

@@ -19,14 +19,16 @@ namespace Library.Factories
 
         public OrderDto CreateSimpleOrderDto(Order order, Store store, List<OrderProduct> orderProducts)
         {
-            return new OrderDto {
+            return new OrderDto
+            {
                 OrderDate = order.OrderDate,
                 OrderId = order.OrderId,
                 OrderStatus = order.OrderStatus,
                 StoreImage = store.StoreImage,
                 StoreName = store.StoreName,
-                OrderTotal = orderProducts.Sum(op=>op.Price),
-                ProductQuantity = orderProducts.Count
+                OrderTotal = orderProducts.Sum(op => op.Price),
+                ProductQuantity = orderProducts.Count,
+                StoreId = store.StoreId
             };
         }
 

@@ -1,4 +1,5 @@
-﻿using Library.Interface;
+﻿using Library.DTO;
+using Library.Interface;
 using Library.Models;
 using Library.Services.Interface;
 using Newtonsoft.Json;
@@ -31,11 +32,11 @@ namespace Library.Services
             var byteContent = new ByteArrayContent(buffer);
             byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            var response =await HttpClient.PutAsync(BaseAPIUri, byteContent);
+            var response = await HttpClient.PutAsync(BaseAPIUri, byteContent);
 
             if (response.IsSuccessStatusCode)
             {
-               bool deserializeObject = JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
+                bool deserializeObject = JsonConvert.DeserializeObject<bool>(await response.Content.ReadAsStringAsync());
                 return deserializeObject;
             }
 
@@ -80,12 +81,13 @@ namespace Library.Services
             {
                 IEnumerable<Store> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<Store>>(await response.Content.ReadAsStringAsync());
                 return deserializeObject;
-            }else
+            }
+            else
             {
                 return null;
             }
 
-            
+
         }
 
         public async Task<IEnumerable<Store>> GetSpecificStoreCategory(string category)
@@ -128,10 +130,18 @@ namespace Library.Services
         public async Task<Store> GetStoreSimpleInformation(Guid id)
         {
 
-          
+
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoreSimpleInformation)}/{id}");
             var response = await HttpClient.GetStringAsync(FullAPIUri);
             Store deserializeObject = JsonConvert.DeserializeObject<Store>(response);
+            return deserializeObject;
+        }
+
+        public async Task<StoreDTO> GetStoreSimpleInformationWithOrderId(Guid orderid)
+        {
+            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetStoreSimpleInformationWithOrderId)}/{orderid}");
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            StoreDTO deserializeObject = JsonConvert.DeserializeObject<StoreDTO>(response);
             return deserializeObject;
         }
 

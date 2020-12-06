@@ -17,7 +17,7 @@
         <StackLayout>
 
 
-            <forms:AnimationView
+            <!--<forms:AnimationView
                 Animation="loading.json"
                 AutoPlay="True"
                 HeightRequest="80"
@@ -25,7 +25,7 @@
                 IsVisible="{Binding LoadingManager.IsLoading}"
                 Loop="True"
                 VerticalOptions="Center"
-                WidthRequest="80" />
+                WidthRequest="80" />-->
             <!--<Label Style="{StaticResource TitleLabel}" Text="{Binding Username, StringFormat='Welcome, {0}'}" />
 
             <BoxView
