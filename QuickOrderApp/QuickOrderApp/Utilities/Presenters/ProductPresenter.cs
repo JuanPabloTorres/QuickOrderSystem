@@ -291,7 +291,6 @@ namespace QuickOrderApp.Utilities.Presenters
             });
 
 
-
             DeleteCommand = new Command(async () =>
             {
 

@@ -55,9 +55,9 @@ namespace QuickOrderApp.ViewModels.HomeVM
             }
         }
 
-       public LoadingManager LoadingManager { get; set; }
+        public LoadingManager LoadingManager { get; set; }
 
-        Dictionary<string,IEnumerable<Store>> KeyValues { get; set; }
+        Dictionary<string, IEnumerable<Store>> KeyValues { get; set; }
 
         private MoreManager<Store> MoreManager;
         private string keyname = "storeAdded";
@@ -71,35 +71,37 @@ namespace QuickOrderApp.ViewModels.HomeVM
             LoadingManager = new LoadingManager();
             MoreManager = new MoreManager<Store>();
 
-            MoreCommand = new Command(async() =>
+            MoreCommand = new Command(async () =>
             {
 
-               await LoadDifferentItems();
-            
+                await LoadDifferentItems();
+
             });
 
-          
+
 
             SelectedStore = new Store();
 
         }
 
-       
-        public async  Task LoadItems()
+
+        public async Task LoadItems()
         {
+
+
             LoadingManager.OnLoading();
 
             TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
             if (tokenExpManger.IsExpired())
             {
-               await tokenExpManger.CloseSession();
+                await tokenExpManger.CloseSession();
                 LoadingManager.OffLoading();
 
             }
             else
             {
-                
-            var storeData = await StoreDataStore.GetAvailableStore();
+
+                var storeData = await StoreDataStore.GetAvailableStore();
 
                 //if (!KeyValues.ContainsKey("storeAdded"))
                 //{
@@ -111,16 +113,16 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
 
                 if (Stores.Count > 0)
-            {
-                Stores.Clear();
-            }
+                {
+                    Stores.Clear();
+                }
 
-            foreach (var store in storeData)
-            {
-                var storepresenter = new StorePresenters(store);
+                foreach (var store in storeData)
+                {
+                    var storepresenter = new StorePresenters(store);
 
-                Stores.Add(storepresenter);
-            }
+                    Stores.Add(storepresenter);
+                }
 
                 LoadingManager.OffLoading();
             }
@@ -178,7 +180,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
                 }
 
 
-               
+
 
 
                 LoadingManager.OffLoading();

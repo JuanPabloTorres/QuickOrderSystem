@@ -1,4 +1,5 @@
 ﻿using Library.Services;
+using QuickOrderApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,27 +8,27 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.Managers
 {
-    public class TokenExpManger
+    public class TokenExpManger : BaseViewModel
     {
-        readonly UserConnectedDataStore userConnectedDataStore;
-        public TokenExpManger(UserConnectedDataStore userConnectedDataStore)
+        //readonly UserConnectedDataStore userConnectedDataStore;
+        //public TokenExpManger(UserConnectedDataStore userConnectedDataStore)
+        //{
+        //    this.userConnectedDataStore = userConnectedDataStore;
+        //}
+        private DateTime tokenexp;
+
+        public DateTime TokenExp
         {
-            this.userConnectedDataStore = userConnectedDataStore;
+            get { return tokenexp; }
+            set { tokenexp = value; }
         }
-		private DateTime tokenexp;
 
-		public DateTime TokenExp
-		{
-			get { return tokenexp; }
-			set { tokenexp = value; }
-		}
+        public TokenExpManger(DateTime exp)
+        {
+            this.TokenExp = exp;
+        }
 
-		public TokenExpManger(DateTime exp)
-		{
-			this.TokenExp = exp;
-		}
-
-        public  bool IsExpired()
+        public bool IsExpired()
         {
 
             if (DateTime.Now >= this.TokenExp)

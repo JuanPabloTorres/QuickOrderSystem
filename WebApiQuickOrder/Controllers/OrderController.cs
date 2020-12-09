@@ -110,6 +110,8 @@ namespace WebApiQuickOrder.Controllers
             if (ordersAdded.Count() < _context.Orders.Count())
             {
 
+
+
                 List<Order> orders = new List<Order>();
 
 

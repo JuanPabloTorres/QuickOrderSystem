@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:zxcm="clr-namespace:ZXing.Common;assembly=zxing.portable"
     xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
-    Title="{Binding OrderDetail.StoreOrder.StoreName, StringFormat='Order Detail of {0}'}"
+    Title="Order"
     BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="DetailOrderRoute"
     Shell.BackgroundColor="{x:StaticResource BackgroundColor}"

@@ -321,7 +321,7 @@ namespace WebApiQuickOrder.Controllers
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: credentials
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -347,7 +347,7 @@ namespace WebApiQuickOrder.Controllers
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(1),
                 signingCredentials: credentials
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
@@ -410,7 +410,7 @@ namespace WebApiQuickOrder.Controllers
                         {
                             Token = tokenString,
                             UserDetail = user,
-                            Exp = DateTime.Now.AddMinutes(30)
+                            Exp = DateTime.Now.AddMinutes(1)
 
                         };
 
@@ -428,7 +428,7 @@ namespace WebApiQuickOrder.Controllers
                         {
                             Token = tokenString,
                             UserDetail = user,
-                            Exp = DateTime.Now.AddMinutes(30)
+                            Exp = DateTime.Now.AddMinutes(1)
 
                         };
                         return tokenDTO;
@@ -439,7 +439,7 @@ namespace WebApiQuickOrder.Controllers
                     {
                         Token = tokenString,
                         UserDetail = user,
-                        Exp = DateTime.Now.AddMinutes(30)
+                        Exp = DateTime.Now.AddMinutes(1)
                     };
                     return tokenDTO;
 
