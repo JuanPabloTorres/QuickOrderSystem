@@ -13,7 +13,7 @@ using QuickOrderApp.Views.Store.EmployeeStoreControlPanel;
 
 namespace QuickOrderApp.LoginBuilder
 {
-    public class ConcreteLoginTokenBuilder:LoginTokenBuilder
+    public class ConcreteLoginTokenBuilder : LoginTokenBuilder
     {
         public async override void ErrorMessage()
         {
@@ -26,7 +26,7 @@ namespace QuickOrderApp.LoginBuilder
             await Shell.Current.GoToAsync("//RouteName");
         }
 
-        public  async override void GoEmployeeHome()
+        public async override void GoEmployeeHome()
         {
             App.Current.MainPage = new AppShell();
             await Shell.Current.GoToAsync("EmployeeControlPanelRoute");
@@ -59,43 +59,43 @@ namespace QuickOrderApp.LoginBuilder
 
         public async override void VerifyLogin()
         {
-           
 
-                var loginresult = UserLoginToken.UserDetail;
 
-                if (!loginresult.IsValidUser)
+            var loginresult = UserLoginToken.UserDetail;
+
+            if (!loginresult.IsValidUser)
+            {
+                App.LogUser = loginresult;
+
+                await PopupNavigation.PushAsync(new ValidateEmailCode());
+
+
+            }
+            else
+            {
+
+
+                App.LogUser = loginresult;
+
+                bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
+
+                //Verfico si hay tarjetas registradas con el usuario
+                if (hasPaymentCard)
                 {
-                    App.LogUser = loginresult;
+                    var cards = App.LogUser.PaymentCards.ToList();
 
-                    await PopupNavigation.PushAsync(new ValidateEmailCode());
-                 
+
+
+                    var userCardTokenId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, cards[0].StripeCardId);
+
+
+                    App.CardPaymentToken.CardTokenId = userCardTokenId;
 
                 }
-                else
-                {
-                   
 
-                    App.LogUser = loginresult;
-
-                    bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
-
-                    //Verfico si hay tarjetas registradas con el usuario
-                    if (hasPaymentCard)
-                    {
-                        var data = App.LogUser.PaymentCards;
-                        var card = new List<PaymentCard>(data);
+            }
 
 
-                        var userCardTokenId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, card[0].StripeCardId);
-
-
-                        App.CardPaymentToken.CardTokenId = userCardTokenId;
-
-                    }
-                    
-                }
-
-           
         }
     }
 }

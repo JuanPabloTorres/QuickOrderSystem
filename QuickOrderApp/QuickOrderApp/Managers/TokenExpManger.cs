@@ -53,6 +53,7 @@ namespace QuickOrderApp.Managers
             if (App.UsersConnected != null)
             {
                 App.UsersConnected.IsDisable = true;
+
                 var result = await userConnectedDataStore.UpdateItemAsync(App.UsersConnected);
 
                 if (result)

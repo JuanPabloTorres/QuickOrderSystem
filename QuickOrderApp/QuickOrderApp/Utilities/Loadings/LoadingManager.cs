@@ -6,7 +6,7 @@ using System.Text;
 
 namespace QuickOrderApp.Utilities.Loadings
 {
-    public class LoadingManager: INotifyPropertyChanged
+    public class LoadingManager : INotifyPropertyChanged
     {
 
         #region INotifyPropertyChanged
@@ -26,7 +26,7 @@ namespace QuickOrderApp.Utilities.Loadings
             return true;
         }
 
-      
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             var changed = PropertyChanged;
@@ -42,7 +42,9 @@ namespace QuickOrderApp.Utilities.Loadings
         public bool IsLoading
         {
             get { return isloading; }
-            set { isloading = value;
+            set
+            {
+                isloading = value;
                 OnPropertyChanged();
             }
         }
@@ -52,7 +54,9 @@ namespace QuickOrderApp.Utilities.Loadings
         public bool ContentVisible
         {
             get { return contentVisible; }
-            set { contentVisible = value;
+            set
+            {
+                contentVisible = value;
                 OnPropertyChanged();
             }
         }
@@ -61,13 +65,14 @@ namespace QuickOrderApp.Utilities.Loadings
 
         public void OnLoading(bool loadingToOn = true)
         {
-             IsLoading = loadingToOn;
+            IsLoading = loadingToOn;
             ContentVisible = false;
         }
 
         public void OffLoading(bool loadingToOff = false)
         {
             IsLoading = loadingToOff;
+
             ContentVisible = true;
         }
 

@@ -10,9 +10,49 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="{Binding Username, StringFormat='Welcome, {0}'}"
     BackgroundColor="{x:StaticResource BackgroundColor}"
+    NavigationPage.HasBackButton="False"
     Routing.Route="EmployeeControlPanelRoute"
     Shell.BackgroundColor="{x:StaticResource BackgroundColor}"
+    Shell.ForegroundColor="Black"
+    Shell.NavBarIsVisible="False"
+    Shell.TitleColor="Black"
     mc:Ignorable="d">
+
+
+
+    <!--<Shell.NavigationPage.TitleView>
+
+        <Grid HorizontalOptions="FillAndExpand">
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*" />
+
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+
+                <RowDefinition Height="*" />
+
+            </Grid.RowDefinitions>
+
+
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                Text="{Binding Username, StringFormat='Welcome, {0}'}" />
+
+        </Grid>
+
+
+
+    </Shell.NavigationPage.TitleView>-->
+
+
+
+
+
+
     <ContentPage.Content>
         <StackLayout>
 
@@ -34,6 +74,35 @@
                 BackgroundColor="LightGray"
                 HeightRequest="0.1"
                 HorizontalOptions="Fill" />-->
+
+            <Frame
+                Padding="0"
+                HasShadow="True"
+                HorizontalOptions="FillAndExpand"
+                IsClippedToBounds="True">
+
+
+                <StackLayout Margin="5">
+
+
+
+                    <Label
+                        Grid.Row="0"
+                        Margin="8,0,0,0"
+                        HorizontalOptions="Start"
+                        Style="{StaticResource TitleLabel}"
+                        Text="{Binding Username, StringFormat='Welcome, {0}'}" />
+
+
+
+
+
+
+                </StackLayout>
+
+            </Frame>
+
+
 
             <Grid Grid.Row="2">
 

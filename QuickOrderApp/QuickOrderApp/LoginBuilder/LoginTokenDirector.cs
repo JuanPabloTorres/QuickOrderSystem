@@ -2,28 +2,26 @@
 
 namespace QuickOrderApp.LoginBuilder
 {
-	public class LoginTokenDirector
-	{
-		public TokenDTO MakeLogin(LoginTokenBuilder loginBuilder, string username, string password)
-		{
-			loginBuilder.CreateLoginToken(username, password);
+    public class LoginTokenDirector
+    {
+        public TokenDTO MakeLogin(LoginTokenBuilder loginBuilder, string username, string password)
+        {
+            loginBuilder.CreateLoginToken(username, password);
 
-			if (loginBuilder.GetLogin() != null)
-			{
-				loginBuilder.VerifyLogin();
+            if (loginBuilder.GetLogin() != null)
+            {
+                loginBuilder.VerifyLogin();
 
-				loginBuilder.MakeHubConnection();
+                loginBuilder.MakeHubConnection();
 
-				return loginBuilder.GetLogin();
+                return loginBuilder.GetLogin();
 
-			}
-			else
-			{
-				loginBuilder.ErrorMessage();
-				return null;
-			}
-
-			return loginBuilder.GetLogin();
-		}
-	}
+            }
+            else
+            {
+                loginBuilder.ErrorMessage();
+                return null;
+            }
+        }
+    }
 }

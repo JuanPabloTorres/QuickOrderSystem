@@ -106,6 +106,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 else
                 {
                     IsLoading = false;
+
                     await App.Current.MainPage.DisplayAlert("Notification", "Empty values...!", "OK");
 
                 }
@@ -245,21 +246,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                                             App.LogUser = App.TokenDto.UserDetail;
 
-                                            //if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
-                                            //{
-
-                                            //    App.UsersConnected = new UsersConnected()
-                                            //    {
-                                            //        HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                            //        UserID = App.LogUser.UserId,
-                                            //        IsDisable = false,
-                                            //        ConnecteDate = DateTime.Now
-                                            //    };
-
-                                            //    //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
-
-                                            //    var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-                                            //}
 
 
                                             try
@@ -466,12 +452,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
 
-        //private bool _isShowCancel;
-        //public bool IsShowCancel
-        //{
-        //    get { return _isShowCancel; }
-        //    set { /*SetPropertyValue(ref _isShowCancel, value);*/ }
-        //}
 
         private Validator usernameValidator;
 

@@ -205,7 +205,7 @@ namespace QuickOrderApp
                DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.10.120:44100/api" : "http://192.168.10.120:44100/api";
 
             public static string LocalBackendUrl =
-                DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.1.144:5000/api" : "http://192.168.1.144:5000/api";
+                DeviceInfo.Platform == DevicePlatform.Android ? "http://192.168.1.132:5000/api" : "http://192.168.1.132:5000/api";
 
             //public static string LocalBackendUrl =
             //    DeviceInfo.Platform == DevicePlatform.Android ? "http://10.11.6.188:5000/api" : "http://10.11.6.188:5000/api";

@@ -34,6 +34,8 @@
                 TextColor="White"
                 VerticalTextAlignment="Center" />
 
+
+
         </StackLayout>
     </NavigationPage.TitleView>
 
@@ -41,6 +43,29 @@
 
 
         <StackLayout>
+
+
+            <!--<StackLayout
+                Margin="5"
+                HorizontalOptions="Fill"
+                Orientation="Horizontal">
+
+                <Entry
+                    HorizontalOptions="StartAndExpand"
+                    Keyboard="Text"
+                    Placeholder="Search Store..."
+                    WidthRequest="300" />
+                <button:SfButton
+                    Margin="10,0,10,0"
+                    BackgroundColor="Tomato"
+                    CornerRadius="5"
+                    FontFamily="RobotoBold"
+                    FontSize="18"
+                    HasShadow="True"
+                    Text="Search"
+                    TextColor="#2F3538"
+                    VerticalOptions="Center" />
+            </StackLayout>-->
 
             <!--<forms:AnimationView
                 Animation="loading.json"
@@ -51,6 +76,9 @@
                 Loop="True"
                 VerticalOptions="Center"
                 WidthRequest="40" />-->
+
+
+
 
 
 
@@ -94,7 +122,7 @@
 
                                     <frame:PancakeView
                                         Padding="0"
-                                        HeightRequest="180"
+                                        HeightRequest="100"
                                         HorizontalOptions="Fill"
                                         IsClippedToBounds="True">
                                         <ff:CachedImage Aspect="Fill" Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />

@@ -38,6 +38,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
             set
             {
                 selectedStore = value;
+
                 OnPropertyChanged();
 
             }
@@ -60,15 +61,19 @@ namespace QuickOrderApp.ViewModels.HomeVM
         Dictionary<string, IEnumerable<Store>> KeyValues { get; set; }
 
         private MoreManager<Store> MoreManager;
+
         private string keyname = "storeAdded";
-        static int group;
+
         public HomeViewModel()
         {
             StoreCategories = new ObservableCollection<StoreCategory>();
 
             KeyValues = new Dictionary<string, IEnumerable<Store>>();
+
             Stores = new ObservableCollection<StorePresenters>();
+
             LoadingManager = new LoadingManager();
+
             MoreManager = new MoreManager<Store>();
 
             MoreCommand = new Command(async () =>
@@ -95,6 +100,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
             if (tokenExpManger.IsExpired())
             {
                 await tokenExpManger.CloseSession();
+
                 LoadingManager.OffLoading();
 
             }
@@ -103,11 +109,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
                 var storeData = await StoreDataStore.GetAvailableStore();
 
-                //if (!KeyValues.ContainsKey("storeAdded"))
-                //{
 
-                //    KeyValues.Add("storeAdded", storeData);
-                //}
 
                 MoreManager.AddKeyAndValues(keyname, storeData);
 
@@ -135,6 +137,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
             LoadingManager.OnLoading();
 
             TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+
             if (tokenExpManger.IsExpired())
             {
                 await tokenExpManger.CloseSession();
@@ -189,45 +192,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
         }
 
-        public void SetStoreCategories()
-        {
-            //var values = Enum.GetValues(typeof(StoreType));
 
-            StoreCategory barbershopcategory = new StoreCategory(StoreType.BarberShop.ToString(), "barbershop.png");
-
-            StoreCategories.Add(barbershopcategory);
-
-            StoreCategory grocerycategory = new StoreCategory(StoreType.Grocery.ToString(), "supermarket.png");
-
-            StoreCategories.Add(grocerycategory);
-
-            StoreCategory farmingcategory = new StoreCategory(StoreType.Farming.ToString(), "garden.png");
-
-
-            StoreCategories.Add(farmingcategory);
-
-            StoreCategory restaurantcategory = new StoreCategory(StoreType.Restaurant.ToString(), "food.png");
-
-            StoreCategories.Add(restaurantcategory);
-
-            StoreCategory autopartscategory = new StoreCategory(StoreType.AutorParts.ToString(), "support.png");
-
-            StoreCategories.Add(autopartscategory);
-
-
-            StoreCategory servicecategory = new StoreCategory(StoreType.Service.ToString(), "partnership.png");
-
-            StoreCategories.Add(servicecategory);
-
-            StoreCategory storecategory = new StoreCategory(StoreType.Store.ToString(), "tag.png");
-
-            StoreCategories.Add(storecategory);
-
-            StoreCategory clothescategory = new StoreCategory(StoreType.ClothingStore.ToString(), "clothes.png");
-
-            StoreCategories.Add(clothescategory);
-
-        }
 
     }
 }

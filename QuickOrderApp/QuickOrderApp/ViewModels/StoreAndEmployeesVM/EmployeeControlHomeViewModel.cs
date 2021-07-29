@@ -13,7 +13,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
     public class EmployeeControlHomeViewModel : BaseViewModel
     {
 
-     
+
         public ObservableCollection<Store> UserStoreEmployee { get; set; }
         public ObservableCollection<StorePresenters> StorePresenters { get; set; }
         private string username;
@@ -30,7 +30,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         private Store employeeSelectedStore;
 
-       
+
 
         private Employee storeEmployeeSelected;
 
@@ -45,6 +45,12 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         }
 
         public ICommand SignOutCommand { get; set; }
+
+        public ICommand DisableBackCommand = new Command(() =>
+        {
+
+
+        });
 
         public LoadingManager LoadingManager { get; set; }
 
@@ -65,7 +71,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 LoadingManager.OffLoading();
             });
 
-            SignOutCommand = new Command(async() => 
+            SignOutCommand = new Command(async () =>
             {
 
                 await App.ComunicationService.Disconnect();
@@ -95,18 +101,18 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             foreach (var item in userEmployees)
             {
-               
+
                 //Obtine el empleado
                 item.EmployeeStore = await StoreDataStore.GetAvailableStoreInformation(item.StoreId);
                 if (item.EmployeeStore != null)
                 {
-                var empWorkHours = await EmployeeWorkHour.GetEmployeeWorkHours(item.EmployeeId.ToString());
-                item.EmployeeWorkHours = empWorkHours.ToList();
+                    var empWorkHours = await EmployeeWorkHour.GetEmployeeWorkHours(item.EmployeeId.ToString());
+                    item.EmployeeWorkHours = empWorkHours.ToList();
 
-               
-                var storePresenter = new StorePresenters(item.EmployeeStore);
 
-                StorePresenters.Add(storePresenter);
+                    var storePresenter = new StorePresenters(item.EmployeeStore);
+
+                    StorePresenters.Add(storePresenter);
 
                 }
                 //UserStoreEmployee.Add(item.EmployeeStore);
