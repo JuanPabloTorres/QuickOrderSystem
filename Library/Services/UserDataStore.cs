@@ -1,4 +1,5 @@
-﻿using Library.DTO;
+﻿using Library.ApiResponses;
+using Library.DTO;
 using Library.Interface;
 using Library.Models;
 using Library.Services.Interface;
@@ -24,11 +25,14 @@ namespace Library.Services
             return deserializeObject;
         }
 
-        public User CheckUserCredential(string username, string password)
+        public LoginResponse CheckUserCredential(string username, string password)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CheckUserCredential)}/{username}/{password}");
+
             var response = HttpClient.GetStringAsync(FullAPIUri);
-            User deserializeObject = JsonConvert.DeserializeObject<User>(response.Result);
+
+            LoginResponse deserializeObject = JsonConvert.DeserializeObject<LoginResponse>(response.Result);
+
             return deserializeObject;
         }
 
@@ -59,16 +63,19 @@ namespace Library.Services
         public async Task<IEnumerable<UserDTO>> GetUserWithName(string name)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetUserWithName)}/{name}");
-            var response =await  HttpClient.GetStringAsync(FullAPIUri);
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
             IEnumerable<UserDTO> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<UserDTO>>(response);
             return deserializeObject;
         }
 
-        public TokenDTO LoginCredential(string username, string password)
+        public LoginResponse LoginCredential(string username, string password)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(LoginCredential)}/{username}/{password}");
+
             var response = HttpClient.GetStringAsync(FullAPIUri);
-            TokenDTO deserializeObject = JsonConvert.DeserializeObject<TokenDTO>(response.Result);
+
+            LoginResponse deserializeObject = JsonConvert.DeserializeObject<LoginResponse>(response.Result);
+
             return deserializeObject;
         }
 

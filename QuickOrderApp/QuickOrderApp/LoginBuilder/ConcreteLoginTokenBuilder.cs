@@ -61,7 +61,8 @@ namespace QuickOrderApp.LoginBuilder
         {
 
 
-            var loginresult = UserLoginToken.UserDetail;
+            var loginresult = UserLoginToken.Token.UserDetail;
+
 
             if (!loginresult.IsValidUser)
             {

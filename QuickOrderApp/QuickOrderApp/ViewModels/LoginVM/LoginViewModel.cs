@@ -65,6 +65,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
             Task.Run(async () =>
             {
                 Username = await SecureStorage.GetAsync("username");
+
                 Password = await SecureStorage.GetAsync("password");
             });
 
@@ -85,16 +86,15 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
 
 
-
                     LoginTokenDirector LoginDirector = new LoginTokenDirector();
 
                     ConcreteLoginTokenBuilder userlog = new ConcreteLoginTokenBuilder();
 
                     var result = LoginDirector.MakeLogin(userlog, Username, Password);
 
-                    if (result != null)
+                    if (result.ResponseCode == Library.Helpers.Code.Successfull)
                     {
-                        App.TokenDto = result;
+                        App.TokenDto = result.Token;
 
                         userlog.GoQuickOrderHome();
                     }
@@ -134,9 +134,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
                     var result = LoginDirector.MakeLogin(userlog, Username, Password);
 
-                    if (result != null)
+                    if (result.ResponseCode == Library.Helpers.Code.Successfull)
                     {
-                        App.TokenDto = result;
+                        App.TokenDto = result.Token;
 
                         userlog.GoEmployeeHome();
                     }
@@ -192,6 +192,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                 };
 
                                 Gender value;
+
                                 Enum.TryParse(GenderSelected, out value);
 
                                 var newUser = new User()
@@ -235,22 +236,23 @@ namespace QuickOrderApp.ViewModels.LoginVM
                                         }).Wait();
 
                                         newUser.StripeUserId = customertokenId;
+
                                         var result = await userDataStore.AddItemAsync(newUser);
 
                                         //var credentialsResult = userDataStore.CheckUserCredential(Username, Password);
-                                        App.TokenDto = userDataStore.LoginCredential(Username, Password);
 
-                                        if (result)
+                                        App.TokenDto = userDataStore.LoginCredential(Username, Password).Token;
+
+                                        if (result.ResponseCode == Library.Helpers.Code.Successfull)
                                         {
 
-
                                             App.LogUser = App.TokenDto.UserDetail;
-
 
 
                                             try
                                             {
                                                 await SecureStorage.SetAsync("username", Username);
+
                                                 await SecureStorage.SetAsync("password", Password);
                                             }
                                             catch (Exception ex)

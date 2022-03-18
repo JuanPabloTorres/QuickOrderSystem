@@ -1,4 +1,5 @@
-﻿using Library.Services;
+﻿using Library.ApiResponses;
+using Library.Services;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -29,29 +30,39 @@ namespace Library.Interface
             FullAPIUri = BaseAPIUri;
         }
 
-        public async Task<bool> AddItemAsync(T item)
+        public async Task<BaseResponse> AddItemAsync(T item)
         {
             var serializeObj = JsonConvert
                     .SerializeObject(item, Formatting.Indented, new JsonSerializerSettings
                     {
-                        //ContractResolver = new JsonPrivateResolver(),
                         ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+
                         NullValueHandling = NullValueHandling.Include
                     });
 
             var buffer = System.Text.Encoding.UTF8.GetBytes(serializeObj);
+
             var byteContent = new ByteArrayContent(buffer);
+
             byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
             var response = await HttpClient.PostAsync(BaseAPIUri, byteContent);
 
             if (response.IsSuccessStatusCode)
             {
+                BaseResponse deserializeObject = JsonConvert.DeserializeObject<BaseResponse>(await response.Content.ReadAsStringAsync());
 
-                return true;
+                return deserializeObject;
             }
 
-            return false;
+
+            var baseResponse = new BaseResponse()
+            {
+                Message = "Error Sending Request",
+                ResponseCode = Helpers.Code.RequestError
+            };
+
+            return baseResponse;
         }
 
         public async Task<bool> DeleteItemAsync(string id)

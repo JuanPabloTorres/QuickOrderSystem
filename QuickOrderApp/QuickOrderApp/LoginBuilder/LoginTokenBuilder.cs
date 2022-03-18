@@ -1,4 +1,5 @@
-﻿using Library.DTO;
+﻿using Library.ApiResponses;
+using Library.DTO;
 using Library.Models;
 using Library.Services.Interface;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,16 +10,16 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.LoginBuilder
 {
-   public abstract class LoginTokenBuilder
+    public abstract class LoginTokenBuilder
     {
-        protected  TokenDTO UserLoginToken;
+        protected LoginResponse UserLoginToken;
         protected IUserDataStore userDataStore => Startup.ServiceProvider.GetRequiredService<IUserDataStore>();
         protected IUserConnectedDataStore userConnectedDataStore => Startup.ServiceProvider.GetRequiredService<IUserConnectedDataStore>();
 
         protected IStripeServiceDS stripeServiceDS => DependencyService.Get<IStripeServiceDS>();
-        public  void CreateLoginToken(string username,string password)
+        public void CreateLoginToken(string username, string password)
         {
-            var result  = userDataStore.LoginCredential(username, password);
+            var result = userDataStore.LoginCredential(username, password);
 
             if (result != null)
             {
@@ -31,7 +32,7 @@ namespace QuickOrderApp.LoginBuilder
 
         }
 
-        public TokenDTO GetLogin()
+        public LoginResponse GetLogin()
         {
             return UserLoginToken;
         }

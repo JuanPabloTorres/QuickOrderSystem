@@ -1,4 +1,5 @@
-﻿using Library.DTO;
+﻿using Library.ApiResponses;
+using Library.DTO;
 using Library.Models;
 using Library.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -225,10 +226,12 @@ namespace WebApiQuickOrder.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<bool>> PostUser([FromBody]User user)
+        public async Task<ActionResult<bool>> PostUser([FromBody] User user)
         {
             _context.Users.Add(user);
+
             await _context.SaveChangesAsync();
+
 
             string validationcode = Guid.NewGuid().ToString().Substring(0, 5);
 
@@ -254,9 +257,10 @@ namespace WebApiQuickOrder.Controllers
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser(Guid id)
+        public async Task<ActionResult> DeleteUser(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
+
             if (user == null)
             {
                 return NotFound();
@@ -265,7 +269,7 @@ namespace WebApiQuickOrder.Controllers
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
-            return user;
+            return Ok();
         }
 
 
@@ -354,51 +358,74 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{username}/{password}")]
-        public User CheckUserCredential(string username, string password)
+        public ActionResult CheckUserCredential(string username, string password)
         {
-            var loginOfUser = _context.Logins.Where(c => c.Username == username && c.Password == password).FirstOrDefault();
 
+            LoginResponse loginResponse = new LoginResponse();
 
-            if (loginOfUser != null)
+            try
             {
-                if (_context.Users.Count() > 0)
-                {
-                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).Include(c => c.PaymentCards).FirstOrDefault();
 
-                    return user;
+
+                var user = _context.Users.Include(s => s.Stores).Include(pc => pc.PaymentCards).Include(l => l.UserLogin).Where(u =>
+
+                u.UserLogin.Password == password && u.UserLogin.Username == username).FirstOrDefault();
+
+
+                if (user != null)
+                {
+
+                    loginResponse.UserInformation = user;
+
+                    loginResponse.ResponseCode = Library.Helpers.Code.Successfull;
+
+                    loginResponse.Message = "Login Successfull";
+
+                    return Ok(loginResponse);
+
                 }
                 else
                 {
-                    return null;
+                    loginResponse.ResponseCode = Library.Helpers.Code.Not_Found;
+
+                    loginResponse.Message = "Login Was Not Successfull";
+
+                    return Ok(loginResponse);
                 }
             }
-            else
+            catch (Exception e)
             {
-                return null;
+
+                loginResponse.ResponseCode = Library.Helpers.Code.Exepction;
+
+                loginResponse.Message = e.Message;
+
+                return Ok(loginResponse);
             }
 
 
         }
 
         [HttpGet("[action]/{username}/{password}")]
-        public TokenDTO LoginCredential(string username, string password)
+        public ActionResult LoginCredential(string username, string password)
         {
+            LoginResponse loginResponse = new LoginResponse();
 
-
-
-            var loginOfUser = _context.Logins.Where(c => c.Username == username && c.Password == password).FirstOrDefault();
-
-            if (loginOfUser != null)
+            try
             {
 
-                if (_context.Users.Count() > 0)
+                var user = _context.Users.Include(s => s.Stores).Include(pc => pc.PaymentCards).Include(l => l.UserLogin).Where(u =>
+
+             u.UserLogin.Password == password && u.UserLogin.Username == username).FirstOrDefault();
+
+
+                if (user != null)
                 {
-
-                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).Include(c => c.PaymentCards).FirstOrDefault();
-
                     var isAdministrator = _context.Stores.Any(s => s.UserId == user.UserId);
+
                     string tokenString;
-                    TokenDTO tokenDTO;
+
+                    TokenDTO token;
 
                     if (isAdministrator)
                     {
@@ -406,7 +433,8 @@ namespace WebApiQuickOrder.Controllers
                         tokenString = GenerateJWTTokenWithRole(user, "Admin");
 
                         var obj = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
-                        tokenDTO = new TokenDTO()
+
+                        token = new TokenDTO()
                         {
                             Token = tokenString,
                             UserDetail = user,
@@ -414,7 +442,17 @@ namespace WebApiQuickOrder.Controllers
 
                         };
 
-                        return tokenDTO;
+                        loginResponse.Token = token;
+
+                        loginResponse.UserInformation = user;
+
+                        loginResponse.ResponseCode = Library.Helpers.Code.Successfull;
+
+                        loginResponse.Message = "Login Successfull As Administrator";
+
+                        return Ok(loginResponse);
+
+
 
                     }
 
@@ -424,35 +462,72 @@ namespace WebApiQuickOrder.Controllers
                     {
 
                         tokenString = GenerateJWTTokenWithRole(user, "Employee");
-                        tokenDTO = new TokenDTO()
+
+                        token = new TokenDTO()
                         {
                             Token = tokenString,
                             UserDetail = user,
                             Exp = DateTime.Now.AddMinutes(30)
 
                         };
-                        return tokenDTO;
+
+                        loginResponse.Token = token;
+
+                        loginResponse.UserInformation = user;
+
+                        loginResponse.ResponseCode = Library.Helpers.Code.Successfull;
+
+                        loginResponse.Message = "Login Successfull As Employee";
+
+                        return Ok(loginResponse);
                     }
 
                     tokenString = GenerateJWTToken(user);
-                    tokenDTO = new TokenDTO()
+
+                    token = new TokenDTO()
                     {
                         Token = tokenString,
                         UserDetail = user,
                         Exp = DateTime.Now.AddMinutes(30)
                     };
-                    return tokenDTO;
+
+                    loginResponse.Token = token;
+
+                    loginResponse.UserInformation = user;
+
+                    loginResponse.ResponseCode = Library.Helpers.Code.Successfull;
+
+                    loginResponse.Message = "Login Successfull As Regular User";
+
+                    return Ok(loginResponse);
+
 
                 }
                 else
                 {
-                    return null;
+                    loginResponse.UserInformation = user;
+
+                    loginResponse.ResponseCode = Library.Helpers.Code.Not_Found;
+
+                    loginResponse.Message = "User Not Found";
+
+                    return Ok(loginResponse);
                 }
+
             }
-            else
+            catch (Exception e)
             {
-                return null;
+
+                loginResponse.ResponseCode = Library.Helpers.Code.Exepction;
+
+                loginResponse.Message = e.Message;
+
+                return Ok(loginResponse);
             }
+
+
+
+
 
         }
 
