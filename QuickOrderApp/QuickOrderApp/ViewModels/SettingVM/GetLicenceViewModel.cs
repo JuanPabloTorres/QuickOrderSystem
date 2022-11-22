@@ -1,6 +1,4 @@
 ﻿using QuickOrderApp.Managers;
-using QuickOrderApp.ViewModels.StoreAndEmployeesVM;
-using Stripe;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
@@ -9,78 +7,69 @@ namespace QuickOrderApp.ViewModels.SettingVM
 {
     public class GetLicenceViewModel : BaseViewModel
     {
-
-        public ICommand GetLicenseCommand { get; set; }
-
-        public GetLicenceViewModel()
+        public GetLicenceViewModel ()
         {
             GetLicenseCommand = new Command<string>(async (arg) =>
             {
-
                 TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
-                if (tokenExpManger.IsExpired())
+
+                if( tokenExpManger.IsExpired() )
                 {
                     await tokenExpManger.CloseSession();
                 }
                 else
                 {
+                    var result = await Shell.Current.DisplayAlert("Notification", "Your are going to get a store license.For the cost $100 by month. Are you OK with that?", "Yes", "No");
 
-                var result = await Shell.Current.DisplayAlert("Notification", "Your are going to get a store license.For the cost $100 by month. Are you OK with that?", "Yes", "No");
-
-                if (result)
-                {
-                    var cardResult = await CardDataStore.GetCardFromUser(App.LogUser.UserId,App.TokenDto.Token);
-
-                    if (cardResult != null && cardResult.Count() > 0)
+                    if( result )
                     {
-                        //Make the Payment transation here...
+                        var cardResult = await CardDataStore.GetCardFromUser(App.LogUser.UserId, App.TokenDto.Token);
 
-                        //Check that the payment was submited.
-
-                        //Send Lincese Code 
-
-                        var subcriptionToken = await stripeServiceDS.CreateACustomerSubcription(App.LogUser.StripeUserId);
-
-                        if (!string.IsNullOrEmpty(subcriptionToken))
+                        if( cardResult != null && cardResult.Count() > 0 )
                         {
-                            var subcription = new Library.Models.Subcription()
+                            //Make the Payment transation here...
+
+                            //Check that the payment was submited.
+
+                            //Send Lincese Code
+
+                            var subcriptionToken = await stripeServiceDS.CreateACustomerSubcription(App.LogUser.StripeUserId);
+
+                            if( !string.IsNullOrEmpty(subcriptionToken) )
                             {
-                                StripeCustomerId = App.LogUser.StripeUserId,
-                                StripeSubCriptionID = subcriptionToken,
-                                //StoreLicense = StoreControlPanelViewModel.YourSelectedStore.StoreLicenceId
-                            };
-
-                            var subcriptionResult = await SubcriptionDataStore.AddItemAsync(subcription);
-
-                            if (subcriptionResult)
-                            {
-
-                                var licenseReuslt = await storeLicenseDataStore.PostStoreLicense(App.LogUser.Email, App.LogUser.Name);
-
-                                if (licenseReuslt)
+                                var subcription = new Library.Models.Subcription()
                                 {
-                                    await App.Current.MainPage.DisplayAlert("Notification", "License added succefully.", "OK");
+                                    StripeCustomerId = App.LogUser.StripeUserId,
+                                    StripeSubCriptionID = subcriptionToken,
+                                    //StoreLicense = StoreControlPanelViewModel.YourSelectedStore.StoreLicenceId
+                                };
+
+                                var subcriptionResult = await SubcriptionDataStore.AddItemAsync(subcription);
+
+                                if( subcriptionResult )
+                                {
+                                    var licenseReuslt = await storeLicenseDataStore.PostStoreLicense(App.LogUser.Email, App.LogUser.Name);
+
+                                    if( licenseReuslt )
+                                    {
+                                        await App.Current.MainPage.DisplayAlert("Notification", "License added succefully.", "OK");
+                                    }
                                 }
                             }
-
+                            else
+                            {
+                                await App.Current.MainPage.DisplayAlert("Notification", "The subcription could not be made. Try again.", "OK");
+                            }
                         }
                         else
                         {
-                            await App.Current.MainPage.DisplayAlert("Notification", "The subcription could not be made. Try again.", "OK");
+                            await App.Current.MainPage.DisplayAlert("Notification", "You dont have a card register, register a card first.", "OK");
                         }
-
-
-
-                    }
-                    else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Notification", "You dont have a card register, register a card first.", "OK");
                     }
                 }
-                }
-
             });
         }
 
+        public ICommand GetLicenseCommand { get; set; }
     }
 }

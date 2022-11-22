@@ -1,20 +1,21 @@
 ﻿using Library.Models;
 using QuickOrderApp.Utilities.Presenters;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 {
     [QueryProperty("SelectedProductType", "type")]
-    public class StoreProductViewModel:BaseViewModel
+    public class StoreProductViewModel : BaseViewModel
     {
-
-        public ObservableCollection<ProductPresenter> StoreProducts { get; set; }
         private string selectedproductType;
+
+        public StoreProductViewModel ()
+        {
+            StoreProducts = new ObservableCollection<ProductPresenter>();
+        }
 
         public string SelectedProductType
         {
@@ -22,38 +23,32 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             set
             {
                 selectedproductType = value;
+
                 OnPropertyChanged();
 
                 LoadInventory(SelectedProductType);
             }
         }
 
+        public ObservableCollection<ProductPresenter> StoreProducts { get; set; }
 
-        public StoreProductViewModel()
-        {
-            StoreProducts = new ObservableCollection<ProductPresenter>();
-        }
-
-        async Task LoadInventory(string selectedproductType)
+        private async Task LoadInventory (string selectedproductType)
         {
             StoreProducts.Clear();
 
-            ProductType _productType = (ProductType)Enum.Parse(typeof(ProductType), selectedproductType);
+            ProductType _productType = (ProductType) Enum.Parse(typeof(ProductType), selectedproductType);
 
             //Guid guidStoreId = Guid.Parse(StoreId);
 
             var data = await productDataStore.GetSpecificProductTypeFromStore(App.CurrentStore.StoreId, _productType);
 
-            foreach (var item in data)
+            foreach( var item in data )
             {
-
                 var productPresenter = new ProductPresenter(item);
+
                 StoreProducts.Add(productPresenter);
             }
-
-
         }
-
 
         //public async Task GetStoreInformation(string id)
         //{
@@ -71,15 +66,12 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         //        var productPresenter = new ProductPresenter(product);
         //        if (StoreProducts.Where(p => p.ProductId == productPresenter.ProductId).FirstOrDefault() == null)
         //        {
-
         //            StoreProducts.Add(productPresenter);
         //        }
         //    }
 
-
         //    if (StoreWorkoutHours.Count() == 0)
         //    {
-
         //        foreach (var workhour in store.WorkHours)
         //        {
         //            if (workhour.Day == DateTime.Today.DayOfWeek.ToString())
@@ -92,7 +84,5 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         //    }
 
         //}
-
-
     }
 }

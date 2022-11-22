@@ -7,9 +7,12 @@ namespace Library.Services.Interface
 {
     public interface IEmployeeDataStore : IDataStore<Employee>
     {
-        Task<IEnumerable<Employee>> GetEmployeesOfStore(Guid storeId);
-        Task<IEnumerable<Employee>> GetUserEmployees(string userId);
-        Task<Employee> GetSpecificStoreEmployee(Guid userId, Guid StoreId);
-        Task<bool> IsEmployeeFromStore(Guid storeId, Guid userId);
+        Task<IEnumerable<Employee>> GetEmployeesOfStore (Guid storeId);
+
+        Task<Employee> GetSpecificStoreEmployee (Guid userId, Guid StoreId);
+
+        Task<IEnumerable<Employee>> GetUserEmployees (string userId);
+
+        Task<bool> IsEmployeeFromStore (Guid storeId, Guid userId);
     }
 }

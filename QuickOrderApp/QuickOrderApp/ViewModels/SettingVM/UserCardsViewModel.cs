@@ -1,58 +1,49 @@
-﻿using Library.DTO;
-using Library.Models;
-using QuickOrderApp.Managers;
+﻿using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IdentityModel.Tokens.Jwt;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.SettingVM
 {
-   public  class UserCardsViewModel:BaseViewModel
+    public class UserCardsViewModel : BaseViewModel
     {
-
-        public ObservableCollection<PaymentCardPresenter> PaymentCardPresenters { get; set; }
-
-        public UserCardsViewModel()
+        public UserCardsViewModel ()
         {
             PaymentCardPresenters = new ObservableCollection<PaymentCardPresenter>();
 
             ExecuteLoadItems();
 
-            MessagingCenter.Subscribe<PaymentCardPresenter>(this, "PaymencardDeleteMsg", (sender) => 
+            MessagingCenter.Subscribe<PaymentCardPresenter>(this, "PaymencardDeleteMsg", (sender) =>
             {
                 PaymentCardPresenters.Remove(sender);
             });
         }
 
+        public ObservableCollection<PaymentCardPresenter> PaymentCardPresenters { get; set; }
 
-        async Task ExecuteLoadItems()
+        private async Task ExecuteLoadItems ()
         {
-
             TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
-            if (tokenExpManger.IsExpired())
+
+            if( tokenExpManger.IsExpired() )
             {
                 await tokenExpManger.CloseSession();
             }
             else
             {
+                var tokenData = new JwtSecurityTokenHandler().ReadJwtToken(App.TokenDto.Token);
 
-            var tokenData = new  JwtSecurityTokenHandler().ReadJwtToken(App.TokenDto.Token);
-            var cardData = await CardDataStore.GetCardDTOFromUser(App.LogUser.UserId,App.TokenDto.Token);
+                var cardData = await CardDataStore.GetCardDTOFromUser(App.LogUser.UserId, App.TokenDto.Token);
 
-            foreach (var item in cardData)
-            {
-                var cardPresenter = new PaymentCardPresenter(item);
+                foreach( var item in cardData )
+                {
+                    var cardPresenter = new PaymentCardPresenter(item);
 
-                PaymentCardPresenters.Add(cardPresenter);
+                    PaymentCardPresenters.Add(cardPresenter);
+                }
             }
-            }
-
         }
-
     }
 }

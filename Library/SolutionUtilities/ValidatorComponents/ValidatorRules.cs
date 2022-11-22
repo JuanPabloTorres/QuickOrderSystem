@@ -1,23 +1,46 @@
 ﻿using Library.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Library.SolutionUtilities.ValidatorComponents
 {
     public static class ValidatorRules
     {
-
-        public static Validator EmailPatternRule(string emailValue)
+        public static Validator CreditCardCheckerRule (PaymentCard paymentCard)
         {
-            if (!String.IsNullOrEmpty(emailValue))
+            if( !string.IsNullOrEmpty(paymentCard.HolderName) && !string.IsNullOrEmpty(paymentCard.CardNumber) && !string.IsNullOrEmpty(paymentCard.Month) && !string.IsNullOrEmpty(paymentCard.Year) && !string.IsNullOrEmpty(paymentCard.Cvc) )
             {
+                if( paymentCard.CardNumber.Length >= 15 && paymentCard.CardNumber.Length <= 16 )
+                {
+                    if( ( paymentCard.CardNumber.Length == 16 && paymentCard.Cvc.Length == 3 ) || ( paymentCard.CardNumber.Length == 15 && paymentCard.Cvc.Length == 4 ) )
+                    {
+                        return new Validator();
+                    }
+                    else
+                    {
+                        return new Validator() { HasError = true, ErrorMessage = "Card Number is in incorrect format check the card digits or the CVC , to continue." };
+                    }
+                }
+                else
+                {
+                    return new Validator() { HasError = true, ErrorMessage = "Card number are invalid. Check again." };
+                }
+            }
+            else
+            {
+                return new Validator() { HasError = true, ErrorMessage = "Values are empty." };
+            }
+        }
 
+        public static Validator EmailPatternRule (string emailValue)
+        {
+            if( !String.IsNullOrEmpty(emailValue) )
+            {
                 Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+
                 Match match = regex.Match(emailValue);
 
-                if (match.Success)
+                if( match.Success )
                 {
                     var goodValidator = new Validator()
                     {
@@ -50,13 +73,13 @@ namespace Library.SolutionUtilities.ValidatorComponents
             }
         }
 
-        public static Validator EmptyOrNullValueRule(string value)
+        public static Validator EmptyOrNullValueRule (string value)
         {
-            if (!string.IsNullOrEmpty(value))
+            if( !string.IsNullOrEmpty(value) )
             {
                 var goodValidator = new Validator()
                 {
-                    ErrorMessage =string.Empty,
+                    ErrorMessage = string.Empty,
                     HasError = false
                 };
 
@@ -74,9 +97,9 @@ namespace Library.SolutionUtilities.ValidatorComponents
             }
         }
 
-        public static Validator PasswordAndConfirmPasswordEquals(string password, string confirmpassword)
+        public static Validator PasswordAndConfirmPasswordEquals (string password, string confirmpassword)
         {
-            if (password == confirmpassword)
+            if( password == confirmpassword )
             {
                 var goodValidator = new Validator()
                 {
@@ -97,37 +120,5 @@ namespace Library.SolutionUtilities.ValidatorComponents
                 return notEqualValidator;
             }
         }
-
-        public static Validator CreditCardCheckerRule(PaymentCard paymentCard)
-        {
-            if (!string.IsNullOrEmpty(paymentCard.HolderName)&& !string.IsNullOrEmpty(paymentCard.CardNumber) && !string.IsNullOrEmpty(paymentCard.Month) && !string.IsNullOrEmpty(paymentCard.Year) && !string.IsNullOrEmpty(paymentCard.Cvc))
-            {
-
-                if (paymentCard.CardNumber.Length >= 15 && paymentCard.CardNumber.Length <= 16)
-                {
-                    if ((paymentCard.CardNumber.Length == 16 && paymentCard.Cvc.Length == 3) || (paymentCard.CardNumber.Length == 15 && paymentCard.Cvc.Length == 4))
-                    {
-                        return new Validator();
-                       
-
-                    }
-                    else
-                    {
-                        return new Validator() { HasError = true, ErrorMessage = "Card Number is in incorrect format check the card digits or the CVC , to continue." };
-                    }
-
-                }
-                else
-                {
-                    return new Validator() { HasError = true, ErrorMessage = "Card number are invalid. Check again." };
-                }
-
-            }
-            else
-            {
-                return new Validator() { HasError = true, ErrorMessage = "Values are empty." };
-            }
-        }
-
     }
 }

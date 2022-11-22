@@ -6,15 +6,11 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:home="clr-namespace:QuickOrderApp.Views.Home"
     xmlns:inbox="clr-namespace:QuickOrderApp.Views.Inbox"
-    xmlns:login="clr-namespace:QuickOrderApp.Views.Login"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:setting="clr-namespace:QuickOrderApp.Views.Settings"
     xmlns:store="clr-namespace:QuickOrderApp.Views.Store"
     Title="QuickOrderApp"
     mc:Ignorable="d">
-
-
-
 
     <Shell.Resources>
         <ResourceDictionary>
@@ -29,14 +25,12 @@
                 <Setter Property="Shell.TabBarForegroundColor" Value="White" />
                 <Setter Property="Shell.TabBarUnselectedColor" Value="#fefcff" />
                 <Setter Property="Shell.TabBarTitleColor" Value="Black" />
-
             </Style>
             <Style BasedOn="{StaticResource BaseStyle}" TargetType="TabBar" />
         </ResourceDictionary>
     </Shell.Resources>
 
     <TabBar>
-
 
         <Tab Title="Home" Icon="home.png">
             <ShellContent ContentTemplate="{DataTemplate home:HomePage}" />
@@ -50,10 +44,7 @@
         <Tab Title="Settings" Icon="settings.png">
             <ShellContent ContentTemplate="{DataTemplate setting:Settings}" />
         </Tab>
-
     </TabBar>
-
-
 
     <!--
         Optional Templates
@@ -82,7 +73,4 @@
             </ContentView>
         </DataTemplate>
     </Shell.MenuItemTemplate>
-
-
-
 </Shell>

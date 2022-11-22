@@ -1,93 +1,75 @@
-﻿using Library.DTO;
-using Library.Models;
-using QuickOrderApp.Utilities.Presenters;
-using Refit;
-using System;
-using System.Collections.Generic;
+﻿using QuickOrderApp.Utilities.Presenters;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 {
-	[QueryProperty("StoreId","id")]
-    public class SearchEmployeeViewModel:BaseViewModel
+    [QueryProperty("StoreId", "id")]
+    public class SearchEmployeeViewModel : BaseViewModel
     {
+        private string storeId;
 
-		private string storeId;
+        private string tosearch;
 
-		public string StoreId
-		{
-			get { return storeId; }
-			set { storeId = value;
-				OnPropertyChanged();
-			}
-		}
-
-
-		public ObservableCollection<SearchEmployeePresenter> Users { get; set; }
-
-		private string tosearch;
-
-		public string ToSearch
-		{
-			get { return tosearch; }
-			set 
-			{
-				if (tosearch != value)
-				{
-
-				tosearch = value;
-				}
-				OnPropertyChanged();
-			}
-		}
-
-
-		public ICommand SearchEmployeeCommand { get; set; }
-
-        public SearchEmployeeViewModel()
+        public SearchEmployeeViewModel ()
         {
             Users = new ObservableCollection<SearchEmployeePresenter>();
 
             SearchEmployeeCommand = new Command(async () =>
             {
-                if (!string.IsNullOrEmpty(ToSearch) && !string.IsNullOrWhiteSpace(ToSearch))
+                if( !string.IsNullOrEmpty(ToSearch) && !string.IsNullOrWhiteSpace(ToSearch) )
                 {
                     await SearchEmployee(ToSearch);
-
                 }
                 else
                 {
                     await Shell.Current.DisplayAlert("Notification", "User with that information was not found...!", "OK");
                 }
-
-
             });
-
         }
 
+        public ICommand SearchEmployeeCommand { get; set; }
 
-        async Task SearchEmployee(string value)
-		{
+        public string StoreId
+        {
+            get { return storeId; }
+            set
+            {
+                storeId = value;
 
+                OnPropertyChanged();
+            }
+        }
 
-			var usersdto = await userDataStore.GetUserWithName(value);
+        public string ToSearch
+        {
+            get { return tosearch; }
+            set
+            {
+                if( tosearch != value )
+                {
+                    tosearch = value;
+                }
+                OnPropertyChanged();
+            }
+        }
 
-			Users.Clear();
-			foreach (var item in usersdto)
-			{
+        public ObservableCollection<SearchEmployeePresenter> Users { get; set; }
 
-				var serchEmpPresenter = new SearchEmployeePresenter(item,StoreId);
-				Users.Add(serchEmpPresenter);
-			}
+        private async Task SearchEmployee (string value)
+        {
+            var usersdto = await userDataStore.GetUserWithName(value);
 
-			
-		}
+            Users.Clear();
 
-	}
+            foreach( var item in usersdto )
+            {
+                var serchEmpPresenter = new SearchEmployeePresenter(item, StoreId);
+
+                Users.Add(serchEmpPresenter);
+            }
+        }
+    }
 }

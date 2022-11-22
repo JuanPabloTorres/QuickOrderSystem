@@ -5,10 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using WebApiQuickOrder.Context;
+
 namespace WebApiQuickOrder.Controllers
 {
     [Route("api/[controller]")]
@@ -17,26 +16,59 @@ namespace WebApiQuickOrder.Controllers
     {
         private readonly QOContext _context;
 
-        public ProductController(QOContext context)
+        public ProductController (QOContext context)
         {
             _context = context;
         }
 
-        // GET: api/Product
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        // DELETE: api/Product/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Product>> DeleteProduct (Guid id)
         {
-            return await _context.Products.ToListAsync();
+            var product = await _context.Products.FindAsync(id);
+
+            if( product == null )
+            {
+                return NotFound();
+            }
+
+            _context.Products.Remove(product);
+
+            await _context.SaveChangesAsync();
+
+            return product;
+        }
+
+        [HttpPost("[action]/{StoreId}")]
+        public async Task<IEnumerable<Product>> GetDifferentProductFromStore (IEnumerable<Product> productsAdded, Guid storeId)
+        {
+            var result = await _context.Products.Where(p => p.StoreId == storeId).ToListAsync();
+
+            List<Product> products = new List<Product>();
+
+            foreach( var item in result )
+            {
+                if( !productsAdded.Any(p => p.ProductId == item.ProductId) )
+                {
+                    products.Add(item);
+
+                    if( products.Count == 5 )
+                    {
+                        return products;
+                    }
+                }
+            }
+
+            return products;
         }
 
         // GET: api/Product/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(Guid id)
+        public async Task<ActionResult<Product>> GetProduct (Guid id)
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null)
+            if( product == null )
             {
                 return NotFound();
             }
@@ -45,92 +77,83 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{StoreId}")]
-        public async Task<IEnumerable<Product>> GetProductFromStore(Guid StoreId)
+        public async Task<IEnumerable<Product>> GetProductFromStore (Guid StoreId)
         {
             var result = await _context.Products.Where(p => p.StoreId == StoreId).ToListAsync();
 
-
             List<Product> products = new List<Product>();
 
-            foreach (var item in result)
+            foreach( var item in result )
             {
                 products.Add(item);
 
-                if (products.Count() == 5)
-                {
-                    return products;
-                }
-            }
-
-
-
-            return products;
-        }
-
-
-        [HttpPost("[action]/{StoreId}")]
-        public async Task<IEnumerable<Product>> GetDifferentProductFromStore(IEnumerable<Product> productsAdded,Guid storeId)
-        {
-            var result = await _context.Products.Where(p => p.StoreId == storeId).ToListAsync();
-
-            List<Product> products = new List<Product>();
-
-            foreach (var item in result)
-            {
-                if (!productsAdded.Any(p => p.ProductId == item.ProductId))
-                {
-                    products.Add(item);
-
-                    if (products.Count == 5)
-                    {
-                        return products;
-                    }
-                }
-            }
-
-          
-
-            return products;
-        }
-
-
-        [HttpGet("[action]/{storeId}/{type}")]
-        public async Task<IEnumerable<Product>> GetSpecificProductTypeFromStore(Guid storeId,ProductType type)
-        {
-            var result = await _context.Products.Where(p => p.Type == type && p.StoreId == storeId).ToListAsync();
-
-            List<Product> products = new List<Product>();
-
-            foreach (var item in result)
-            {
-                products.Add(item);
-
-                if (products.Count() == 5)
+                if( products.Count() == 5 )
                 {
                     return products;
                 }
             }
 
             return products;
+        }
+
+        // GET: api/Product
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts ()
+        {
+            return await _context.Products.ToListAsync();
         }
 
         [HttpGet("[action]/{storeid}/{lowquantity}")]
-        public IEnumerable<Product> GetProductWithLowQuantity(Guid storeid, int lowquantity)
+        public IEnumerable<Product> GetProductWithLowQuantity (Guid storeid, int lowquantity)
         {
             var result = _context.Products.Where(p => p.InventoryQuantity <= lowquantity && p.StoreId == storeid);
 
             return result;
         }
 
+        [HttpGet("[action]/{storeId}/{type}")]
+        public async Task<IEnumerable<Product>> GetSpecificProductTypeFromStore (Guid storeId, ProductType type)
+        {
+            var result = await _context.Products.Where(p => p.Type == type && p.StoreId == storeId).ToListAsync();
+
+            List<Product> products = new List<Product>();
+
+            foreach( var item in result )
+            {
+                products.Add(item);
+
+                if( products.Count() == 5 )
+                {
+                    return products;
+                }
+            }
+
+            return products;
+        }
+
+        // POST: api/Product
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPost]
+        public async Task<ActionResult<Product>> PostProduct (Product product)
+        {
+            _context.Products.Add(product);
+
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
+        }
+
         // PUT: api/Product/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-        public async Task<bool> PutProduct(Product product)
+        public async Task<bool> PutProduct (Product product)
         {
             var oldproducts = _context.Products.Where(p => p.ProductId == product.ProductId).FirstOrDefault();
 
-            if (oldproducts != null)
+            if( oldproducts != null )
             {
                 _context.Products.Remove(oldproducts);
 
@@ -148,68 +171,20 @@ namespace WebApiQuickOrder.Controllers
             }
         }
 
-        // POST: api/Product
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        [HttpGet("[action]/{storeId}/{item}")]
+        public async Task<Product> SearchItemOfStore (string storeId, string item)
         {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            var result = await _context.Products.Where(p => p.StoreId.ToString() == storeId && p.ProductName == item).FirstOrDefaultAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
+            return result;
         }
 
-        // DELETE: api/Product/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Product>> DeleteProduct(Guid id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-
-            return product;
-        }
-
-        [HttpGet("[action]")]
-        public async Task<bool> UpdateInventoryItem(Guid productId, int quantity)
+        public async Task<bool> UpdateInventoryFromOrderSubmited (Guid productId, int quantity)
         {
             var product = await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
 
-            product.InventoryQuantity -= quantity;
-
-            _context.Entry(product).State = EntityState.Modified;
-
-
-            try
+            if( product != null )
             {
-                _context.SaveChanges();
-
-                return true;
-            }
-            catch (Exception e)
-            {
-
-                Console.WriteLine(e.Message);
-
-                return false;
-            }
-
-        }
-
-        public async Task<bool> UpdateInventoryFromOrderSubmited(Guid productId, int quantity)
-        {
-            var product =await  _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
-
-
-            if (product != null)
-            {
-
                 _context.Products.Remove(product);
 
                 _context.SaveChanges();
@@ -226,22 +201,32 @@ namespace WebApiQuickOrder.Controllers
             {
                 return false;
             }
-
-
-
         }
 
-        [HttpGet("[action]/{storeId}/{item}")]
-        public async Task<Product> SearchItemOfStore(string storeId,string item)
+        [HttpGet("[action]")]
+        public async Task<bool> UpdateInventoryItem (Guid productId, int quantity)
         {
-            var result = await _context.Products.Where(p => p.StoreId.ToString() == storeId && p.ProductName == item).FirstOrDefaultAsync();
+            var product = await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
 
-            return result;
+            product.InventoryQuantity -= quantity;
 
+            _context.Entry(product).State = EntityState.Modified;
 
+            try
+            {
+                _context.SaveChanges();
+
+                return true;
+            }
+            catch( Exception e )
+            {
+                Console.WriteLine(e.Message);
+
+                return false;
+            }
         }
 
-        private bool ProductExists(Guid id)
+        private bool ProductExists (Guid id)
         {
             return _context.Products.Any(e => e.ProductId == id);
         }

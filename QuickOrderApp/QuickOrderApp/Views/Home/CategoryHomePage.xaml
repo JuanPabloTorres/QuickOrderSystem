@@ -12,8 +12,6 @@
     <ContentPage.Content>
         <StackLayout>
 
-
-
             <StackLayout>
                 <Frame
                     Margin="8"
@@ -39,10 +37,6 @@
                     Text="Search"
                     TextColor="Black" />
             </StackLayout>
-
-
-
-
 
             <CollectionView
                 Margin="5"
@@ -86,15 +80,12 @@
                                         Source="{Binding CategoryIcon}"
                                         VerticalOptions="Center"
                                         WidthRequest="30" />
-
-
                                 </StackLayout>
                             </Frame>
                         </ContentView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -59,7 +59,6 @@
                                     Text="{Binding StoreType, StringFormat='Store Type: {0}'}" />
                                 <StackLayout Margin="4">
 
-
                                     <Label
                                         FontSize="Body"
                                         HorizontalOptions="Start"
@@ -77,7 +76,6 @@
                                     HasShadow="True"
                                     Text="Shop"
                                     TextColor="Black" />
-
                             </StackLayout>
                         </Frame>
                     </ContentView>
@@ -85,6 +83,4 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
     </StackLayout>
-
-
 </ContentPage>

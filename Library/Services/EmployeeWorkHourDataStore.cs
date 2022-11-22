@@ -10,11 +10,14 @@ namespace Library.Services
 {
     public class EmployeeWorkHourDataStore : DataStoreService<EmployeeWorkHour>, IEmployeeWorkHourDataStore
     {
-        public async Task<IEnumerable<EmployeeWorkHour>> GetEmployeeWorkHours(string empId)
+        public async Task<IEnumerable<EmployeeWorkHour>> GetEmployeeWorkHours (string empId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetEmployeeWorkHours)}/{empId}");
+
             var response = HttpClient.GetStringAsync(FullAPIUri);
+
             IEnumerable<EmployeeWorkHour> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<EmployeeWorkHour>>(response.Result);
+
             return deserializeObject;
         }
     }

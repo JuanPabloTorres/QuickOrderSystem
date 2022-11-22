@@ -63,10 +63,5 @@
                 Text="Orders Completed"
                 TextColor="#2F3538" />
         </Grid>
-
-
-
-
-
     </ContentPage.Content>
 </ContentPage>

@@ -56,7 +56,6 @@
                     <Label Style="{StaticResource DataLabel}" Text="• Get Remote Order From Your Customers." />
                     <Label Style="{StaticResource DataLabel}" Text="• And More." />
 
-
                     <button:SfButton
                         Margin="10"
                         BackgroundColor="Tomato"
@@ -71,8 +70,6 @@
                         VerticalOptions="Center" />
                 </StackLayout>
             </Frame>
-
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

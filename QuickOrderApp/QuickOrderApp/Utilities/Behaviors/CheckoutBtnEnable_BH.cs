@@ -3,9 +3,8 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.Utilities.Behaviors
 {
-    class CheckoutBtnEnable_BH : Behavior<SfButton>
+    internal class CheckoutBtnEnable_BH : Behavior<SfButton>
     {
-
         //protected override void OnAttachedTo(SfButton button)
         //{
         //    button.IsEnabled += OnEntryTextChanged;
@@ -17,6 +16,5 @@ namespace QuickOrderApp.Utilities.Behaviors
         //    entry.TextChanged -= OnEntryTextChanged;
         //    base.OnDetachingFrom(entry);
         //}
-
     }
 }

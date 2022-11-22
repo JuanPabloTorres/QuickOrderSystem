@@ -1,50 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-
-namespace Library.DTO
+﻿namespace Library.DTO
 {
     public class StripePaymentCardResult
     {
+        private string errorMsg;
 
-		private bool hasError;
+        private bool hasError;
 
-		public bool HasError
-		{
-			get { return hasError; }
-			set { hasError = value; }
-		}
+        public StripePaymentCardResult ()
+        {
+        }
 
-		private string errorMsg;
+        public StripePaymentCardResult (string tokenid)
+        {
+            this.TokenId = tokenid;
 
-		public string ErrorMsg
-		{
-			get { return errorMsg; }
-			set { errorMsg = value; }
-		}
+            this.HasError = false;
 
-		public string TokenId { get; set; }
+            this.ErrorMsg = string.Empty;
+        }
 
-		public StripePaymentCardResult()
-		{
+        public StripePaymentCardResult (bool _haserror, string _errormsg)
+        {
+            this.HasError = _haserror;
 
-		}
+            this.ErrorMsg = _errormsg;
+        }
 
-		public StripePaymentCardResult(string tokenid)
-		{
-			this.TokenId = tokenid;
+        public string ErrorMsg
+        {
+            get { return errorMsg; }
 
-			this.HasError = false;
-			this.ErrorMsg = string.Empty;
-		}
+            set { errorMsg = value; }
+        }
 
-		public StripePaymentCardResult(bool _haserror, string _errormsg)
-		{
-			this.HasError = _haserror;
-			this.ErrorMsg = _errormsg;
-		}
+        public bool HasError
+        {
+            get { return hasError; }
 
+            set { hasError = value; }
+        }
 
-	}
+        public string TokenId { get; set; }
+    }
 }

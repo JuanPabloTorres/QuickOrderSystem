@@ -16,9 +16,6 @@
         <StackLayout>
             <StackLayout>
 
-
-
-
                 <Label
                     HorizontalOptions="Start"
                     Style="{StaticResource DataLabel}"
@@ -107,7 +104,6 @@
                                             HeightRequest="150"
                                             Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}" />
 
-
                                         <!--<Image
                                             Aspect="Fill"
                                             HeightRequest="200"
@@ -141,7 +137,6 @@
                                             Text="{Binding ProductType, StringFormat='Type:{0}'}" />
                                     </StackLayout>
 
-
                                     <Grid HorizontalOptions="Fill">
 
                                         <button:SfButton
@@ -168,11 +163,9 @@
                                             Text="Delete"
                                             TextColor="#2F3538" />
                                     </Grid>
-
                                 </StackLayout>
                             </Frame>
                         </ContentView>
-
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

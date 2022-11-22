@@ -9,75 +9,35 @@ namespace QuickOrderApp.Utilities.Presenters
 {
     public class RequestPresenter : BaseViewModel
     {
-        private string store;
+        private Guid requestid;
 
-        public string Store
-        {
-            get { return store; }
-            set
-            {
-                store = value;
-                OnPropertyChanged();
-            }
-        }
+        private string store;
 
         private string title;
 
-        public string RequestTitle
-        {
-            get { return title; }
-            set { title = value; }
-        }
-        private Guid requestid;
-
-        public Guid RequestId
-        {
-            get { return requestid; }
-            set
-            {
-                requestid = value;
-                OnPropertyChanged();
-            }
-        }
-
         private Guid toUser;
 
-        public Guid ToUser
-        {
-            get { return toUser; }
-            set {
-                toUser = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-
-
-        public ICommand RequestAnswerCommand { get; set; }
-
-        public RequestPresenter(UserRequest userRequest)
+        public RequestPresenter (UserRequest userRequest)
         {
             RequestId = userRequest.RequestId;
+
             var store = GetStore(userRequest.FromStore.ToString());
 
-            if (userRequest.Type == RequestType.JobRequest)
+            if( userRequest.Type == RequestType.JobRequest )
             {
                 RequestTitle = store.Result.StoreName + " Send Job Request";
             }
 
             RequestAnswerCommand = new Command<string>(async (e) =>
             {
-
-                if (Answer.Accept.ToString() == e)
+                if( Answer.Accept.ToString() == e )
                 {
-
                     userRequest.RequestAnswer = Answer.Accept;
+
                     var requestUpdated = await requestDataStore.UpdateItemAsync(userRequest);
 
-                    if (requestUpdated)
+                    if( requestUpdated )
                     {
-
                         MessagingCenter.Send<RequestPresenter>(this, "RefreshInbox");
 
                         var newStoreEmployee = new Employee()
@@ -90,11 +50,9 @@ namespace QuickOrderApp.Utilities.Presenters
 
                         var employeeAdded = await EmployeeDataStore.AddItemAsync(newStoreEmployee);
                     }
-
                 }
-                if (Answer.Decline.ToString() == e)
+                if( Answer.Decline.ToString() == e )
                 {
-
                     //userRequest.RequestAnswer = Answer.Decline;
                     //var requestUpdated = await requestDataStore.UpdateItemAsync(userRequest);
                     //MessagingCenter.Send<RequestPresenter>(this, "RefreshInbox");
@@ -102,11 +60,50 @@ namespace QuickOrderApp.Utilities.Presenters
 
                     MessagingCenter.Send<RequestPresenter>(this, "RefreshInbox");
                 }
-
             });
         }
 
-        async Task<Store> GetStore(string storeId)
+        public ICommand RequestAnswerCommand { get; set; }
+
+        public Guid RequestId
+        {
+            get { return requestid; }
+            set
+            {
+                requestid = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public string RequestTitle
+        {
+            get { return title; }
+            set { title = value; }
+        }
+
+        public string Store
+        {
+            get { return store; }
+            set
+            {
+                store = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public Guid ToUser
+        {
+            get { return toUser; }
+            set
+            {
+                toUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private async Task<Store> GetStore (string storeId)
         {
             var store = await StoreDataStore.GetItemAsync(storeId);
 

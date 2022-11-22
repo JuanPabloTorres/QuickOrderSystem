@@ -42,10 +42,7 @@
                                             <Label Style="{StaticResource DataLabel}" Text="Card:" />
                                             <Label Style="{StaticResource DataLabel}" Text="{Binding CardNumber}" />
                                         </StackLayout>
-
-
                                     </StackLayout>
-
 
                                     <button:SfButton
                                         Grid.Row="0"
@@ -60,11 +57,8 @@
                                         HasShadow="True"
                                         Text="Delete"
                                         TextColor="#2F3538" />
-
-
                                 </StackLayout>
                             </Frame>
-
                         </ContentView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

@@ -25,8 +25,6 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
-
-
                         <StackLayout>
                             <StackLayout>
                                 <Frame
@@ -47,7 +45,6 @@
                                         WidthRequest="100" />-->
                                 </Frame>
 
-
                                 <Label
                                     FontAttributes="Bold"
                                     FontSize="Title"
@@ -55,8 +52,6 @@
                                     Text="{Binding StoreName}"
                                     TextColor="Black"
                                     VerticalOptions="Center" />
-
-
                             </StackLayout>
 
                             <BoxView
@@ -76,11 +71,8 @@
                                 Text="View"
                                 TextColor="#2F3538" />
                         </StackLayout>
-
-
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
             </CollectionView>
         </StackLayout>
     </ContentPage.Content>

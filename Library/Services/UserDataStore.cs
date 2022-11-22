@@ -11,39 +11,51 @@ namespace Library.Services
 {
     public class UserDataStore : DataStoreService<User>, IUserDataStore
     {
-        public async Task<bool> CheckIfUsernameAndPasswordExist(string username, string password)
+        public async Task<bool> CheckIfUsernameAndPasswordExist (string username, string password)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CheckIfUsernameAndPasswordExist)}/{username}/{password}");
+
             var response = await HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+
             return deserializeObject;
         }
 
-        public User CheckUserCredential(string username, string password)
+        public User CheckUserCredential (string username, string password)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CheckUserCredential)}/{username}/{password}");
+
             var response = HttpClient.GetStringAsync(FullAPIUri);
+
             User deserializeObject = JsonConvert.DeserializeObject<User>(response.Result);
+
             return deserializeObject;
         }
 
-        public bool ConfirmCode(string code)
+        public bool ConfirmCode (string code)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(ConfirmCode)}/{code}");
+
             var response = HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response.Result);
+
             return deserializeObject;
         }
 
-        public async Task<bool> EmailExist(string email)
+        public async Task<bool> EmailExist (string email)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(EmailExist)}/{email}");
+
             var response = await HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+
             return deserializeObject;
         }
 
-        public bool ForgotCodeSend(string email)
+        public bool ForgotCodeSend (string email)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(ForgotCodeSend)}/{email}");
             var response = HttpClient.GetStringAsync(FullAPIUri);
@@ -51,35 +63,47 @@ namespace Library.Services
             return deserializeObject;
         }
 
-        public async Task<IEnumerable<UserDTO>> GetUserWithName(string name)
+        public async Task<IEnumerable<UserDTO>> GetUserWithName (string name)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetUserWithName)}/{name}");
-            var response =await  HttpClient.GetStringAsync(FullAPIUri);
+
+            var response = await HttpClient.GetStringAsync(FullAPIUri);
+
             IEnumerable<UserDTO> deserializeObject = JsonConvert.DeserializeObject<IEnumerable<UserDTO>>(response);
+
             return deserializeObject;
         }
 
-        public TokenDTO LoginCredential(string username, string password)
+        public TokenDTO LoginCredential (string username, string password)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(LoginCredential)}/{username}/{password}");
+
             var response = HttpClient.GetStringAsync(FullAPIUri);
+
             TokenDTO deserializeObject = JsonConvert.DeserializeObject<TokenDTO>(response.Result);
+
             return deserializeObject;
         }
 
-        public async Task<bool> ResendCode(string userId)
+        public async Task<bool> ResendCode (string userId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(ResendCode)}/{userId}");
+
             var response = await HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+
             return deserializeObject;
         }
 
-        public async Task<bool> ValidateEmail(string code, string userid)
+        public async Task<bool> ValidateEmail (string code, string userid)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(ValidateEmail)}/{code}/{userid}");
+
             var response = await HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+
             return deserializeObject;
         }
     }

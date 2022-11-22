@@ -51,10 +51,6 @@
                             Text="{Binding EmployeeOrderPresenter.OrderType}"
                             TextColor="Orange" />
                     </StackLayout>
-
-
-
-
                 </StackLayout>
             </Frame>
             <Label Style="{StaticResource TitleLabel}" Text="Order Products" />
@@ -71,11 +67,9 @@
                 ItemsSource="{Binding EmployeeOrderPresenter.OrderProductsPresenter}"
                 VerticalOptions="Center">
 
-
                 <CollectionView.ItemTemplate>
 
                     <DataTemplate>
-
 
                         <StackLayout Orientation="Vertical">
                             <Label
@@ -94,10 +88,8 @@
                                         HeightRequest="80"
                                         Source="{Binding ProductImg, Converter={StaticResource BytesToImgConverter}}"
                                         WidthRequest="80" />
-
                                 </Frame>
                                 <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-
 
                                     <Label
                                         Style="{StaticResource DataLabel}"
@@ -108,9 +100,6 @@
                                         HorizontalOptions="Center"
                                         Text="{Binding Price, StringFormat='{0:C}'}"
                                         VerticalOptions="Center" />-->
-
-
-
                                 </StackLayout>
                                 <StackLayout VerticalOptions="Center">
                                     <button:SfCheckBox
@@ -123,17 +112,10 @@
                                         TextColor="#2F3538"
                                         VerticalOptions="Center" />
                                 </StackLayout>
-
-
-
                             </StackLayout>
-
                         </StackLayout>
-
-
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
             </CollectionView>
 
             <button:SfButton

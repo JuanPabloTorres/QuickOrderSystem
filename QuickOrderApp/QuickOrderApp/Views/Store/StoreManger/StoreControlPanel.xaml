@@ -14,7 +14,6 @@
     mc:Ignorable="d">
     <ContentPage.Content>
 
-
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -154,7 +153,5 @@
                     TextColor="#2F3538" />
             </Grid>
         </Grid>
-
-
     </ContentPage.Content>
 </ContentPage>

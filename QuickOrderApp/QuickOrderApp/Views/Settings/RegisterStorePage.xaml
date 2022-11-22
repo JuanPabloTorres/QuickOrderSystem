@@ -7,7 +7,6 @@
     xmlns:combobox="clr-namespace:Syncfusion.XForms.ComboBox;assembly=Syncfusion.SfComboBox.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sfTimePicker="clr-namespace:Syncfusion.XForms.Pickers;assembly=Syncfusion.SfPicker.XForms"
     Title="New Store"
     BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="RegisterStoreRoute"
@@ -42,7 +41,7 @@
                 Text="Choose Image"
                 TextColor="#2F3538" />
             <StackLayout>
-                <!--<Label Text="Store Name" FontSize="Title"/>-->
+                <!--<Label Text="Store Name" FontSize="Title" />-->
                 <Entry Placeholder="Store Name" Text="{Binding StoreName}" />
 
                 <Entry Placeholder="Store Description" Text="{Binding StoreDescription}" />
@@ -99,7 +98,6 @@
                                         HorizontalOptions="FillAndExpand"
                                         Time="{Binding Close}" />
                                 </StackLayout>
-
                             </StackLayout>
                             <BoxView
                                 BackgroundColor="Black"
@@ -139,7 +137,7 @@
             </StackLayout>
 
             <StackLayout>
-                <!--<Label Text="Licensen Code" FontSize="Title"/>-->
+                <!--<Label Text="Licensen Code" FontSize="Title" />-->
                 <Entry Placeholder="License Code" Text="{Binding LicenseCode}" />
             </StackLayout>
             <button:SfButton
@@ -154,6 +152,4 @@
                 TextColor="#2F3538" />
         </StackLayout>
     </ScrollView>
-
-
 </ContentPage>

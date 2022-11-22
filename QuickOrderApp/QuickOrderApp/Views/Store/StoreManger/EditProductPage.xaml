@@ -51,7 +51,6 @@
 
                 <Entry Placeholder="Product Name" Text="{Binding ProductName}" />
 
-
                 <Editor
                     MinimumHeightRequest="120"
                     Placeholder="Product Description"
@@ -80,7 +79,6 @@
                     FontSize="Body"
                     HasShadow="True"
                     Text="Complete" />
-
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

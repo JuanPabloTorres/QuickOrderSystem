@@ -4,6 +4,5 @@ namespace QuickOrderApp.Services.Interface
 {
     public interface IUserDataStore : IDataStore<User>
     {
-
     }
 }

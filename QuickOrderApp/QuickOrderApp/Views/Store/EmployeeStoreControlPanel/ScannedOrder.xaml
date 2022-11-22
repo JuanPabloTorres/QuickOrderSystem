@@ -26,7 +26,6 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
 
-
                         <StackLayout
                             Margin="5"
                             BackgroundColor="White"
@@ -47,16 +46,10 @@
                             <Label Style="{StaticResource DataLabel}" Text="{Binding ProductName}" />
                             <Label Style="{StaticResource DataLabel}" Text="{Binding Quantity}" />
                             <Label Style="{StaticResource DataLabel}" Text="{Binding Price, StringFormat='{0:C}'}" />
-
                         </StackLayout>
-
-
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
             </CollectionView>
-
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

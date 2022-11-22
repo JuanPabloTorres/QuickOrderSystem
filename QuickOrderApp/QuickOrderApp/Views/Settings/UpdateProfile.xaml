@@ -122,7 +122,6 @@
                         Text="Update"
                         TextColor="#2F3538"
                         VerticalOptions="Center" />
-
                 </Grid>
             </ScrollView>
         </Frame>

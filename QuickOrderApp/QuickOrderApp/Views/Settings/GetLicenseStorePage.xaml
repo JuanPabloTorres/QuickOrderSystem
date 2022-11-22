@@ -79,9 +79,6 @@
                         TextColor="#2F3538" />
                 </StackLayout>
             </Frame>
-
         </Grid>
-
     </ScrollView>
-
 </ContentPage>

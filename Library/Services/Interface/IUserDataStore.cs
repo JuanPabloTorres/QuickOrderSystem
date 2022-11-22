@@ -7,19 +7,20 @@ namespace Library.Services.Interface
 {
     public interface IUserDataStore : IDataStore<User>
     {
-        User CheckUserCredential(string username, string password);
-        bool ForgotCodeSend(string email);
-        bool ConfirmCode(string code);
+        Task<bool> CheckIfUsernameAndPasswordExist (string username, string password);
 
-        TokenDTO LoginCredential(string username, string password);
-        Task<IEnumerable<UserDTO>> GetUserWithName(string name);
+        User CheckUserCredential (string username, string password);
 
-        Task<bool> CheckIfUsernameAndPasswordExist(string username, string password);
+        bool ConfirmCode (string code);
 
-        Task<bool> ValidateEmail(string code, string userid);
+        Task<bool> EmailExist (string email);
 
-        Task<bool> ResendCode(string userId);
+        bool ForgotCodeSend (string email);
+        Task<IEnumerable<UserDTO>> GetUserWithName (string name);
 
-        Task<bool> EmailExist(string email);
+        TokenDTO LoginCredential (string username, string password);
+        Task<bool> ResendCode (string userId);
+
+        Task<bool> ValidateEmail (string code, string userid);
     }
 }

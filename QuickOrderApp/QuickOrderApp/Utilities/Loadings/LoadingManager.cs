@@ -2,74 +2,78 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace QuickOrderApp.Utilities.Loadings
 {
-    public class LoadingManager: INotifyPropertyChanged
+    public class LoadingManager : INotifyPropertyChanged
     {
-
         #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected bool SetProperty<T>(ref T backingStore, T value,
-          [CallerMemberName]string propertyName = "",
-          Action onChanged = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(backingStore, value))
-                return false;
-
-            backingStore = value;
-            onChanged?.Invoke();
-            OnPropertyChanged(propertyName);
-            return true;
-        }
-
-      
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        protected void OnPropertyChanged ([CallerMemberName] string propertyName = "")
         {
             var changed = PropertyChanged;
-            if (changed == null)
+
+            if( changed == null )
                 return;
 
             changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion
-        private bool isloading;
-
-        public bool IsLoading
+        protected bool SetProperty<T> (ref T backingStore, T value, [CallerMemberName] string propertyName = "", Action onChanged = null)
         {
-            get { return isloading; }
-            set { isloading = value;
-                OnPropertyChanged();
-            }
+            if( EqualityComparer<T>.Default.Equals(backingStore, value) )
+                return false;
+
+            backingStore = value;
+
+            onChanged?.Invoke();
+
+            OnPropertyChanged(propertyName);
+
+            return true;
         }
 
+        #endregion INotifyPropertyChanged
+
         private bool contentVisible;
+
+        private bool isloading;
 
         public bool ContentVisible
         {
             get { return contentVisible; }
-            set { contentVisible = value;
+            set
+            {
+                contentVisible = value;
+
                 OnPropertyChanged();
             }
         }
 
-
-
-        public void OnLoading(bool loadingToOn = true)
+        public bool IsLoading
         {
-             IsLoading = loadingToOn;
-            ContentVisible = false;
+            get { return isloading; }
+            set
+            {
+                isloading = value;
+                OnPropertyChanged();
+            }
         }
 
-        public void OffLoading(bool loadingToOff = false)
+        public void OffLoading (bool loadingToOff = false)
         {
             IsLoading = loadingToOff;
+
             ContentVisible = true;
         }
 
+        public void OnLoading (bool loadingToOn = true)
+        {
+            IsLoading = loadingToOn;
+
+            ContentVisible = false;
+        }
     }
 }

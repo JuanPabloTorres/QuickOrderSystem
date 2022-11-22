@@ -2,31 +2,30 @@
 using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.SettingVM
 {
-   public  class YourStoresViewModel:BaseViewModel
+    public class YourStoresViewModel : BaseViewModel
     {
+        private Store selectedStore;
 
         private User userinformation;
 
-        public User UserInformation
+        public YourStoresViewModel ()
         {
-            get { return userinformation; }
-            set
-            {
-                userinformation = value;
-                OnPropertyChanged();
-            }
-        }
+            UserInformation = App.LogUser;
 
-        private Store selectedStore;
+            StorePresenters = new ObservableCollection<StorePresenters>();
+
+            GoStoreControlPanelCommand = new Command<Guid>(async (value) =>
+            {
+                await GoStoreControlPanel(value);
+            });
+        }
 
         public Store SelectedStore
         {
@@ -34,72 +33,68 @@ namespace QuickOrderApp.ViewModels.SettingVM
             set
             {
                 selectedStore = value;
+
                 OnPropertyChanged();
 
-                if (!(SelectedStore.StoreId == Guid.Empty))
+                if( !( SelectedStore.StoreId == Guid.Empty ) )
                 {
                     GoStoreControlPanelCommand.Execute(SelectedStore.StoreId);
-                   
                 }
+            }
+        }
+
+        public ObservableCollection<StorePresenters> StorePresenters { get; set; }
+
+        public User UserInformation
+        {
+            get { return userinformation; }
+            set
+            {
+                userinformation = value;
+
+                OnPropertyChanged();
             }
         }
 
         protected ICommand GoStoreControlPanelCommand { get; set; }
 
-        public ObservableCollection<StorePresenters> StorePresenters { get; set; }
-
-
-        public YourStoresViewModel()
+        public async Task ExecuteLoadItems ()
         {
-            UserInformation = App.LogUser;
-            StorePresenters = new ObservableCollection<StorePresenters>();
-            GoStoreControlPanelCommand = new Command<Guid>(async (value) => 
-            {
-                await GoStoreControlPanel(value);
-            });
-        }
-
-        public async Task ExecuteLoadItems()
-        {
-
             TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
-            if (tokenExpManger.IsExpired())
+
+            if( tokenExpManger.IsExpired() )
             {
                 await tokenExpManger.CloseSession();
             }
             else
             {
-
-                if (StorePresenters.Count > 0)
+                if( StorePresenters.Count > 0 )
                 {
                     StorePresenters.Clear();
                 }
 
                 var yourStores = StoreDataStore.GetStoresFromUser(App.LogUser.UserId);
 
-                foreach (var item in yourStores)
+                foreach( var item in yourStores )
                 {
                     var storePresenter = new StorePresenters(item);
 
                     StorePresenters.Add(storePresenter);
                 }
-
             }
-
         }
 
-
-        async Task GoStoreControlPanel(Guid StoreId)
+        private async Task GoStoreControlPanel (Guid StoreId)
         {
             TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
-            if (tokenExpManger.IsExpired())
+
+            if( tokenExpManger.IsExpired() )
             {
                 await tokenExpManger.CloseSession();
             }
             else
             {
-
-            await Shell.Current.GoToAsync($"StoreControlPanelRoute?Id={StoreId.ToString()}", animate: true);
+                await Shell.Current.GoToAsync($"StoreControlPanelRoute?Id={StoreId.ToString()}", animate: true);
             }
         }
     }

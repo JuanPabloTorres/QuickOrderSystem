@@ -7,8 +7,6 @@
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
     xmlns:forms="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
-    xmlns:inputLayout="clr-namespace:Syncfusion.XForms.TextInputLayout;assembly=Syncfusion.Core.XForms"
-    xmlns:local="clr-namespace:QuickOrderApp.Utilities.Shopping"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Quick Order"
     BackgroundColor="{x:StaticResource BackgroundColor}"
@@ -34,12 +32,10 @@
                 Text="Quick Order"
                 TextColor="White"
                 VerticalTextAlignment="Center" />
-
         </StackLayout>
     </NavigationPage.TitleView>
 
     <ContentPage.Content>
-
 
         <StackLayout>
 
@@ -52,8 +48,6 @@
                 Loop="True"
                 VerticalOptions="Center"
                 WidthRequest="40" />
-
-
 
             <CollectionView
                 Margin="5"
@@ -114,7 +108,6 @@
                                     </StackLayout>
                                     <StackLayout Margin="4">
 
-
                                         <Label
                                             HorizontalOptions="Start"
                                             Style="{StaticResource DataLabel}"
@@ -138,7 +131,6 @@
                                         HasShadow="True"
                                         Text="View"
                                         TextColor="#2F3538" />
-
                                 </StackLayout>
                             </Frame>
                         </ContentView>
@@ -149,7 +141,6 @@
                 ItemsSource="{Binding Stores,Mode=TwoWay}"
                 Margin="5"
                 SelectedItem="{Binding SelectedStore}">
-
 
             -->
             <!--  Built in Cells  -->
@@ -166,20 +157,17 @@
                                 HeightRequest="200"
                                 Padding="0"
                                 IsClippedToBounds="True">
-                                        <Image Source="{Binding StoreImg,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill"/>
+                                        <Image Source="{Binding StoreImg,Converter={StaticResource BytesToImgConverter}}" Aspect="Fill" />
                                     </Frame>
                                     <Label Text="{Binding StoreName}" FontSize="Title" TextColor="Black" HorizontalOptions="Center"></Label>
-                                    <BoxView HeightRequest="0.1" HorizontalOptions="Fill" Margin="4" BackgroundColor="Black"/>
-                                    <button:SfButton Text="See Store" Command="{Binding GoHomeStoreCommand}" CornerRadius="5" Margin="15" BackgroundColor="DodgerBlue" TextColor="Black" FontAttributes="Bold" HasShadow="True"/>
-
+                                    <BoxView HeightRequest="0.1" HorizontalOptions="Fill" Margin="4" BackgroundColor="Black" />
+                                    <button:SfButton Text="See Store" Command="{Binding GoHomeStoreCommand}" CornerRadius="5" Margin="15" BackgroundColor="DodgerBlue" TextColor="Black" FontAttributes="Bold" HasShadow="True" />
                                 </StackLayout>
                             </Frame>
                         </ViewCell>
                 </DataTemplate>
             </CollectionView.ItemTemplate>-->
             <!--
-
-
         </CollectionView>-->
         </StackLayout>
     </ContentPage.Content>

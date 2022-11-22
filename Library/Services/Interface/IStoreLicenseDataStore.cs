@@ -6,11 +6,12 @@ namespace Library.Services.Interface
 {
     public interface IStoreLicenseDataStore : IDataStore<StoreLicense>
     {
-        bool StoreLicenseExists(Guid id);
-        Task<bool> PostStoreLicense(string email, string username);
+        Task<bool> IsLicenseInUsed (string license);
 
-        Task<bool> IsLicenseInUsed(string license);
+        Task<bool> PostStoreLicense (string email, string username);
 
-        Task<bool> UpdateLicenceInCode(Guid id);
+        bool StoreLicenseExists (Guid id);
+
+        Task<bool> UpdateLicenceInCode (Guid id);
     }
 }

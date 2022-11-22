@@ -1,27 +1,20 @@
-﻿using Library.Models;
-using Library.Services.Interface;
-using Stripe;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Library.Services.Interface;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.Components
 {
     public class LoginComponent
     {
-        public IUserDataStore userDataStore => DependencyService.Get<IUserDataStore>();
+        private string password;
 
         private string username;
 
-        public string Username
+        public LoginComponent (string _username, string _password)
         {
-            get { return username; }
-            set { username = value; }
+            this.Username = _username;
 
+            this.Password = _password;
         }
-
-        private string password;
 
         public string Password
         {
@@ -29,25 +22,16 @@ namespace QuickOrderApp.Components
             set { password = value; }
         }
 
+        public IUserDataStore userDataStore => DependencyService.Get<IUserDataStore>();
 
-
-        public LoginComponent(string _username,string _password)
+        public string Username
         {
-            this.Username = _username;
-            this.Password = _password;
-
-
-
+            get { return username; }
+            set { username = value; }
         }
-
 
         //public bool OnLogin()
         //{
-
         //}
-
-
-
-
     }
 }

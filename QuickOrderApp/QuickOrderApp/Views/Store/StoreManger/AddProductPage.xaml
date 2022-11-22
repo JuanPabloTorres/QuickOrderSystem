@@ -29,7 +29,6 @@
                         HeightRequest="200"
                         Source="{Binding ProductImg}" />
 
-
                     <!--<Image
                         x:Name="logo"
                         Aspect="Fill"
@@ -59,7 +58,6 @@
                     HorizontalOptions="Fill" />
 
                 <Entry Placeholder="Product Name" Text="{Binding ProductName}" />
-
 
                 <Editor
                     MinimumHeightRequest="120"
@@ -96,7 +94,6 @@
                     HasShadow="True"
                     Text="Complete"
                     TextColor="#2F3538" />
-
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

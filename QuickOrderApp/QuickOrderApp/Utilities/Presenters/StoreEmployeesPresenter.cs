@@ -9,17 +9,40 @@ namespace QuickOrderApp.Utilities.Presenters
     {
         private Employee employee;
 
+        private bool iswork;
+
+        public StoreEmployeesPresenter (Employee emp)
+        {
+            Employee = emp;
+
+            EditCommand = new Command(async () =>
+            {
+                await Shell.Current.GoToAsync("StoreEmployeeEditRoute");
+
+                MessagingCenter.Send<Employee>(emp, "EmpEdit");
+            });
+            DetailCommand = new Command(async () =>
+            {
+                await Shell.Current.GoToAsync("StoreEmployeeDetailRoute");
+
+                MessagingCenter.Send<Employee>(emp, "EmpDetail");
+            });
+        }
+
+        public ICommand DetailCommand { get; set; }
+
+        public ICommand EditCommand { get; set; }
+
         public Employee Employee
         {
             get { return employee; }
             set
             {
                 employee = value;
+
                 OnPropertyChanged();
             }
         }
-
-        private bool iswork;
 
         public bool IsWork
         {
@@ -27,32 +50,9 @@ namespace QuickOrderApp.Utilities.Presenters
             set
             {
                 iswork = value;
+
                 OnPropertyChanged();
             }
         }
-
-
-        public ICommand EditCommand { get; set; }
-        public ICommand DetailCommand { get; set; }
-
-        public StoreEmployeesPresenter(Employee emp)
-        {
-            Employee = emp;
-
-            EditCommand = new Command(async () =>
-            {
-                await Shell.Current.GoToAsync("StoreEmployeeEditRoute");
-                MessagingCenter.Send<Employee>(emp, "EmpEdit");
-
-            });
-            DetailCommand = new Command(async () =>
-            {
-                await Shell.Current.GoToAsync("StoreEmployeeDetailRoute");
-                MessagingCenter.Send<Employee>(emp, "EmpDetail");
-            });
-
-
-        }
-
     }
 }

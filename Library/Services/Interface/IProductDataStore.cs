@@ -7,13 +7,14 @@ namespace Library.Services.Interface
 {
     public interface IProductDataStore : IDataStore<Product>
     {
-        IEnumerable<Product> GetProductFromStore(Guid StoreId);
-        IEnumerable<Product> GetProductWithLowQuantity(Guid storeid, int lowquantity);
+        Task<IEnumerable<Product>> GetDifferentProductFromStore (IEnumerable<Product> productsAdded, Guid storeId);
 
-        Task<IEnumerable<Product>>GetSpecificProductTypeFromStore(Guid storeId, ProductType type);
+        IEnumerable<Product> GetProductFromStore (Guid StoreId);
 
-        Task<Product> SearchItemOfStore(string storeId, string item);
+        IEnumerable<Product> GetProductWithLowQuantity (Guid storeid, int lowquantity);
 
-        Task<IEnumerable<Product>> GetDifferentProductFromStore(IEnumerable<Product> productsAdded, Guid storeId);
+        Task<IEnumerable<Product>> GetSpecificProductTypeFromStore (Guid storeId, ProductType type);
+
+        Task<Product> SearchItemOfStore (string storeId, string item);
     }
 }

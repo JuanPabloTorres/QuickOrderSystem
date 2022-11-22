@@ -16,7 +16,6 @@
     <ContentPage.Content>
         <StackLayout>
 
-
             <forms:AnimationView
                 Animation="loading.json"
                 AutoPlay="True"
@@ -64,7 +63,6 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
 
-
                             <StackLayout>
                                 <StackLayout>
                                     <Frame
@@ -77,9 +75,7 @@
                                             Aspect="Fill"
                                             HeightRequest="150"
                                             Source="{Binding StoreImg, Converter={StaticResource BytesToImgConverter}}" />
-
                                     </Frame>
-
 
                                     <Label
                                         FontAttributes="Bold"
@@ -88,8 +84,6 @@
                                         Text="{Binding StoreName}"
                                         TextColor="Black"
                                         VerticalOptions="Center" />
-
-
                                 </StackLayout>
 
                                 <BoxView
@@ -108,16 +102,10 @@
                                     HorizontalOptions="Fill"
                                     Text="View"
                                     TextColor="#2F3538" />
-
                             </StackLayout>
-
-
-
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
-
                 </CollectionView>
-
             </Grid>
             <button:SfButton
                 Margin="10"

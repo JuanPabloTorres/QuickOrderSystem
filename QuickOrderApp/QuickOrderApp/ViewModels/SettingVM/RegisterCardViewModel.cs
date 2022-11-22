@@ -1,10 +1,7 @@
 ﻿using Library.Models;
 using QuickOrderApp.Managers;
-using QuickOrderApp.Utilities.Factories;
 using QuickOrderApp.Utilities.Static;
-using Stripe;
 using System;
-using System.Collections.Generic;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -12,20 +9,91 @@ namespace QuickOrderApp.ViewModels.SettingVM
 {
     public class RegisterCardViewModel : BaseViewModel
     {
+        private string cardnumber;
+
+        private Validator cardnumberValidator;
+
+        private string cvc;
+
+        private Validator cvcValidator;
 
         private string holdername;
 
-        public string HolderName
-        {
-            get { return holdername; }
-            set
-            {
-                holdername = value;
-                OnPropertyChanged();
-            }
-        }
+        private Validator holdernameValidator;
 
-        private string cardnumber;
+        private string month;
+
+        private Validator monthValidator;
+
+        private string year;
+
+        private Validator yearValidator;
+
+        public RegisterCardViewModel ()
+        {
+            PropertiesInitializer();
+
+            CompleteRegisterCardCommand = new Command(async () =>
+            {
+                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+
+                if( tokenExpManger.IsExpired() )
+                {
+                    await tokenExpManger.CloseSession();
+                }
+                else
+                {
+                    HolderNameValidator = ValidatorRules.EmptyOrNullValueRule(HolderName);
+
+                    CardNumberValidator = ValidatorRules.EmptyOrNullValueRule(CardNumber);
+
+                    YearValidator = ValidatorRules.EmptyOrNullValueRule(Year);
+
+                    MonthVaidator = ValidatorRules.EmptyOrNullValueRule(Month);
+
+                    CVCValidator = ValidatorRules.EmptyOrNullValueRule(CVC);
+
+                    if( !HolderNameValidator.HasError && !CardNumberValidator.HasError && !YearValidator.HasError && !MonthVaidator.HasError && !CVCValidator.HasError )
+                    {
+                        try
+                        {
+                            var cardData = new PaymentCard()
+                            {
+                                CardNumber = CardNumber,
+                                Cvc = CVC,
+                                HolderName = HolderName,
+                                Month = Month,
+                                Year = Year,
+                                PaymentCardId = Guid.NewGuid(),
+                                UserId = App.LogUser.UserId
+                            };
+
+                            var cardserviceResult = await stripeServiceDS.InsertStripeCardToStripeUser(cardData, App.LogUser.StripeUserId);
+
+                            if( !cardserviceResult.HasError )
+                            {
+                                cardData.StripeCardId = cardserviceResult.TokenId;
+
+                                var result = await CardDataStore.AddItemAsync(cardData);
+
+                                if( result )
+                                {
+                                    await Shell.Current.DisplayAlert("Notification", "Card succefully added.", "OK");
+                                }
+                            }
+                            else
+                            {
+                                await Shell.Current.DisplayAlert("Notification", cardserviceResult.ErrorMsg, "OK");
+                            }
+                        }
+                        catch( Exception e )
+                        {
+                            await Shell.Current.DisplayAlert("Notification", e.Message, "OK");
+                        }
+                    }
+                }
+            });
+        }
 
         public string CardNumber
         {
@@ -33,11 +101,23 @@ namespace QuickOrderApp.ViewModels.SettingVM
             set
             {
                 cardnumber = value;
+
                 OnPropertyChanged();
             }
         }
 
-        private string cvc;
+        public Validator CardNumberValidator
+        {
+            get { return cardnumberValidator; }
+            set
+            {
+                cardnumberValidator = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand CompleteRegisterCardCommand { get; set; }
 
         public string CVC
         {
@@ -45,11 +125,43 @@ namespace QuickOrderApp.ViewModels.SettingVM
             set
             {
                 cvc = value;
+
                 OnPropertyChanged();
             }
         }
 
-        private string month;
+        public Validator CVCValidator
+        {
+            get { return cvcValidator; }
+            set
+            {
+                cvcValidator = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public string HolderName
+        {
+            get { return holdername; }
+            set
+            {
+                holdername = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public Validator HolderNameValidator
+        {
+            get { return holdernameValidator; }
+            set
+            {
+                holdernameValidator = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         public string Month
         {
@@ -57,12 +169,21 @@ namespace QuickOrderApp.ViewModels.SettingVM
             set
             {
                 month = value;
+
                 OnPropertyChanged();
             }
         }
 
+        public Validator MonthVaidator
+        {
+            get { return monthValidator; }
+            set
+            {
+                monthValidator = value;
 
-        private string year;
+                OnPropertyChanged();
+            }
+        }
 
         public string Year
         {
@@ -70,150 +191,33 @@ namespace QuickOrderApp.ViewModels.SettingVM
             set
             {
                 year = value;
+
                 OnPropertyChanged();
             }
         }
-
-        private Validator holdernameValidator;
-
-        public Validator HolderNameValidator
-        {
-            get { return holdernameValidator; }
-            set { holdernameValidator = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Validator cardnumberValidator;
-
-        public Validator CardNumberValidator
-        {
-            get { return cardnumberValidator; }
-            set { cardnumberValidator = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Validator yearValidator;
 
         public Validator YearValidator
         {
             get { return yearValidator; }
-            set { yearValidator = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Validator monthValidator;
-
-        public Validator MonthVaidator
-        {
-            get { return monthValidator; }
-            set {
-                monthValidator = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Validator cvcValidator;
-
-        public Validator CVCValidator
-        {
-            get { return cvcValidator; }
-            set { cvcValidator = value;
-                OnPropertyChanged();
-            }
-        }
-
-
-        
-        public ICommand CompleteRegisterCardCommand { get; set; }
-
-        public RegisterCardViewModel()
-        {
-
-            PropertiesInitializer();
-
-
-            CompleteRegisterCardCommand = new Command(async () =>
+            set
             {
+                yearValidator = value;
 
-
-                TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
-                if (tokenExpManger.IsExpired())
-                {
-                    await tokenExpManger.CloseSession();
-                }
-                else
-                {
-
-                HolderNameValidator = ValidatorRules.EmptyOrNullValueRule(HolderName);
-                CardNumberValidator = ValidatorRules.EmptyOrNullValueRule(CardNumber);
-                YearValidator = ValidatorRules.EmptyOrNullValueRule(Year);
-                MonthVaidator = ValidatorRules.EmptyOrNullValueRule(Month);
-                CVCValidator = ValidatorRules.EmptyOrNullValueRule(CVC);
-
-
-                if (!HolderNameValidator.HasError && !CardNumberValidator.HasError && !YearValidator.HasError && !MonthVaidator.HasError && !CVCValidator.HasError)
-                {
-
-                    try
-                    {
-
-                        var cardData = new PaymentCard()
-                        {
-                            CardNumber = CardNumber,
-                            Cvc = CVC,
-                            HolderName = HolderName,
-                            Month = Month,
-                            Year = Year,
-                            PaymentCardId = Guid.NewGuid(),
-                            UserId = App.LogUser.UserId
-                        };
-
-                        var cardserviceResult = await stripeServiceDS.InsertStripeCardToStripeUser(cardData, App.LogUser.StripeUserId);
-
-                        if (!cardserviceResult.HasError)
-                        {
-                            cardData.StripeCardId = cardserviceResult.TokenId;
-                            var result = await CardDataStore.AddItemAsync(cardData);
-
-                            if (result)
-                            {
-                                await Shell.Current.DisplayAlert("Notification", "Card succefully added.", "OK");
-                            }
-                        }
-                        else
-                        {
-                            await Shell.Current.DisplayAlert("Notification", cardserviceResult.ErrorMsg, "OK");
-                        }
-
-
-                    }
-                    catch (Exception e)
-                    {
-
-                        await Shell.Current.DisplayAlert("Notification", e.Message, "OK");
-                    }
-
-
-                }
-                }
-               
-
-
-
-            });
+                OnPropertyChanged();
+            }
         }
 
-        void PropertiesInitializer()
+        private void PropertiesInitializer ()
         {
             HolderNameValidator = new Validator();
+
             CardNumberValidator = new Validator();
+
             CVCValidator = new Validator();
+
             YearValidator = new Validator();
+
             MonthVaidator = new Validator();
         }
-
     }
 }

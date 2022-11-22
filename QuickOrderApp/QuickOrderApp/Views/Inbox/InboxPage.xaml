@@ -33,7 +33,6 @@
 
                             <StackLayout BackgroundColor="White">
 
-
                                 <Label Style="{StaticResource TitleLabel}" Text="{Binding RequestTitle}" />
                                 <BoxView
                                     Margin="4"
@@ -67,14 +66,9 @@
                                     TextColor="#2F3538" />
                             </StackLayout>
                         </Frame>
-
-
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
-
             </CollectionView>
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

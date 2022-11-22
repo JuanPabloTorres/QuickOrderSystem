@@ -17,7 +17,6 @@
 
             <StackLayout>
 
-
                 <Grid VerticalOptions="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -49,8 +48,6 @@
                             HorizontalTextAlignment="Center"
                             Text="Your Information"
                             TextColor="#2F3538" />
-
-
                     </StackLayout>
 
                     <Grid Grid.Row="1">
@@ -60,7 +57,6 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
-
                         </Grid.RowDefinitions>
 
                         <Label
@@ -100,9 +96,6 @@
                             HorizontalTextAlignment="Center"
                             Text="Your Stores"
                             TextColor="#2F3538" />
-
-
-
                     </Grid>
 
                     <StackLayout Grid.Row="2">
@@ -138,8 +131,6 @@
                             HorizontalTextAlignment="Center"
                             Text="Terms And Conditions"
                             TextColor="#2F3538" />
-
-
                     </StackLayout>
                     <StackLayout Grid.Row="3">
                         <Label
@@ -162,13 +153,9 @@
                             HorizontalTextAlignment="Center"
                             Text="Sing Out"
                             TextColor="#2F3538" />
-
                     </StackLayout>
-
                 </Grid>
             </StackLayout>
         </ScrollView>
-
-
     </ContentPage.Content>
 </ContentPage>

@@ -14,14 +14,11 @@
     <ContentPage.Content>
         <ScrollView>
 
-
-
             <Grid VerticalOptions="Center">
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
-
                 </Grid.RowDefinitions>
 
                 <StackLayout Grid.Row="0">
@@ -41,12 +38,10 @@
 
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
-
 
                             <StackLayout Grid.Row="0">
 
@@ -60,13 +55,10 @@
                                     HeightRequest="0.1"
                                     HorizontalOptions="Fill" />
 
-
                                 <Label
                                     HorizontalOptions="Center"
                                     Style="{StaticResource DataLabel}"
                                     Text="{Binding StoreDescription}" />
-
-
                             </StackLayout>
 
                             <Grid Grid.Row="1">
@@ -91,14 +83,9 @@
                                     Text="Update Store"
                                     TextColor="#2F3538"
                                     VerticalOptions="End" />
-
-
                             </Grid>
                         </Grid>
-
                     </Frame>
-
-
                 </StackLayout>
 
                 <Grid Grid.Row="1">
@@ -108,7 +95,6 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-
                     </Grid.RowDefinitions>
 
                     <Label
@@ -145,17 +131,8 @@
                         HorizontalTextAlignment="Center"
                         Text="Cancel Subcription"
                         TextColor="#2F3538" />
-
-
-
                 </Grid>
-
-
-
             </Grid>
-
         </ScrollView>
-
-
     </ContentPage.Content>
 </ContentPage>

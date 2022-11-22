@@ -1,38 +1,26 @@
-﻿using Library.Models;
-using QuickOrderApp.ViewModels;
+﻿using QuickOrderApp.ViewModels;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace QuickOrderApp.Utilities.Presenters
 {
     public class WorkHourPresenter : BaseViewModel
     {
-        private string day;
+        private TimeSpan close;
 
-        public string Day
-        {
-            get { return day; }
-            set
-            {
-                day = value;
-                OnPropertyChanged();
-            }
-        }
+        private string day;
 
         private TimeSpan open;
 
-        public TimeSpan Open
-        {
-            get { return open; }
-            set
-            {
-                open = value;
-                OnPropertyChanged();
-            }
-        }
+        private bool willWork;
 
-        private TimeSpan close;
+        public WorkHourPresenter (string day)
+        {
+            Day = day;
+
+            Open = DateTime.Parse("8:00 AM").TimeOfDay;
+
+            Close = DateTime.Parse("3:00 PM").TimeOfDay;
+        }
 
         public TimeSpan Close
         {
@@ -40,33 +28,42 @@ namespace QuickOrderApp.Utilities.Presenters
             set
             {
                 close = value;
+
                 OnPropertyChanged();
             }
         }
 
-        private bool willWork;
+        public string Day
+        {
+            get { return day; }
+            set
+            {
+                day = value;
+
+                OnPropertyChanged();
+            }
+        }
+
+        public TimeSpan Open
+        {
+            get { return open; }
+            set
+            {
+                open = value;
+
+                OnPropertyChanged();
+            }
+        }
 
         public bool WillWork
         {
             get { return willWork; }
-            set { willWork = value;
+            set
+            {
+                willWork = value;
+
                 OnPropertyChanged();
             }
         }
-
-
-        public WorkHourPresenter(string day)
-        {
-            Day = day;
-
-            Open = DateTime.Parse("8:00 AM").TimeOfDay;
-            Close = DateTime.Parse("3:00 PM").TimeOfDay;
-
-        }
-
-       
-
-
-
     }
 }

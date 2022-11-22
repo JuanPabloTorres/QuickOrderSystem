@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-
-namespace QuickOrderApp.Utilities.Shopping
+﻿namespace QuickOrderApp.Utilities.Shopping
 {
-   public  class PaymentManager
+    public class PaymentManager
     {
-        public PaymentManager()
+        public PaymentManager ()
         {
-
         }
-
     }
 }

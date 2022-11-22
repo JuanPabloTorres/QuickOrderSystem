@@ -37,9 +37,7 @@
                         HasShadow="True"
                         Text="Search"
                         TextColor="#2F3538" />
-
                 </StackLayout>
-
             </Frame>
             <Label
                 Margin="8,0,0,0"
@@ -85,12 +83,9 @@
                                 </StackLayout>
                             </Frame>
                         </ContentView>
-
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

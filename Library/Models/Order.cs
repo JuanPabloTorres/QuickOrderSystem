@@ -5,32 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
-    [Table("Orders")]
-    public class Order:BaseModel
+    public enum Status
     {
-        [Key]
-        public Guid OrderId { get; set; }
-
-        public DateTime OrderDate { get; set; }
-
-        public ICollection<OrderProduct> OrderProducts { get; set; }
-
-        public Guid BuyerId { get; set; }
-
-        public Guid StoreId { get; set; }
-
-        [ForeignKey("StoreId")]
-        public Store StoreOrder { get; set; }
-
-        public Type OrderType { get; set; }
-        public Status OrderStatus { get; set; }
-
-        public Employee PrepareBy { get; set; }
-
-        bool IsSubmit { get; set; }
-
-        
-
+        InProccess,
+        Pending,
+        Completed,
+        OnTheWay,
+        NotSubmited,
+        Submited,
     }
 
     public enum Type
@@ -40,17 +22,29 @@ namespace Library.Models
         None
     }
 
-    public enum Status
+    [Table("Orders")]
+    public class Order : BaseModel
     {
-        InProccess,
-        Pending,
-        Completed,
-        OnTheWay,
-        NotSubmited,
-        Submited,
-       
+        public Guid BuyerId { get; set; }
+
+        public DateTime OrderDate { get; set; }
+
+        [Key]
+        public Guid OrderId { get; set; }
+
+        public ICollection<OrderProduct> OrderProducts { get; set; }
+
+        public Status OrderStatus { get; set; }
+
+        public Type OrderType { get; set; }
+
+        public Employee PrepareBy { get; set; }
+
+        public Guid StoreId { get; set; }
+
+        [ForeignKey("StoreId")]
+        public Store StoreOrder { get; set; }
+
+        private bool IsSubmit { get; set; }
     }
-
-
-
 }

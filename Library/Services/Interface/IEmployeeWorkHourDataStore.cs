@@ -6,6 +6,6 @@ namespace Library.Services.Interface
 {
     public interface IEmployeeWorkHourDataStore : IDataStore<EmployeeWorkHour>
     {
-        Task<IEnumerable<EmployeeWorkHour>> GetEmployeeWorkHours(string empId);
+        Task<IEnumerable<EmployeeWorkHour>> GetEmployeeWorkHours (string empId);
     }
 }

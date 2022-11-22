@@ -1,9 +1,6 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,27 +18,50 @@ namespace WebApiQuickOrder
 {
     public class Startup
     {
-
-       
-        public Startup(IConfiguration configuration)
+        public Startup (IConfiguration configuration)
         {
             Configuration = configuration;
-          
-            StripeConfiguration.ApiKey=Configuration.GetSection("Stripe")["SecretKey"];
+
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
         }
 
         public IConfiguration Configuration { get; }
 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if( env.IsProduction() )
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            //app.UseHttpsRedirection();
+            app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+
+                endpoints.MapHub<ComunicationHub>("/comunicationhub");
+            });
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices (IServiceCollection services)
         {
             services.AddDbContext<QOContext>(opts => opts.UseSqlServer(Configuration["ConnectionStrings:DevelopmentDBLocal"]));
+
             services.AddSignalR();
 
             services.Configure<OktaSettings>(Configuration.GetSection("Okta"));
-            services.AddSingleton<ITokenService, OktaTokenService>();
-            services.AddMvc();
 
+            services.AddSingleton<ITokenService, OktaTokenService>();
+
+            services.AddMvc();
 
             //services.AddIdentity<IdentityUser, IdentityRole>(options =>
             //{
@@ -55,6 +75,7 @@ namespace WebApiQuickOrder
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
+
                 options.SaveToken = true;
 
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -68,48 +89,23 @@ namespace WebApiQuickOrder
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
                     ClockSkew = TimeSpan.Zero
                 };
-
             });
-
-           
 
             services.AddAuthorization(config =>
             {
-              
                 //config.AddPolicy("AdmindAndEmployees", policy => policy.RequireRole("Admin","Employee"));
                 config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
+
                 config.AddPolicy(Policies.Employee, Policies.EmployeePolicy());
+
                 config.AddPolicy(Policies.UserAndEmployees, Policies.UserAndEmployeesPolicy());
+
                 config.AddPolicy(Policies.StoreControl, Policies.StoreControlPolicy());
-
             });
-          
+
             services.AddControllers();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsProduction())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            //app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            app.UseSignalR(routes =>
-            {
-                routes.MapHub<ComunicationHub>("/comunicationhub");
-            });
         }
     }
 }

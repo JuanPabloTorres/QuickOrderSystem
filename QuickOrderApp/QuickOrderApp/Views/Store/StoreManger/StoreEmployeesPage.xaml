@@ -24,7 +24,6 @@
                         <Frame Padding="0" Style="{StaticResource FrameStyle}">
                             <StackLayout Padding="5">
 
-
                                 <StackLayout Margin="3">
 
                                     <Label Style="{StaticResource DataLabel}" Text="{Binding Employee.EmployeeId, StringFormat='Employee #{0}'}" />
@@ -55,14 +54,11 @@
                                         HasShadow="True"
                                         Text="Detail" />
                                 </Grid>
-
                             </StackLayout>
                         </Frame>
                     </ContentView>
-
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
     </ContentPage.Content>
 </ContentPage>

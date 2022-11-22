@@ -8,8 +8,5 @@ namespace Library.Models
         public string Code { get; set; }
 
         public string Email { get; set; }
-
-
-
     }
 }

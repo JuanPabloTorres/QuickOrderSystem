@@ -41,7 +41,7 @@
                     Text="Choose Image"
                     TextColor="#2F3538" />
                 <StackLayout>
-                    <!--<Label Text="Store Name" FontSize="Title"/>-->
+                    <!--<Label Text="Store Name" FontSize="Title" />-->
                     <Entry Placeholder="Store Name" Text="{Binding StoreName}" />
 
                     <Entry Placeholder="Store Description" Text="{Binding StoreDescription}" />
@@ -92,7 +92,6 @@
                                             HorizontalOptions="FillAndExpand"
                                             Time="{Binding Close}" />
                                     </StackLayout>
-
                                 </StackLayout>
                                 <BoxView
                                     BackgroundColor="Black"
@@ -115,6 +114,5 @@
                     TextColor="#2F3538" />
             </StackLayout>
         </ScrollView>
-
     </ContentPage.Content>
 </ContentPage>

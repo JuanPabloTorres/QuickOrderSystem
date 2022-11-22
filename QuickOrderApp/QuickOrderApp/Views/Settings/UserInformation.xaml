@@ -6,7 +6,6 @@
     xmlns:button="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sfavatar="clr-namespace:Syncfusion.XForms.AvatarView;assembly=Syncfusion.Core.XForms"
     Title="Personal Information"
     BackgroundColor="{x:StaticResource BackgroundColor}"
     Routing.Route="UserInformationRoute"
@@ -23,7 +22,6 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -68,9 +66,6 @@
                                 <Label Style="{StaticResource DataLabel}" Text="Phone: " />
                                 <Label Style="{StaticResource DataLabel}" Text="{Binding Phone}" />
                             </StackLayout>
-
-
-
                         </StackLayout>
                     </StackLayout>
 
@@ -129,7 +124,6 @@
                     </Grid>
                 </Grid>
             </ScrollView>
-
         </Frame>
     </ContentPage.Content>
 </ContentPage>

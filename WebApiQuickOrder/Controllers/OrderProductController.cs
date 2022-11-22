@@ -15,25 +15,35 @@ namespace WebApiQuickOrder.Controllers
     {
         private readonly QOContext _context;
 
-        public OrderProductController(QOContext context)
+        public OrderProductController (QOContext context)
         {
             _context = context;
         }
 
-        // GET: api/OrderProduct
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderProduct>>> GetOrderProducts()
+        // DELETE: api/OrderProduct/5
+        [HttpDelete("{id}")]
+        public async Task<bool> DeleteOrderProduct (Guid id)
         {
-            return await _context.OrderProducts.ToListAsync();
+            var orderProduct = _context.OrderProducts.Where(p => p.OrderProductId == id).FirstOrDefault();
+            if( orderProduct == null )
+            {
+                return false;
+            }
+
+            _context.OrderProducts.Remove(orderProduct);
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
 
         // GET: api/OrderProduct/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderProduct>> GetOrderProduct(Guid id)
+        public async Task<ActionResult<OrderProduct>> GetOrderProduct (Guid id)
         {
             var orderProduct = await _context.OrderProducts.FindAsync(id);
 
-            if (orderProduct == null)
+            if( orderProduct == null )
             {
                 return NotFound();
             }
@@ -41,16 +51,53 @@ namespace WebApiQuickOrder.Controllers
             return orderProduct;
         }
 
+        // GET: api/OrderProduct
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OrderProduct>>> GetOrderProducts ()
+        {
+            return await _context.OrderProducts.ToListAsync();
+        }
+
+        [HttpGet("[action]/{id}")]
+        public bool OrderProductExists (Guid id)
+        {
+            return _context.OrderProducts.Any(e => e.OrderProductId == id);
+        }
+
+        [HttpGet("[action]/{userid}/{productId}/{orderId}")]
+        public bool OrderProductOfUserExistInOrder (Guid userid, Guid productId, Guid orderId)
+        {
+            return _context.OrderProducts.Any(e => e.BuyerId == userid && e.ProductIdReference == productId && e.OrderId == orderId);
+        }
+
+        [HttpGet("[action]/{productId}/{orderId}")]
+        public OrderProduct OrderProductOfUserExistOnOrder (Guid productId, Guid orderId)
+        {
+            return _context.OrderProducts.Where(e => e.ProductIdReference == productId && e.OrderId == orderId).FirstOrDefault();
+        }
+
+        // POST: api/OrderProduct
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPost]
+        public async Task<ActionResult<OrderProduct>> PostOrderProduct (OrderProduct orderProduct)
+        {
+            _context.OrderProducts.Add(orderProduct);
+
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetOrderProduct", new { id = orderProduct.OrderProductId }, orderProduct);
+        }
+
         // PUT: api/OrderProduct/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-        public async Task<bool> PutOrderProduct(Guid id, OrderProduct orderProduct)
+        public async Task<bool> PutOrderProduct (Guid id, OrderProduct orderProduct)
         {
-
             var product = _context.OrderProducts.Where(o => o.OrderProductId == orderProduct.OrderProductId).FirstOrDefault();
 
-            if (product != null)
+            if( product != null )
             {
                 _context.OrderProducts.Remove(product);
 
@@ -91,52 +138,6 @@ namespace WebApiQuickOrder.Controllers
             //}
 
             //return NoContent();
-        }
-
-        // POST: api/OrderProduct
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<OrderProduct>> PostOrderProduct(OrderProduct orderProduct)
-        {
-            _context.OrderProducts.Add(orderProduct);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetOrderProduct", new { id = orderProduct.OrderProductId }, orderProduct);
-        }
-
-        // DELETE: api/OrderProduct/5
-        [HttpDelete("{id}")]
-        public async Task<bool> DeleteOrderProduct(Guid id)
-        {
-            var orderProduct = _context.OrderProducts.Where(p => p.OrderProductId == id).FirstOrDefault();
-            if (orderProduct == null)
-            {
-                return false;
-            }
-
-            _context.OrderProducts.Remove(orderProduct);
-            await _context.SaveChangesAsync();
-
-            return true;
-        }
-
-        [HttpGet("[action]/{id}")]
-        public bool OrderProductExists(Guid id)
-        {
-            return _context.OrderProducts.Any(e => e.OrderProductId == id);
-        }
-
-        [HttpGet("[action]/{userid}/{productId}/{orderId}")]
-        public bool OrderProductOfUserExistInOrder(Guid userid, Guid productId, Guid orderId)
-        {
-            return _context.OrderProducts.Any(e => e.BuyerId == userid && e.ProductIdReference == productId && e.OrderId == orderId);
-        }
-
-        [HttpGet("[action]/{productId}/{orderId}")]
-        public OrderProduct OrderProductOfUserExistOnOrder(Guid productId, Guid orderId)
-        {
-            return _context.OrderProducts.Where(e => e.ProductIdReference == productId && e.OrderId == orderId).FirstOrDefault();
         }
     }
 }

@@ -86,5 +86,4 @@
             </ContentView>
         </AbsoluteLayout>
     </ScrollView>
-
 </pages:PopupPage>

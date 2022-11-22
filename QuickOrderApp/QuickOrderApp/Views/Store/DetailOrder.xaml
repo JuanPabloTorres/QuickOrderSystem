@@ -54,7 +54,6 @@
 
                                             <Label Style="{StaticResource DataLabel}" Text="{Binding ProductPrice, StringFormat='{0:C}'}" />
                                             <Label Style="{StaticResource DataLabel}" Text="{Binding Quantity, StringFormat='Items: {0}'}" />
-
                                         </StackLayout>
                                         <button:SfButton
                                             Margin="10"
@@ -66,13 +65,9 @@
                                             IsVisible="{Binding AreVisible}"
                                             Text="Remove"
                                             TextColor="#2F3538" />
-
                                     </StackLayout>
                                 </Frame>
                             </ContentView>
-
-
-
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
@@ -99,7 +94,6 @@
                                 IsChecked="{Binding IsDelivery}"
                                 Text="Delivery"
                                 TextColor="#2F3538" />
-
                         </button:SfRadioGroup>
                     </StackLayout>
                 </Frame>
@@ -117,7 +111,6 @@
 
                             <StackLayout Margin="6,0,0,0">
 
-
                                 <Label Style="{StaticResource ReceiptLabel}" Text="{Binding OrderDetail.OrderId, StringFormat='Order #{0}'}" />
                                 <Label Style="{StaticResource ReceiptLabel}" Text="{Binding OrderDetail.OrderDate, StringFormat='Date: {0:MM/dd/YYYY}'}" />
                                 <Label Style="{StaticResource ReceiptLabel}" Text="{Binding OrderStatus, StringFormat='Items:{0}'}" />
@@ -133,7 +126,6 @@
                                 <Label Style="{StaticResource ReceiptLabel}" Text="{Binding Total, StringFormat='Total:{0:C}'}" />
                             </StackLayout>
 
-
                             <zxing:ZXingBarcodeImageView
                                 Margin="4,0,4,0"
                                 BackgroundColor="#F0F0F0"
@@ -144,20 +136,12 @@
                                 VerticalOptions="Center"
                                 WidthRequest="150">
 
-
-
                                 <zxing:ZXingBarcodeImageView.BarcodeOptions>
                                     <zxcm:EncodingOptions Width="150" Height="150" />
                                 </zxing:ZXingBarcodeImageView.BarcodeOptions>
-
                             </zxing:ZXingBarcodeImageView>
-
-
-
-
                         </StackLayout>
                     </StackLayout>
-
                 </Frame>
 
                 <button:SfButton
@@ -172,9 +156,7 @@
                     IsVisible="{Binding AreVisible}"
                     Text="Checkout"
                     TextColor="#2F3538" />
-
             </StackLayout>
         </ScrollView>
-
     </ContentPage.Content>
 </ContentPage>

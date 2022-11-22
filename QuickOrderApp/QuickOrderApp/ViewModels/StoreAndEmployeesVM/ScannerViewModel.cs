@@ -1,70 +1,63 @@
 ﻿using Library.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
-using ZXing;
 
 namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 {
-	[QueryProperty("OrderScannedId", "Id")]
-   public  class ScannerViewModel:BaseViewModel
+    [QueryProperty("OrderScannedId", "Id")]
+    public class ScannerViewModel : BaseViewModel
     {
+        private string orderIdScanned;
 
-		private string orderIdScanned;
+        private Order orderScanned;
 
-		public string OrderIdScanned
-		{
-			get { return orderIdScanned; }
-			set { orderIdScanned = value;
-				OnPropertyChanged();
-			}
-		}
+        private string orderscannedId;
 
-		private string orderscannedId;
+        public ScannerViewModel ()
+        {
+            MessagingCenter.Subscribe<Order>(this, "orderscanned", (sender) =>
+            {
+                OrderScanned = sender;
+            });
+        }
 
-		public string OrderScannedId
-		{
-			get { return orderscannedId; }
-			set { orderscannedId = value;
-				OnPropertyChanged();
+        public string OrderIdScanned
+        {
+            get { return orderIdScanned; }
+            set
+            {
+                orderIdScanned = value;
 
-				orderDataStore.GetItemAsync(OrderScannedId);
-			}
-		}
+                OnPropertyChanged();
+            }
+        }
 
+        public Order OrderScanned
+        {
+            get { return orderScanned; }
+            set
+            {
+                orderScanned = value;
 
-		private Order orderScanned;
+                OnPropertyChanged();
+            }
+        }
 
-		public Order OrderScanned
-		{
-			get { return orderScanned; }
-			set { orderScanned = value;
-				OnPropertyChanged();
-			}
-		}
+        public string OrderScannedId
+        {
+            get { return orderscannedId; }
+            set
+            {
+                orderscannedId = value;
 
+                OnPropertyChanged();
 
+                orderDataStore.GetItemAsync(OrderScannedId);
+            }
+        }
 
-		public ICommand ScanndCommad => new Command (() => 
-		{
-			
-
-		});
-		public ScannerViewModel()
-		{
-
-			MessagingCenter.Subscribe<Order>(this, "orderscanned", (sender) => 
-			{
-
-				OrderScanned = sender;
-			
-			});
-
-		}
-
-	
-
-	}
+        public ICommand ScanndCommad => new Command(() =>
+         {
+         });
+    }
 }

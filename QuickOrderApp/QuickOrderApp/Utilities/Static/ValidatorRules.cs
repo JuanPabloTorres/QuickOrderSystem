@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using ZXing;
 
 namespace QuickOrderApp.Utilities.Static
 {
     public static class ValidatorRules
     {
-
-        public static Validator EmailPatternRule(string emailValue)
+        public static Validator EmailPatternRule (string emailValue)
         {
-            if (!String.IsNullOrEmpty(emailValue))
+            if( !String.IsNullOrEmpty(emailValue) )
             {
-
                 Regex regex = new Regex(@"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z");
+
                 Match match = regex.Match(emailValue);
 
-                if (match.Success)
+                if( match.Success )
                 {
                     var goodValidator = new Validator()
                     {
@@ -51,13 +48,13 @@ namespace QuickOrderApp.Utilities.Static
             }
         }
 
-        public static Validator EmptyOrNullValueRule(string value)
+        public static Validator EmptyOrNullValueRule (string value)
         {
-            if (!string.IsNullOrEmpty(value))
+            if( !string.IsNullOrEmpty(value) )
             {
                 var goodValidator = new Validator()
                 {
-                    ErrorMessage =string.Empty,
+                    ErrorMessage = string.Empty,
                     HasError = false
                 };
 
@@ -75,9 +72,9 @@ namespace QuickOrderApp.Utilities.Static
             }
         }
 
-        public static Validator PasswordAndConfirmPasswordEquals(string password, string confirmpassword)
+        public static Validator PasswordAndConfirmPasswordEquals (string password, string confirmpassword)
         {
-            if (password == confirmpassword)
+            if( password == confirmpassword )
             {
                 var goodValidator = new Validator()
                 {
@@ -99,14 +96,11 @@ namespace QuickOrderApp.Utilities.Static
             }
         }
 
-
-        public static bool ValidationsHaveErrors(IList<Validator> validators)
+        public static bool ValidationsHaveErrors (IList<Validator> validators)
         {
             bool result = validators.Any(v => v.HasError == true);
 
             return result;
-          
         }
-
     }
 }

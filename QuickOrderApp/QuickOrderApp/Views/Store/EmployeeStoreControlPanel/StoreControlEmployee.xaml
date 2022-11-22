@@ -13,7 +13,6 @@
     mc:Ignorable="d">
     <ContentPage.Content>
 
-
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -24,7 +23,6 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-
             </Grid.RowDefinitions>
             <Frame
                 Grid.Row="0"
@@ -75,7 +73,6 @@
                 Padding="3"
                 Style="{StaticResource FrameStyle}">
 
-
                 <StackLayout
                     Grid.Row="6"
                     HorizontalOptions="Center"
@@ -90,7 +87,6 @@
                         Text="{Binding StoreEmployee.Type, StringFormat='{0}'}"
                         TextColor="Orange" />
                 </StackLayout>
-
             </Frame>
 
             <CollectionView
@@ -146,16 +142,11 @@
                                         TextColor="Red"
                                         VerticalOptions="Center" />
                                 </StackLayout>
-
                             </StackLayout>
-
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-
-
         </Grid>
-
     </ContentPage.Content>
 </ContentPage>

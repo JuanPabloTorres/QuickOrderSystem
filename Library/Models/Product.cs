@@ -5,32 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
-    [Table("Products")]
-    public class Product
-    {
-        [Key]
-        public Guid ProductId { get; set; }
-
-        [DisplayName("Image")]
-        public byte[] ProductImage { get; set; }
-
-        [DisplayName("Product")]
-        public string ProductName { get; set; }
-
-        [DisplayName("Description")]
-        public string ProductDescription { get; set; }
-
-        [DisplayName("Price")]
-        public double Price { get; set; }
-        [DisplayName("Inventory")]
-        public int InventoryQuantity { get; set; }
-
-        public Guid StoreId { get; set; }
-
-        public ProductType Type { get; set; }
-    }
-
-
     public enum ProductType
     {
         Carnes,
@@ -43,5 +17,31 @@ namespace Library.Models
         Animales,
         Juguetes,
         Otro
+    }
+
+    [Table("Products")]
+    public class Product
+    {
+        [DisplayName("Inventory")]
+        public int InventoryQuantity { get; set; }
+
+        [DisplayName("Price")]
+        public double Price { get; set; }
+
+        [DisplayName("Description")]
+        public string ProductDescription { get; set; }
+
+        [Key]
+        public Guid ProductId { get; set; }
+
+        [DisplayName("Image")]
+        public byte[] ProductImage { get; set; }
+
+        [DisplayName("Product")]
+        public string ProductName { get; set; }
+
+        public Guid StoreId { get; set; }
+
+        public ProductType Type { get; set; }
     }
 }

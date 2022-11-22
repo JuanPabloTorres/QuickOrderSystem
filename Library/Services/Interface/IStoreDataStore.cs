@@ -7,19 +7,22 @@ namespace Library.Services.Interface
 {
     public interface IStoreDataStore : IDataStore<Store>
     {
-        IEnumerable<Store> GetStoresFromUser(Guid userid);
-        Task<IEnumerable<Store>> SearchStore(string searchStore);
-        Task<IEnumerable<Store>> GetSpecificStoreCategory(string category);
-        Task<string> GetStoreDestinationPaymentKey(Guid storeId);
+        Task<bool> DisableStore (Store store);
 
-        Task<string> GetStoreDestinationPublicPaymentKey(Guid storeId);
+        Task<IEnumerable<Store>> GetAvailableStore ();
 
-        Task<bool> DisableStore(Store store);
+        Task<Store> GetAvailableStoreInformation (Guid id);
 
-        Task<IEnumerable<Store>> GetAvailableStore();
+        Task<IEnumerable<Store>> GetDifferentStore (IEnumerable<Store> storesAdded);
 
-        Task<Store> GetAvailableStoreInformation(Guid id);
+        Task<IEnumerable<Store>> GetSpecificStoreCategory (string category);
 
-        Task<IEnumerable<Store>> GetDifferentStore(IEnumerable<Store> storesAdded);
+        Task<string> GetStoreDestinationPaymentKey (Guid storeId);
+
+        Task<string> GetStoreDestinationPublicPaymentKey (Guid storeId);
+
+        IEnumerable<Store> GetStoresFromUser (Guid userid);
+
+        Task<IEnumerable<Store>> SearchStore (string searchStore);
     }
 }

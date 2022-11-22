@@ -7,15 +7,15 @@ namespace Library.Models
     [Table("Logins")]
     public class Login
     {
-        [Key]
-        public Guid LoginId { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-
-
         public bool IsConnected { get; set; }
 
+        [Key]
+        public Guid LoginId { get; set; }
+
+        public string Password { get; set; }
+
         public Guid UserId { get; set; }
-       
+
+        public string Username { get; set; }
     }
 }

@@ -7,21 +7,22 @@ namespace Library.Services.Interface
 {
     public interface IOrderDataStore : IDataStore<Order>
     {
-        Order HaveOrderOfSpecificStore(Guid userid, Guid storeid,string token);
-        IEnumerable<Order> GetUserOrders(Guid userid);
+        Task<bool> DisableOrder (Guid orderId);
 
-        Task<IEnumerable<Order>> GetStoreOrders(Guid storeId,string token);
+        Task<IEnumerable<Order>> GetOrdersOfStoreOfUserWithSpecifiStatus (Guid userid, Guid storeid, Status status);
 
-        Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status,string token);
+        Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatus (Guid userid, Status status, string token);
 
-        IEnumerable<Order> GetUserOrdersWithToken(Guid userid, string token);
-        IEnumerable<Order> GetUserOrdersOfStore(Guid userid, Guid storeid);
+        Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatusDifferent (IEnumerable<Order> ordersAdded, Status status, Guid userid);
 
-        Task<IEnumerable<Order>> GetOrdersOfStoreOfUserWithSpecifiStatus(Guid userid, Guid storeid, Status status);
+        Task<IEnumerable<Order>> GetStoreOrders (Guid storeId, string token);
 
+        IEnumerable<Order> GetUserOrders (Guid userid);
 
-        Task<IEnumerable<Order>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Order> ordersAdded,Status status,Guid userid);
+        IEnumerable<Order> GetUserOrdersOfStore (Guid userid, Guid storeid);
 
-        Task<bool> DisableOrder(Guid orderId);
+        IEnumerable<Order> GetUserOrdersWithToken (Guid userid, string token);
+
+        Order HaveOrderOfSpecificStore (Guid userid, Guid storeid, string token);
     }
 }

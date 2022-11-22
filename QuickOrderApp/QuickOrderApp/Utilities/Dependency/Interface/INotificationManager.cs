@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace QuickOrderApp.Utilities.Dependency.Interface
 {
@@ -8,10 +6,10 @@ namespace QuickOrderApp.Utilities.Dependency.Interface
     {
         event EventHandler NotificationReceived;
 
-        void Initialize();
+        void Initialize ();
 
-        int ScheduleNotification(string title, string message);
+        void ReceiveNotification (string title, string message);
 
-        void ReceiveNotification(string title, string message);
+        int ScheduleNotification (string title, string message);
     }
 }

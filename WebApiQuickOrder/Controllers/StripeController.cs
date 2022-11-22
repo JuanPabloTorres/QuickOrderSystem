@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Library.DTO;
+﻿using Library.DTO;
 using Library.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Stripe;
-
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using WebApiQuickOrder.Context;
 
 namespace WebApiQuickOrder.Controllers
@@ -20,19 +16,179 @@ namespace WebApiQuickOrder.Controllers
     [ApiController]
     public class StripeController : ControllerBase
     {
-
-        IConfiguration _configuration;
         private readonly QOContext _context;
 
-        public StripeController(IConfiguration configuration , QOContext context)
+        private IConfiguration _configuration;
+
+        public StripeController (IConfiguration configuration, QOContext context)
         {
             this._configuration = configuration;
+
             _context = context;
         }
 
+        [HttpGet("[action]/{customerId}")]
+        public async Task<bool> CancelSubcription (string customerId)
+        {
+            var subcription = await _context.Subcriptions.Where(sub => sub.StripeCustomerId == customerId && sub.IsDisable == false).FirstOrDefaultAsync();
+
+            if( subcription != null )
+            {
+                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
+
+                var options = new SubscriptionUpdateOptions
+                {
+                    CancelAtPeriodEnd = true,
+                };
+
+                var service = new SubscriptionService();
+
+                var resultToken = await service.UpdateAsync(subcription.StripeSubCriptionID, options);
+
+                if( resultToken.CancelAtPeriodEnd )
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        [HttpGet("[action]/{customerId}")]
+        public async Task<string> CreateACustomerSubcription (string customerId)
+        {
+            try
+            {
+                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
+
+                //==================================================================
+                // Create Product Subcription
+
+                var productoptions = new ProductCreateOptions
+                {
+                    Name = "Quick Order Subcription",
+                    Active = true,
+                    Description = "Quick Order Admin System Subcription",
+                    Type = "service"
+                };
+
+                var productservice = new ProductService();
+
+                var producttoken = await productservice.CreateAsync(productoptions);
+
+                var priceoptions = new PriceCreateOptions
+                {
+                    UnitAmount = 200,
+                    Currency = "usd",
+                    Recurring = new PriceRecurringOptions
+                    {
+                        Interval = "month",
+                    },
+                    Product = producttoken.Id,
+                };
+
+                var priceservice = new PriceService();
+
+                var priceservicetoken = await priceservice.CreateAsync(priceoptions);
+
+                //======================================================================= End Create Product Subcription
+
+                //===================================================================================
+                //Create Subcription to store
+
+                var options = new SubscriptionCreateOptions
+                {
+                    Customer = customerId,
+                    Items = new List<SubscriptionItemOptions>
+                {
+                    new SubscriptionItemOptions
+                    {
+                        Price = priceservicetoken.Id,
+                    },
+                  },
+                };
+
+                var service = new SubscriptionService();
+
+                Subscription subscription = await service.CreateAsync(options);
+
+                if( !string.IsNullOrEmpty(subscription.Id) )
+                {
+                    //var newSubcription = new Subcription()
+                    //{
+                    //    StripeCustomerId = customerId,
+                    //    StripeSubCriptionID = subscription.Id
+                    //};
+
+                    //_context.Subcriptions.Add(newSubcription);
+
+                    //try
+                    //{
+                    //_context.SaveChanges();
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    Console.WriteLine(e);
+                    //}
+
+                    return subscription.Id;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            catch( Exception e )
+            {
+                Console.WriteLine(e);
+
+                return string.Empty;
+            }
+        }
 
         [HttpPost("[action]")]
-        public async Task<string> CreateStripeCustomer(UserDTO userDTO)
+        public async Task<StripePaymentCardResult> CreateCardToken (PaymentCard paymentCard)
+        {
+            try
+            {
+                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["publickey"];
+
+                var service = new ChargeService();
+
+                var tokenoptions = new TokenCreateOptions()
+                {
+                    Card = new CreditCardOptions()
+                    {
+                        Number = paymentCard.CardNumber,
+                        ExpYear = long.Parse(paymentCard.Year),
+                        ExpMonth = long.Parse(paymentCard.Month),
+                        Cvc = paymentCard.Cvc,
+                        Name = paymentCard.HolderName,
+                    },
+                };
+
+                var tokenService = new TokenService();
+
+                var stripeToken = await tokenService.CreateAsync(tokenoptions);
+
+                return new StripePaymentCardResult(stripeToken.Id);
+            }
+            catch( Exception e )
+            {
+                var result = new StripePaymentCardResult(true, e.Message);
+
+                return result;
+            }
+        }
+
+        [HttpPost("[action]")]
+        public async Task<string> CreateStripeCustomer (UserDTO userDTO)
         {
             //Crear customer en Quick Order Stripe Account
             StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
@@ -45,17 +201,15 @@ namespace WebApiQuickOrder.Controllers
                 Email = userDTO.Email,
                 Phone = userDTO.Phone,
                 Address = new AddressOptions() { Line1 = userDTO.Address }
-
-
             };
 
             //Mando un api call de crear un customer
             var customerservice = new CustomerService();
+
             var customertoken = await customerservice.CreateAsync(optionsCustomers);
 
-
             //Verificamos que el id hay sido creado de manera correcta
-            if (!string.IsNullOrEmpty(customertoken.Id))
+            if( !string.IsNullOrEmpty(customertoken.Id) )
             {
                 // Retornamos el valor id del customer.
                 return customertoken.Id;
@@ -66,172 +220,62 @@ namespace WebApiQuickOrder.Controllers
             }
         }
 
-        [HttpPost("[action]")]
-        public async Task<bool> UpdateStripeCustomer(UserDTO updateinformation)
-        {
-            try
-            {
-                var options = new CustomerUpdateOptions
-                {
-                    Description = "Customer Update From Quick Order",
-                    Name = updateinformation.Name,
-                    Email = updateinformation.Email,
-                    Phone = updateinformation.Phone,
-                    Address = new AddressOptions() { Line1 = updateinformation.Address }
-
-                };
-                var service = new CustomerService();
-                var updateResult = await service.UpdateAsync(updateinformation.StripeCustomerId, options);
-
-                if (!string.IsNullOrEmpty(updateResult.Id))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            catch (Exception e)
-            {
-
-                Console.WriteLine(e.Message);
-
-                return false;
-            }
-
-        }
-
-        [HttpPost("[action]/{stripeuserId}")]
-        public async Task<string> InsertStripeCardToCustomer(PaymentCard paymentCard,string stripeuserId)
-        {
-
-            try
-            {
-                //Insertar tarjeta a un customer
-                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
-
-                //Obtenemos los valores de la tarjeta 
-                var tokenoptions = new TokenCreateOptions()
-                {
-                     
-                    Card = new CreditCardOptions()
-                    {
-                        
-                        Number = paymentCard.CardNumber,
-                        ExpYear = long.Parse(paymentCard.Year),
-                        ExpMonth = long.Parse(paymentCard.Month),
-                        Cvc = paymentCard.Cvc,
-                        Name = paymentCard.HolderName,
-
-                    },
-                };
-
-                //Creamos el token de la tarjeta
-                var tokenService = new TokenService();
-
-                var stripeToken = await tokenService.CreateAsync(tokenoptions);
-
-
-                //El token pasara la informacion necesaria de la tarjeta
-                var CardCreateoptions = new CardCreateOptions
-                {
-                    Source = stripeToken.Id,
-                };
-
-                //Comenzamos a usar el servicio de la tarjeta.
-                var cardservice = new CardService();
-
-                //Creamos la tarjeta para un el customer de stripe 
-                var cardserviceToken = await cardservice.CreateAsync(stripeuserId, CardCreateoptions);
-
-
-                //Verificamos los valores si son correctos.
-                if (!string.IsNullOrEmpty(cardserviceToken.Id))
-                {
-                    return cardserviceToken.Id;
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-            catch (Exception e)
-            {
-
-                return e.Message;
-            }
-           
-        }
-
-        [HttpPost("[action]/{stripeuserId}")]
-        public async Task<StripePaymentCardResult> InsertStripeCardToStripeUser(PaymentCard paymentCard, string stripeuserId)
-        {
-
-            try
-            {
-                //Insertar tarjeta a un customer
-                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
-
-                //Obtenemos los valores de la tarjeta 
-                var tokenoptions = new TokenCreateOptions()
-                {
-                    Card = new CreditCardOptions()
-                    {
-                        Number = paymentCard.CardNumber,
-                        ExpYear = long.Parse(paymentCard.Year),
-                        ExpMonth = long.Parse(paymentCard.Month),
-                        Cvc = paymentCard.Cvc,
-                        Name = paymentCard.HolderName,
-
-                    },
-                };
-
-                //Creamos el token de la tarjeta
-                var tokenService = new TokenService();
-
-                var stripeToken = await tokenService.CreateAsync(tokenoptions);
-
-
-                //El token pasara la informacion necesaria de la tarjeta
-                var CardCreateoptions = new CardCreateOptions
-                {
-                    Source = stripeToken.Id,
-                };
-
-                //Comenzamos a usar el servicio de la tarjeta.
-                var cardservice = new CardService();
-
-                //Creamos la tarjeta para un el customer de stripe 
-                var cardserviceToken = await cardservice.CreateAsync(stripeuserId, CardCreateoptions);
-
-
-                //Verificamos los valores si son correctos.
-                if (!string.IsNullOrEmpty(cardserviceToken.Id))
-                {
-
-                    var result = new StripePaymentCardResult(cardserviceToken.Id);
-                    return result;
-                }
-                else
-                {
-                    return new StripePaymentCardResult(true, "Token could not be creted try again.");
-                }
-            }
-            catch (Exception e)
-            {
-
-                return new StripePaymentCardResult(true, e.Message);
-            }
-
-        }
-
-        [HttpGet("[action]/{customerId}/{customercardId}")]
-        public async Task<string> GetCustomerCardId(string customerId,string customercardId)
+        public async Task<string> CreateSubcritionProduct ()
         {
             StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
 
+            var productoptions = new ProductCreateOptions
+            {
+                Name = "Quick Order Subcription",
+                Active = true,
+                Description = "Quick Order Admin System Subcription",
+                Type = "service"
+            };
+
+            var productservice = new ProductService();
+
+            var producttoken = await productservice.CreateAsync(productoptions);
+
+            var priceoptions = new PriceCreateOptions
+            {
+                UnitAmount = 200,
+                Currency = "usd",
+                Recurring = new PriceRecurringOptions
+                {
+                    Interval = "month",
+                },
+                Product = producttoken.Id,
+            };
+            var priceservice = new PriceService();
+
+            var pricetoken = await priceservice.CreateAsync(priceoptions);
+
+            if( !string.IsNullOrEmpty(producttoken.Id) )
+            {
+                return producttoken.Id;
+            }
+            else
+            {
+                return string.Empty;
+            }
+        }
+
+        [HttpGet("[action]/{customerId}/{cardId}")]
+        public async Task<bool> DeleteCardFromCustomer (string customerId, string cardId)
+        {
+            StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
+
+            var service = new Stripe.CardService();
+
+            var cardToken = await service.DeleteAsync(customerId, cardId);
+
+            return cardToken.Deleted.Value;
+        }
+
+        [HttpGet("[action]/{customerId}/{customercardId}")]
+        public async Task<string> GetCustomerCardId (string customerId, string customercardId)
+        {
+            StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
 
             var customerService = new CustomerService();
 
@@ -240,9 +284,10 @@ namespace WebApiQuickOrder.Controllers
             var service = new CardService();
 
             var customerToken = await customerService.GetAsync(customerId);
-            var UserCardToken = await service.GetAsync(customerToken.Id,customercardId);
 
-            if (!string.IsNullOrEmpty(UserCardToken.Id))
+            var UserCardToken = await service.GetAsync(customerToken.Id, customercardId);
+
+            if( !string.IsNullOrEmpty(UserCardToken.Id) )
             {
                 return UserCardToken.Id;
             }
@@ -250,14 +295,120 @@ namespace WebApiQuickOrder.Controllers
             {
                 return string.Empty;
             }
+        }
 
+        [HttpPost("[action]/{stripeuserId}")]
+        public async Task<string> InsertStripeCardToCustomer (PaymentCard paymentCard, string stripeuserId)
+        {
+            try
+            {
+                //Insertar tarjeta a un customer
+                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
 
+                //Obtenemos los valores de la tarjeta
+                var tokenoptions = new TokenCreateOptions()
+                {
+                    Card = new CreditCardOptions()
+                    {
+                        Number = paymentCard.CardNumber,
+                        ExpYear = long.Parse(paymentCard.Year),
+                        ExpMonth = long.Parse(paymentCard.Month),
+                        Cvc = paymentCard.Cvc,
+                        Name = paymentCard.HolderName,
+                    },
+                };
+
+                //Creamos el token de la tarjeta
+                var tokenService = new TokenService();
+
+                var stripeToken = await tokenService.CreateAsync(tokenoptions);
+
+                //El token pasara la informacion necesaria de la tarjeta
+                var CardCreateoptions = new CardCreateOptions
+                {
+                    Source = stripeToken.Id,
+                };
+
+                //Comenzamos a usar el servicio de la tarjeta.
+                var cardservice = new CardService();
+
+                //Creamos la tarjeta para un el customer de stripe
+                var cardserviceToken = await cardservice.CreateAsync(stripeuserId, CardCreateoptions);
+
+                //Verificamos los valores si son correctos.
+                if( !string.IsNullOrEmpty(cardserviceToken.Id) )
+                {
+                    return cardserviceToken.Id;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            catch( Exception e )
+            {
+                return e.Message;
+            }
+        }
+
+        [HttpPost("[action]/{stripeuserId}")]
+        public async Task<StripePaymentCardResult> InsertStripeCardToStripeUser (PaymentCard paymentCard, string stripeuserId)
+        {
+            try
+            {
+                //Insertar tarjeta a un customer
+                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
+
+                //Obtenemos los valores de la tarjeta
+                var tokenoptions = new TokenCreateOptions()
+                {
+                    Card = new CreditCardOptions()
+                    {
+                        Number = paymentCard.CardNumber,
+                        ExpYear = long.Parse(paymentCard.Year),
+                        ExpMonth = long.Parse(paymentCard.Month),
+                        Cvc = paymentCard.Cvc,
+                        Name = paymentCard.HolderName,
+                    },
+                };
+
+                //Creamos el token de la tarjeta
+                var tokenService = new TokenService();
+
+                var stripeToken = await tokenService.CreateAsync(tokenoptions);
+
+                //El token pasara la informacion necesaria de la tarjeta
+                var CardCreateoptions = new CardCreateOptions
+                {
+                    Source = stripeToken.Id,
+                };
+
+                //Comenzamos a usar el servicio de la tarjeta.
+                var cardservice = new CardService();
+
+                //Creamos la tarjeta para un el customer de stripe
+                var cardserviceToken = await cardservice.CreateAsync(stripeuserId, CardCreateoptions);
+
+                //Verificamos los valores si son correctos.
+                if( !string.IsNullOrEmpty(cardserviceToken.Id) )
+                {
+                    var result = new StripePaymentCardResult(cardserviceToken.Id);
+                    return result;
+                }
+                else
+                {
+                    return new StripePaymentCardResult(true, "Token could not be creted try again.");
+                }
+            }
+            catch( Exception e )
+            {
+                return new StripePaymentCardResult(true, e.Message);
+            }
         }
 
         [HttpGet("[action]/{storeId}/{total}/{customerId}/{orderId}")]
-        public async Task<bool> MakePayment(Guid storeId,double total, string customerId,string orderId )
+        public async Task<bool> MakePayment (Guid storeId, double total, string customerId, string orderId)
         {
-
             try
             {
                 var key = await _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefaultAsync();
@@ -276,17 +427,14 @@ namespace WebApiQuickOrder.Controllers
                     Customer = customerId,
                     Description = "Payment of Order" + orderId,
                     ApplicationFeeAmount = 002
-
-
                 };
 
                 var service = new ChargeService();
 
                 Charge charge = await service.CreateAsync(chargeoptions);
 
-                if (charge.Status == "succeeded")
+                if( charge.Status == "succeeded" )
                 {
-
                     return true;
                 }
                 else
@@ -294,21 +442,17 @@ namespace WebApiQuickOrder.Controllers
                     return false;
                 }
             }
-            catch (Exception e)
+            catch( Exception e )
             {
-
                 Console.WriteLine(e.Message);
 
                 return false;
             }
-           
         }
 
-
         [HttpGet("[action]/{storeId}/{total}/{paymentCardId}/{orderId}")]
-        public async Task<bool> MakePaymentWithCard(Guid storeId, double total,Guid paymentCardId, string orderId)
+        public async Task<bool> MakePaymentWithCard (Guid storeId, double total, Guid paymentCardId, string orderId)
         {
-
             try
             {
                 var paymentCard = _context.PaymentCards.Where(pc => pc.PaymentCardId == paymentCardId).FirstOrDefault();
@@ -317,9 +461,6 @@ namespace WebApiQuickOrder.Controllers
                 StripeConfiguration.ApiKey = key.SKKey;
 
                 string valuetotal = total.ToString("0.00").Replace(".", "");
-
-
-                
 
                 var tokenoptions = new TokenCreateOptions()
                 {
@@ -335,7 +476,6 @@ namespace WebApiQuickOrder.Controllers
 
                 var tokenService = new TokenService();
 
-
                 var stripeToken = await tokenService.CreateAsync(tokenoptions);
 
                 var chargeoptions = new Stripe.ChargeCreateOptions
@@ -347,17 +487,14 @@ namespace WebApiQuickOrder.Controllers
                     Capture = true,
                     Source = stripeToken.Id,
                     Description = "Payment of Order " + orderId,
-
-
                 };
 
                 var service = new ChargeService();
 
                 Charge charge = await service.CreateAsync(chargeoptions);
 
-                if (charge.Status == "succeeded")
+                if( charge.Status == "succeeded" )
                 {
-
                     return true;
                 }
                 else
@@ -365,26 +502,90 @@ namespace WebApiQuickOrder.Controllers
                     return false;
                 }
             }
-            catch (Exception e)
+            catch( Exception e )
             {
-
-                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.Message);
 
                 return false;
             }
-
         }
 
-        [HttpGet("[action]/{customerId}/{cardId}")]
-        public async Task<bool> DeleteCardFromCustomer(string customerId, string cardId)
+        //}
+        [HttpGet("[action]/{storestripeAccId}/{quickOrderFee}/{storeId}")]
+        public async Task<string> TransferQuickOrderFeeFromStore (string storestripeAccId, string quickOrderFee, string storeId)
         {
-            StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
+            try
+            {
+                var key = await _context.Stores.Where(s => s.StoreId.ToString() == storeId).FirstOrDefaultAsync();
 
-            var service = new Stripe.CardService();
-            var cardToken =await service.DeleteAsync(customerId, cardId);
+                //StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
 
-            return cardToken.Deleted.Value;
+                StripeConfiguration.ApiKey = key.SKKey;
 
+                string totalfee = quickOrderFee.Replace(".", "");
+
+                var options = new TransferCreateOptions
+                {
+                    Amount = long.Parse(totalfee),
+                    Currency = "usd",
+                    Destination = "acct_1HDvl5BahC5Vu88T",
+                    Description = "Order Fee Quick Order",
+                };
+
+                var service = new TransferService();
+
+                var transfertoken = await service.CreateAsync(options);
+
+                if( !string.IsNullOrEmpty(transfertoken.Id) )
+                {
+                    return transfertoken.Id;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+            catch( Exception e )
+            {
+                Console.WriteLine(e);
+
+                return string.Empty;
+            }
+        }
+
+        [HttpPost("[action]")]
+        public async Task<bool> UpdateStripeCustomer (UserDTO updateinformation)
+        {
+            try
+            {
+                var options = new CustomerUpdateOptions
+                {
+                    Description = "Customer Update From Quick Order",
+                    Name = updateinformation.Name,
+                    Email = updateinformation.Email,
+                    Phone = updateinformation.Phone,
+                    Address = new AddressOptions() { Line1 = updateinformation.Address }
+                };
+
+                var service = new CustomerService();
+
+                var updateResult = await service.UpdateAsync(updateinformation.StripeCustomerId, options);
+
+                if( !string.IsNullOrEmpty(updateResult.Id) )
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch( Exception e )
+            {
+                Console.WriteLine(e.Message);
+
+                return false;
+            }
         }
 
         //[HttpPost("[action]")]
@@ -409,292 +610,16 @@ namespace WebApiQuickOrder.Controllers
         //    }
         //    catch (Exception e)
         //    {
-
         //        var result = new StripePaymentCardResult(true, e.Message);
 
         //        return result;
         //    }
-
-        //}
-
-        [HttpPost("[action]")]
-        public async Task<StripePaymentCardResult> CreateCardToken(PaymentCard paymentCard)
-        {
-            try
-            {
-                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["publickey"];
-
-
-                var service = new ChargeService();
-
-                var tokenoptions = new TokenCreateOptions()
-                {                    
-                    Card = new CreditCardOptions()
-                    {
-                        Number = paymentCard.CardNumber,
-                        ExpYear = long.Parse(paymentCard.Year),
-                        ExpMonth = long.Parse(paymentCard.Month),
-                        Cvc = paymentCard.Cvc,
-                        Name = paymentCard.HolderName,
-                    },
-                };
-
-                var tokenService = new TokenService();
-
-
-                var stripeToken = await tokenService.CreateAsync(tokenoptions);
-
-
-
-                return new StripePaymentCardResult(stripeToken.Id);
-            }
-            catch (Exception e)
-            {
-
-                var result = new StripePaymentCardResult(true, e.Message);
-
-                return result;
-            }
-          
-        }
-
-        [HttpGet("[action]/{customerId}")]
-        public async Task<string> CreateACustomerSubcription(string customerId)
-        {
-
-            try
-            {
-                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
-
-                //==================================================================
-                // Create Product Subcription
-
-                var productoptions = new ProductCreateOptions
-                {
-                    Name = "Quick Order Subcription",
-                    Active = true,
-                    Description = "Quick Order Admin System Subcription",
-                    Type = "service"
-
-
-                };
-
-                var productservice = new ProductService();
-                var producttoken = await productservice.CreateAsync(productoptions);
-
-
-                var priceoptions = new PriceCreateOptions
-                {
-                    UnitAmount = 200,
-                    Currency = "usd",
-                    Recurring = new PriceRecurringOptions
-                    {
-                        Interval = "month",
-                    },
-                    Product = producttoken.Id,
-                };
-                var priceservice = new PriceService();
-                var priceservicetoken = await priceservice.CreateAsync(priceoptions);
-
-                //======================================================================= End Create Product Subcription
-
-
-                //===================================================================================
-                //Create Subcription to store
-
-
-                var options = new SubscriptionCreateOptions
-                {
-                    Customer = customerId,
-                    Items = new List<SubscriptionItemOptions>
-                {
-                    new SubscriptionItemOptions
-                    {
-                        Price = priceservicetoken.Id,
-                    },
-
-                  },
-
-                };
-                var service = new SubscriptionService();
-                Subscription subscription = await service.CreateAsync(options);
-
-                if (!string.IsNullOrEmpty(subscription.Id))
-                {
-                    //var newSubcription = new Subcription()
-                    //{
-                    //    StripeCustomerId = customerId,
-                    //    StripeSubCriptionID = subscription.Id
-                    //};
-
-                    //_context.Subcriptions.Add(newSubcription);
-
-                    //try
-                    //{
-
-                    //_context.SaveChanges();
-                    //}
-                    //catch (Exception e)
-                    //{
-
-                    //    Console.WriteLine(e);
-                    //}
-
-
-
-                    return subscription.Id;
-
-
-
-
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-            catch (Exception e)
-            {
-
-                
-                Console.WriteLine(e);
-
-                return string.Empty;
-            }
-           
-
-
-        }
-
-        [HttpGet("[action]/{storestripeAccId}/{quickOrderFee}/{storeId}")]
-        public async Task<string> TransferQuickOrderFeeFromStore(string storestripeAccId,string quickOrderFee,string storeId)
-        {
-
-            try
-            {
-                var key = await _context.Stores.Where(s => s.StoreId.ToString() == storeId).FirstOrDefaultAsync();
-                //StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
-                StripeConfiguration.ApiKey = key.SKKey;
-                string totalfee = quickOrderFee.Replace(".", "");
-
-                var options = new TransferCreateOptions
-                {
-                    Amount = long.Parse(totalfee),
-                    Currency = "usd",
-                    Destination = "acct_1HDvl5BahC5Vu88T",
-                    Description = "Order Fee Quick Order",                     
-                };
-                var service = new TransferService();
-                var transfertoken = await service.CreateAsync(options);
-
-                if (!string.IsNullOrEmpty(transfertoken.Id))
-                {
-                    return transfertoken.Id;
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-            catch (Exception e)
-            {
-
-                Console.WriteLine(e);
-                return string.Empty;
-            }
-          
-
-          
-        }
-
-
-        public async Task<string> CreateSubcritionProduct()
-        {
-            StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
-
-
-            var productoptions = new ProductCreateOptions
-            {
-                Name = "Quick Order Subcription",
-                Active = true,
-                Description = "Quick Order Admin System Subcription",
-                Type = "service"
-            };
-
-
-            var productservice = new ProductService();
-            var producttoken = await productservice.CreateAsync(productoptions);
-
-
-            var priceoptions = new PriceCreateOptions
-            {
-                UnitAmount = 200,
-                Currency = "usd",
-                Recurring = new PriceRecurringOptions
-                {
-                    Interval = "month",
-                },                 
-                Product = producttoken.Id,
-                
-            };
-            var priceservice = new PriceService();
-            var pricetoken = await priceservice.CreateAsync(priceoptions);
-
-            if (!string.IsNullOrEmpty(producttoken.Id))
-            {
-                return producttoken.Id;
-            }
-            else
-            {
-                return string.Empty;
-            }
-        }
-
-
-        [HttpGet("[action]/{customerId}")]
-        public async Task<bool> CancelSubcription(string customerId)
-        {
-            var subcription = await _context.Subcriptions.Where(sub => sub.StripeCustomerId == customerId && sub.IsDisable == false).FirstOrDefaultAsync();
-
-            if (subcription != null)
-            {
-            StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
-
-            var options = new SubscriptionUpdateOptions
-            {
-                CancelAtPeriodEnd = true,
-            };
-
-            var service = new SubscriptionService();
-            var resultToken = await service.UpdateAsync(subcription.StripeSubCriptionID, options);
-
-            if (resultToken.CancelAtPeriodEnd)
-            {
-                return true;
-            }
-
-            else
-            {
-                return false;
-            }
-
-
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-
         //[HttpPost("[action]")]
         //public async Task<StripePaymentCardResult> CreateBankToken(PaymentCard paymentCard)
         //{
         //    try
         //    {
         //        StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["publickey"];
-
-
 
         //        var tokenoptions = new TokenCreateOptions
         //        {
@@ -716,7 +641,7 @@ namespace WebApiQuickOrder.Controllers
         //        if (!string.IsNullOrEmpty(stripebankaccountToken.Id))
         //        {
         //            var result =  new StripePaymentCardResult()
-        //            { 
+        //            {
         //             TokenId = stripebankaccountToken.Id
 
         //            };
@@ -731,7 +656,6 @@ namespace WebApiQuickOrder.Controllers
         //    }
         //    catch (Exception e)
         //    {
-
         //        var result = new StripePaymentCardResult(true, e.Message);
 
         //        return result;
@@ -739,16 +663,12 @@ namespace WebApiQuickOrder.Controllers
 
         //}
 
-
         //[HttpGet("[action]/{stripebankaccountToken}")]
         //public async Task<string> CreateStripeAccount(UserDTO userDTO, string stripebankaccountToken)
         //{
-
         //    try
         //    {
         //        StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["publickey"];
-
-
 
         //        var options = new AccountCreateOptions
         //        {
@@ -777,10 +697,7 @@ namespace WebApiQuickOrder.Controllers
         //                Address = new AddressOptions() { Line1 = userDTO.Address },
         //                Phone = userDTO.Phone
 
-
         //            }
-
-
 
         //        };
         //        var service = new AccountService();
@@ -790,17 +707,11 @@ namespace WebApiQuickOrder.Controllers
         //    }
         //    catch (Exception e)
         //    {
-
         //        Console.WriteLine(e.Message);
 
         //        return string.Empty;
         //    }
 
-
-
         //}
-
-
-
     }
 }

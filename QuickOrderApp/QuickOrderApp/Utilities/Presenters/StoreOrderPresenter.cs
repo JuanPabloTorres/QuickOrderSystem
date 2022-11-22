@@ -7,52 +7,29 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.Utilities.Presenters
 {
-    public class StoreOrderPresenter:BaseViewModel
+    public class StoreOrderPresenter : BaseViewModel
     {
-
         private Order detailOrder;
-
-        public Order DetailOrder
-        {
-            get { return detailOrder; }
-            set { detailOrder = value; }
-        }
 
         private string orderStatus;
 
-        public string OrderStatus
+        public StoreOrderPresenter (Order order)
         {
-            get { return orderStatus; }
-            set
-            {
-                orderStatus = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ICommand DetailCommand { get; set; }
-
-        public ICommand DetailEmployeeOrderCommand { get; set; }
-
-        public StoreOrderPresenter(Order order)
-        {
-
             DetailOrder = order;
 
             OrderStatus = order.OrderStatus.ToString();
 
             DetailCommand = new Command(async () =>
             {
-
                 try
                 {
                     await Shell.Current.GoToAsync($"StoreDetailOrderRoute", animate: true);
+
                     MessagingCenter.Send<Order>(DetailOrder, "Detail");
                     //await Shell.Current.GoToAsync($"StoreDetailOrderRoute?Id={DetailOrder.StoreId.ToString()}", animate: true);
                 }
-                catch (Exception e)
+                catch( Exception e )
                 {
-
                     Console.WriteLine(e);
                 }
                 //await Shell.Current.GoToAsync("OrderDetailRoute",true);
@@ -60,7 +37,6 @@ namespace QuickOrderApp.Utilities.Presenters
 
             DetailEmployeeOrderCommand = new Command(async () =>
             {
-
                 try
                 {
                     await EmployeeShell.Current.GoToAsync($"{StoreOrderDetailPage.Route}", animate: true);
@@ -68,18 +44,33 @@ namespace QuickOrderApp.Utilities.Presenters
                     EmployeeOrderPresenter employeeOrderPresenter = new EmployeeOrderPresenter(order);
 
                     MessagingCenter.Send<EmployeeOrderPresenter>(employeeOrderPresenter, "OrderDetail");
-                   
                 }
-                catch (Exception e)
+                catch( Exception e )
                 {
-
                     Console.WriteLine(e);
                 }
-              
             });
-
-           
         }
 
+        public ICommand DetailCommand { get; set; }
+
+        public ICommand DetailEmployeeOrderCommand { get; set; }
+
+        public Order DetailOrder
+        {
+            get { return detailOrder; }
+            set { detailOrder = value; }
+        }
+
+        public string OrderStatus
+        {
+            get { return orderStatus; }
+            set
+            {
+                orderStatus = value;
+
+                OnPropertyChanged();
+            }
+        }
     }
 }

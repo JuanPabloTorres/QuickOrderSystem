@@ -8,8 +8,13 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
     [QueryProperty("StoreId", "Id")]
     public class StoreHomeViewModel : BaseViewModel
     {
-
         private string storeid;
+
+        private string storename;
+
+        public StoreHomeViewModel ()
+        {
+        }
 
         public string StoreId
         {
@@ -17,17 +22,12 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             set
             {
                 storeid = value;
+
                 OnPropertyChanged();
 
                 GetStore(StoreId);
-
-
             }
         }
-
-        public ObservableCollection<Product> StoreProducts { get; set; }
-
-        private string storename;
 
         public string StoreName
         {
@@ -35,23 +35,18 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
             set
             {
                 storename = value;
+
                 OnPropertyChanged();
             }
         }
 
+        public ObservableCollection<Product> StoreProducts { get; set; }
 
-        public StoreHomeViewModel()
-        {
-
-        }
-
-        async Task GetStore(string id)
+        private async Task GetStore (string id)
         {
             var store = await StoreDataStore.GetItemAsync(StoreId);
 
             StoreName = store.StoreName;
-
         }
-
     }
 }

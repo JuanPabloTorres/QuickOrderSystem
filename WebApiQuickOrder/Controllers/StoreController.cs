@@ -16,125 +16,147 @@ namespace WebApiQuickOrder.Controllers
     {
         private readonly QOContext _context;
 
-        public StoreController(QOContext context)
+        public StoreController (QOContext context)
         {
             _context = context;
         }
 
-        // GET: api/Store
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<IEnumerable<Store>>> GetStores()
+        // DELETE: api/Store/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<bool>> Delete (Guid id)
         {
-            return await _context.Stores.ToListAsync();
+            var store = await _context.Stores.FindAsync(id);
+
+            if( store == null )
+            {
+                return false;
+            }
+
+            _context.Stores.Remove(store);
+
+            await _context.SaveChangesAsync();
+
+            var result = await _context.Stores.AnyAsync(s => s.StoreId == id);
+
+            if( result )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        [HttpPut("[action]")]
+        public async Task<bool> DisableStore (Store store)
+        {
+            try
+            {
+                _context.Entry(store).State = EntityState.Modified;
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch( DbUpdateConcurrencyException )
+            {
+                if( !StoreExists(store.StoreId) )
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         // GET: api/Store
         [HttpGet("[action]")]
-        public async Task<ActionResult<IEnumerable<Store>>> GetAvailableStore()
+        public async Task<ActionResult<IEnumerable<Store>>> GetAvailableStore ()
         {
             var result = await _context.Stores.Where(st => st.IsDisable == false).ToListAsync();
 
-
-
             List<Store> stores = new List<Store>();
 
-
-            foreach (var item in result)
+            foreach( var item in result )
             {
-
-                if (!item.IsDisable)
+                if( !item.IsDisable )
                 {
+                    stores.Add(item);
 
-                stores.Add(item);
-
-                if (stores.Count() == 5)
-                {
-                    return stores;
-                }
+                    if( stores.Count() == 5 )
+                    {
+                        return stores;
+                    }
                 }
             }
 
-
-
             return stores.ToList();
-
         }
 
+        // GET: api/Store/5
+        [HttpGet("[action]/{id}")]
+        public async Task<ActionResult<Store>> GetAvailableStoreInformation (Guid id)
+        {
+            var store = await _context.Stores.Where(s => s.StoreId == id && s.IsDisable == false).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();
+
+            if( store == null )
+            {
+                return NotFound();
+            }
+
+            return store;
+        }
 
         // GET: api/Store
         [HttpPost("[action]")]
-        public  ActionResult<IEnumerable<Store>> GetDifferentStore(IEnumerable<Store> storesAdded)
+        public ActionResult<IEnumerable<Store>> GetDifferentStore (IEnumerable<Store> storesAdded)
         {
-            
-            if (storesAdded.Count() < _context.Stores.Count())
+            if( storesAdded.Count() < _context.Stores.Count() )
             {
-
                 List<Store> stores = new List<Store>();
 
-
-                foreach (var item in _context.Stores)
+                foreach( var item in _context.Stores )
                 {
-                    if (!item.IsDisable)
+                    if( !item.IsDisable )
                     {
-                    if (!storesAdded.Any(x=>x.StoreId == item.StoreId))
-                    {
-                        stores.Add(item);
-
-                        if (stores.Count == 5)
+                        if( !storesAdded.Any(x => x.StoreId == item.StoreId) )
                         {
-                            return stores;
+                            stores.Add(item);
+
+                            if( stores.Count == 5 )
+                            {
+                                return stores;
+                            }
                         }
                     }
-
-                    }
                 }
-
-                
 
                 return stores.ToList();
             }
 
             return null;
-
         }
 
-
-        // GET: api/Store
-        [HttpGet("[action]/{userid}")]
-        public async Task<ActionResult<IEnumerable<Store>>> GetStoresFromUser(Guid userid)
+        [HttpGet("[action]/{category}")]
+        public IEnumerable<Store> GetSpecificStoreCategory (string category)
         {
-            return await _context.Stores.Where(s => s.UserId == userid && s.IsDisable == false).ToListAsync();
-        }
+            StoreType storeType;
 
-        // GET: api/Store
-        [HttpGet("[action]/{searchStore}")]
-        public async Task<IEnumerable<Store>> SearchStore(string searchStore)
-        {
-            return await _context.Stores.Where(s => s.StoreName == searchStore).ToListAsync();
+            Enum.TryParse(category, out storeType);
+
+            return _context.Stores.Where(s => s.StoreType == storeType).ToList();
         }
 
         // GET: api/Store/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Store>> GetStore(Guid id)
+        public async Task<ActionResult<Store>> GetStore (Guid id)
         {
             var store = await _context.Stores.Where(s => s.StoreId == id).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();
 
-            if (store == null)
-            {
-                return NotFound();
-            }
-
-            return store;
-        }
-
-        // GET: api/Store/5
-        [HttpGet("[action]/{id}")]
-        public async Task<ActionResult<Store>> GetAvailableStoreInformation(Guid id)
-        {
-            var store = await _context.Stores.Where(s => s.StoreId == id && s.IsDisable == false).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();
-
-            if (store == null)
+            if( store == null )
             {
                 return NotFound();
             }
@@ -144,11 +166,11 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/Store/5
         [HttpGet("[action]/{storeId}")]
-        public async Task<ActionResult<string>> GetStoreDestinationPaymentKey(Guid storeId)
+        public async Task<ActionResult<string>> GetStoreDestinationPaymentKey (Guid storeId)
         {
-            var keyResult =  _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().SKKey;
-            
-            if (keyResult == null)
+            var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().SKKey;
+
+            if( keyResult == null )
             {
                 return NotFound();
             }
@@ -156,14 +178,13 @@ namespace WebApiQuickOrder.Controllers
             return keyResult;
         }
 
-
         // GET: api/Store/5
         [HttpGet("[action]/{storeId}")]
-        public async Task<ActionResult<string>> GetStoreDestinationPublicPaymentKey(Guid storeId)
+        public async Task<ActionResult<string>> GetStoreDestinationPublicPaymentKey (Guid storeId)
         {
             var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().PBKey;
 
-            if (keyResult == null)
+            if( keyResult == null )
             {
                 return NotFound();
             }
@@ -171,17 +192,45 @@ namespace WebApiQuickOrder.Controllers
             return keyResult;
         }
 
+        // GET: api/Store
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Store>>> GetStores ()
+        {
+            return await _context.Stores.ToListAsync();
+        }
 
+        // GET: api/Store
+        [HttpGet("[action]/{userid}")]
+        public async Task<ActionResult<IEnumerable<Store>>> GetStoresFromUser (Guid userid)
+        {
+            return await _context.Stores.Where(s => s.UserId == userid && s.IsDisable == false).ToListAsync();
+        }
+
+        // POST: api/Store
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
+        [HttpPost]
+        public async Task<ActionResult<Store>> PostStore (Store store)
+        {
+            _context.Stores.Add(store);
+
+            //_context.WorkHours.Attach(store.WorkHours)
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetStore", new { id = store.StoreId }, store);
+        }
 
         // PUT: api/Store/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-        public async Task<bool> PutStore(Store store)
+        public async Task<bool> PutStore (Store store)
         {
             try
             {
                 _context.Entry(store).State = EntityState.Modified;
+
                 await _context.SaveChangesAsync();
 
                 var result = _context.WorkHours.Where(w => w.StoreId == store.StoreId).ToList();
@@ -192,41 +241,13 @@ namespace WebApiQuickOrder.Controllers
 
                 _context.WorkHours.AddRange(store.WorkHours);
 
-               await _context.SaveChangesAsync();
-               
-
-                return true;
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StoreExists(store.StoreId))
-                {
-                    return false;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-
-        }
-
-
-        [HttpPut("[action]")]
-        public async Task<bool> DisableStore(Store store)
-        {
-            try
-            {
-                _context.Entry(store).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-               
                 return true;
             }
-            catch (DbUpdateConcurrencyException)
+            catch( DbUpdateConcurrencyException )
             {
-                if (!StoreExists(store.StoreId))
+                if( !StoreExists(store.StoreId) )
                 {
                     return false;
                 }
@@ -235,69 +256,18 @@ namespace WebApiQuickOrder.Controllers
                     throw;
                 }
             }
-
-
         }
 
-
-
-
-        // POST: api/Store
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Store>> PostStore(Store store)
+        // GET: api/Store
+        [HttpGet("[action]/{searchStore}")]
+        public async Task<IEnumerable<Store>> SearchStore (string searchStore)
         {
-            _context.Stores.Add(store);
-            //_context.WorkHours.Attach(store.WorkHours)
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetStore", new { id = store.StoreId }, store);
+            return await _context.Stores.Where(s => s.StoreName == searchStore).ToListAsync();
         }
 
-        
-
-        // DELETE: api/Store/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<bool>> Delete(Guid id)
-        {
-            var store = await _context.Stores.FindAsync(id);
-            if (store == null)
-            {
-                return false;
-            }
-
-            _context.Stores.Remove(store);
-            await _context.SaveChangesAsync();
-
-
-            var result = await _context.Stores.AnyAsync(s => s.StoreId == id);
-
-            if (result)
-            {
-                return true;
-            }else
-            {
-                return false;
-            }
-        }
-
-        private bool StoreExists(Guid id)
+        private bool StoreExists (Guid id)
         {
             return _context.Stores.Any(e => e.StoreId == id);
-        }
-
-        [HttpGet("[action]/{category}")]
-        public IEnumerable<Store> GetSpecificStoreCategory(string category)
-        {
-
-            StoreType storeType;
-
-            Enum.TryParse(category, out storeType);
-
-            return _context.Stores.Where(s => s.StoreType == storeType).ToList();
-
-
         }
     }
 }

@@ -9,36 +9,47 @@ namespace Library.Services
 {
     public class StoreLicenceDataStore : DataStoreService<StoreLicense>, IStoreLicenseDataStore
     {
-        public async Task<bool> IsLicenseInUsed(string license)
+        public async Task<bool> IsLicenseInUsed (string license)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(IsLicenseInUsed)}/{license}");
+
             var response = await HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+
             return deserializeObject;
         }
 
-        public async Task<bool> PostStoreLicense(string email, string username)
+        public async Task<bool> PostStoreLicense (string email, string username)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(PostStoreLicense)}/{email}/{username}");
+
             var response = HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response.Result);
+
             return deserializeObject;
         }
 
-
-        public bool StoreLicenseExists(Guid id)
+        public bool StoreLicenseExists (Guid id)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(StoreLicenseExists)}/{id}");
+
             var response = HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response.Result);
+
             return deserializeObject;
         }
 
-        public async  Task<bool> UpdateLicenceInCode(Guid id)
+        public async Task<bool> UpdateLicenceInCode (Guid id)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(UpdateLicenceInCode)}/{id}");
+
             var response = await HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+
             return deserializeObject;
         }
     }

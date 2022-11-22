@@ -2,12 +2,10 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using QuickOrderApp.Managers;
-using QuickOrderApp.Services.HubService;
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -15,9 +13,7 @@ namespace QuickOrderApp.ViewModels.InboxVM
 {
     public class InboxViewModel : BaseViewModel
     {
-        public ObservableCollection<RequestPresenter> UserRequests { get; set; }
-
-        public InboxViewModel()
+        public InboxViewModel ()
         {
             UserRequests = new ObservableCollection<RequestPresenter>();
 
@@ -26,60 +22,57 @@ namespace QuickOrderApp.ViewModels.InboxVM
             MessagingCenter.Subscribe<RequestPresenter>(this, "RefreshInbox", (sender) =>
             {
                 UserRequests.Remove(sender);
-               
             });
-       
 
             App.ComunicationService.hubConnection.On<string>("ReceiveMessage", (message) =>
             {
-
                 UserRequest deseralized = JsonConvert.DeserializeObject<UserRequest>(message);
+
                 var requestPresenter = new RequestPresenter(deseralized);
+
                 UserRequests.Add(requestPresenter);
             });
         }
 
+        public ObservableCollection<RequestPresenter> UserRequests { get; set; }
 
-        public async Task ExecuteLoadItemsCommand()
+        public async Task ExecuteLoadItemsCommand ()
         {
             TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
-            if (tokenExpManger.IsExpired())
+
+            if( tokenExpManger.IsExpired() )
             {
                 await tokenExpManger.CloseSession();
             }
             else
             {
-            IsBusy = true;
+                IsBusy = true;
 
-            try
-            {
-                UserRequests.Clear();
-                
-                var requestData = await requestDataStore.GetRequestOfUser(App.LogUser.UserId);
-
-                foreach (var item in requestData)
+                try
                 {
-                    if (item.RequestAnswer == Answer.None)
+                    UserRequests.Clear();
+
+                    var requestData = await requestDataStore.GetRequestOfUser(App.LogUser.UserId);
+
+                    foreach( var item in requestData )
                     {
-                        var presenter = new RequestPresenter(item);
+                        if( item.RequestAnswer == Answer.None )
+                        {
+                            var presenter = new RequestPresenter(item);
 
-                        UserRequests.Add(presenter);
-
+                            UserRequests.Add(presenter);
+                        }
                     }
                 }
-               
+                catch( Exception ex )
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-
-            }
-
         }
     }
 }

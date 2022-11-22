@@ -1,17 +1,10 @@
 ﻿using Library.Models;
-using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using QuickOrderApp.Managers;
-using QuickOrderApp.Utilities.Dependency;
-using QuickOrderApp.Utilities.Dependency.Interface;
 using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Presenters.PresenterModel;
-using QuickOrderApp.Views.Home;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,31 +12,40 @@ using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.HomeVM
 {
-
     public class HomeViewModel : BaseViewModel
     {
+        private static int group;
 
-        public ObservableCollection<StorePresenters> Stores { get; set; }
-
-        public ObservableCollection<StoreCategory> StoreCategories { get; set; }
-        public ICommand SearchStoreCommand { get; set; }
-
-        public ICommand MoreCommand { get; set; }
+        private string searchText;
 
         private Store selectedStore;
 
-        public Store SelectedStore
+        public HomeViewModel ()
         {
-            get { return selectedStore; }
-            set
-            {
-                selectedStore = value;
-                OnPropertyChanged();
+            StoreCategories = new ObservableCollection<StoreCategory>();
 
-            }
+            KeyValues = new Dictionary<string, IEnumerable<Store>>();
+
+            Stores = new ObservableCollection<StorePresenters>();
+
+            LoadingManager = new LoadingManager();
+
+            MoreCommand = new Command(async () =>
+            {
+                await LoadDifferentItems();
+            });
+
+            //Task.Run(async() =>
+            //{
+            //    await LoadItems();
+            //}).Wait();
+
+            SelectedStore = new Store();
         }
 
-        private string searchText;
+        public LoadingManager LoadingManager { get; set; }
+        public ICommand MoreCommand { get; set; }
+        public ICommand SearchStoreCommand { get; set; }
 
         public string SearchText
         {
@@ -51,97 +53,41 @@ namespace QuickOrderApp.ViewModels.HomeVM
             set
             {
                 searchText = value;
+
                 OnPropertyChanged();
             }
         }
 
-       public LoadingManager LoadingManager { get; set; }
-
-        Dictionary<string,IEnumerable<Store>> KeyValues { get; set; }
-        static int group;
-        public HomeViewModel()
+        public Store SelectedStore
         {
-            StoreCategories = new ObservableCollection<StoreCategory>();
-
-            KeyValues = new Dictionary<string, IEnumerable<Store>>();
-            Stores = new ObservableCollection<StorePresenters>();
-            LoadingManager = new LoadingManager();
-
-
-            MoreCommand = new Command(async() =>
+            get { return selectedStore; }
+            set
             {
+                selectedStore = value;
 
-               await LoadDifferentItems();
-            
-            });
-
-            //Task.Run(async() => 
-            //{
-            
-            //    await LoadItems();
-            //}).Wait();
-           
-
-            SelectedStore = new Store();
-
+                OnPropertyChanged();
+            }
         }
 
-       
-        public async  Task LoadItems()
+        public ObservableCollection<StoreCategory> StoreCategories { get; set; }
+        public ObservableCollection<StorePresenters> Stores { get; set; }
+        private Dictionary<string, IEnumerable<Store>> KeyValues { get; set; }
+
+        public async Task LoadDifferentItems ()
         {
             LoadingManager.OnLoading();
 
             TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
-            if (tokenExpManger.IsExpired())
-            {
-               await tokenExpManger.CloseSession();
-                LoadingManager.OffLoading();
 
-            }
-            else
-            {
-                
-            var storeData = await StoreDataStore.GetAvailableStore();
-
-                if (!KeyValues.ContainsKey("storeAdded"))
-                {
-
-                    KeyValues.Add("storeAdded", storeData);
-                }
-
-                if (Stores.Count > 0)
-            {
-                Stores.Clear();
-            }
-
-            foreach (var store in storeData)
-            {
-                var storepresenter = new StorePresenters(store);
-
-                Stores.Add(storepresenter);
-            }
-
-                LoadingManager.OffLoading();
-            }
-
-
-        }
-
-        public async Task LoadDifferentItems()
-        {
-            LoadingManager.OnLoading();
-
-            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
-            if (tokenExpManger.IsExpired())
+            if( tokenExpManger.IsExpired() )
             {
                 await tokenExpManger.CloseSession();
-                LoadingManager.OffLoading();
 
+                LoadingManager.OffLoading();
             }
             else
             {
-
-                if (!KeyValues.ContainsKey("storeAdded"))
+                if( !KeyValues.ContainsKey("storeAdded") )
                 {
                     await LoadItems();
                 }
@@ -149,66 +95,84 @@ namespace QuickOrderApp.ViewModels.HomeVM
                 {
                     var storeData = await StoreDataStore.GetDifferentStore(KeyValues["storeAdded"]);
 
-                    if (storeData != null)
+                    if( storeData != null )
                     {
-
                         var tempData = new List<Store>();
 
-
-                        foreach (var item in KeyValues["storeAdded"])
+                        foreach( var item in KeyValues["storeAdded"] )
                         {
-
-                            if (!tempData.Any(s => s.StoreId == item.StoreId))
+                            if( !tempData.Any(s => s.StoreId == item.StoreId) )
                             {
-
                                 tempData.Add(item);
-
                             }
                         }
 
-                        foreach (var item in storeData)
+                        foreach( var item in storeData )
                         {
-                            if (!tempData.Any(s => s.StoreId == item.StoreId))
+                            if( !tempData.Any(s => s.StoreId == item.StoreId) )
                             {
-
                                 tempData.Add(item);
-
                             }
-                            
                         }
-
 
                         KeyValues.Clear();
+
                         KeyValues.Add("storeAdded", tempData);
 
-                        foreach (var item in KeyValues["storeAdded"])
+                        foreach( var item in KeyValues["storeAdded"] )
                         {
-
-                            if (!Stores.Any(s => s.StoreId == item.StoreId))
+                            if( !Stores.Any(s => s.StoreId == item.StoreId) )
                             {
                                 var storepresenter = new StorePresenters(item);
 
-
                                 Stores.Add(storepresenter);
-
                             }
                         }
-
-
                     }
                 }
 
+                LoadingManager.OffLoading();
+            }
+        }
 
-               
+        public async Task LoadItems ()
+        {
+            LoadingManager.OnLoading();
 
+            TokenExpManger tokenExpManger = new TokenExpManger(App.TokenDto.Exp);
+
+            if( tokenExpManger.IsExpired() )
+            {
+                await tokenExpManger.CloseSession();
 
                 LoadingManager.OffLoading();
             }
+            else
+            {
+                var storeData = await StoreDataStore.GetAvailableStore();
 
+                if( !KeyValues.ContainsKey("storeAdded") )
+                {
+                    KeyValues.Add("storeAdded", storeData);
+                }
 
+                if( Stores.Count > 0 )
+                {
+                    Stores.Clear();
+                }
+
+                foreach( var store in storeData )
+                {
+                    var storepresenter = new StorePresenters(store);
+
+                    Stores.Add(storepresenter);
+                }
+
+                LoadingManager.OffLoading();
+            }
         }
 
-        public void SetStoreCategories()
+        public void SetStoreCategories ()
         {
             //var values = Enum.GetValues(typeof(StoreType));
 
@@ -222,7 +186,6 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
             StoreCategory farmingcategory = new StoreCategory(StoreType.Farming.ToString(), "garden.png");
 
-
             StoreCategories.Add(farmingcategory);
 
             StoreCategory restaurantcategory = new StoreCategory(StoreType.Restaurant.ToString(), "food.png");
@@ -232,7 +195,6 @@ namespace QuickOrderApp.ViewModels.HomeVM
             StoreCategory autopartscategory = new StoreCategory(StoreType.AutorParts.ToString(), "support.png");
 
             StoreCategories.Add(autopartscategory);
-
 
             StoreCategory servicecategory = new StoreCategory(StoreType.Service.ToString(), "partnership.png");
 
@@ -245,8 +207,6 @@ namespace QuickOrderApp.ViewModels.HomeVM
             StoreCategory clothescategory = new StoreCategory(StoreType.ClothingStore.ToString(), "clothes.png");
 
             StoreCategories.Add(clothescategory);
-
         }
-
     }
 }

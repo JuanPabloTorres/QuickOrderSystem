@@ -8,10 +8,10 @@ namespace Library.Services.Interface
 {
     public interface ICardDataStore : IDataStore<PaymentCard>
     {
-        Task<IEnumerable<PaymentCard>> GetCardFromUser(Guid userId,string token);
+        Task<bool> DeletePaymentCard (string cardId);
 
-        Task<IEnumerable<PaymentCardDTO>> GetCardDTOFromUser(Guid userId,string token);
+        Task<IEnumerable<PaymentCardDTO>> GetCardDTOFromUser (Guid userId, string token);
 
-        Task<bool> DeletePaymentCard(string cardId);
+        Task<IEnumerable<PaymentCard>> GetCardFromUser (Guid userId, string token);
     }
 }

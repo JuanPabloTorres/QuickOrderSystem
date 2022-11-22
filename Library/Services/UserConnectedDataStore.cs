@@ -15,8 +15,11 @@ namespace Library.Services
         public async Task<UsersConnected> GetUserConnectedID(Guid userId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetUserConnectedID)}/{userId}");
+
             var response = await HttpClient.GetStringAsync(FullAPIUri);
+
             UsersConnected deserializeObject = JsonConvert.DeserializeObject<UsersConnected>(response);
+
             return deserializeObject;
         }
 
@@ -33,8 +36,11 @@ namespace Library.Services
                });
 
             var buffer = System.Text.Encoding.UTF8.GetBytes(serializeObj);
+
             var byteContent = new ByteArrayContent(buffer);
+
             byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
 
             var response = await HttpClient.PostAsync(FullAPIUri,byteContent);
 
@@ -61,8 +67,11 @@ namespace Library.Services
         public async Task<bool> SendOrdersToEmployees(string storeId, string orderId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(SendOrdersToEmployees)}/{storeId}/{orderId}");
+
             var response = await HttpClient.GetStringAsync(FullAPIUri);
+
             bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+
             return deserializeObject;
         }
     }

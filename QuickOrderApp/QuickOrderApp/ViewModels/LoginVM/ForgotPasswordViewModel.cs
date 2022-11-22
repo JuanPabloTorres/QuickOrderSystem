@@ -1,81 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.ViewModels.LoginVM
 {
-    public class ForgotPasswordViewModel:BaseViewModel
+    public class ForgotPasswordViewModel : BaseViewModel
     {
+        private string code;
 
-		private string email;
+        private string email;
 
-		public string Email
-		{
-			get { return email; }
-			set { email = value;
-				OnPropertyChanged();
-			}
-		}
+        public ForgotPasswordViewModel ()
+        {
+            SendCodeCommand = new Command(async () =>
+            {
+                if( !string.IsNullOrEmpty(Email) )
+                {
+                    var codeSendResult = userDataStore.ForgotCodeSend(Email);
 
-		private string code;
+                    if( codeSendResult )
+                    {
+                        await Shell.Current.DisplayAlert("Notification", "Code was sended to user email check the email.", "OK");
+                    }
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Notification", "Empty value.", "OK");
+                }
+            });
+            ConfirmCodeCommand = new Command(async () =>
+            {
+                if( !string.IsNullOrEmpty(Code) )
+                {
+                    var codeSendResult = userDataStore.ConfirmCode(Code);
 
-		public string Code
-		{
-			get { return code; }
-			set { code = value;
-				OnPropertyChanged();
-			}
-		}
+                    if( codeSendResult )
+                    {
+                        await Shell.Current.DisplayAlert("Notification", "Code was sended to user email check the email.", "OK");
+                    }
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Notification", "Empty value.", "OK");
+                }
+            });
+        }
 
-		public ICommand SendCodeCommand { get; set; }
-		public ICommand ConfirmCodeCommand { get; set; }
+        public string Code
+        {
+            get { return code; }
+            set
+            {
+                code = value;
 
-		public ForgotPasswordViewModel()
-		{
+                OnPropertyChanged();
+            }
+        }
 
+        public ICommand ConfirmCodeCommand { get; set; }
 
-			SendCodeCommand = new Command(async() => 
-			{
+        public string Email
+        {
+            get { return email; }
+            set
+            {
+                email = value;
 
-				if (!string.IsNullOrEmpty(Email))
-				{
-					var codeSendResult =  userDataStore.ForgotCodeSend(Email);
+                OnPropertyChanged();
+            }
+        }
 
-					if (codeSendResult)
-					{
-						await Shell.Current.DisplayAlert("Notification", "Code was sended to user email check the email.", "OK");
-					}
-				}
-				else
-				{
-					await Shell.Current.DisplayAlert("Notification", "Empty value.", "OK");
-				}
-			
-			});
-			ConfirmCodeCommand = new Command(async() =>
-			{
-
-				if (!string.IsNullOrEmpty(Code))
-				{
-					var codeSendResult = userDataStore.ConfirmCode(Code);
-
-					if (codeSendResult)
-					{
-						await Shell.Current.DisplayAlert("Notification", "Code was sended to user email check the email.", "OK");
-					}
-				}
-				else
-				{
-					await Shell.Current.DisplayAlert("Notification", "Empty value.", "OK");
-				}
-
-			});
-
-		}
-
-
-
-	}
+        public ICommand SendCodeCommand { get; set; }
+    }
 }

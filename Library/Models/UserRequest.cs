@@ -3,18 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Library.Models
 {
-    public class UserRequest
+    public enum Answer
     {
-        [Key]
-        public Guid RequestId { get; set; }
-
-        public Guid ToUser { get; set; }
-
-        public Guid FromStore { get; set; }
-
-        public RequestType Type { get; set; }
-
-        public Answer RequestAnswer { get; set; }
+        None,
+        Accept,
+        Decline
     }
 
     public enum RequestType
@@ -22,10 +15,16 @@ namespace Library.Models
         JobRequest
     }
 
-    public enum Answer
+    public class UserRequest
     {
-        None,
-        Accept,
-        Decline
+        public Guid FromStore { get; set; }
+
+        public Answer RequestAnswer { get; set; }
+
+        [Key]
+        public Guid RequestId { get; set; }
+
+        public Guid ToUser { get; set; }
+        public RequestType Type { get; set; }
     }
 }

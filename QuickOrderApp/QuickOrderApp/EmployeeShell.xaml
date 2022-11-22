@@ -5,12 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:emphome="clr-namespace:QuickOrderApp.Views.Store.EmployeeStoreControlPanel"
-    xmlns:inbox="clr-namespace:QuickOrderApp.Views.Inbox"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:setting="clr-namespace:QuickOrderApp.Views.Settings"
-    xmlns:store="clr-namespace:QuickOrderApp.Views.Store"
     mc:Ignorable="d">
-
 
     <Shell.Resources>
         <ResourceDictionary>
@@ -30,17 +26,15 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-
-
     <TabBar>
 
         <Tab Title="Home" Icon="tab_about.png">
             <ShellContent ContentTemplate="{DataTemplate emphome:EmployeeControlPanel}" />
         </Tab>
-        <!--<Tab Title="Inventory" Icon="tab_about.png" >
+        <!--<Tab Title="Inventory" Icon="tab_about.png">
             <ShellContent ContentTemplate="{DataTemplate inbox:InboxPage}" />
         </Tab>
-        <Tab Title="Orders" Icon="tab_about.png" >
+        <Tab Title="Orders" Icon="tab_about.png">
             <ShellContent ContentTemplate="{DataTemplate store:StoreOrders}" />
         </Tab>
         <Tab Title="Settings" Icon="tab_about.png">

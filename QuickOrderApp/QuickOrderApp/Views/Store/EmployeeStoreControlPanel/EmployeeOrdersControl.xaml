@@ -24,7 +24,6 @@
                 VerticalOptions="Center"
                 WidthRequest="80" />
 
-
             <CollectionView
                 Grid.Row="3"
                 Margin="5"
@@ -41,10 +40,7 @@
 
                 <CollectionView.ItemTemplate>
 
-
-
                     <DataTemplate>
-
 
                         <Frame Padding="4" Style="{StaticResource FrameStyle}">
 
@@ -85,7 +81,6 @@
                                         TextColor="Red" />
                                 </StackLayout>
 
-
                                 <StackLayout Orientation="Horizontal">
                                     <Label Style="{StaticResource DataLabel}" Text="Type: " />
 
@@ -112,13 +107,9 @@
                                     VerticalOptions="Center" />
                             </StackLayout>
                         </Frame>
-
-
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
             </CollectionView>
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -15,8 +15,6 @@
     mc:Ignorable="d">
     <StackLayout VerticalOptions="Center">
 
-
-
         <forms:AnimationView
             Animation="loading.json"
             AutoPlay="True"
@@ -25,7 +23,6 @@
             IsVisible="{Binding IsLoading}"
             Loop="True"
             WidthRequest="80" />
-
 
         <Label
             Margin="0,10,0,10"
@@ -48,7 +45,6 @@
                         Keyboard="Text"
                         Placeholder="Password"
                         Text="{Binding Password}" />
-
 
                     <button:SfButton
                         Margin="10,4,10,0"
@@ -102,19 +98,14 @@
                             Text="Forgot Password"
                             TextColor="#1771F1"
                             VerticalTextAlignment="Center" />
-
-
                     </Grid>
                 </StackLayout>
             </StackLayout>
-
         </Frame>
-
 
         <!--<Label
             HorizontalOptions="Center"
             Text="Quick Order System"
             VerticalOptions="End" />-->
     </StackLayout>
-
 </ContentPage>

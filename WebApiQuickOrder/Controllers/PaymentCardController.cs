@@ -18,43 +18,53 @@ namespace WebApiQuickOrder.Controllers
     {
         private readonly QOContext _context;
 
-        public PaymentCardController(QOContext context)
+        public PaymentCardController (QOContext context)
         {
             _context = context;
         }
 
-        // GET: api/PaymentCards
-        [HttpGet]
+        // DELETE: api/PaymentCards/5
+        [HttpDelete("[action]/{id}")]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<PaymentCard>>> GetPaymentCards()
+        public async Task<ActionResult<bool>> DeletePaymentCard (string id)
         {
-            return await _context.PaymentCards.ToListAsync();
-        }
+            var paymentCard = await _context.PaymentCards.Where(pc => pc.PaymentCardId.ToString() == id).FirstOrDefaultAsync();
 
+            if( paymentCard == null )
+            {
+                return false;
+            }
+
+            _context.PaymentCards.Remove(paymentCard);
+
+            await _context.SaveChangesAsync();
+
+            var paymentcardResult = await _context.PaymentCards.Where(pc => pc.PaymentCardId.ToString() == id).FirstOrDefaultAsync();
+
+            if( paymentcardResult == null )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         // GET: api/PaymentCards
         [HttpGet("[action]/{userId}")]
         [Authorize(Policy = Policies.User)]
-        public async Task<IEnumerable<PaymentCard>> GetCardFromUser(Guid userId)
-        {
-            return await _context.PaymentCards.Where(c => c.UserId == userId).ToListAsync();
-        }
-
-        // GET: api/PaymentCards
-        [HttpGet("[action]/{userId}")]
-        [Authorize(Policy = Policies.User)]
-        public async Task<IEnumerable<PaymentCardDTO>> GetCardDTOFromUser(Guid userId)
+        public async Task<IEnumerable<PaymentCardDTO>> GetCardDTOFromUser (Guid userId)
         {
             var cards = await _context.PaymentCards.Where(c => c.UserId == userId).ToListAsync();
 
             List<PaymentCardDTO> paymentCardDTOs = new List<PaymentCardDTO>();
 
-            foreach (var item in cards)
+            foreach( var item in cards )
             {
                 try
                 {
-
-                    string cardlastfour = item.CardNumber.Substring((item.CardNumber.Length - 4));
+                    string cardlastfour = item.CardNumber.Substring(( item.CardNumber.Length - 4 ));
                     var cardDtO = new PaymentCardDTO()
                     {
                         CardNumber = "●●●●" + cardlastfour,
@@ -65,27 +75,31 @@ namespace WebApiQuickOrder.Controllers
 
                     paymentCardDTOs.Add(cardDtO);
                 }
-                catch (Exception e)
+                catch( Exception e )
                 {
-
                     Console.WriteLine(e.Message);
                 }
-
-               
             }
 
             return paymentCardDTOs;
+        }
 
+        // GET: api/PaymentCards
+        [HttpGet("[action]/{userId}")]
+        [Authorize(Policy = Policies.User)]
+        public async Task<IEnumerable<PaymentCard>> GetCardFromUser (Guid userId)
+        {
+            return await _context.PaymentCards.Where(c => c.UserId == userId).ToListAsync();
         }
 
         // GET: api/PaymentCards/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<PaymentCard>> GetPaymentCard(Guid id)
+        public async Task<ActionResult<PaymentCard>> GetPaymentCard (Guid id)
         {
             var paymentCard = await _context.PaymentCards.FindAsync(id);
 
-            if (paymentCard == null)
+            if( paymentCard == null )
             {
                 return NotFound();
             }
@@ -93,13 +107,35 @@ namespace WebApiQuickOrder.Controllers
             return paymentCard;
         }
 
+        // GET: api/PaymentCards
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<PaymentCard>>> GetPaymentCards ()
+        {
+            return await _context.PaymentCards.ToListAsync();
+        }
+
+        // POST: api/PaymentCards
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [HttpPost]
+        [Authorize(Policy = Policies.User)]
+        public async Task<ActionResult<bool>> PostPaymentCard (PaymentCard paymentCard)
+        {
+            _context.PaymentCards.Add(paymentCard);
+
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetPaymentCard", new { id = paymentCard.PaymentCardId }, paymentCard);
+        }
+
         // PUT: api/PaymentCards/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPaymentCard(Guid id, PaymentCard paymentCard)
+        public async Task<IActionResult> PutPaymentCard (Guid id, PaymentCard paymentCard)
         {
-            if (id != paymentCard.PaymentCardId)
+            if( id != paymentCard.PaymentCardId )
             {
                 return BadRequest();
             }
@@ -110,9 +146,9 @@ namespace WebApiQuickOrder.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch( DbUpdateConcurrencyException )
             {
-                if (!PaymentCardExists(id))
+                if( !PaymentCardExists(id) )
                 {
                     return NotFound();
                 }
@@ -125,49 +161,7 @@ namespace WebApiQuickOrder.Controllers
             return NoContent();
         }
 
-        // POST: api/PaymentCards
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        [Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<bool>> PostPaymentCard(PaymentCard paymentCard)
-        {
-            _context.PaymentCards.Add(paymentCard);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPaymentCard", new { id = paymentCard.PaymentCardId }, paymentCard);
-        }
-
-        // DELETE: api/PaymentCards/5
-        [HttpDelete("[action]/{id}")]
-        [Authorize]
-        public async Task<ActionResult<bool>> DeletePaymentCard(string id)
-        {
-            var paymentCard = await _context.PaymentCards.Where(pc=>pc.PaymentCardId.ToString() == id).FirstOrDefaultAsync();
-
-            if (paymentCard == null)
-            {
-                return false;
-            }
-
-            _context.PaymentCards.Remove(paymentCard);
-            await _context.SaveChangesAsync();
-
-            var paymentcardResult = await _context.PaymentCards.Where(pc => pc.PaymentCardId.ToString() == id).FirstOrDefaultAsync();
-
-            if (paymentcardResult == null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-          
-        }
-
-        private bool PaymentCardExists(Guid id)
+        private bool PaymentCardExists (Guid id)
         {
             return _context.PaymentCards.Any(e => e.PaymentCardId == id);
         }

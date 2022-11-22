@@ -63,8 +63,6 @@
                             IsVisible="{Binding CVCValidator.HasError}"
                             Text="{Binding CVCValidator.ErrorMessage}"
                             TextColor="Red" />
-
-
                     </StackLayout>
                     <button:SfButton
                         Margin="10"

@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace QuickOrderApp.ConfigPayment
+﻿namespace QuickOrderApp.ConfigPayment
 {
     public class CardPaymentToken
     {
-		private string cardtokenId;
+        private string cardtokenId;
 
-		public string CardTokenId
-		{
-			get { return cardtokenId; }
-			set { cardtokenId = value; }
-		}
-	}
+        public string CardTokenId
+        {
+            get { return cardtokenId; }
+            set { cardtokenId = value; }
+        }
+    }
 }

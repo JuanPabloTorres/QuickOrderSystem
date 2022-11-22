@@ -1,129 +1,132 @@
 ﻿using Library.DTO;
 using QuickOrderApp.ViewModels;
-using QuickOrderApp.Views.Settings;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace QuickOrderApp.Utilities.Presenters
 {
-	public class PaymentCardPresenter : BaseViewModel
-	{
-		private string holdername;
+    public class PaymentCardPresenter : BaseViewModel
+    {
+        private string cardnumber;
 
-		public string HolderName
-		{
-			get { return holdername; }
-			set { holdername = value;
-				OnPropertyChanged();
-			}
-		}
+        private string cvc;
 
-		private string stripecardId;
+        private string expmonth;
 
-		public string StipeCardId
-		{
-			get { return stripecardId; }
-			set { stripecardId = value;
-				OnPropertyChanged();
-			}
-		}
+        private string expyear;
 
+        private string holdername;
 
+        private Guid paymentCardId;
 
-		private Guid paymentCardId;
+        private string stripecardId;
 
-		public Guid PaymentCardId
-		{
-			get { return paymentCardId; }
-			set { paymentCardId = value;
-				OnPropertyChanged();
-			}
-		}
+        public PaymentCardPresenter (PaymentCardDTO paymentCardDTO)
+        {
+            this.HolderName = paymentCardDTO.HolderName;
 
-		private string cardnumber;
+            this.CardNumber = paymentCardDTO.CardNumber;
 
-		public string CardNumber
-		{
-			get { return cardnumber; }
-			set { cardnumber = value;
-				OnPropertyChanged();
-			}
-		}
+            this.stripecardId = paymentCardDTO.StripeCardId;
 
-		private string expmonth;
+            this.PaymentCardId = paymentCardDTO.PaymentCardId;
 
-		public string ExpMonth
-		{
-			get { return expmonth; }
-			set { expmonth = value;
-				OnPropertyChanged();
-			}
-		}
+            DeleteCardCommand = new Command(async () =>
+            {
+                var deleted = await CardDataStore.DeletePaymentCard(paymentCardId.ToString());
 
-		private string expyear;
+                if( deleted )
+                {
+                    var cardDeleteStripeResult = await stripeServiceDS.DeleteCardFromCustomer(App.LogUser.StripeUserId, this.StipeCardId);
 
-		public string ExpYear
-		{
-			get { return expyear; }
-			set { expyear = value;
-				OnPropertyChanged();
-			}
-		}
+                    if( cardDeleteStripeResult )
+                    {
+                        MessagingCenter.Send<PaymentCardPresenter>(this, "PaymencardDeleteMsg");
+                    }
+                }
 
-		private string cvc;
+                //await Shell.Current.GoToAsync($"{EditCardPage.Route}");
+            });
+        }
 
-		public string CVC
-		{
-			get { return cvc; }
-			set { cvc = value;
-				OnPropertyChanged();
-			}
-		}
+        public string CardNumber
+        {
+            get { return cardnumber; }
+            set
+            {
+                cardnumber = value;
 
-		public ICommand DeleteCardCommand { get; set; }
+                OnPropertyChanged();
+            }
+        }
 
+        public string CVC
+        {
+            get { return cvc; }
+            set
+            {
+                cvc = value;
 
-		public PaymentCardPresenter(PaymentCardDTO paymentCardDTO)
-		{
-			this.HolderName = paymentCardDTO.HolderName;
-			this.CardNumber = paymentCardDTO.CardNumber;
-			this.stripecardId = paymentCardDTO.StripeCardId;
-			this.PaymentCardId = paymentCardDTO.PaymentCardId;
+                OnPropertyChanged();
+            }
+        }
 
+        public ICommand DeleteCardCommand { get; set; }
 
-			DeleteCardCommand = new Command(async() => 
-			{
+        public string ExpMonth
+        {
+            get { return expmonth; }
+            set
+            {
+                expmonth = value;
 
+                OnPropertyChanged();
+            }
+        }
 
-				var deleted = await CardDataStore.DeletePaymentCard(paymentCardId.ToString());
+        public string ExpYear
+        {
+            get { return expyear; }
+            set
+            {
+                expyear = value;
 
-				if (deleted)
-				{
-					var cardDeleteStripeResult = await stripeServiceDS.DeleteCardFromCustomer(App.LogUser.StripeUserId, this.StipeCardId);
+                OnPropertyChanged();
+            }
+        }
 
-					 if (cardDeleteStripeResult)
-					{
-						MessagingCenter.Send<PaymentCardPresenter>(this, "PaymencardDeleteMsg"); 
-					}
-				}
+        public string HolderName
+        {
+            get { return holdername; }
+            set
+            {
+                holdername = value;
 
+                OnPropertyChanged();
+            }
+        }
 
-				//await Shell.Current.GoToAsync($"{EditCardPage.Route}");
-			  
-			});
+        public Guid PaymentCardId
+        {
+            get { return paymentCardId; }
+            set
+            {
+                paymentCardId = value;
 
+                OnPropertyChanged();
+            }
+        }
 
-		}
+        public string StipeCardId
+        {
+            get { return stripecardId; }
+            set
+            {
+                stripecardId = value;
 
-
-
-
-
-
-
-
-	}
+                OnPropertyChanged();
+            }
+        }
+    }
 }

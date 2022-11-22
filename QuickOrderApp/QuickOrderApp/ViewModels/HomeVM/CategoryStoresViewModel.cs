@@ -9,22 +9,14 @@ namespace QuickOrderApp.ViewModels.HomeVM
     [QueryProperty("Category", "CategoryId")]
     public class CategoryStoresViewModel : BaseViewModel
     {
-        public ObservableCollection<StorePresenters> Stores { get; set; }
+        private string category;
 
         private Store selectedStore;
 
-        public Store SelectedStore
+        public CategoryStoresViewModel ()
         {
-            get { return selectedStore; }
-            set
-            {
-                selectedStore = value;
-                OnPropertyChanged();
-
-            }
+            Stores = new ObservableCollection<StorePresenters>();
         }
-
-        private string category;
 
         public string Category
         {
@@ -32,30 +24,36 @@ namespace QuickOrderApp.ViewModels.HomeVM
             set
             {
                 category = value;
+
                 OnPropertyChanged();
 
                 GetSpecificStoreCategory(Category);
             }
         }
 
-
-        public CategoryStoresViewModel()
+        public Store SelectedStore
         {
-            Stores = new ObservableCollection<StorePresenters>();
+            get { return selectedStore; }
+            set
+            {
+                selectedStore = value;
+
+                OnPropertyChanged();
+            }
         }
 
-        public async Task GetSpecificStoreCategory(string category)
+        public ObservableCollection<StorePresenters> Stores { get; set; }
+
+        public async Task GetSpecificStoreCategory (string category)
         {
             var data = await StoreDataStore.GetSpecificStoreCategory(category);
 
-            foreach (var store in data)
+            foreach( var store in data )
             {
                 var storepresenter = new StorePresenters(store);
 
                 Stores.Add(storepresenter);
             }
-
-
         }
     }
 }
