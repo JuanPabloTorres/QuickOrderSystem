@@ -1,17 +1,16 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using Library.AbstractModels;
+using System;
 
 namespace Library.Models
 {
-    public class UsersConnected
+    public class UsersConnected : BaseModel
     {
         public DateTime ConnecteDate { get; set; }
-
-        [Key]
-        public string HubConnectionID { get; set; }
 
         public bool IsDisable { get; set; }
 
         public Guid UserID { get; set; }
+
+        public string HubConnectionID { get; set; }
     }
 }

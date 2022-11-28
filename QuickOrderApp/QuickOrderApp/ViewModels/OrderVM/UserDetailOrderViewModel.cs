@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
 using QuickOrderApp.Utilities.Static;
@@ -76,7 +77,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                 }
                 else
                 {
-                    var cardofUser = await CardDataStore.GetCardFromUser(App.LogUser.UserId, App.TokenDto.Token);
+                    var cardofUser = await CardDataStore.GetCardFromUser(App.LogUser.ID, App.TokenDto.Token);
 
                     App.LogUser.PaymentCards = new List<PaymentCard>(cardofUser);
 
@@ -86,16 +87,16 @@ namespace QuickOrderApp.ViewModels.OrderVM
                         {
                             if( IsDelivery )
                             {
-                                OrderDetail.OrderType = Library.Models.Type.Delivery;
+                                OrderDetail.OrderType = Library.Helpers.Type.Delivery;
                             }
                             if( IspickUp )
                             {
-                                OrderDetail.OrderType = Library.Models.Type.PickUp;
+                                OrderDetail.OrderType = Library.Helpers.Type.PickUp;
                             }
 
                             if( !IsDelivery && !IspickUp )
                             {
-                                OrderDetail.OrderType = Library.Models.Type.PickUp;
+                                OrderDetail.OrderType = Library.Helpers.Type.PickUp;
                             }
 
                             OrderDetail.OrderStatus = Status.Submited;
@@ -104,7 +105,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                             var customercardId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, App.LogUser.PaymentCards.FirstOrDefault().StripeCardId);
 
-                            var isTransactionSuccess = await stripeServiceDS.MakePaymentWithCard(OrderDetail.StoreId, Total, App.LogUser.PaymentCards.FirstOrDefault().PaymentCardId, OrderDetail.OrderId.ToString());
+                            var isTransactionSuccess = await stripeServiceDS.MakePaymentWithCard(OrderDetail.StoreID, Total, App.LogUser.PaymentCards.FirstOrDefault().ID, OrderDetail.ID.ToString());
 
                             if( isTransactionSuccess )
                             {
@@ -114,7 +115,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                                 if( orderUpdate )
                                 {
-                                    var orderNotificationToEmployees = await userConnectedDataStore.SendOrdersToEmployees(OrderDetail.StoreId.ToString(), OrderDetail.OrderId.ToString());
+                                    var orderNotificationToEmployees = await userConnectedDataStore.SendOrdersToEmployees(OrderDetail.StoreID.ToString(), OrderDetail.ID.ToString());
 
                                     //await App.ComunicationService.OrderToPrepare(OrderDetail);
 
@@ -154,7 +155,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
 
                 if( OrderDetail.OrderProducts.Count() == 0 )
                 {
-                    var result = await orderDataStore.DeleteItemAsync(OrderDetail.OrderId.ToString());
+                    var result = await orderDataStore.DeleteItemAsync(OrderDetail.ID.ToString());
 
                     if( result )
                     {

@@ -1,14 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using Library.AbstractModels;
+using System;
 
 namespace Library.Models
 {
-    public class EmailValidation
+    public class EmailValidation : BaseModel
     {
         public string Email { get; set; }
-
-        [Key]
-        public Guid EmailValidationId { get; set; }
 
         public DateTime ExpDate { get; set; }
 

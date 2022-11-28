@@ -24,7 +24,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpDelete("{id}")]
         public async Task<bool> DeleteEmployee (Guid id)
         {
-            var toremoveEmp = _context.Employees.Where(e => e.EmployeeId == id).FirstOrDefault();
+            var toremoveEmp = _context.Employees.Where(e => e.ID == id).FirstOrDefault();
 
             if( toremoveEmp != null )
             {
@@ -107,7 +107,7 @@ namespace WebApiQuickOrder.Controllers
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);
+            return CreatedAtAction("GetEmployee", new { id = employee.ID }, employee);
         }
 
         // PUT: api/Employee/5
@@ -116,7 +116,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPut]
         public async Task<bool> PutEmployee (Employee employee)
         {
-            var oldemp = _context.Employees.Where(e => e.EmployeeId == employee.EmployeeId).FirstOrDefault();
+            var oldemp = _context.Employees.Where(e => e.ID == employee.ID).FirstOrDefault();
 
             if( oldemp != null )
             {
@@ -151,7 +151,7 @@ namespace WebApiQuickOrder.Controllers
 
         private bool EmployeeExists (Guid id)
         {
-            return _context.Employees.Any(e => e.EmployeeId == id);
+            return _context.Employees.Any(e => e.ID == id);
         }
     }
 }

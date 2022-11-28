@@ -1,15 +1,16 @@
-﻿using Library.DTO;
+﻿using Library.ApiResponses;
+using Library.DTO;
 using Library.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Library.Services.Interface
 {
-    public interface IUserDataStore : IDataStore<User>
+    public interface IUserDataStore : IDataStore<AppUser>
     {
-        Task<bool> CheckIfUsernameAndPasswordExist (string username, string password);
+        Task<Response<Credential>> CheckIfUsernameAndPasswordExist (string username, string password);
 
-        User CheckUserCredential (string username, string password);
+        AppUser CheckUserCredential (string username, string password);
 
         bool ConfirmCode (string code);
 
@@ -18,7 +19,7 @@ namespace Library.Services.Interface
         bool ForgotCodeSend (string email);
         Task<IEnumerable<UserDTO>> GetUserWithName (string name);
 
-        TokenDTO LoginCredential (string username, string password);
+        Task<Response<TokenDTO>> LoginCredential (string username, string password);
         Task<bool> ResendCode (string userId);
 
         Task<bool> ValidateEmail (string code, string userid);

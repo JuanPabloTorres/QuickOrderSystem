@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Library.AbstractModels;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
     [Table("Subcriptions")]
-    public class Subcription
+    public class Subcription:BaseModel
     {
         public bool IsDisable { get; set; }
 
@@ -15,7 +16,8 @@ namespace Library.Models
 
         public string StripeCustomerId { get; set; }
 
-        [Key]
-        public string StripeSubCriptionID { get; set; }
+        public string StripeSubcriptionID { get; set; }
+
+
     }
 }

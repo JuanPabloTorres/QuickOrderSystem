@@ -92,7 +92,7 @@
                         <li class="nav-item">
                             <div class="align-content-center">
 
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="HomeStore" asp-route-StoreId="@QuickOrderAdmin.Utilities.SelectedStore.CurrentStore.StoreId">Home</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="HomeStore" asp-route-StoreId="@QuickOrderAdmin.Utilities.SelectedStore.CurrentStore.ID">Home</a>
                             </div>
 
                         </li>
@@ -147,7 +147,7 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                     @foreach (var item in QuickOrderAdmin.Utilities.LogUser.LoginUser.Stores)
                                     {
-                                        <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="HomeStore" asp-route-StoreId="@item.StoreId">
+                                        <a class="nav-link text-dark" asp-area="" asp-controller="Store" asp-action="HomeStore" asp-route-StoreId="@item.ID">
                                             <div class="row">
                                                 <div class="col"> <img src="data:image;base64,@System.Convert.ToBase64String(item.StoreImage)" width="45" height="45" class="rounded-circle" /></div>
                                                 <div class="col">@item.StoreName</div>

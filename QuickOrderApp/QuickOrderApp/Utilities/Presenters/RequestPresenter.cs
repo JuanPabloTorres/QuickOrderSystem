@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using QuickOrderApp.ViewModels;
 using System;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace QuickOrderApp.Utilities.Presenters
 
         public RequestPresenter (UserRequest userRequest)
         {
-            RequestId = userRequest.RequestId;
+            RequestId = userRequest.ID;
 
             var store = GetStore(userRequest.FromStore.ToString());
 
@@ -42,7 +43,7 @@ namespace QuickOrderApp.Utilities.Presenters
 
                         var newStoreEmployee = new Employee()
                         {
-                            EmployeeId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             UserId = userRequest.ToUser,
                             StoreId = userRequest.FromStore,
                             Type = EmployeeType.New

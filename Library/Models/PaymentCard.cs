@@ -1,17 +1,17 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using Library.AbstractModels;
+using System;
 
 namespace Library.Models
 {
-    public class PaymentCard
+    public class PaymentCard : BaseModel
     {
-        public PaymentCard ()
+        public PaymentCard()
         {
         }
 
-        public PaymentCard (Guid paymentcardId, string holdername, string cardnumber, Guid userid, string cvc, string expmonth, string expyear, string stripecardId)
+        public PaymentCard(Guid paymentcardId, string holdername, string cardnumber, Guid userid, string cvc, string expmonth, string expyear, string stripecardId)
         {
-            this.PaymentCardId = paymentcardId;
+            this.ID = paymentcardId;
 
             this.HolderName = holdername;
 
@@ -35,9 +35,6 @@ namespace Library.Models
         public string HolderName { get; set; }
 
         public string Month { get; set; }
-
-        [Key]
-        public Guid PaymentCardId { get; set; }
 
         public string StripeCardId { get; set; }
 

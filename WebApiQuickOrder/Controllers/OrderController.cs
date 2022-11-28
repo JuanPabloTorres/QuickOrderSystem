@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,18 +18,18 @@ namespace WebApiQuickOrder.Controllers
     {
         private readonly QOContext _context;
 
-        public OrderController (QOContext context)
+        public OrderController(QOContext context)
         {
             _context = context;
         }
 
         // DELETE: api/Order/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Order>> DeleteOrder (Guid id)
+        public async Task<ActionResult<Order>> DeleteOrder(Guid id)
         {
             var order = await _context.Orders.FindAsync(id);
 
-            if( order == null )
+            if (order == null)
             {
                 return NotFound();
             }
@@ -41,11 +42,11 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{orderId}")]
-        public async Task<bool> DisableOrder (Guid orderId)
+        public async Task<bool> DisableOrder(Guid orderId)
         {
-            var orderToDisable = await _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefaultAsync();
+            var orderToDisable = await _context.Orders.Where(o => o.ID == orderId).FirstOrDefaultAsync();
 
-            orderToDisable.IsDisisble = true;
+            orderToDisable.IsDisasble = true;
 
             _context.Entry(orderToDisable).State = EntityState.Modified;
 
@@ -55,9 +56,9 @@ namespace WebApiQuickOrder.Controllers
 
                 return true;
             }
-            catch( DbUpdateConcurrencyException )
+            catch (DbUpdateConcurrencyException)
             {
-                if( !OrderExists(orderToDisable.OrderId) )
+                if (!OrderExists(orderToDisable.ID))
                 {
                     return false;
                 }
@@ -69,20 +70,20 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{userid}/{storeid}")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetNotSubmitedOrderOfStoreSpecificUser (Guid userid, Guid storeid)
+        public async Task<ActionResult<IEnumerable<Order>>> GetNotSubmitedOrderOfStoreSpecificUser(Guid userid, Guid storeid)
         {
-            var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == Status.NotSubmited).Include(op => op.OrderProducts).ToListAsync();
+            var _completeOrders = await _context.Orders.Where(o => o.StoreID == storeid && o.BuyerId == userid && o.OrderStatus == Status.NotSubmited).Include(op => op.OrderProducts).ToListAsync();
 
             return _completeOrders;
         }
 
         // GET: api/Order/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder (Guid id)
+        public async Task<ActionResult<Order>> GetOrder(Guid id)
         {
-            var order = _context.Orders.Where(o => o.OrderId == id).Include(op => op.OrderProducts).FirstOrDefault();
+            var order = _context.Orders.Where(o => o.ID == id).Include(op => op.OrderProducts).FirstOrDefault();
 
-            if( order == null )
+            if (order == null)
             {
                 return NotFound();
             }
@@ -92,16 +93,16 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/Order
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders ()
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
             return await _context.Orders.ToListAsync();
         }
 
         // GET: api/Order/5
         [HttpGet("[action]/{userid}/{storeid}/{status}")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfStoreOfUserWithSpecifiStatus (Guid userid, Guid storeid, Status status)
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfStoreOfUserWithSpecifiStatus(Guid userid, Guid storeid, Status status)
         {
-            var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == status).Include(op => op.OrderProducts).ToListAsync();
+            var _completeOrders = await _context.Orders.Where(o => o.StoreID == storeid && o.BuyerId == userid && o.OrderStatus == status).Include(op => op.OrderProducts).ToListAsync();
 
             return _completeOrders;
         }
@@ -109,17 +110,17 @@ namespace WebApiQuickOrder.Controllers
         // GET: api/Order/5
         [HttpGet("[action]/{userid}/{status}")]
         [Authorize(Policy = Policies.User)]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatus (Guid userid, Status status)
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatus(Guid userid, Status status)
         {
-            var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status && o.IsDisisble == false).Include(op => op.OrderProducts).ToListAsync();
+            var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status && o.IsDisasble == false).Include(op => op.OrderProducts).ToListAsync();
 
             List<Order> orders = new List<Order>();
 
-            foreach( var item in result )
+            foreach (var item in result)
             {
                 orders.Add(item);
 
-                if( orders.Count() == 5 )
+                if (orders.Count() == 5)
                 {
                     return orders.ToList();
                 }
@@ -130,23 +131,23 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/Order/5
         [HttpPost("[action]/{status}/{userid}")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatusDifferent (IEnumerable<Order> ordersAdded, Status status, Guid userid)
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrdersOfUserWithSpecificStatusDifferent(IEnumerable<Order> ordersAdded, Status status, Guid userid)
         {
-            if( ordersAdded.Count() < _context.Orders.Count() )
+            if (ordersAdded.Count() < _context.Orders.Count())
             {
                 List<Order> orders = new List<Order>();
 
                 var result = await _context.Orders.Where(o => o.BuyerId == userid && o.OrderStatus == status).Include(op => op.OrderProducts).ToListAsync();
 
-                foreach( var item in result )
+                foreach (var item in result)
                 {
-                    if( !item.IsDisisble )
+                    if (!item.IsDisasble)
                     {
-                        if( !ordersAdded.Any(x => x.OrderId == item.OrderId) )
+                        if (!ordersAdded.Any(x => x.ID == item.ID))
                         {
                             orders.Add(item);
 
-                            if( orders.Count == 5 )
+                            if (orders.Count == 5)
                             {
                                 return orders;
                             }
@@ -162,16 +163,16 @@ namespace WebApiQuickOrder.Controllers
 
         [HttpGet("[action]/{storeId}")]
         [Authorize(Policy = Policies.StoreControl)]
-        public IEnumerable<Order> GetStoreOrders (Guid storeId)
+        public IEnumerable<Order> GetStoreOrders(Guid storeId)
         {
-            return _context.Orders.Where(e => e.StoreId == storeId && e.OrderStatus == Status.Submited).Include(o => o.OrderProducts).ToList();
+            return _context.Orders.Where(e => e.StoreID == storeId && e.OrderStatus == Status.Submited).Include(o => o.OrderProducts).ToList();
         }
 
         // GET: api/Order/5
         [HttpGet("[action]/{userid}/{storeid}")]
-        public async Task<ActionResult<IEnumerable<Order>>> GetSubmitedOrderOfStoreSpecificUser (Guid userid, Guid storeid)
+        public async Task<ActionResult<IEnumerable<Order>>> GetSubmitedOrderOfStoreSpecificUser(Guid userid, Guid storeid)
         {
-            var _completeOrders = await _context.Orders.Where(o => o.StoreId == storeid && o.BuyerId == userid && o.OrderStatus == Status.Submited).Include(op => op.OrderProducts).ToListAsync();
+            var _completeOrders = await _context.Orders.Where(o => o.StoreID == storeid && o.BuyerId == userid && o.OrderStatus == Status.Submited).Include(op => op.OrderProducts).ToListAsync();
 
             return _completeOrders;
         }
@@ -182,29 +183,29 @@ namespace WebApiQuickOrder.Controllers
 
         [HttpGet("[action]/{userid}")]
         [Authorize(Policy = Policies.User)]
-        public IEnumerable<Order> GetUserOrders (Guid userid)
+        public IEnumerable<Order> GetUserOrders(Guid userid)
         {
             return _context.Orders.Where(e => e.BuyerId == userid).Include(o => o.OrderProducts).ToList();
         }
 
         [HttpGet("[action]/{userid}/{storeid}")]
-        public IEnumerable<Order> GetUserOrdersOfStore (Guid userid, Guid storeid)
+        public IEnumerable<Order> GetUserOrdersOfStore(Guid userid, Guid storeid)
         {
-            return _context.Orders.Where(e => e.BuyerId == userid && e.StoreId == storeid).Include(o => o.OrderProducts).ToList();
+            return _context.Orders.Where(e => e.BuyerId == userid && e.StoreID == storeid).Include(o => o.OrderProducts).ToList();
         }
 
         [HttpGet("[action]/{userid}")]
         [Authorize(Policy = Policies.User)]
-        public IEnumerable<Order> GetUserOrdersWithToken (Guid userid)
+        public IEnumerable<Order> GetUserOrdersWithToken(Guid userid)
         {
             return _context.Orders.Where(e => e.BuyerId == userid).Include(o => o.OrderProducts).ToList();
         }
 
         [HttpGet("[action]/{userid}/{storeid}")]
         [Authorize(Policy = Policies.User)]
-        public Order HaveOrderOfSpecificStore (Guid userid, Guid storeid)
+        public Order HaveOrderOfSpecificStore(Guid userid, Guid storeid)
         {
-            return _context.Orders.Where(e => e.BuyerId == userid && e.StoreId == storeid).FirstOrDefault();
+            return _context.Orders.Where(e => e.BuyerId == userid && e.StoreID == storeid).FirstOrDefault();
         }
 
         //}
@@ -212,16 +213,16 @@ namespace WebApiQuickOrder.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Order>> PostOrder (Order order)
+        public async Task<ActionResult<Order>> PostOrder(Order order)
         {
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
+            return CreatedAtAction("GetOrder", new { id = order.ID }, order);
         }
 
         [HttpPut]
-        public async Task<ActionResult<bool>> PutOrder (Order orderupdated)
+        public async Task<ActionResult<bool>> PutOrder(Order orderupdated)
         {
             _context.Entry(orderupdated).State = EntityState.Modified;
 
@@ -229,13 +230,13 @@ namespace WebApiQuickOrder.Controllers
             {
                 await _context.SaveChangesAsync();
 
-                if( orderupdated.OrderStatus == Status.Submited )
+                if (orderupdated.OrderStatus == Status.Submited)
                 {
-                    foreach( var item in orderupdated.OrderProducts )
+                    foreach (var item in orderupdated.OrderProducts)
                     {
-                        var product = _context.Products.Where(p => p.StoreId == item.StoreId && p.ProductId == item.ProductIdReference).FirstOrDefault();
+                        var product = _context.Products.Where(p => p.StoreID == item.ID && p.ID == item.ProductIdReference).FirstOrDefault();
 
-                        if( product != null && product.InventoryQuantity > 0 )
+                        if (product != null && product.InventoryQuantity > 0)
                         {
                             product.InventoryQuantity -= item.Quantity;
 
@@ -250,9 +251,9 @@ namespace WebApiQuickOrder.Controllers
 
                 return true;
             }
-            catch( DbUpdateConcurrencyException )
+            catch (DbUpdateConcurrencyException)
             {
-                if( !OrderExists(orderupdated.OrderId) )
+                if (!OrderExists(orderupdated.ID))
                 {
                     return NotFound();
                 }
@@ -332,9 +333,9 @@ namespace WebApiQuickOrder.Controllers
         //    {
         //        return false;
         //    }
-        private bool OrderExists (Guid id)
+        private bool OrderExists(Guid id)
         {
-            return _context.Orders.Any(e => e.OrderId == id);
+            return _context.Orders.Any(e => e.ID == id);
         }
     }
 }

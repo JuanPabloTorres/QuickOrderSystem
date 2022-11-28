@@ -85,7 +85,7 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserRequest", new { id = userRequest.RequestId }, userRequest);
+            return CreatedAtAction("GetUserRequest", new { id = userRequest.ID }, userRequest);
         }
 
         // PUT: api/UserRequest/5
@@ -94,7 +94,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPut]
         public async Task<bool> PutUserRequest (UserRequest userRequest)
         {
-            var request = _context.Requests.Where(r => r.RequestId == userRequest.RequestId).FirstOrDefault();
+            var request = _context.Requests.Where(r => r.ID == userRequest.ID).FirstOrDefault();
 
             if( request != null )
             {

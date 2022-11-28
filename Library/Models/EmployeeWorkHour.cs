@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Library.AbstractModels;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
-    public class EmployeeWorkHour
+    public class EmployeeWorkHour:BaseModel
     {
         public DateTime CloseTime { get; set; }
 
@@ -19,7 +20,6 @@ namespace Library.Models
 
         public bool WillWork { get; set; }
 
-        [Key]
-        public Guid WorkHourId { get; set; }
+      
     }
 }

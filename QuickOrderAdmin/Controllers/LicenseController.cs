@@ -131,25 +131,25 @@ namespace QuickOrderAdmin.Controllers
                 if (userVm.Password == userVm.ConfirmPassword)
                 {
 
-                    var credentialExist = await userDataStore.CheckIfUsernameAndPasswordExist(userVm.Username, userVm.Password);
+                    var _apiResponse = await userDataStore.CheckIfUsernameAndPasswordExist(userVm.Username, userVm.Password);
 
-                    if (!credentialExist)
+                    if (_apiResponse.IsValid)
                     {
 
                         //Las credenciales de entrada del usuario
-                        var userLogin = new Login()
+                        var userLogin = new Credential()
                         {
-                            LoginId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Password = userVm.Password,
                             Username = userVm.Username
                         };
 
                         //Creamos el usuario
-                        var newUser = new User()
+                        var newUser = new AppUser()
                         {
-                            UserId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Email = userVm.Email,
-                            LoginId = userLogin.LoginId,
+                            LoginId = userLogin.ID,
                             Name = userVm.Name,
                             UserLogin = userLogin,
                             Address = userVm.Address
@@ -188,10 +188,10 @@ namespace QuickOrderAdmin.Controllers
                            
 
                             //Lo agregamos a la base de datos.
-                            var addedUser = await userDataStore.AddItemAsync(newUser);
+                            var _apiUserRequestResponse = await userDataStore.AddItemAsync(newUser);
 
                             //Verificamos si el usuario se inserto a nuestra base de datos
-                            if (addedUser)
+                            if (_apiUserRequestResponse.IsValid)
                             {
 
                                 //Verificamos si el token de la tarjeta insertada es correcta.
@@ -200,39 +200,39 @@ namespace QuickOrderAdmin.Controllers
                                     //Agregamos la tarjeta a nuestra base de datos.
                                     var cardadded = cardDataStore.AddItemAsync(new PaymentCard()
                                     {
-                                        UserId = newUser.UserId,
+                                        UserId = newUser.ID,
                                         StripeCardId = cardservicetokenId,
                                         CardNumber = PaymentCard.CardNumber,
                                         Cvc = PaymentCard.Cvc,
                                         Month = PaymentCard.Month,
                                         Year = PaymentCard.Year,
                                         HolderName = PaymentCard.HolderName,
-                                        PaymentCardId = Guid.NewGuid()
+                                        ID = Guid.NewGuid()
                                     });
                                 }
 
                                 //Creamos el lincense 
                                 var newStoreLicense = new StoreLicense()
                                 {
-                                    LicenseId = Guid.NewGuid(),
+                                    ID = Guid.NewGuid(),
                                     StartDate = DateTime.Today,
-                                    LicenseHolderUserId = newUser.UserId
+                                    LicenseHolderUserId = newUser.ID
 
                                 };
 
                                 //Lo insertamos a nuestra base de datos
-                                var storelicenceresult = await storeLicenseDataStore.AddItemAsync(newStoreLicense);
+                                var _apiStoreLicenseRequestResponse = await storeLicenseDataStore.AddItemAsync(newStoreLicense);
 
                                 //Verificamos el resultado
-                                if (storelicenceresult)
+                                if (_apiStoreLicenseRequestResponse.IsValid)
                                 {
 
                                     var subcription = new Subcription()
                                     {
                                         IsDisable = false,
                                         StripeCustomerId = customerToken,
-                                        StripeSubCriptionID = subcriptiontoken,
-                                        StoreLicense = newStoreLicense.LicenseId
+                                        StripeSubcriptionID = subcriptiontoken,
+                                        StoreLicense = newStoreLicense.ID
 
 
                                     };
@@ -240,7 +240,7 @@ namespace QuickOrderAdmin.Controllers
                                     var result = SubcriptionDataStore.AddItemAsync(subcription);
 
                                     //Enviamos el email con el codio de la nueva licensia.
-                                    SendStoreLicenceEmailCode(newUser.Email, newStoreLicense.LicenseId.ToString());
+                                    SendStoreLicenceEmailCode(newUser.Email, newStoreLicense.ID.ToString());
                                 }
                                 //Verificamos que los credenciales esten correctos.
                                 var resultCredentials = userDataStore.CheckUserCredential(userLogin.Username, userLogin.Password);

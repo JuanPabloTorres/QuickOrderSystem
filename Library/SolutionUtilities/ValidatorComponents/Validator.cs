@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Library.SolutionUtilities.ValidatorComponents
 {
     public class Validator
     {
-        public Validator ()
+        public static IList<Validator> PropertiesToValid { get; set; } = new List<Validator>();
+
+        public Validator()
         {
             HasError = false;
 
             ErrorMessage = String.Empty;
         }
 
-        public Validator (Validator validator)
+        public Validator(Validator validator)
         {
             HasError = validator.HasError;
 

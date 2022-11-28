@@ -108,7 +108,7 @@
                         <div class="form-group">
                             <label class="control-label">Categories</label>
                             @Html.DropDownList("Type",
-                                new SelectList(Enum.GetValues(typeof(Library.Models.ProductType))),
+                                new SelectList(Enum.GetValues(typeof(Library.Helpers.ProductType))),
                                 "Select Product Type",
                                 new { @class = "form-control" })
 

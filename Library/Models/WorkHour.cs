@@ -1,11 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using Library.AbstractModels;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
     [Table("StoresWorkHours")]
-    public class WorkHour
+    public class WorkHour : BaseModel
     {
         public DateTime CloseTime { get; set; }
 
@@ -13,12 +13,6 @@ namespace Library.Models
 
         public DateTime OpenTime { get; set; }
 
-        public Guid StoreId { get; set; }
-
-        [Key]
-        public Guid WorkHourId { get; set; }
-
-        //[ForeignKey("StoreId")]
-        //public Store WorkHourStore { get; set; }
+      
     }
 }

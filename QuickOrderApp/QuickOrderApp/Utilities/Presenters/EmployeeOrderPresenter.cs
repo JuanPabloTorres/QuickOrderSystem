@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using QuickOrderApp.ViewModels;
 using System;
 using System.Collections.ObjectModel;
@@ -18,7 +19,7 @@ namespace QuickOrderApp.Utilities.Presenters
 
         private int orderItems;
 
-        private Library.Models.Type orderType;
+        private Library.Helpers.Type orderType;
 
         private Status ostatus;
 
@@ -30,7 +31,7 @@ namespace QuickOrderApp.Utilities.Presenters
 
         public EmployeeOrderPresenter (Order order)
         {
-            OrderId = order.OrderId;
+            OrderId = order.ID;
 
             OrderDate = order.OrderDate;
 
@@ -42,7 +43,7 @@ namespace QuickOrderApp.Utilities.Presenters
 
             OrderType = order.OrderType;
 
-            StoreId = order.StoreId;
+            StoreId = order.StoreID;
 
             OrderProducts = new ObservableCollection<OrderProduct>(order.OrderProducts.ToList());
 
@@ -120,7 +121,7 @@ namespace QuickOrderApp.Utilities.Presenters
 
         public Status OrderStatus { get; set; }
 
-        public Library.Models.Type OrderType
+        public Library.Helpers.Type OrderType
         {
             get { return orderType; }
             set

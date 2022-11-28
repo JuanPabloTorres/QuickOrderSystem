@@ -23,7 +23,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
                     if( result )
                     {
-                        var cardResult = await CardDataStore.GetCardFromUser(App.LogUser.UserId, App.TokenDto.Token);
+                        var cardResult = await CardDataStore.GetCardFromUser(App.LogUser.ID, App.TokenDto.Token);
 
                         if( cardResult != null && cardResult.Count() > 0 )
                         {
@@ -40,13 +40,13 @@ namespace QuickOrderApp.ViewModels.SettingVM
                                 var subcription = new Library.Models.Subcription()
                                 {
                                     StripeCustomerId = App.LogUser.StripeUserId,
-                                    StripeSubCriptionID = subcriptionToken,
+                                    StripeSubcriptionID = subcriptionToken,
                                     //StoreLicense = StoreControlPanelViewModel.YourSelectedStore.StoreLicenceId
                                 };
 
-                                var subcriptionResult = await SubcriptionDataStore.AddItemAsync(subcription);
+                                var _apiResponse = await SubcriptionDataStore.AddItemAsync(subcription);
 
-                                if( subcriptionResult )
+                                if(_apiResponse.IsValid)
                                 {
                                     var licenseReuslt = await storeLicenseDataStore.PostStoreLicense(App.LogUser.Email, App.LogUser.Name);
 

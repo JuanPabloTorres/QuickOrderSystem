@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using QuickOrderApp.Managers;
 using QuickOrderApp.Views.Settings;
 using System;
@@ -12,7 +13,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
 {
     public class SettingViewModel : BaseViewModel
     {
-        private User userinformation;
+        private AppUser userinformation;
 
         public SettingViewModel ()
         {
@@ -60,7 +61,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                {
                    await Shell.Current.GoToAsync("UpdateProfileRoute", true);
 
-                   MessagingCenter.Send<User>(App.LogUser, "UserInformation");
+                   MessagingCenter.Send<AppUser>(App.LogUser, "UserInformation");
                }
            });
 
@@ -167,7 +168,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
             });
         }
 
-        public User UserInformation
+        public AppUser UserInformation
         {
             get { return userinformation; }
             set

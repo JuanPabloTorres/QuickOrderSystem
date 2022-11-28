@@ -23,7 +23,7 @@ namespace QuickOrderApp.ViewModels.LoginVM
           {
               if( !string.IsNullOrEmpty(Code) )
               {
-                  var userValidateResult = await userDataStore.ValidateEmail(Code, App.LogUser.UserId.ToString());
+                  var userValidateResult = await userDataStore.ValidateEmail(Code, App.LogUser.ID.ToString());
 
                   if( userValidateResult )
                   {
@@ -38,14 +38,14 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
         public ICommand ResendCode => new Command(async () =>
                   {
-                      var resendResult = await userDataStore.ResendCode(App.LogUser.UserId.ToString());
+                      var resendResult = await userDataStore.ResendCode(App.LogUser.ID.ToString());
                   });
 
         public ICommand ValidateCommand => new Command(async () =>
           {
               if( !string.IsNullOrEmpty(Code) )
               {
-                  var userValidateResult = await userDataStore.ValidateEmail(Code, App.LogUser.UserId.ToString());
+                  var userValidateResult = await userDataStore.ValidateEmail(Code, App.LogUser.ID.ToString());
 
                   if( userValidateResult )
                   {

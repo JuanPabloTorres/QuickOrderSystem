@@ -1,4 +1,5 @@
 ﻿using Library.DTO;
+using Library.Helpers;
 using Library.Models;
 using Library.SolutionUtilities.ValidatorComponents;
 using QuickOrderApp.Managers;
@@ -42,7 +43,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
             Genders = new List<string>(Enum.GetNames(typeof(Gender)).ToList());
 
-            MessagingCenter.Subscribe<User>(this, "UserInformation", (obj) =>
+            MessagingCenter.Subscribe<AppUser>(this, "UserInformation", (obj) =>
             {
                 Fullname = obj.Name;
 

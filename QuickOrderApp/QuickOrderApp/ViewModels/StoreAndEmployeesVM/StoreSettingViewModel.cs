@@ -36,9 +36,9 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
         public ICommand CancelSubcriptionCommand => new Command(async () =>
           {
-              var result = await stripeServiceDS.CancelSubcription(App.LogUser.StripeUserId);
+              var apiResponse = await stripeServiceDS.CancelSubcription(App.LogUser.StripeUserId);
 
-              if( result )
+              if( apiResponse.IsValid )
               {
                   storeInformation.IsDisable = true;
 

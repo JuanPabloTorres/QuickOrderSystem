@@ -35,7 +35,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
             {
                 var tokenData = new JwtSecurityTokenHandler().ReadJwtToken(App.TokenDto.Token);
 
-                var cardData = await CardDataStore.GetCardDTOFromUser(App.LogUser.UserId, App.TokenDto.Token);
+                var cardData = await CardDataStore.GetCardDTOFromUser(App.LogUser.ID, App.TokenDto.Token);
 
                 foreach( var item in cardData )
                 {

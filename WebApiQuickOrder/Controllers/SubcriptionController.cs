@@ -71,7 +71,7 @@ namespace WebApiQuickOrder.Controllers
             }
             catch( DbUpdateException )
             {
-                if( SubcriptionExists(subcription.StripeSubCriptionID) )
+                if( SubcriptionExists(subcription.StripeSubcriptionID) )
                 {
                     return Conflict();
                 }
@@ -81,7 +81,7 @@ namespace WebApiQuickOrder.Controllers
                 }
             }
 
-            return CreatedAtAction("GetSubcription", new { id = subcription.StripeSubCriptionID }, subcription);
+            return CreatedAtAction("GetSubcription", new { id = subcription.StripeSubcriptionID }, subcription);
         }
 
         // PUT: api/Subcription/5
@@ -90,7 +90,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSubcription (string id, Subcription subcription)
         {
-            if( id != subcription.StripeSubCriptionID )
+            if( id != subcription.StripeSubcriptionID )
             {
                 return BadRequest();
             }
@@ -118,7 +118,7 @@ namespace WebApiQuickOrder.Controllers
 
         private bool SubcriptionExists (string id)
         {
-            return _context.Subcriptions.Any(e => e.StripeSubCriptionID == id);
+            return _context.Subcriptions.Any(e => e.StripeSubcriptionID == id);
         }
     }
 }

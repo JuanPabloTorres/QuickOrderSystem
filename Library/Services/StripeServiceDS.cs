@@ -1,4 +1,6 @@
-﻿using Library.DTO;
+﻿using Library.ApiResponses;
+using Library.DTO;
+using Library.Factories;
 using Library.Models;
 using Library.Services.Interface;
 using Newtonsoft.Json;
@@ -10,18 +12,14 @@ namespace Library.Services
 {
     public class StripeServiceDS : IStripeServiceDS
     {
-        public static string LocalBackendUrl = "http://juantorres9-001-site1.etempurl.com/api";
-
         protected readonly Uri BaseAPIUri;
 
         protected readonly HttpClient HttpClient;
 
         //protected readonly INetworkService NetworkService;
-        //public static string LocalBackendUrl = "http://192.168.1.144:5000/api";
-        //public static string LocalBackendUrl = "http://192.168.56.1:5000/api";
-        //public static string LocalBackendUrl = "https://192.168.1.132:5001/api";
+        public readonly string LocalBackendUrl = "http://192.168.0.2:5000/api";
 
-        public StripeServiceDS ()
+        public StripeServiceDS()
         {
             HttpClient = new HttpClient();
 
@@ -32,24 +30,40 @@ namespace Library.Services
 
         protected Uri FullAPIUri { get; set; }
 
-        public async Task<bool> CancelSubcription (string customerId)
+        public async Task<Response<Subcription>> CancelSubcription(string customerId)
         {
-            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CancelSubcription)}/{customerId}");
+            ResponseFactory<Subcription> responseFactory = new ResponseFactory<Subcription>();
 
-            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            try
+            {
+                FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CancelSubcription)}/{customerId}");
 
-            bool deserialized = JsonConvert.DeserializeObject<bool>(response);
+                var response = await HttpClient.GetAsync(FullAPIUri);
 
-            return deserialized;
+                if (response.IsSuccessStatusCode)
+                {
+                    var apiResponse = JsonConvert.DeserializeObject<Response<Subcription>>(await response.Content.ReadAsStringAsync());
+
+                    return apiResponse;
+                }
+                else
+                {
+                    return responseFactory.FailResponse("Request Fail");
+                }
+            }
+            catch (Exception e)
+            {
+                return responseFactory.FailResponse(e.Message);
+            }
         }
 
-        public async Task<string> CreateACustomerSubcription (string customerId)
+        public async Task<string> CreateACustomerSubcription(string customerId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CreateACustomerSubcription)}/{customerId}");
 
             var response = await HttpClient.GetAsync(FullAPIUri);
 
-            if( response.IsSuccessStatusCode )
+            if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsStringAsync();
             }
@@ -59,7 +73,7 @@ namespace Library.Services
             }
         }
 
-        public async Task<StripePaymentCardResult> CreateCardToken (PaymentCard paymentCard)
+        public async Task<StripePaymentCardResult> CreateCardToken(PaymentCard paymentCard)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CreateCardToken)}");
 
@@ -79,7 +93,7 @@ namespace Library.Services
 
             var response = await HttpClient.PostAsync(FullAPIUri, byteContent);
 
-            if( response.IsSuccessStatusCode )
+            if (response.IsSuccessStatusCode)
             {
                 StripePaymentCardResult deserialized = JsonConvert.DeserializeObject<StripePaymentCardResult>(response.Content.ReadAsStringAsync().Result);
 
@@ -91,7 +105,7 @@ namespace Library.Services
             }
         }
 
-        public async Task<string> CreateStripeCustomer (UserDTO userDTO)
+        public async Task<string> CreateStripeCustomer(UserDTO userDTO)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CreateStripeCustomer)}");
 
@@ -111,7 +125,7 @@ namespace Library.Services
 
             var response = await HttpClient.PostAsync(FullAPIUri, byteContent);
 
-            if( response.IsSuccessStatusCode )
+            if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsStringAsync();
             }
@@ -121,7 +135,7 @@ namespace Library.Services
             }
         }
 
-        public async Task<bool> DeleteCardFromCustomer (string customerId, string cardId)
+        public async Task<bool> DeleteCardFromCustomer(string customerId, string cardId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(DeleteCardFromCustomer)}/{customerId}/{cardId}");
 
@@ -132,13 +146,13 @@ namespace Library.Services
             return deserialized;
         }
 
-        public async Task<string> GetCustomerCardId (string customerId, string customercardId)
+        public async Task<string> GetCustomerCardId(string customerId, string customercardId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(GetCustomerCardId)}/{customerId}/{customercardId}");
 
             var response = await HttpClient.GetAsync(FullAPIUri);
 
-            if( response.IsSuccessStatusCode )
+            if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsStringAsync();
             }
@@ -148,7 +162,7 @@ namespace Library.Services
             }
         }
 
-        public async Task<string> InsertStripeCardToCustomer (PaymentCard paymentCard, string stripeuserId)
+        public async Task<string> InsertStripeCardToCustomer(PaymentCard paymentCard, string stripeuserId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(InsertStripeCardToCustomer)}/{stripeuserId}");
 
@@ -168,7 +182,7 @@ namespace Library.Services
 
             var response = await HttpClient.PostAsync(FullAPIUri, byteContent);
 
-            if( response.IsSuccessStatusCode )
+            if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadAsStringAsync();
             }
@@ -178,7 +192,7 @@ namespace Library.Services
             }
         }
 
-        public async Task<StripePaymentCardResult> InsertStripeCardToStripeUser (PaymentCard paymentCard, string stripeuserId)
+        public async Task<StripePaymentCardResult> InsertStripeCardToStripeUser(PaymentCard paymentCard, string stripeuserId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(InsertStripeCardToStripeUser)}/{stripeuserId}");
 
@@ -198,7 +212,7 @@ namespace Library.Services
 
             var response = await HttpClient.PostAsync(FullAPIUri, byteContent);
 
-            if( response.IsSuccessStatusCode )
+            if (response.IsSuccessStatusCode)
             {
                 StripePaymentCardResult deserialized = JsonConvert.DeserializeObject<StripePaymentCardResult>(response.Content.ReadAsStringAsync().Result);
 
@@ -210,7 +224,7 @@ namespace Library.Services
             }
         }
 
-        public async Task<bool> MakePayment (Guid storeId, double total, string customerId, string orderId)
+        public async Task<bool> MakePayment(Guid storeId, double total, string customerId, string orderId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(MakePayment)}/{storeId}/{total}/{customerId}/{orderId}");
 
@@ -221,7 +235,7 @@ namespace Library.Services
             return deserialized;
         }
 
-        public async Task<bool> MakePayment2 (Guid storeId, double total, string customerId, string orderId, string customerCardId)
+        public async Task<bool> MakePayment2(Guid storeId, double total, string customerId, string orderId, string customerCardId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(MakePayment2)}/{storeId}/{total}/{customerId}/{orderId}/{customerCardId}");
 
@@ -232,7 +246,7 @@ namespace Library.Services
             return deserialized;
         }
 
-        public async Task<bool> MakePaymentWithCard (Guid storeId, double total, Guid paymentCardId, string orderId)
+        public async Task<bool> MakePaymentWithCard(Guid storeId, double total, Guid paymentCardId, string orderId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(MakePaymentWithCard)}/{storeId}/{total}/{paymentCardId}/{orderId}");
 
@@ -243,7 +257,7 @@ namespace Library.Services
             return deserialized;
         }
 
-        public async Task<string> TransferQuickOrderFeeFromStore (string storestripeAccId, string quickOrderFee, string storeId)
+        public async Task<string> TransferQuickOrderFeeFromStore(string storestripeAccId, string quickOrderFee, string storeId)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(TransferQuickOrderFeeFromStore)}/{storestripeAccId}/{quickOrderFee}/{storeId}");
 
@@ -254,7 +268,7 @@ namespace Library.Services
             return deserialized;
         }
 
-        public async Task<bool> UpdateStripeCustomer (UserDTO updateinformation)
+        public async Task<bool> UpdateStripeCustomer(UserDTO updateinformation)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(UpdateStripeCustomer)}");
 
@@ -274,7 +288,7 @@ namespace Library.Services
 
             var response = await HttpClient.PostAsync(FullAPIUri, byteContent);
 
-            if( response.IsSuccessStatusCode )
+            if (response.IsSuccessStatusCode)
             {
                 bool deserialized = JsonConvert.DeserializeObject<bool>(response.Content.ReadAsStringAsync().Result);
 

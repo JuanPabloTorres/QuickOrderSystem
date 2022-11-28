@@ -1,15 +1,18 @@
-﻿using Library.Services;
+﻿using Library.ApiResponses;
+using Library.Factories;
+using Library.Services.Interface;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Library.Interface
+namespace Library.Services
 {
     public class DataStoreService<T> : IDataStore<T> where T : class
     {
-        public static string LocalBackendUrl = "http://juantorres9-001-site1.etempurl.com/api";
+        //public static string LocalBackendUrl = "http://localhost:5000/api";
 
         protected readonly Uri BaseAPIUri;
 
@@ -17,12 +20,9 @@ namespace Library.Interface
 
         //protected readonly INetworkService NetworkService;
 
-        //public static string LocalBackendUrl = "http://192.168.1.144:5000/api";
-        //public static string LocalBackendUrl = "http://192.168.1.133:5000/api";
-        //public static string LocalBackendUrl = "http://192.168.56.1:5000/api";
-        //public static string LocalBackendUrl = "https://192.168.1.132:5001/api";
+        public readonly string LocalBackendUrl = "http://192.168.0.2:5000/api";
 
-        public DataStoreService ()
+        public DataStoreService()
         {
             HttpClient = new HttpClient();
 
@@ -33,46 +33,68 @@ namespace Library.Interface
 
         protected Uri FullAPIUri { get; set; }
 
-        public async Task<bool> AddItemAsync (T item)
+        public async Task<Response<T>> AddItemAsync(T item)
         {
-            var serializeObj = JsonConvert
-                .SerializeObject(item, Formatting.Indented, new JsonSerializerSettings
+            var factory = new ResponseFactory<T>();
+
+            //var myGenericObject = Activator.CreateInstance(typeof(ResponseFactory<>).MakeGenericType(typeof(T)), factory);
+
+            try
+            {
+                var serializeObj = JsonConvert.SerializeObject(item, Formatting.Indented, new JsonSerializerSettings
                 {
                     //ContractResolver = new JsonPrivateResolver(),
                     ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
                     NullValueHandling = NullValueHandling.Include
                 });
 
-            var buffer = System.Text.Encoding.UTF8.GetBytes(serializeObj);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(serializeObj);
 
-            var byteContent = new ByteArrayContent(buffer);
+                var byteContent = new ByteArrayContent(buffer);
 
-            byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            var response = await HttpClient.PostAsync(BaseAPIUri, byteContent);
+                var response = await HttpClient.PostAsync(BaseAPIUri, byteContent);
 
-            if( response.IsSuccessStatusCode )
-            {
-                return true;
+                if (response.IsSuccessStatusCode)
+                {
+                    var _apiResponse = JsonConvert.DeserializeObject<Response<T>>(await response.Content.ReadAsStringAsync());
+
+                    return _apiResponse;
+                }
+                else
+                {
+                    MethodInfo method = typeof(ResponseFactory<T>).GetMethod(nameof(ResponseFactory<T>.FailResponse));
+
+                    var _failResponse = method.Invoke(factory, new object[] { "Request Fail." });
+
+                    return (Response<T>)_failResponse;
+                }
             }
+            catch (Exception e)
+            {
+                MethodInfo method = typeof(ResponseFactory<T>).GetMethod(nameof(ResponseFactory<T>.FailResponse));
 
-            return false;
+                var _failResponse = method.Invoke(factory, new object[] { e.Message });
+
+                return (Response<T>)_failResponse;
+            }
         }
 
-        public async Task<bool> DeleteItemAsync (string id)
+        public async Task<bool> DeleteItemAsync(string id)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{id}");
 
             var response = HttpClient.DeleteAsync(FullAPIUri);
 
-            if( response.Result.IsSuccessStatusCode )
+            if (response.Result.IsSuccessStatusCode)
             {
                 return true;
             }
             else return false;
         }
 
-        public async Task<T> GetItemAsync (string id)
+        public async Task<T> GetItemAsync(string id)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{id}");
 
@@ -83,7 +105,7 @@ namespace Library.Interface
             return deserializeObject;
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync (bool forceRefresh = false)
+        public async Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = false)
         {
             string uriString = $"{typeof(T).Name}";
 
@@ -94,7 +116,7 @@ namespace Library.Interface
             return deserializeObjects;
         }
 
-        public async Task<bool> UpdateItemAsync (T item)
+        public async Task<bool> UpdateItemAsync(T item)
         {
             FullAPIUri = new Uri(BaseAPIUri, "");
 
@@ -114,7 +136,7 @@ namespace Library.Interface
 
             var response = await HttpClient.PutAsync(BaseAPIUri, byteContent);
 
-            if( response.IsSuccessStatusCode )
+            if (response.IsSuccessStatusCode)
             {
                 return true;
             }

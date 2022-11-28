@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,7 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            var result = await _context.Stores.AnyAsync(s => s.StoreId == id);
+            var result = await _context.Stores.AnyAsync(s => s.ID == id);
 
             if( result )
             {
@@ -61,7 +62,7 @@ namespace WebApiQuickOrder.Controllers
             }
             catch( DbUpdateConcurrencyException )
             {
-                if( !StoreExists(store.StoreId) )
+                if( !StoreExists(store.ID) )
                 {
                     return false;
                 }
@@ -100,7 +101,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{id}")]
         public async Task<ActionResult<Store>> GetAvailableStoreInformation (Guid id)
         {
-            var store = await _context.Stores.Where(s => s.StoreId == id && s.IsDisable == false).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();
+            var store = await _context.Stores.Where(s => s.ID == id && s.IsDisable == false).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();
 
             if( store == null )
             {
@@ -122,7 +123,7 @@ namespace WebApiQuickOrder.Controllers
                 {
                     if( !item.IsDisable )
                     {
-                        if( !storesAdded.Any(x => x.StoreId == item.StoreId) )
+                        if( !storesAdded.Any(x => x.ID == item.ID) )
                         {
                             stores.Add(item);
 
@@ -154,7 +155,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Store>> GetStore (Guid id)
         {
-            var store = await _context.Stores.Where(s => s.StoreId == id).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();
+            var store = await _context.Stores.Where(s => s.ID == id).Include(p => p.Products).Include(w => w.WorkHours).FirstOrDefaultAsync();
 
             if( store == null )
             {
@@ -165,10 +166,10 @@ namespace WebApiQuickOrder.Controllers
         }
 
         // GET: api/Store/5
-        [HttpGet("[action]/{storeId}")]
-        public async Task<ActionResult<string>> GetStoreDestinationPaymentKey (Guid storeId)
+        [HttpGet("[action]/{ID}")]
+        public async Task<ActionResult<string>> GetStoreDestinationPaymentKey (Guid ID)
         {
-            var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().SKKey;
+            var keyResult = _context.Stores.Where(s => s.ID == ID).FirstOrDefault().SKKey;
 
             if( keyResult == null )
             {
@@ -179,10 +180,10 @@ namespace WebApiQuickOrder.Controllers
         }
 
         // GET: api/Store/5
-        [HttpGet("[action]/{storeId}")]
-        public async Task<ActionResult<string>> GetStoreDestinationPublicPaymentKey (Guid storeId)
+        [HttpGet("[action]/{ID}")]
+        public async Task<ActionResult<string>> GetStoreDestinationPublicPaymentKey (Guid ID)
         {
-            var keyResult = _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefault().PBKey;
+            var keyResult = _context.Stores.Where(s => s.ID == ID).FirstOrDefault().PBKey;
 
             if( keyResult == null )
             {
@@ -218,7 +219,7 @@ namespace WebApiQuickOrder.Controllers
             //_context.WorkHours.Attach(store.WorkHours)
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStore", new { id = store.StoreId }, store);
+            return CreatedAtAction("GetStore", new { id = store.ID }, store);
         }
 
         // PUT: api/Store/5
@@ -233,7 +234,7 @@ namespace WebApiQuickOrder.Controllers
 
                 await _context.SaveChangesAsync();
 
-                var result = _context.WorkHours.Where(w => w.StoreId == store.StoreId).ToList();
+                var result = _context.WorkHours.Where(w => w.ID == store.ID).ToList();
 
                 _context.WorkHours.RemoveRange(result);
 
@@ -247,7 +248,7 @@ namespace WebApiQuickOrder.Controllers
             }
             catch( DbUpdateConcurrencyException )
             {
-                if( !StoreExists(store.StoreId) )
+                if( !StoreExists(store.ID) )
                 {
                     return false;
                 }
@@ -267,7 +268,7 @@ namespace WebApiQuickOrder.Controllers
 
         private bool StoreExists (Guid id)
         {
-            return _context.Stores.Any(e => e.StoreId == id);
+            return _context.Stores.Any(e => e.ID == id);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace QuickOrderApp.Utilities.Presenters
         {
             StoreName = store.StoreName;
 
-            StoreId = store.StoreId;
+            StoreId = store.ID;
 
             StoreImg = store.StoreImage;
 

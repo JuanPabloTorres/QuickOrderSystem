@@ -1,4 +1,7 @@
-﻿using Library.DTO;
+﻿using Library.ApiResponses;
+using Library.DTO;
+using Library.Factories;
+using Library.Helpers;
 using Library.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,13 +24,13 @@ namespace WebApiQuickOrder.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class AppUserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
         private readonly QOContext _context;
 
-        public UserController (QOContext context, IConfiguration configuration)
+        public AppUserController(QOContext context, IConfiguration configuration)
         {
             _context = context;
 
@@ -35,21 +38,39 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{username}/{password}")]
-        public async Task<bool> CheckIfUsernameAndPasswordExist (string username, string password)
+        public async Task<Response<Credential>> CheckIfUsernameAndPasswordExist(string username, string password)
         {
-            return await _context.Logins.AnyAsync(l => l.Username == username && l.Password == password);
+            ResponseFactory<Credential> responseFactory = new ResponseFactory<Credential>();
+
+            try
+            {
+                var _exist = await _context.Logins.AnyAsync(l => l.Username == username && l.Password == password);
+
+                if (_exist)
+                {
+                    return responseFactory.ResponseSpecificStatus("User Found", ResponseStatus.User_Found);
+                }
+                else
+                {
+                    return responseFactory.ResponseSpecificStatus("User Don't Exist.", ResponseStatus.Not_Found);
+                }
+            }
+            catch (Exception e)
+            {
+                return responseFactory.FailResponse(e.Message);
+            }
         }
 
         [HttpGet("[action]/{username}/{password}")]
-        public User CheckUserCredential (string username, string password)
+        public AppUser CheckUserCredential(string username, string password)
         {
             var loginOfUser = _context.Logins.Where(c => c.Username == username && c.Password == password).FirstOrDefault();
 
-            if( loginOfUser != null )
+            if (loginOfUser != null)
             {
-                if( _context.Users.Count() > 0 )
+                if (_context.Users.Count() > 0)
                 {
-                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).Include(c => c.PaymentCards).FirstOrDefault();
+                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.ID).Include(s => s.Stores).Include(c => c.PaymentCards).FirstOrDefault();
 
                     return user;
                 }
@@ -65,13 +86,13 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{code}")]
-        public bool ConfirmCode (string code)
+        public bool ConfirmCode(string code)
         {
             var result = _context.ForgotPasswords.Where(u => u.Code == code).FirstOrDefault();
 
             var userInfo = _context.Users.Where(u => u.Email == result.Email).Include(l => l.UserLogin).FirstOrDefault();
 
-            if( result != null )
+            if (result != null)
             {
                 var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
 
@@ -91,12 +112,12 @@ namespace WebApiQuickOrder.Controllers
                     Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
                 };
 
-                using( var mess = new MailMessage(senderEmail, receiverEmail)
+                using (var mess = new MailMessage(senderEmail, receiverEmail)
                 {
                     IsBodyHtml = true,
                     Subject = sub,
                     Body = body
-                } )
+                })
                 {
                     smtp.Send(mess);
                 }
@@ -115,11 +136,11 @@ namespace WebApiQuickOrder.Controllers
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<User>> DeleteUser (Guid id)
+        public async Task<ActionResult<AppUser>> DeleteUser(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
 
-            if( user == null )
+            if (user == null)
             {
                 return NotFound();
             }
@@ -132,7 +153,7 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{email}")]
-        public async Task<bool> EmailExist (string email)
+        public async Task<bool> EmailExist(string email)
         {
             var result = await _context.Users.AnyAsync(e => e.Email == email);
 
@@ -140,11 +161,11 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{email}")]
-        public bool ForgotCodeSend (string email)
+        public bool ForgotCodeSend(string email)
         {
             var result = _context.Users.Where(u => u.Email == email).FirstOrDefault();
 
-            if( result != null )
+            if (result != null)
             {
                 var forgotpassword = new ForgotPassword()
                 {
@@ -174,12 +195,12 @@ namespace WebApiQuickOrder.Controllers
                     Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
                 };
 
-                using( var mess = new MailMessage(senderEmail, receiverEmail)
+                using (var mess = new MailMessage(senderEmail, receiverEmail)
                 {
                     IsBodyHtml = true,
                     Subject = sub,
                     Body = body
-                } )
+                })
                 {
                     smtp.Send(mess);
                 }
@@ -194,11 +215,11 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser (Guid id)
+        public async Task<ActionResult<AppUser>> GetUser(Guid id)
         {
             var user = await _context.Users.FindAsync(id);
 
-            if( user == null )
+            if (user == null)
             {
                 return NotFound();
             }
@@ -208,29 +229,29 @@ namespace WebApiQuickOrder.Controllers
 
         // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers ()
+        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
 
         // GET: api/User/5
         [HttpGet("[action]/{name}")]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserWithName (string name)
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserWithName(string name)
         {
             var _users = await _context.Users.Where(user => user.Name == name).ToListAsync();
 
-            if( _users == null )
+            if (_users == null)
             {
                 return NotFound();
             }
 
             List<UserDTO> userDTOs = new List<UserDTO>();
 
-            foreach( var item in _users )
+            foreach (var item in _users)
             {
                 var userDTO = new UserDTO()
                 {
-                    UserId = item.UserId,
+                    UserId = item.ID,
                     Name = item.Name,
                     Address = item.Address,
                     Email = item.Email,
@@ -245,25 +266,29 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{username}/{password}")]
-        public TokenDTO LoginCredential (string username, string password)
+        public async Task<ActionResult<Response<TokenDTO>>> LoginCredential(string username, string password)
         {
-            IActionResult response = Unauthorized();
+            ResponseFactory<TokenDTO> responseFactory = new ResponseFactory<TokenDTO>();
 
-            var loginOfUser = _context.Logins.Where(c => c.Username == username && c.Password == password).FirstOrDefault();
+            Response<TokenDTO> _apiResponse = new Response<TokenDTO>();
 
-            if( loginOfUser != null )
+            try
             {
-                if( _context.Users.Count() > 0 )
-                {
-                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.LoginId).Include(s => s.Stores).Include(c => c.PaymentCards).FirstOrDefault();
+                IActionResult response = Unauthorized();
 
-                    var isAdministrator = _context.Stores.Any(s => s.UserId == user.UserId);
+                var loginOfUser = await _context.Logins.Where(c => c.Username == username && c.Password == password).FirstOrDefaultAsync();
+
+                if (loginOfUser != null)
+                {
+                    var user = _context.Users.Where(u => u.LoginId == loginOfUser.ID).Include(s => s.Stores).Include(c => c.PaymentCards).FirstOrDefault();
+
+                    var isAdministrator = _context.Stores.Any(s => s.UserId == user.ID);
 
                     string tokenString;
 
                     TokenDTO tokenDTO;
 
-                    if( isAdministrator )
+                    if (isAdministrator)
                     {
                         tokenString = GenerateJWTTokenWithRole(user, "Admin");
 
@@ -276,12 +301,14 @@ namespace WebApiQuickOrder.Controllers
                             Exp = DateTime.Now.AddMinutes(30)
                         };
 
-                        return tokenDTO;
+                        _apiResponse = responseFactory.DataResponse("Valid Credential ", tokenDTO);
+
+                        return Ok(_apiResponse);
                     }
 
-                    var isEmployee = _context.Employees.Any(emp => emp.EmployeeUser.UserId == user.UserId);
+                    var isEmployee = _context.Employees.Any(emp => emp.ID == user.ID);
 
-                    if( isEmployee )
+                    if (isEmployee)
                     {
                         tokenString = GenerateJWTTokenWithRole(user, "Employee");
 
@@ -292,7 +319,9 @@ namespace WebApiQuickOrder.Controllers
                             Exp = DateTime.Now.AddMinutes(30)
                         };
 
-                        return tokenDTO;
+                        _apiResponse = responseFactory.DataResponse("Valid Credential ", tokenDTO);
+
+                        return Ok(_apiResponse);
                     }
 
                     tokenString = GenerateJWTToken(user);
@@ -303,53 +332,67 @@ namespace WebApiQuickOrder.Controllers
                         UserDetail = user,
                         Exp = DateTime.Now.AddMinutes(30)
                     };
-                    return tokenDTO;
+
+                    _apiResponse = responseFactory.DataResponse("Valid Credential ", tokenDTO);
+
+                    return Ok(_apiResponse);
                 }
                 else
                 {
-                    return null;
+                    var _failResponse = responseFactory.ResponseSpecificStatus("Credential Not Found", ResponseStatus.Not_Found);
+
+                    return Ok(_failResponse);
                 }
             }
-            else
+            catch (Exception e)
             {
-                return null;
+                var _failResponse = responseFactory.FailResponse(e.Message);
+
+                return Ok(_failResponse);
             }
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> PostUser ([FromBody] User user)
+        public async Task<ActionResult<Response<AppUser>>> PostUser([FromBody] AppUser user)
         {
-            _context.Users.Add(user);
+            ResponseFactory<AppUser> responseFactory = new ResponseFactory<AppUser>();
 
-            await _context.SaveChangesAsync();
-
-            string validationcode = Guid.NewGuid().ToString().Substring(0, 5);
-
-            var emailValidation = new EmailValidation()
+            try
             {
-                Email = user.Email,
-                ExpDate = DateTime.Now.AddMinutes(30),
-                EmailValidationId = Guid.NewGuid(),
-                UserId = user.UserId,
-                ValidationCode = validationcode
-            };
+                _context.Users.Add(user);
 
-            _context.EmailValidations.Add(emailValidation);
+                await _context.SaveChangesAsync();
 
-            await _context.SaveChangesAsync();
+                string validationcode = Guid.NewGuid().ToString().Substring(0, 5);
 
-            SendValidateEmailCode(emailValidation);
+                var emailValidation = new EmailValidation()
+                {
+                    Email = user.Email,
+                    ExpDate = DateTime.Now.AddMinutes(30),
+                    ID = Guid.NewGuid(),
+                    UserId = user.ID,
+                    ValidationCode = validationcode
+                };
 
-            return true;
+                _context.EmailValidations.Add(emailValidation);
 
-            //return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+                await _context.SaveChangesAsync();
+
+                SendValidateEmailCode(emailValidation);
+
+                return Ok(responseFactory.DataResponse("User Created.", user));
+            }
+            catch (Exception e)
+            {
+                return Ok(responseFactory.FailResponse(e.Message));
+            }
         }
 
         // PUT: api/User/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut]
-        public async Task<ActionResult<User>> PutUser (User user)
+        public async Task<ActionResult<AppUser>> PutUser(AppUser user)
         {
             _context.Entry(user).State = EntityState.Modified;
 
@@ -359,9 +402,9 @@ namespace WebApiQuickOrder.Controllers
 
                 return user;
             }
-            catch( DbUpdateConcurrencyException )
+            catch (DbUpdateConcurrencyException)
             {
-                if( !UserExists(user.UserId) )
+                if (!UserExists(user.ID))
                 {
                     return NotFound();
                 }
@@ -406,11 +449,11 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{userId}")]
-        public async Task<ActionResult<bool>> ResendCode (string userId)
+        public async Task<ActionResult<bool>> ResendCode(string userId)
         {
-            var user = _context.Users.Where(u => u.UserId.ToString() == userId).FirstOrDefault();
+            var user = _context.Users.Where(u => u.ID.ToString() == userId).FirstOrDefault();
 
-            if( user != null )
+            if (user != null)
             {
                 string validationcode = Guid.NewGuid().ToString().Substring(0, 5);
 
@@ -418,8 +461,8 @@ namespace WebApiQuickOrder.Controllers
                 {
                     Email = user.Email,
                     ExpDate = DateTime.Now.AddMinutes(30),
-                    EmailValidationId = Guid.NewGuid(),
-                    UserId = user.UserId,
+                    ID = Guid.NewGuid(),
+                    UserId = user.ID,
                     ValidationCode = validationcode
                 };
 
@@ -436,13 +479,13 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{code}/{userid}")]
-        public async Task<ActionResult<bool>> ValidateEmail (string code, string userid)
+        public async Task<ActionResult<bool>> ValidateEmail(string code, string userid)
         {
             var validate = await _context.EmailValidations.Where(email => email.ValidationCode == code && email.UserId.ToString() == userid && DateTime.Now <= email.ExpDate).FirstOrDefaultAsync();
 
-            if( validate != null )
+            if (validate != null)
             {
-                var user = await _context.Users.Where(u => u.UserId.ToString() == userid).FirstOrDefaultAsync();
+                var user = await _context.Users.Where(u => u.ID.ToString() == userid).FirstOrDefaultAsync();
 
                 user.IsValidUser = true;
 
@@ -456,18 +499,18 @@ namespace WebApiQuickOrder.Controllers
             return false;
         }
 
-        private Login AuthenticateUser (Login loginCredentials)
+        private Credential AuthenticateUser(Credential loginCredentials)
         {
-            Login user = _context.Logins.SingleOrDefault(x => x.Username == loginCredentials.Username && x.Password == loginCredentials.Password);
+            Credential user = _context.Logins.SingleOrDefault(x => x.Username == loginCredentials.Username && x.Password == loginCredentials.Password);
 
             return user;
         }
 
-        private IActionResult BuildToken (User userInfo)
+        private IActionResult BuildToken(AppUser userInfo)
         {
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.ID.ToString()),
                 new Claim("miValor", "Lo que yo quiera"),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
@@ -492,7 +535,7 @@ namespace WebApiQuickOrder.Controllers
             });
         }
 
-        private string GenerateJWTToken (User userInfo)
+        private string GenerateJWTToken(AppUser userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
 
@@ -500,7 +543,7 @@ namespace WebApiQuickOrder.Controllers
 
             var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, userInfo.ID.ToString()),
                 new Claim("fullName", userInfo.Name.ToString()),
                 new Claim("role",Policies.User),
 
@@ -519,7 +562,7 @@ namespace WebApiQuickOrder.Controllers
 
         //Genera token de seguridad para los distintos action a los que se tendra acceso.
         //===========================================================================================
-        private string GenerateJWTTokenWithRole (User userInfo, string role)
+        private string GenerateJWTTokenWithRole(AppUser userInfo, string role)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
 
@@ -527,31 +570,31 @@ namespace WebApiQuickOrder.Controllers
 
             var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Sub, userInfo.ID.ToString()),
                 new Claim("fullName", userInfo.Name.ToString()),
                 new Claim("role",Policies.User),
 
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
-            if( !string.IsNullOrEmpty(role) )
+            if (!string.IsNullOrEmpty(role))
             {
-                switch( role )
+                switch (role)
                 {
                     case "Admin":
-                    {
-                        claims.Add(new Claim("role", Policies.Admin));
+                        {
+                            claims.Add(new Claim("role", Policies.Admin));
 
-                        claims.Add(new Claim("role", Policies.StoreControl));
-                        break;
-                    }
+                            claims.Add(new Claim("role", Policies.StoreControl));
+                            break;
+                        }
                     case "Employee":
-                    {
-                        claims.Add(new Claim("role", Policies.Employee));
+                        {
+                            claims.Add(new Claim("role", Policies.Employee));
 
-                        claims.Add(new Claim("role", Policies.StoreControl));
-                        break;
-                    }
+                            claims.Add(new Claim("role", Policies.StoreControl));
+                            break;
+                        }
                     default:
                         break;
                 }
@@ -567,7 +610,7 @@ namespace WebApiQuickOrder.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private bool SendValidateEmailCode (EmailValidation emailValidation)
+        private bool SendValidateEmailCode(EmailValidation emailValidation)
         {
             var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
 
@@ -586,21 +629,21 @@ namespace WebApiQuickOrder.Controllers
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential("est.juanpablotorres@gmail.com", "jp84704tt")
             };
-            using( var mess = new MailMessage(senderEmail, receiverEmail)
+            using (var mess = new MailMessage(senderEmail, receiverEmail)
             {
                 IsBodyHtml = true,
                 Subject = sub,
                 Body = body
-            } )
+            })
             {
                 smtp.Send(mess);
                 return true;
             }
         }
 
-        private bool UserExists (Guid id)
+        private bool UserExists(Guid id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _context.Users.Any(e => e.ID == id);
         }
     }
 }

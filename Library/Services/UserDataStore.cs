@@ -1,5 +1,6 @@
-﻿using Library.DTO;
-using Library.Interface;
+﻿using Library.ApiResponses;
+using Library.DTO;
+using Library.Factories;
 using Library.Models;
 using Library.Services.Interface;
 using Newtonsoft.Json;
@@ -9,26 +10,46 @@ using System.Threading.Tasks;
 
 namespace Library.Services
 {
-    public class UserDataStore : DataStoreService<User>, IUserDataStore
+    public class UserDataStore : DataStoreService<AppUser>, IUserDataStore
     {
-        public async Task<bool> CheckIfUsernameAndPasswordExist (string username, string password)
+        public async Task<Response<Credential>> CheckIfUsernameAndPasswordExist (string username, string password)
         {
-            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CheckIfUsernameAndPasswordExist)}/{username}/{password}");
+            ResponseFactory<Credential> responseFactory = new ResponseFactory<Credential> ();
 
-            var response = await HttpClient.GetStringAsync(FullAPIUri);
+            try
+            {
+                FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CheckIfUsernameAndPasswordExist)}/{username}/{password}");
 
-            bool deserializeObject = JsonConvert.DeserializeObject<bool>(response);
+                var response = await HttpClient.GetAsync(FullAPIUri);
 
-            return deserializeObject;
+                if (response.IsSuccessStatusCode)
+                {
+                    var deserializeObject = JsonConvert.DeserializeObject<Response<Credential>>(await response.Content.ReadAsStringAsync());
+
+                    return deserializeObject;
+                }
+                else
+                {
+                    return responseFactory.FailResponse("Request Fail");
+                }
+            }
+            catch (Exception e)
+            {
+                return responseFactory.FailResponse(e.Message);
+            }
+
+           
+
+    
         }
 
-        public User CheckUserCredential (string username, string password)
+        public AppUser CheckUserCredential (string username, string password)
         {
             FullAPIUri = new Uri(BaseAPIUri, $"{nameof(CheckUserCredential)}/{username}/{password}");
 
             var response = HttpClient.GetStringAsync(FullAPIUri);
 
-            User deserializeObject = JsonConvert.DeserializeObject<User>(response.Result);
+            AppUser deserializeObject = JsonConvert.DeserializeObject<AppUser>(response.Result);
 
             return deserializeObject;
         }
@@ -74,15 +95,38 @@ namespace Library.Services
             return deserializeObject;
         }
 
-        public TokenDTO LoginCredential (string username, string password)
+        public async Task<Response<TokenDTO>> LoginCredential (string username, string password)
         {
-            FullAPIUri = new Uri(BaseAPIUri, $"{nameof(LoginCredential)}/{username}/{password}");
+            try
+            {
+                FullAPIUri = new Uri(BaseAPIUri, $"{nameof(LoginCredential)}/{username}/{password}");
 
-            var response = HttpClient.GetStringAsync(FullAPIUri);
+                var response = await HttpClient.GetAsync(FullAPIUri);
 
-            TokenDTO deserializeObject = JsonConvert.DeserializeObject<TokenDTO>(response.Result);
+                if (response.IsSuccessStatusCode)
+                {
+                    Response<TokenDTO> _apiResponse = JsonConvert.DeserializeObject<Response<TokenDTO>>(await response.Content.ReadAsStringAsync());
 
-            return deserializeObject;
+                    return _apiResponse;
+                }
+                else
+                {
+                    ResponseFactory<TokenDTO> _failRequest = new ResponseFactory<TokenDTO>();
+
+                    return _failRequest.ApiRequestFail();
+                }
+
+               
+            }
+            catch (Exception e)
+            {
+                ResponseFactory<TokenDTO> _failResponse = new ResponseFactory<TokenDTO>();
+
+                return _failResponse.FailResponse(e.Message);
+
+            }
+
+          
         }
 
         public async Task<bool> ResendCode (string userId)

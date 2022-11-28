@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.Generic;
@@ -56,8 +57,8 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                         CloseTime = Convert.ToDateTime(item.Close.ToString()),
                         Day = item.Day,
                         OpenTime = Convert.ToDateTime(item.Open.ToString()),
-                        WorkHourId = Guid.NewGuid(),
-                        EmpId = empDetail.EmployeeId,
+                        ID = Guid.NewGuid(),
+                        EmpId = empDetail.ID,
                         WillWork = item.WillWork
                     };
                     employeeWorkHour.Add(workhour);

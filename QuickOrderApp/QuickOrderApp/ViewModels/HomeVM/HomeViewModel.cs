@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Loadings;
 using QuickOrderApp.Utilities.Presenters;
@@ -101,7 +102,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
                         foreach( var item in KeyValues["storeAdded"] )
                         {
-                            if( !tempData.Any(s => s.StoreId == item.StoreId) )
+                            if( !tempData.Any(s => s.ID == item.ID) )
                             {
                                 tempData.Add(item);
                             }
@@ -109,7 +110,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
                         foreach( var item in storeData )
                         {
-                            if( !tempData.Any(s => s.StoreId == item.StoreId) )
+                            if( !tempData.Any(s => s.ID == item.ID) )
                             {
                                 tempData.Add(item);
                             }
@@ -121,7 +122,7 @@ namespace QuickOrderApp.ViewModels.HomeVM
 
                         foreach( var item in KeyValues["storeAdded"] )
                         {
-                            if( !Stores.Any(s => s.StoreId == item.StoreId) )
+                            if( !Stores.Any(s => s.StoreId == item.ID) )
                             {
                                 var storepresenter = new StorePresenters(item);
 

@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.ComponentModel;
@@ -119,7 +120,7 @@ namespace QuickOrderAdmin.Models
             this.StoreDescription = store.StoreDescription;
             this.StripePublicKey = store.PBKey;
             this.StripeSecretKey = store.SKKey;
-            this.StoreId = store.StoreId;
+            this.StoreId = store.ID;
             this.SelectedStoreType = store.StoreType;
             this.StoreImage = store.StoreImage;
 

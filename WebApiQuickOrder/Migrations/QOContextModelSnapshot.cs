@@ -19,16 +19,109 @@ namespace WebApiQuickOrder.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Library.Models.EmailValidation", b =>
+            modelBuilder.Entity("Library.Models.AppUser", b =>
                 {
-                    b.Property<Guid>("EmailValidationId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsValidUser")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LoginId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StripeUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LoginId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Library.Models.Credential", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsConnected")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Logins");
+                });
+
+            modelBuilder.Entity("Library.Models.EmailValidation", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ExpDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdateDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
@@ -37,15 +130,27 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<string>("ValidationCode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("EmailValidationId");
+                    b.HasKey("ID");
 
                     b.ToTable("EmailValidations");
                 });
 
             modelBuilder.Entity("Library.Models.Employee", b =>
                 {
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("EmployeeUserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("StoreID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StoreId")
@@ -54,25 +159,31 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("EmployeeId");
+                    b.HasKey("ID");
+
+                    b.HasIndex("EmployeeUserID");
 
                     b.HasIndex("StoreId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Library.Models.EmployeeWorkHour", b =>
                 {
-                    b.Property<Guid>("WorkHourId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CloseTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Day")
@@ -81,13 +192,22 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("EmpId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("OpenTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdateDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("WillWork")
                         .HasColumnType("bit");
 
-                    b.HasKey("WorkHourId");
+                    b.HasKey("ID");
 
                     b.HasIndex("EmpId");
 
@@ -107,39 +227,19 @@ namespace WebApiQuickOrder.Migrations
                     b.ToTable("ForgotPasswords");
                 });
 
-            modelBuilder.Entity("Library.Models.Login", b =>
-                {
-                    b.Property<Guid>("LoginId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsConnected")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("LoginId");
-
-                    b.ToTable("Logins");
-                });
-
             modelBuilder.Entity("Library.Models.Order", b =>
                 {
-                    b.Property<Guid>("OrderId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("BuyerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsDisisble")
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDisasble")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("OrderDate")
@@ -151,15 +251,21 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<int>("OrderType")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("PrepareByEmployeeId")
+                    b.Property<Guid?>("PrepareByID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StoreID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("OrderId");
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("PrepareByEmployeeId");
+                    b.HasKey("ID");
+
+                    b.HasIndex("PrepareByID");
 
                     b.HasIndex("StoreId");
 
@@ -168,14 +274,23 @@ namespace WebApiQuickOrder.Migrations
 
             modelBuilder.Entity("Library.Models.OrderProduct", b =>
                 {
-                    b.Property<Guid>("OrderProductId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("BuyerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("OrderId")
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("OrderID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderProductId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Price")
@@ -193,27 +308,36 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("StoreId")
+                    b.Property<Guid>("StoreID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("OrderProductId");
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("OrderId");
+                    b.HasKey("ID");
+
+                    b.HasIndex("OrderID");
 
                     b.ToTable("OrderProducts");
                 });
 
             modelBuilder.Entity("Library.Models.PaymentCard", b =>
                 {
-                    b.Property<Guid>("PaymentCardId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AppUserID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CardNumber")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Cvc")
                         .HasColumnType("nvarchar(max)");
@@ -221,11 +345,20 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<string>("HolderName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Month")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("StripeCardId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -233,21 +366,27 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<string>("Year")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("PaymentCardId");
+                    b.HasKey("ID");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AppUserID");
 
                     b.ToTable("PaymentCards");
                 });
 
             modelBuilder.Entity("Library.Models.Product", b =>
                 {
-                    b.Property<Guid>("ProductId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("InventoryQuantity")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -261,26 +400,38 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<string>("ProductName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("StoreId")
+                    b.Property<Guid>("StoreID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductId");
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("StoreId");
+                    b.HasKey("ID");
+
+                    b.HasIndex("StoreID");
 
                     b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Library.Models.Store", b =>
                 {
-                    b.Property<Guid>("StoreId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AppUserID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsDisable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDisasble")
                         .HasColumnType("bit");
 
                     b.Property<string>("PBKey")
@@ -307,23 +458,32 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<int>("StoreType")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("StoreId");
+                    b.HasKey("ID");
+
+                    b.HasIndex("AppUserID");
 
                     b.HasIndex("StoreRegisterLicenseId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Stores");
                 });
 
             modelBuilder.Entity("Library.Models.StoreLicense", b =>
                 {
-                    b.Property<Guid>("LicenseId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsUsed")
                         .HasColumnType("bit");
@@ -334,21 +494,37 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("LicenseId");
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
 
                     b.ToTable("Licences");
                 });
 
             modelBuilder.Entity("Library.Models.Subcription", b =>
                 {
-                    b.Property<string>("StripeSubCriptionID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDisable")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StoreLicense")
                         .HasColumnType("uniqueidentifier");
@@ -356,59 +532,37 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<string>("StripeCustomerId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("StripeSubCriptionID");
+                    b.Property<string>("StripeSubcriptionID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
 
                     b.ToTable("Subcriptions");
                 });
 
-            modelBuilder.Entity("Library.Models.User", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsValidUser")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LoginId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StripeUserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("LoginId");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("Library.Models.UserRequest", b =>
                 {
-                    b.Property<Guid>("RequestId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("FromStore")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
                     b.Property<int>("RequestAnswer")
                         .HasColumnType("int");
+
+                    b.Property<Guid>("StoreID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ToUser")
                         .HasColumnType("uniqueidentifier");
@@ -416,66 +570,98 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.HasKey("RequestId");
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
 
                     b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("Library.Models.UsersConnected", b =>
                 {
-                    b.Property<string>("HubConnectionID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("ConnecteDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("HubConnectionID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDisable")
                         .HasColumnType("bit");
+
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("HubConnectionID");
+                    b.HasKey("ID");
 
                     b.ToTable("usersConnecteds");
                 });
 
             modelBuilder.Entity("Library.Models.WorkHour", b =>
                 {
-                    b.Property<Guid>("WorkHourId")
+                    b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CloseTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Day")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDisasble")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("OpenTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("StoreId")
+                    b.Property<Guid>("StoreID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("WorkHourId");
+                    b.Property<DateTime>("UpdateDateTime")
+                        .HasColumnType("datetime2");
 
-                    b.HasIndex("StoreId");
+                    b.HasKey("ID");
+
+                    b.HasIndex("StoreID");
 
                     b.ToTable("StoresWorkHours");
                 });
 
+            modelBuilder.Entity("Library.Models.AppUser", b =>
+                {
+                    b.HasOne("Library.Models.Credential", "UserLogin")
+                        .WithMany()
+                        .HasForeignKey("LoginId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Library.Models.Employee", b =>
                 {
+                    b.HasOne("Library.Models.AppUser", "EmployeeUser")
+                        .WithMany("Employees")
+                        .HasForeignKey("EmployeeUserID");
+
                     b.HasOne("Library.Models.Store", "EmployeeStore")
                         .WithMany("Employees")
                         .HasForeignKey("StoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Library.Models.User", "EmployeeUser")
-                        .WithMany("Employees")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -493,7 +679,7 @@ namespace WebApiQuickOrder.Migrations
                 {
                     b.HasOne("Library.Models.Employee", "PrepareBy")
                         .WithMany()
-                        .HasForeignKey("PrepareByEmployeeId");
+                        .HasForeignKey("PrepareByID");
 
                     b.HasOne("Library.Models.Store", "StoreOrder")
                         .WithMany("Orders")
@@ -506,47 +692,34 @@ namespace WebApiQuickOrder.Migrations
                 {
                     b.HasOne("Library.Models.Order", null)
                         .WithMany("OrderProducts")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderID");
                 });
 
             modelBuilder.Entity("Library.Models.PaymentCard", b =>
                 {
-                    b.HasOne("Library.Models.User", null)
+                    b.HasOne("Library.Models.AppUser", null)
                         .WithMany("PaymentCards")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AppUserID");
                 });
 
             modelBuilder.Entity("Library.Models.Product", b =>
                 {
                     b.HasOne("Library.Models.Store", null)
                         .WithMany("Products")
-                        .HasForeignKey("StoreId")
+                        .HasForeignKey("StoreID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Library.Models.Store", b =>
                 {
+                    b.HasOne("Library.Models.AppUser", null)
+                        .WithMany("Stores")
+                        .HasForeignKey("AppUserID");
+
                     b.HasOne("Library.Models.StoreLicense", "UserStoreLicense")
                         .WithMany()
                         .HasForeignKey("StoreRegisterLicenseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Library.Models.User", null)
-                        .WithMany("Stores")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Library.Models.User", b =>
-                {
-                    b.HasOne("Library.Models.Login", "UserLogin")
-                        .WithMany()
-                        .HasForeignKey("LoginId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -555,7 +728,7 @@ namespace WebApiQuickOrder.Migrations
                 {
                     b.HasOne("Library.Models.Store", null)
                         .WithMany("WorkHours")
-                        .HasForeignKey("StoreId")
+                        .HasForeignKey("StoreID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

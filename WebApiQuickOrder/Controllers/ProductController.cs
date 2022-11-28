@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -42,13 +43,13 @@ namespace WebApiQuickOrder.Controllers
         [HttpPost("[action]/{StoreId}")]
         public async Task<IEnumerable<Product>> GetDifferentProductFromStore (IEnumerable<Product> productsAdded, Guid storeId)
         {
-            var result = await _context.Products.Where(p => p.StoreId == storeId).ToListAsync();
+            var result = await _context.Products.Where(p => p.ID == storeId).ToListAsync();
 
             List<Product> products = new List<Product>();
 
             foreach( var item in result )
             {
-                if( !productsAdded.Any(p => p.ProductId == item.ProductId) )
+                if( !productsAdded.Any(p => p.ID == item.ID) )
                 {
                     products.Add(item);
 
@@ -79,7 +80,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{StoreId}")]
         public async Task<IEnumerable<Product>> GetProductFromStore (Guid StoreId)
         {
-            var result = await _context.Products.Where(p => p.StoreId == StoreId).ToListAsync();
+            var result = await _context.Products.Where(p => p.StoreID == StoreId).ToListAsync();
 
             List<Product> products = new List<Product>();
 
@@ -107,7 +108,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{storeid}/{lowquantity}")]
         public IEnumerable<Product> GetProductWithLowQuantity (Guid storeid, int lowquantity)
         {
-            var result = _context.Products.Where(p => p.InventoryQuantity <= lowquantity && p.StoreId == storeid);
+            var result = _context.Products.Where(p => p.InventoryQuantity <= lowquantity && p.ID == storeid);
 
             return result;
         }
@@ -115,7 +116,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{storeId}/{type}")]
         public async Task<IEnumerable<Product>> GetSpecificProductTypeFromStore (Guid storeId, ProductType type)
         {
-            var result = await _context.Products.Where(p => p.Type == type && p.StoreId == storeId).ToListAsync();
+            var result = await _context.Products.Where(p => p.Type == type && p.ID == storeId).ToListAsync();
 
             List<Product> products = new List<Product>();
 
@@ -142,7 +143,7 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
+            return CreatedAtAction("GetProduct", new { id = product.ID }, product);
         }
 
         // PUT: api/Product/5
@@ -151,7 +152,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPut]
         public async Task<bool> PutProduct (Product product)
         {
-            var oldproducts = _context.Products.Where(p => p.ProductId == product.ProductId).FirstOrDefault();
+            var oldproducts = _context.Products.Where(p => p.ID == product.ID).FirstOrDefault();
 
             if( oldproducts != null )
             {
@@ -174,14 +175,14 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{storeId}/{item}")]
         public async Task<Product> SearchItemOfStore (string storeId, string item)
         {
-            var result = await _context.Products.Where(p => p.StoreId.ToString() == storeId && p.ProductName == item).FirstOrDefaultAsync();
+            var result = await _context.Products.Where(p => p.StoreID.ToString() == storeId && p.ProductName == item).FirstOrDefaultAsync();
 
             return result;
         }
 
         public async Task<bool> UpdateInventoryFromOrderSubmited (Guid productId, int quantity)
         {
-            var product = await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
+            var product = await _context.Products.Where(p => p.ID == productId).FirstOrDefaultAsync();
 
             if( product != null )
             {
@@ -206,7 +207,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]")]
         public async Task<bool> UpdateInventoryItem (Guid productId, int quantity)
         {
-            var product = await _context.Products.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
+            var product = await _context.Products.Where(p => p.ID == productId).FirstOrDefaultAsync();
 
             product.InventoryQuantity -= quantity;
 
@@ -228,7 +229,7 @@ namespace WebApiQuickOrder.Controllers
 
         private bool ProductExists (Guid id)
         {
-            return _context.Products.Any(e => e.ProductId == id);
+            return _context.Products.Any(e => e.ID == id);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Library.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -73,7 +74,7 @@ namespace QuickOrderAdmin.Controllers
 
                         var MondayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Monday.ToString(),
                             OpenTime = registerStoreViewModel.MOpenTime,
                             CloseTime = registerStoreViewModel.MCloseTime
@@ -81,42 +82,42 @@ namespace QuickOrderAdmin.Controllers
                         };
                         var TuesdayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Tuesday.ToString(),
                             OpenTime = registerStoreViewModel.TOpenTime,
                             CloseTime = registerStoreViewModel.TCloseTime
                         };
                         var WednesdayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Wednesday.ToString(),
                             OpenTime = registerStoreViewModel.WOpenTime,
                             CloseTime = registerStoreViewModel.WCloseTime
                         };
                         var ThuerdayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Thursday.ToString(),
                             OpenTime = registerStoreViewModel.ThOpenTime,
                             CloseTime = registerStoreViewModel.ThCloseTime
                         };
                         var FridayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Friday.ToString(),
                             OpenTime = registerStoreViewModel.FOpenTime,
                             CloseTime = registerStoreViewModel.FCloseTime
                         };
                         var SaturdayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Saturday.ToString(),
                             OpenTime = registerStoreViewModel.SOpenTime,
                             CloseTime = registerStoreViewModel.SCloseTime
                         };
                         var SundayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Sunday.ToString(),
                             OpenTime = registerStoreViewModel.SuOpenTime,
                             CloseTime = registerStoreViewModel.SuCloseTime
@@ -132,13 +133,13 @@ namespace QuickOrderAdmin.Controllers
 
                         var newStore = new Store()
                         {
-                            StoreId = StoreId,
+                            ID = StoreId,
                             /////////////////////////CHANGE Dev///////////////////////
                             StoreName = registerStoreViewModel.StoreName,
                             WorkHours = listWorkHour,
                             StoreImage = ImgToBty,
                             StoreRegisterLicenseId = registerStoreViewModel.StoreLicence,
-                            UserId = LogUser.LoginUser.UserId,
+                            UserId = LogUser.LoginUser.ID,
                             StoreType = registerStoreViewModel.SelectedStoreType,
                             StoreDescription = registerStoreViewModel.StoreDescription,
                             SKKey = registerStoreViewModel.StripeSecretKey,
@@ -150,9 +151,9 @@ namespace QuickOrderAdmin.Controllers
                         var result = userDataStore.CheckUserCredential(LogUser.LoginUser.UserLogin.Username, LogUser.LoginUser.UserLogin.Password);
                         LogUser.LoginUser = result;
 
-                        if (newStoreAddedResult)
+                        if (true)
                         {
-                            return RedirectToAction("HomeStore", new { StoreId = newStore.StoreId });
+                            return RedirectToAction("HomeStore", new { StoreId = newStore.ID });
                         }
                         else
                         {
@@ -203,7 +204,7 @@ namespace QuickOrderAdmin.Controllers
 
                             var MondayWH = new WorkHour()
                             {
-                                WorkHourId = Guid.NewGuid(),
+                                ID = Guid.NewGuid(),
                                 Day = DayOfWeek.Monday.ToString(),
                                 OpenTime = registerStoreViewModel.MOpenTime,
                                 CloseTime = registerStoreViewModel.MCloseTime
@@ -211,42 +212,42 @@ namespace QuickOrderAdmin.Controllers
                             };
                             var TuesdayWH = new WorkHour()
                             {
-                                WorkHourId = Guid.NewGuid(),
+                                ID = Guid.NewGuid(),
                                 Day = DayOfWeek.Tuesday.ToString(),
                                 OpenTime = registerStoreViewModel.TOpenTime,
                                 CloseTime = registerStoreViewModel.TCloseTime
                             };
                             var WednesdayWH = new WorkHour()
                             {
-                                WorkHourId = Guid.NewGuid(),
+                                ID = Guid.NewGuid(),
                                 Day = DayOfWeek.Wednesday.ToString(),
                                 OpenTime = registerStoreViewModel.WOpenTime,
                                 CloseTime = registerStoreViewModel.WCloseTime
                             };
                             var ThuerdayWH = new WorkHour()
                             {
-                                WorkHourId = Guid.NewGuid(),
+                                ID = Guid.NewGuid(),
                                 Day = DayOfWeek.Thursday.ToString(),
                                 OpenTime = registerStoreViewModel.ThOpenTime,
                                 CloseTime = registerStoreViewModel.ThCloseTime
                             };
                             var FridayWH = new WorkHour()
                             {
-                                WorkHourId = Guid.NewGuid(),
+                                ID = Guid.NewGuid(),
                                 Day = DayOfWeek.Friday.ToString(),
                                 OpenTime = registerStoreViewModel.FOpenTime,
                                 CloseTime = registerStoreViewModel.FCloseTime
                             };
                             var SaturdayWH = new WorkHour()
                             {
-                                WorkHourId = Guid.NewGuid(),
+                                ID = Guid.NewGuid(),
                                 Day = DayOfWeek.Saturday.ToString(),
                                 OpenTime = registerStoreViewModel.SOpenTime,
                                 CloseTime = registerStoreViewModel.SCloseTime
                             };
                             var SundayWH = new WorkHour()
                             {
-                                WorkHourId = Guid.NewGuid(),
+                                ID = Guid.NewGuid(),
                                 Day = DayOfWeek.Sunday.ToString(),
                                 OpenTime = registerStoreViewModel.SuOpenTime,
                                 CloseTime = registerStoreViewModel.SuCloseTime
@@ -262,13 +263,13 @@ namespace QuickOrderAdmin.Controllers
 
                             var newStore = new Store()
                             {
-                                StoreId = StoreId,
+                                ID = StoreId,
                                 /////////////////////////CHANGE Dev///////////////////////
                                 StoreName = registerStoreViewModel.StoreName,
                                 WorkHours = listWorkHour,
                                 StoreImage = ImgToBty,
                                 StoreRegisterLicenseId = registerStoreViewModel.StoreLicence,
-                                UserId = LogUser.LoginUser.UserId,
+                                UserId = LogUser.LoginUser.ID,
                                 StoreType = registerStoreViewModel.SelectedStoreType,
                                 StoreDescription = registerStoreViewModel.StoreDescription,
                                 SKKey = registerStoreViewModel.StripeSecretKey,
@@ -289,15 +290,22 @@ namespace QuickOrderAdmin.Controllers
                                 LogUser.UsersConnected = new UsersConnected()
                                 {
                                     HubConnectionID = LogUser.ComunicationService.hubConnection.ConnectionId,
-                                    UserID = result.UserId
+                                    UserID = result.ID
                                 };
 
                                 var hub_connection_result = await userConnectedDataStore.AddItemAsync(LogUser.UsersConnected);
 
-                                LogUser.Token = userDataStore.LoginCredential(LogUser.LoginUser.UserLogin.Username, LogUser.LoginUser.UserLogin.Password);
+                                var _apiResponse =await userDataStore.LoginCredential(LogUser.LoginUser.UserLogin.Username, LogUser.LoginUser.UserLogin.Password);
+
+                                if (_apiResponse.IsValid)
+                                {
+                                    LogUser.Token = _apiResponse.Data;
+                                }
+
+                               
                             }
 
-                            if (newStoreAddedResult)
+                            if (true)
                             {
 
                                 var licenseUpdated = await storeLicenseDataStore.UpdateLicenceInCode(registerStoreViewModel.StoreLicence);
@@ -305,7 +313,7 @@ namespace QuickOrderAdmin.Controllers
                                 if (licenseUpdated)
                                 {
 
-                                return RedirectToAction("HomeStore", new { StoreId = newStore.StoreId });
+                                return RedirectToAction("HomeStore", new { StoreId = newStore.ID });
                                 }
                                 else
                                 {
@@ -363,7 +371,7 @@ namespace QuickOrderAdmin.Controllers
 
                         var MondayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Monday.ToString(),
                             OpenTime = registerStoreViewModel.MOpenTime,
                             CloseTime = registerStoreViewModel.MCloseTime
@@ -371,42 +379,42 @@ namespace QuickOrderAdmin.Controllers
                         };
                         var TuesdayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Tuesday.ToString(),
                             OpenTime = registerStoreViewModel.TOpenTime,
                             CloseTime = registerStoreViewModel.TCloseTime
                         };
                         var WednesdayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Wednesday.ToString(),
                             OpenTime = registerStoreViewModel.WOpenTime,
                             CloseTime = registerStoreViewModel.WCloseTime
                         };
                         var ThuerdayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Thursday.ToString(),
                             OpenTime = registerStoreViewModel.ThOpenTime,
                             CloseTime = registerStoreViewModel.ThCloseTime
                         };
                         var FridayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Friday.ToString(),
                             OpenTime = registerStoreViewModel.FOpenTime,
                             CloseTime = registerStoreViewModel.FCloseTime
                         };
                         var SaturdayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Saturday.ToString(),
                             OpenTime = registerStoreViewModel.SOpenTime,
                             CloseTime = registerStoreViewModel.SCloseTime
                         };
                         var SundayWH = new WorkHour()
                         {
-                            WorkHourId = Guid.NewGuid(),
+                            ID = Guid.NewGuid(),
                             Day = DayOfWeek.Sunday.ToString(),
                             OpenTime = registerStoreViewModel.SuOpenTime,
                             CloseTime = registerStoreViewModel.SuCloseTime
@@ -422,12 +430,12 @@ namespace QuickOrderAdmin.Controllers
 
                         var newStore = new Store()
                         {
-                            StoreId = StoreId,
+                            ID = StoreId,
                             StoreName = registerStoreViewModel.StoreName,
                             WorkHours = listWorkHour,
                             StoreImage = ImgToBty,
                             StoreRegisterLicenseId = registerStoreViewModel.StoreLicence,
-                            UserId = LogUser.LoginUser.UserId,
+                            UserId = LogUser.LoginUser.ID,
                             StoreType = registerStoreViewModel.SelectedStoreType,
                             StoreDescription = registerStoreViewModel.StoreDescription,
                             SKKey = registerStoreViewModel.StripeSecretKey,
@@ -440,13 +448,15 @@ namespace QuickOrderAdmin.Controllers
 
                         if (LogUser.Token == null)
                         {
-                            LogUser.Token = userDataStore.LoginCredential(LogUser.LoginUser.UserLogin.Username, LogUser.LoginUser.UserLogin.Password);
+                            //LogUser.Token =await userDataStore.LoginCredential(LogUser.LoginUser.UserLogin.Username, LogUser.LoginUser.UserLogin.Password);
+
+                            LogUser.Token = null;
                         }
 
-                        if (newStoreAddedResult)
+                        if (true)
                         {
-                            LogUser.LoginUser.Stores = StoreDataStore.GetStoresFromUser(LogUser.LoginUser.UserId).ToList();
-                            return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.StoreId });
+                            LogUser.LoginUser.Stores = StoreDataStore.GetStoresFromUser(LogUser.LoginUser.ID).ToList();
+                            return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.ID });
                         }
                         else
                         {
@@ -484,18 +494,18 @@ namespace QuickOrderAdmin.Controllers
         public IActionResult UserStores(Guid id)
         {
 
-            SelectedStore.CurrentStore = LogUser.LoginUser.Stores.Where(s => s.StoreId == id).FirstOrDefault();
+            SelectedStore.CurrentStore = LogUser.LoginUser.Stores.Where(s => s.ID == id).FirstOrDefault();
             return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> HomeStore(Guid StoreId)
         {
 
-            SelectedStore.CurrentStore = LogUser.LoginUser.Stores.Where(s => s.StoreId == StoreId).FirstOrDefault();
+            SelectedStore.CurrentStore = LogUser.LoginUser.Stores.Where(s => s.ID == StoreId).FirstOrDefault();
 
-            var result = productDataStore.GetProductWithLowQuantity(SelectedStore.CurrentStore.StoreId, 5);
+            var result = productDataStore.GetProductWithLowQuantity(SelectedStore.CurrentStore.ID, 5);
 
-            var empresult = await employeeDataStore.GetEmployeesOfStore(SelectedStore.CurrentStore.StoreId);
+            var empresult = await employeeDataStore.GetEmployeesOfStore(SelectedStore.CurrentStore.ID);
 
             ViewBag.Result = result;
 
@@ -506,7 +516,7 @@ namespace QuickOrderAdmin.Controllers
         {
             var result = await StoreDataStore.DeleteItemAsync(id.ToString());
 
-            var userStoreData = StoreDataStore.GetStoresFromUser(LogUser.LoginUser.UserId);
+            var userStoreData = StoreDataStore.GetStoresFromUser(LogUser.LoginUser.ID);
 
             return RedirectToAction("UserStores", userStoreData);
         }
@@ -540,11 +550,11 @@ namespace QuickOrderAdmin.Controllers
                 {
                     InventoryQuantity = productViewModel.InventoryQuantity,
                     Price = productViewModel.ProductPrice,
-                    ProductId = Guid.NewGuid(),
+                    ID = Guid.NewGuid(),
                     ProductImage = imgbty,
                     Type = productType,
                     ProductName = productViewModel.ProductName,
-                    StoreId = SelectedStore.CurrentStore.StoreId,
+                    StoreID = SelectedStore.CurrentStore.ID,
                     ProductDescription = productViewModel.ProductDescription
                 };
 
@@ -564,7 +574,7 @@ namespace QuickOrderAdmin.Controllers
         public async Task<IActionResult> StoreOrders()
         {
 
-            var orderStoreData = await orderDataStore.GetStoreOrders(SelectedStore.CurrentStore.StoreId, LogUser.Token.Token);
+            var orderStoreData = await orderDataStore.GetStoreOrders(SelectedStore.CurrentStore.ID, LogUser.Token.Token);
 
             var Orders = orderStoreData.Where(o => o.OrderStatus == Status.Submited).ToList();
 
@@ -588,7 +598,7 @@ namespace QuickOrderAdmin.Controllers
 
             if (orderUpdated)
             {
-                await LogUser.ComunicationService.SendCompletedOrderNotification(order.OrderId, order.BuyerId.ToString());
+                await LogUser.ComunicationService.SendCompletedOrderNotification(order.ID, order.BuyerId.ToString());
             }
             return RedirectToAction("StoreOrders");
         }
@@ -611,7 +621,7 @@ namespace QuickOrderAdmin.Controllers
 
         public async Task<IActionResult> SearchItem(string SearchItem)
         {
-            var itemResult = await productDataStore.SearchItemOfStore(SelectedStore.CurrentStore.StoreId.ToString(), SearchItem);
+            var itemResult = await productDataStore.SearchItemOfStore(SelectedStore.CurrentStore.ID.ToString(), SearchItem);
 
             IList<Product> items = new List<Product>();
             if (itemResult != null)
@@ -638,14 +648,14 @@ namespace QuickOrderAdmin.Controllers
         {
             var jobRequest = new UserRequest()
             {
-                RequestId = Guid.NewGuid(),
-                FromStore = SelectedStore.CurrentStore.StoreId,
+                ID = Guid.NewGuid(),
+                FromStore = SelectedStore.CurrentStore.ID,
                 ToUser = userId,
                 Type = RequestType.JobRequest,
                 RequestAnswer = Answer.None
             };
 
-            var userhaveOrder = RequestDataStore.UserRequestExists(userId, SelectedStore.CurrentStore.StoreId);
+            var userhaveOrder = RequestDataStore.UserRequestExists(userId, SelectedStore.CurrentStore.ID);
 
             if (!userhaveOrder)
             {
@@ -671,7 +681,7 @@ namespace QuickOrderAdmin.Controllers
 
         public async Task<IActionResult> ShowStoreProducts()
         {
-            var products = productDataStore.GetProductFromStore(SelectedStore.CurrentStore.StoreId);
+            var products = productDataStore.GetProductFromStore(SelectedStore.CurrentStore.ID);
 
             return View(products);
         }
@@ -756,7 +766,7 @@ namespace QuickOrderAdmin.Controllers
 
         public async Task<IActionResult> NewLicense()
         {
-            var cardResult = await cardDataStore.GetCardFromUser(LogUser.LoginUser.UserId,LogUser.Token.Token);
+            var cardResult = await cardDataStore.GetCardFromUser(LogUser.LoginUser.ID,LogUser.Token.Token);
 
             if (cardResult.Count() > 0)
             {
@@ -767,29 +777,29 @@ namespace QuickOrderAdmin.Controllers
 
                     var newStoreLicense = new StoreLicense()
                     {
-                        LicenseId = Guid.NewGuid(),
+                        ID = Guid.NewGuid(),
                         StartDate = DateTime.Today,
-                        LicenseHolderUserId = LogUser.LoginUser.UserId
+                        LicenseHolderUserId = LogUser.LoginUser.ID
 
                     };
 
                     //Lo insertamos a nuestra base de datos
-                    var storelicenceresult = await storeLicenseDataStore.AddItemAsync(newStoreLicense);
+                    var _apiResponse = await storeLicenseDataStore.AddItemAsync(newStoreLicense);
 
-                    if (storelicenceresult)
+                    if (_apiResponse.IsValid)
                     {
                         var subcription = new Library.Models.Subcription()
                         {
                             StripeCustomerId = LogUser.LoginUser.StripeUserId,
-                            StripeSubCriptionID = subcriptionToken,
-                            StoreLicense = newStoreLicense.LicenseId,
+                            StripeSubcriptionID = subcriptionToken,
+                            StoreLicense = newStoreLicense.ID,
                             IsDisable = false
 
                         };
 
                         var subcriptionResult = await subcriptionDataStore.AddItemAsync(subcription);
 
-                        if (subcriptionResult)
+                        if (true)
                         {
 
                             var licenseReuslt = await storeLicenseDataStore.PostStoreLicense(LogUser.LoginUser.Email, LogUser.LoginUser.Name);

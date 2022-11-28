@@ -67,13 +67,13 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{userid}/{productId}/{orderId}")]
         public bool OrderProductOfUserExistInOrder (Guid userid, Guid productId, Guid orderId)
         {
-            return _context.OrderProducts.Any(e => e.BuyerId == userid && e.ProductIdReference == productId && e.OrderId == orderId);
+            return _context.OrderProducts.Any(e => e.BuyerId == userid && e.ProductIdReference == productId && e.ID == orderId);
         }
 
         [HttpGet("[action]/{productId}/{orderId}")]
         public OrderProduct OrderProductOfUserExistOnOrder (Guid productId, Guid orderId)
         {
-            return _context.OrderProducts.Where(e => e.ProductIdReference == productId && e.OrderId == orderId).FirstOrDefault();
+            return _context.OrderProducts.Where(e => e.ProductIdReference == productId && e.ID == orderId).FirstOrDefault();
         }
 
         // POST: api/OrderProduct

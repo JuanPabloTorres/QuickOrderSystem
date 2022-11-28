@@ -14,17 +14,17 @@ namespace QuickOrderApp.Services.HubService
 
         private INotificationManager notificationManager;
 
-        public ComunicationService ()
+        public ComunicationService()
         {
             //hubConnection = new HubConnectionBuilder().WithUrl("http://192.168.1.144:5000" + "/comunicationhub").Build();
 
-            hubConnection = new HubConnectionBuilder().WithUrl("http://juantorres9-001-site1.etempurl.com" + "/comunicationhub").Build();
+            hubConnection = new HubConnectionBuilder().WithUrl(App.LocalBackendUrl + "/comunicationhub").Build();
 
             notificationManager = DependencyService.Get<INotificationManager>();
 
             notificationManager.NotificationReceived += (sender, eventArgs) =>
             {
-                var evtData = (NotificationEventArgs) eventArgs;
+                var evtData = (NotificationEventArgs)eventArgs;
                 //ShowNotification(evtData.Title, evtData.Message);
             };
 
@@ -35,7 +35,7 @@ namespace QuickOrderApp.Services.HubService
             OrderToPreparerEmployee();
         }
 
-        public void CompletedOrderNotificationReciever ()
+        public void CompletedOrderNotificationReciever()
         {
             hubConnection.On<string>("SendCompletedOrderNotification", (message) =>
             {
@@ -43,20 +43,23 @@ namespace QuickOrderApp.Services.HubService
             });
         }
 
-        public async Task Connect ()
+        public async Task Connect()
         {
-            await hubConnection.StartAsync();
+            if (hubConnection.State == HubConnectionState.Disconnected)
+            {
+                await hubConnection.StartAsync();
+            }
         }
 
-        public async Task Disconnect ()
+        public async Task Disconnect()
         {
-            if( !String.IsNullOrEmpty(hubConnection.ConnectionId) )
+            if (!String.IsNullOrEmpty(hubConnection.ConnectionId))
             {
                 await hubConnection.StopAsync();
             }
         }
 
-        public void JobNotificationReciever ()
+        public void JobNotificationReciever()
         {
             hubConnection.On<string>("SendJobNotification", (message) =>
             {
@@ -64,21 +67,21 @@ namespace QuickOrderApp.Services.HubService
             });
         }
 
-        public async Task OrderToPrepare (Order order)
+        public async Task OrderToPrepare(Order order)
         {
             try
             {
-                string Preparemessage = $"Order: { order.OrderId.ToString()}";
+                string Preparemessage = $"Order: {order.ID.ToString()}";
 
-                await hubConnection.InvokeAsync("OrderToPrepare", Preparemessage, order.StoreId.ToString());
+                await hubConnection.InvokeAsync("OrderToPrepare", Preparemessage, order.StoreID.ToString());
             }
-            catch( Exception e )
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
 
-        public void OrderToPreparerEmployee ()
+        public void OrderToPreparerEmployee()
         {
             hubConnection.On<string>("OrderPrepareNotification", (message) =>
             {
@@ -86,63 +89,63 @@ namespace QuickOrderApp.Services.HubService
             });
         }
 
-        public async Task SendCompletedOrderNotification (Guid OrderId, string userdId)
+        public async Task SendCompletedOrderNotification(Guid OrderId, string userdId)
         {
             try
             {
-                string message = $"Order: { OrderId.ToString()}";
+                string message = $"Order: {OrderId.ToString()}";
 
                 await hubConnection.InvokeAsync("SendCompletedOrderNotification", message, userdId);
             }
-            catch( Exception e )
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
 
-        public async Task SendMessage (string user, string message)
+        public async Task SendMessage(string user, string message)
         {
             try
             {
                 await hubConnection.InvokeAsync("SendMessage", user, message);
             }
-            catch( Exception e )
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
 
-        public async Task SendOrder (string user, Order message)
+        public async Task SendOrder(string user, Order message)
         {
             try
             {
                 await hubConnection.InvokeAsync("SendOrderToStore", user, message);
             }
-            catch( Exception e )
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
 
-        public async Task SendRequestToUser (string connectionId, UserRequest request)
+        public async Task SendRequestToUser(string connectionId, UserRequest request)
         {
             try
             {
                 await hubConnection.InvokeAsync("SenRequestToUser", connectionId, request);
             }
-            catch( Exception e )
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
         }
 
-        public async Task UpdateStoreInventory (Guid storeToUpdate)
+        public async Task UpdateStoreInventory(Guid storeToUpdate)
         {
             try
             {
                 await hubConnection.InvokeAsync("UpdateStoreInventory", storeToUpdate);
             }
-            catch( Exception e )
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }

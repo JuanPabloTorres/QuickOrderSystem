@@ -10,8 +10,8 @@ using WebApiQuickOrder.Context;
 namespace WebApiQuickOrder.Migrations
 {
     [DbContext(typeof(QOContext))]
-    [Migration("20200916032156_9-15-2020-1.01")]
-    partial class _9152020101
+    [Migration("20221126233130_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,8 +27,8 @@ namespace WebApiQuickOrder.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("Email")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ExpDate")
                         .HasColumnType("datetime2");
@@ -36,8 +36,8 @@ namespace WebApiQuickOrder.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ValidationCode")
-                        .HasColumnType("int");
+                    b.Property<string>("ValidationCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("EmailValidationId");
 

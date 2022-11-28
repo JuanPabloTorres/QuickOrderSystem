@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using QuickOrderApp.Utilities.Static;
@@ -107,19 +108,19 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
                     var newStoreProduct = new Product()
                     {
-                        ProductId = Guid.NewGuid(),
+                        ID = Guid.NewGuid(),
                         InventoryQuantity = ProductQuantity,
                         Price = Convert.ToDouble(ProductPrice),
                         ProductImage = ImgArray,
                         ProductName = ProductName,
                         Type = _productType,
-                        StoreId = YourSelectedStore.StoreId,
+                        StoreID = YourSelectedStore.ID,
                         ProductDescription = ProductDescription
                     };
 
-                    var productAddedResult = await productDataStore.AddItemAsync(newStoreProduct);
+                    var _apiResponse = await productDataStore.AddItemAsync(newStoreProduct);
 
-                    if( productAddedResult )
+                    if(_apiResponse.IsValid)
                     {
                         await Shell.Current.DisplayAlert("Notification", "Product Added", "OK");
                     }
@@ -137,17 +138,17 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             GoOrdersCommand = new Command(async () =>
             {
-                await Shell.Current.GoToAsync($"EmployeeOrderControl?Id={YourSelectedStore.StoreId.ToString()}", animate: true);
+                await Shell.Current.GoToAsync($"EmployeeOrderControl?Id={YourSelectedStore.ID.ToString()}", animate: true);
             });
 
             GoOrdersEmployeeCommand = new Command(async () =>
             {
-                await EmployeeShell.Current.GoToAsync($"EmployeeOrderControl?Id={Store.StoreId.ToString()}", animate: true);
+                await EmployeeShell.Current.GoToAsync($"EmployeeOrderControl?Id={Store.ID.ToString()}", animate: true);
             });
 
             GoEmployeesCommand = new Command(async () =>
             {
-                await Shell.Current.GoToAsync($"StoreEmployeeRoute?Id={YourSelectedStore.StoreId.ToString()}", animate: true);
+                await Shell.Current.GoToAsync($"StoreEmployeeRoute?Id={YourSelectedStore.ID.ToString()}", animate: true);
                 //await Shell.Current.GoToAsync($"OrderPageRoute", animate: true);
             });
 
@@ -365,9 +366,9 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         //Obtiene la informacion de horas de trabajos
         private async void GetWorkHourSchedule ()
         {
-            StoreEmployee = await EmployeeDataStore.GetSpecificStoreEmployee(App.LogUser.UserId, Store.StoreId);
+            StoreEmployee = await EmployeeDataStore.GetSpecificStoreEmployee(App.LogUser.ID, Store.ID);
 
-            var empWorkHour = await EmployeeWorkHour.GetEmployeeWorkHours(StoreEmployee.EmployeeId.ToString());
+            var empWorkHour = await EmployeeWorkHour.GetEmployeeWorkHours(StoreEmployee.ID.ToString());
 
             empWorkHour = OrderingEmpWorkHour(empWorkHour.ToList());
 

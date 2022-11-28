@@ -1,4 +1,5 @@
-﻿using Library.DTO;
+﻿using Library.ApiResponses;
+using Library.DTO;
 using Library.Models;
 using System;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ namespace Library.Services.Interface
 {
     public interface IStripeServiceDS
     {
-        Task<bool> CancelSubcription (string customerId);
+        Task<Response<Subcription>> CancelSubcription (string customerId);
 
         Task<string> CreateACustomerSubcription (string customerId);
 

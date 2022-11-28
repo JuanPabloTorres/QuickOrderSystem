@@ -34,9 +34,9 @@ namespace QuickOrderAdmin.Controllers
 
         public async Task<IActionResult> CancelSubcription(string customerId)
         {
-            var result = await stripeServiceDS.CancelSubcription(customerId);
+            var _apiResponse = await stripeServiceDS.CancelSubcription(customerId);
 
-            if (result)
+            if (_apiResponse.IsValid)
             {
                 SelectedStore.CurrentStore.IsDisable = true;
 
@@ -44,11 +44,11 @@ namespace QuickOrderAdmin.Controllers
 
                 if (disableResult)
                 {
-                    LogUser.LoginUser.Stores.Remove(LogUser.LoginUser.Stores.Where(s => s.StoreId == SelectedStore.CurrentStore.StoreId).FirstOrDefault());
+                    LogUser.LoginUser.Stores.Remove(LogUser.LoginUser.Stores.Where(s => s.ID == SelectedStore.CurrentStore.ID).FirstOrDefault());
 
                     if (LogUser.LoginUser.Stores.Count() > 0)
                     {
-                        return RedirectToAction("HomeStore", new { StoreId = LogUser.LoginUser.Stores.FirstOrDefault().StoreId });
+                        return RedirectToAction("HomeStore", new { StoreId = LogUser.LoginUser.Stores.FirstOrDefault().ID });
 
                     }
                     else
@@ -214,10 +214,10 @@ namespace QuickOrderAdmin.Controllers
 
             if (storeUpdatedResult)
             {
-                return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.StoreId });
+                return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.ID });
             }
 
-            return RedirectToAction("GoUpdateStoreInformation",new {storeId = SelectedStore.CurrentStore.StoreId });
+            return RedirectToAction("GoUpdateStoreInformation",new {storeId = SelectedStore.CurrentStore.ID });
 
             ////Logid to update store
 

@@ -19,7 +19,7 @@ namespace QuickOrderApp.Views.Store.StoreManger
         {
             base.OnAppearing();
 
-            viewModel.GetEmployeeDataOfStore(StoreControlPanelViewModel.YourSelectedStore.StoreId.ToString());
+            viewModel.GetEmployeeDataOfStore(StoreControlPanelViewModel.YourSelectedStore.ID.ToString());
 
 
         }

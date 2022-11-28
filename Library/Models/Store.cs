@@ -1,25 +1,13 @@
-﻿using System;
+﻿using Library.AbstractModels;
+using Library.Helpers;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
-    public enum StoreType
-    {
-        None,
-        Store,
-        Grocery,
-        BarberShop,
-        Farming,
-        Restaurant,
-        Service,
-        AutorParts,
-        ClothingStore,
-    }
-
     [Table("Stores")]
-    public class Store
+    public class Store : BaseModel
     {
         public ICollection<Employee> Employees { get; set; }
 
@@ -34,9 +22,6 @@ namespace Library.Models
         public string SKKey { get; set; }
 
         public string StoreDescription { get; set; }
-
-        [Key]
-        public Guid StoreId { get; set; }
 
         public byte[] StoreImage { get; set; }
 

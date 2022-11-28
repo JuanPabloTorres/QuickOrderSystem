@@ -13,7 +13,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
     {
         private Store selectedStore;
 
-        private User userinformation;
+        private AppUser userinformation;
 
         public YourStoresViewModel ()
         {
@@ -36,16 +36,16 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
                 OnPropertyChanged();
 
-                if( !( SelectedStore.StoreId == Guid.Empty ) )
+                if( !( SelectedStore.ID == Guid.Empty ) )
                 {
-                    GoStoreControlPanelCommand.Execute(SelectedStore.StoreId);
+                    GoStoreControlPanelCommand.Execute(SelectedStore.ID);
                 }
             }
         }
 
         public ObservableCollection<StorePresenters> StorePresenters { get; set; }
 
-        public User UserInformation
+        public AppUser UserInformation
         {
             get { return userinformation; }
             set
@@ -73,7 +73,7 @@ namespace QuickOrderApp.ViewModels.SettingVM
                     StorePresenters.Clear();
                 }
 
-                var yourStores = StoreDataStore.GetStoresFromUser(App.LogUser.UserId);
+                var yourStores = StoreDataStore.GetStoresFromUser(App.LogUser.ID);
 
                 foreach( var item in yourStores )
                 {

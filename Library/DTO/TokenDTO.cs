@@ -14,6 +14,6 @@ namespace Library.DTO
         public string Token { get; set; }
 
         [DataMember]
-        public User UserDetail { get; set; }
+        public AppUser UserDetail { get; set; }
     }
 }

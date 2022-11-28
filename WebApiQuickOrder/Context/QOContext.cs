@@ -5,7 +5,7 @@ namespace WebApiQuickOrder.Context
 {
     public class QOContext : DbContext
     {
-        public QOContext (DbContextOptions options) : base(options)
+        public QOContext(DbContextOptions options) : base(options)
         {
         }
 
@@ -17,7 +17,7 @@ namespace WebApiQuickOrder.Context
 
         public DbSet<ForgotPassword> ForgotPasswords { get; set; }
 
-        public DbSet<Login> Logins { get; set; }
+        public DbSet<Credential> Logins { get; set; }
 
         public DbSet<OrderProduct> OrderProducts { get; set; }
 
@@ -35,16 +35,24 @@ namespace WebApiQuickOrder.Context
 
         public DbSet<Subcription> Subcriptions { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<AppUser> Users { get; set; }
 
         public DbSet<UsersConnected> usersConnecteds { get; set; }
 
         public DbSet<WorkHour> WorkHours { get; set; }
 
-        protected override void OnModelCreating (ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().HasMany(w => w.EmployeeWorkHours).WithOne(s => s.Employee).OnDelete(DeleteBehavior.Cascade);
+
             //modelBuilder.Entity<User>().HasOne(l => l.UserLogin).WithOne(u => u.UserLoginOwner).OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Credential>().Ignore(p => p.StoreID);
+
+            modelBuilder.Entity<UsersConnected>().Ignore(p => p.StoreID);
+
+            modelBuilder.Entity<Store>().Ignore(p => p.StoreID);
+
         }
     }
 }

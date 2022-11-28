@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using QuickOrderApp.Utilities.Presenters;
 using System.Linq;
 using System.Windows.Input;
@@ -40,9 +41,9 @@ namespace QuickOrderApp.ViewModels.OrderVM
                             BuyerId = EmployeeOrderPresenter.BuyerId,
                             OrderStatus = EmployeeOrderPresenter.OrderStatus,
                             OrderDate = EmployeeOrderPresenter.OrderDate,
-                            OrderId = EmployeeOrderPresenter.OrderId,
+                            ID = EmployeeOrderPresenter.OrderId,
                             OrderType = EmployeeOrderPresenter.OrderType,
-                            StoreId = EmployeeOrderPresenter.StoreId,
+                            StoreID = EmployeeOrderPresenter.StoreId,
                             OrderProducts = EmployeeOrderPresenter.OrderProducts
                         };
 
@@ -52,7 +53,7 @@ namespace QuickOrderApp.ViewModels.OrderVM
                         {
                             OrderStatus = updateOrder.OrderStatus.ToString();
 
-                            await App.ComunicationService.SendCompletedOrderNotification(updateOrder.OrderId, updateOrder.BuyerId.ToString());
+                            await App.ComunicationService.SendCompletedOrderNotification(updateOrder.ID, updateOrder.BuyerId.ToString());
 
                             MessagingCenter.Send<EmployeeOrderPresenter>(EmployeeOrderPresenter, "RemoveEmpOrderPrensenter");
 

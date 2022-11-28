@@ -1,7 +1,9 @@
 ﻿using Library.Models;
+using Library.SolutionUtilities.ValidatorComponents;
 using QuickOrderApp.Managers;
-using QuickOrderApp.Utilities.Static;
+
 using System;
+
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -64,8 +66,8 @@ namespace QuickOrderApp.ViewModels.SettingVM
                                 HolderName = HolderName,
                                 Month = Month,
                                 Year = Year,
-                                PaymentCardId = Guid.NewGuid(),
-                                UserId = App.LogUser.UserId
+                                ID = Guid.NewGuid(),
+                                UserId = App.LogUser.ID
                             };
 
                             var cardserviceResult = await stripeServiceDS.InsertStripeCardToStripeUser(cardData, App.LogUser.StripeUserId);
@@ -74,9 +76,9 @@ namespace QuickOrderApp.ViewModels.SettingVM
                             {
                                 cardData.StripeCardId = cardserviceResult.TokenId;
 
-                                var result = await CardDataStore.AddItemAsync(cardData);
+                                var _apiResponse = await CardDataStore.AddItemAsync(cardData);
 
-                                if( result )
+                                if( _apiResponse.IsValid )
                                 {
                                     await Shell.Current.DisplayAlert("Notification", "Card succefully added.", "OK");
                                 }

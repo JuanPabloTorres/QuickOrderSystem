@@ -3,10 +3,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApiQuickOrder.Migrations
 {
-    public partial class _202091100 : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "EmailValidations",
+                columns: table => new
+                {
+                    EmailValidationId = table.Column<Guid>(nullable: false),
+                    Email = table.Column<string>(nullable: true),
+                    ExpDate = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
+                    ValidationCode = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailValidations", x => x.EmailValidationId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "ForgotPasswords",
                 columns: table => new
@@ -24,9 +39,9 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     LicenseId = table.Column<Guid>(nullable: false),
-                    StartDate = table.Column<DateTime>(nullable: false),
+                    IsUsed = table.Column<bool>(nullable: false),
                     LicenseHolderUserId = table.Column<Guid>(nullable: false),
-                    IsUsed = table.Column<bool>(nullable: false)
+                    StartDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,10 +53,10 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     LoginId = table.Column<Guid>(nullable: false),
-                    Username = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
                     IsConnected = table.Column<bool>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false)
+                    Password = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
+                    Username = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -53,10 +68,10 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     RequestId = table.Column<Guid>(nullable: false),
-                    ToUser = table.Column<Guid>(nullable: false),
                     FromStore = table.Column<Guid>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
-                    RequestAnswer = table.Column<int>(nullable: false)
+                    RequestAnswer = table.Column<int>(nullable: false),
+                    ToUser = table.Column<Guid>(nullable: false),
+                    Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,10 +83,10 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     StripeSubCriptionID = table.Column<string>(nullable: false),
-                    StripeCustomerId = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: true),
                     IsDisable = table.Column<bool>(nullable: false),
-                    StoreLicense = table.Column<Guid>(nullable: false)
+                    Status = table.Column<string>(nullable: true),
+                    StoreLicense = table.Column<Guid>(nullable: false),
+                    StripeCustomerId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -83,6 +98,8 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     HubConnectionID = table.Column<string>(nullable: false),
+                    ConnecteDate = table.Column<DateTime>(nullable: false),
+                    IsDisable = table.Column<bool>(nullable: false),
                     UserID = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -95,12 +112,13 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
                     Address = table.Column<string>(nullable: true),
-                    Phone = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
                     Gender = table.Column<int>(nullable: false),
+                    IsValidUser = table.Column<bool>(nullable: false),
                     LoginId = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Phone = table.Column<string>(nullable: true),
                     StripeUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -119,13 +137,13 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     PaymentCardId = table.Column<Guid>(nullable: false),
-                    HolderName = table.Column<string>(nullable: true),
                     CardNumber = table.Column<string>(nullable: true),
-                    UserId = table.Column<Guid>(nullable: false),
                     Cvc = table.Column<string>(nullable: true),
+                    HolderName = table.Column<string>(nullable: true),
                     Month = table.Column<string>(nullable: true),
-                    Year = table.Column<string>(nullable: true),
-                    StripeCardId = table.Column<string>(nullable: true)
+                    StripeCardId = table.Column<string>(nullable: true),
+                    UserId = table.Column<Guid>(nullable: false),
+                    Year = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -143,16 +161,16 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     StoreId = table.Column<Guid>(nullable: false),
-                    StoreName = table.Column<string>(nullable: true),
-                    UserId = table.Column<Guid>(nullable: true),
-                    StoreImage = table.Column<byte[]>(nullable: true),
-                    StoreDescription = table.Column<string>(nullable: true),
-                    StoreRegisterLicenseId = table.Column<Guid>(nullable: false),
-                    SKKey = table.Column<string>(nullable: true),
+                    IsDisable = table.Column<bool>(nullable: false),
                     PBKey = table.Column<string>(nullable: true),
-                    StoreType = table.Column<int>(nullable: false),
+                    SKKey = table.Column<string>(nullable: true),
+                    StoreDescription = table.Column<string>(nullable: true),
+                    StoreImage = table.Column<byte[]>(nullable: true),
                     StoreLicenceId = table.Column<Guid>(nullable: false),
-                    IsDisable = table.Column<bool>(nullable: false)
+                    StoreName = table.Column<string>(nullable: true),
+                    StoreRegisterLicenseId = table.Column<Guid>(nullable: false),
+                    StoreType = table.Column<int>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -176,9 +194,9 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     EmployeeId = table.Column<Guid>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: false),
+                    StoreId = table.Column<Guid>(nullable: false),
                     Type = table.Column<int>(nullable: false),
-                    StoreId = table.Column<Guid>(nullable: false)
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -202,11 +220,11 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     ProductId = table.Column<Guid>(nullable: false),
+                    InventoryQuantity = table.Column<int>(nullable: false),
+                    Price = table.Column<double>(nullable: false),
+                    ProductDescription = table.Column<string>(nullable: true),
                     ProductImage = table.Column<byte[]>(nullable: true),
                     ProductName = table.Column<string>(nullable: true),
-                    ProductDescription = table.Column<string>(nullable: true),
-                    Price = table.Column<double>(nullable: false),
-                    InventoryQuantity = table.Column<int>(nullable: false),
                     StoreId = table.Column<Guid>(nullable: false),
                     Type = table.Column<int>(nullable: false)
                 },
@@ -226,10 +244,10 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     WorkHourId = table.Column<Guid>(nullable: false),
-                    OpenTime = table.Column<DateTime>(nullable: false),
                     CloseTime = table.Column<DateTime>(nullable: false),
-                    StoreId = table.Column<Guid>(nullable: false),
-                    Day = table.Column<string>(nullable: true)
+                    Day = table.Column<string>(nullable: true),
+                    OpenTime = table.Column<DateTime>(nullable: false),
+                    StoreId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -247,10 +265,10 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     WorkHourId = table.Column<Guid>(nullable: false),
-                    OpenTime = table.Column<DateTime>(nullable: false),
                     CloseTime = table.Column<DateTime>(nullable: false),
-                    EmpId = table.Column<Guid>(nullable: false),
                     Day = table.Column<string>(nullable: true),
+                    EmpId = table.Column<Guid>(nullable: false),
+                    OpenTime = table.Column<DateTime>(nullable: false),
                     WillWork = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -270,12 +288,12 @@ namespace WebApiQuickOrder.Migrations
                 {
                     OrderId = table.Column<Guid>(nullable: false),
                     IsDisisble = table.Column<bool>(nullable: false),
-                    OrderDate = table.Column<DateTime>(nullable: false),
                     BuyerId = table.Column<Guid>(nullable: false),
-                    StoreId = table.Column<Guid>(nullable: false),
-                    OrderType = table.Column<int>(nullable: false),
+                    OrderDate = table.Column<DateTime>(nullable: false),
                     OrderStatus = table.Column<int>(nullable: false),
-                    PrepareByEmployeeId = table.Column<Guid>(nullable: true)
+                    OrderType = table.Column<int>(nullable: false),
+                    PrepareByEmployeeId = table.Column<Guid>(nullable: true),
+                    StoreId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -299,13 +317,14 @@ namespace WebApiQuickOrder.Migrations
                 columns: table => new
                 {
                     OrderProductId = table.Column<Guid>(nullable: false),
+                    BuyerId = table.Column<Guid>(nullable: false),
+                    OrderId = table.Column<Guid>(nullable: false),
+                    Price = table.Column<double>(nullable: false),
+                    ProductIdReference = table.Column<Guid>(nullable: false),
+                    ProductImage = table.Column<byte[]>(nullable: true),
                     ProductName = table.Column<string>(nullable: true),
                     Quantity = table.Column<int>(nullable: false),
-                    Price = table.Column<double>(nullable: false),
-                    BuyerId = table.Column<Guid>(nullable: false),
                     StoreId = table.Column<Guid>(nullable: false),
-                    OrderId = table.Column<Guid>(nullable: false),
-                    ProductImage = table.Column<byte[]>(nullable: true),
                     Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -382,6 +401,9 @@ namespace WebApiQuickOrder.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "EmailValidations");
+
             migrationBuilder.DropTable(
                 name: "EmployeeWorkHours");
 

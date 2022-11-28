@@ -7,7 +7,7 @@ namespace QuickOrderAdmin.Utilities
     {
 
 
-        public static User LoginUser { get; set; }
+        public static AppUser LoginUser { get; set; }
 
         public static TokenDTO Token { get; set; }
 

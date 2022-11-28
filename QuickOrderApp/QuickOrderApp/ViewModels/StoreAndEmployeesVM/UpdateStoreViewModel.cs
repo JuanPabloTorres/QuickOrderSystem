@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Library.SolutionUtilities.ValidatorComponents;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
@@ -218,7 +219,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
               {
                   StoreUpdate.StoreName = StoreName;
 
-                  Library.Models.StoreType type;
+                StoreType type;
 
                   Enum.TryParse(StoreTypeSelected, out type);
 
@@ -273,8 +274,8 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                     CloseTime = Convert.ToDateTime(item.Close.ToString()),
                     Day = item.Day,
                     OpenTime = Convert.ToDateTime(item.Open.ToString()),
-                    WorkHourId = Guid.NewGuid(),
-                    StoreId = StoreUpdate.StoreId
+                    ID = Guid.NewGuid(),
+                    StoreID = StoreUpdate.StoreID
                 };
 
                 workHours.Add(workHour);

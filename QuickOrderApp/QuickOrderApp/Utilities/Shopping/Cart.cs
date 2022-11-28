@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Library.Services.Interface;
 using QuickOrderApp.Managers;
 using QuickOrderApp.Utilities.Presenters;
@@ -43,9 +44,9 @@ namespace QuickOrderApp.Utilities.Shopping
             }
             else
             {
-                var ordersOfuser = orderDataStore.GetUserOrdersOfStore(App.LogUser.UserId, App.CurrentStore.StoreId);
+                var ordersOfuser = orderDataStore.GetUserOrdersOfStore(App.LogUser.ID, App.CurrentStore.ID);
 
-                Order orderOfuser = ordersOfuser.Where(o => o.OrderStatus == Status.NotSubmited && o.IsDisisble == false).FirstOrDefault();
+                Order orderOfuser = ordersOfuser.Where(o => o.OrderStatus == Status.NotSubmited && o.IsDisasble == false).FirstOrDefault();
 
                 //Crear por primera vez la orden
                 if( orderOfuser == null )
@@ -53,10 +54,10 @@ namespace QuickOrderApp.Utilities.Shopping
                     //Create a new order
                     Order order = new Order()
                     {
-                        OrderId = Guid.NewGuid(),
-                        BuyerId = App.LogUser.UserId,
-                        StoreId = App.CurrentStore.StoreId,
-                        OrderType = Library.Models.Type.None,
+                        ID = Guid.NewGuid(),
+                        BuyerId = App.LogUser.ID,
+                        StoreID = App.CurrentStore.ID,
+                        OrderType = Library.Helpers.Type.None,
                         OrderDate = DateTime.Now,
                         OrderStatus = Status.NotSubmited,
                     };
@@ -71,22 +72,22 @@ namespace QuickOrderApp.Utilities.Shopping
                         Price = product.ProductPrice,
                         ProductName = product.ProductName,
                         Quantity = (int) product.Quantity,
-                        BuyerId = App.LogUser.UserId,
-                        StoreId = App.CurrentStore.StoreId,
-                        OrderId = order.OrderId,
+                        BuyerId = App.LogUser.ID,
+                        StoreID = App.CurrentStore.ID,
+                        ID = order.ID,
                         ProductImage = product.ProductImg,
                         ProductIdReference = product.ProductId
                     };
 
                     //Check id orderproduct exist in the order
-                    var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductIdReference, order.OrderId);
+                    var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.ID, orderProduct.ProductIdReference, order.ID);
 
                     if( !_productoExisteEnOrden )
                     {
                         //Add orderproduct to order
-                        var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
+                        var _apiResponse = await orderProductDataStore.AddItemAsync(orderProduct);
 
-                        if( orderProductAdded )
+                        if(_apiResponse.IsValid)
                         {
                             Cart.OrderProducts.Add(orderProduct);
                             return true;
@@ -98,7 +99,7 @@ namespace QuickOrderApp.Utilities.Shopping
                     }
                     else
                     {
-                        var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, order.OrderId);
+                        var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, order.ID);
 
                         if( orderProducttoUpdate.Quantity != orderProduct.Quantity )
                         {
@@ -122,20 +123,20 @@ namespace QuickOrderApp.Utilities.Shopping
                         Price = product.ProductPrice,
                         ProductName = product.ProductName,
                         Quantity = (int) product.Quantity,
-                        BuyerId = App.LogUser.UserId,
-                        StoreId = App.CurrentStore.StoreId,
-                        OrderId = orderOfuser.OrderId,
+                        BuyerId = App.LogUser.ID,
+                        StoreID = App.CurrentStore.ID,
+                        ID = orderOfuser.ID,
                         ProductImage = product.ProductImg,
                         ProductIdReference = product.ProductId
                     };
 
-                    var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.UserId, orderProduct.ProductIdReference, orderOfuser.OrderId);
+                    var _productoExisteEnOrden = orderProductDataStore.OrderProductOfUserExistInOrder(App.LogUser.ID, orderProduct.ProductIdReference, orderOfuser.ID);
 
                     if( !_productoExisteEnOrden )
                     {
-                        var orderProductAdded = await orderProductDataStore.AddItemAsync(orderProduct);
+                        var _apiResponse = await orderProductDataStore.AddItemAsync(orderProduct);
 
-                        if( orderProductAdded )
+                        if(_apiResponse.IsValid)
                         {
                             Cart.OrderProducts.Add(orderProduct);
 
@@ -150,7 +151,7 @@ namespace QuickOrderApp.Utilities.Shopping
                     }
                     else
                     {
-                        var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, orderOfuser.OrderId);
+                        var orderProducttoUpdate = orderProductDataStore.OrderProductOfUserExistOnOrder(orderProduct.ProductIdReference, orderOfuser.ID);
 
                         if( orderProducttoUpdate.Quantity != orderProduct.Quantity )
                         {

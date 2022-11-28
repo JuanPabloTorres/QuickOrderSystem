@@ -76,7 +76,7 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmployeeWorkHour", new { id = employeeWorkHour.WorkHourId }, employeeWorkHour);
+            return CreatedAtAction("GetEmployeeWorkHour", new { id = employeeWorkHour.ID }, employeeWorkHour);
         }
 
         // PUT: api/EmployeeWorkHour/5
@@ -85,7 +85,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEmployeeWorkHour (Guid id, EmployeeWorkHour employeeWorkHour)
         {
-            if( id != employeeWorkHour.WorkHourId )
+            if( id != employeeWorkHour.ID )
             {
                 return BadRequest();
             }
@@ -113,7 +113,7 @@ namespace WebApiQuickOrder.Controllers
 
         private bool EmployeeWorkHourExists (Guid id)
         {
-            return _context.EmployeeWorkHours.Any(e => e.WorkHourId == id);
+            return _context.EmployeeWorkHours.Any(e => e.ID == id);
         }
     }
 }

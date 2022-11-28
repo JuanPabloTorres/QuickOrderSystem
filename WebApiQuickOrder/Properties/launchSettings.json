@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:7472",
+      "applicationUrl": "http://localhost:500",
       "sslPort": 44300
     }
   },
@@ -11,7 +11,7 @@
   "profiles": {
     "IIS Express": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "api/Order",
       "applicationUrl": "http://localhost:5000/",
       "environmentVariables": {
@@ -21,7 +21,7 @@
     },
     "WebApiQuickOrder": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "api/Order",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {

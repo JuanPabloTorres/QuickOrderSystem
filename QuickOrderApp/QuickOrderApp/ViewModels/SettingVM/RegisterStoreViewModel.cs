@@ -1,4 +1,6 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
+using Library.SolutionUtilities.ValidatorComponents;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using QuickOrderApp.Managers;
@@ -170,9 +172,9 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
                                     var newStoreRegister = new Store()
                                     {
-                                        StoreId = Guid.NewGuid(),
+                                        ID = Guid.NewGuid(),
                                         StoreName = StoreName,
-                                        UserId = App.LogUser.UserId,
+                                        UserId = App.LogUser.ID,
                                         StoreImage = ImgArray,
                                         StoreType = value,
                                         StoreRegisterLicenseId = licenseCodeGuid,
@@ -190,8 +192,8 @@ namespace QuickOrderApp.ViewModels.SettingVM
                                             CloseTime = Convert.ToDateTime(item.Close.ToString()),
                                             Day = item.Day,
                                             OpenTime = Convert.ToDateTime(item.Open.ToString()),
-                                            WorkHourId = Guid.NewGuid(),
-                                            StoreId = newStoreRegister.StoreId
+                                            ID = Guid.NewGuid(),
+                                            StoreID = newStoreRegister.ID
                                         };
 
                                         workHours.Add(workHour);
@@ -199,9 +201,9 @@ namespace QuickOrderApp.ViewModels.SettingVM
 
                                     newStoreRegister.WorkHours = workHours;
 
-                                    var storeaddedResult = await StoreDataStore.AddItemAsync(newStoreRegister);
+                                    var _apiResponse = await StoreDataStore.AddItemAsync(newStoreRegister);
 
-                                    if( storeaddedResult )
+                                    if(_apiResponse.IsValid)
                                     {
                                         var licenceUpdateResult = await storeLicenseDataStore.UpdateLicenceInCode(licenseCodeGuid);
 

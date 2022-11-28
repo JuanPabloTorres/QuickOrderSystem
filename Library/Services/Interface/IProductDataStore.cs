@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Library.Services.Interface
 
         IEnumerable<Product> GetProductWithLowQuantity (Guid storeid, int lowquantity);
 
-        Task<IEnumerable<Product>> GetSpecificProductTypeFromStore (Guid storeId, ProductType type);
+        Task<IEnumerable<Product>> GetSpecificProductTypeFromStore(Guid storeId, ProductType type);
 
         Task<Product> SearchItemOfStore (string storeId, string item);
     }

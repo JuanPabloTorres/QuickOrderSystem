@@ -41,7 +41,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{storeId}")]
         public async Task<IEnumerable<WorkHour>> GetStoreWorkHours (string storeId)
         {
-            return await _context.WorkHours.Where(wh => wh.StoreId.ToString() == storeId).ToListAsync();
+            return await _context.WorkHours.Where(wh => wh.StoreID.ToString() == storeId).ToListAsync();
         }
 
         // GET: api/WorkHour/5
@@ -75,7 +75,7 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetWorkHour", new { id = workHour.WorkHourId }, workHour);
+            return CreatedAtAction("GetWorkHour", new { id = workHour.ID }, workHour);
         }
 
         //// GET: api/WorkHour
@@ -100,7 +100,7 @@ namespace WebApiQuickOrder.Controllers
             }
             catch( DbUpdateConcurrencyException )
             {
-                if( !WorkHourExists(workHour.WorkHourId) )
+                if( !WorkHourExists(workHour.ID) )
                 {
                     return false;
                 }
@@ -113,7 +113,7 @@ namespace WebApiQuickOrder.Controllers
 
         private bool WorkHourExists (Guid id)
         {
-            return _context.WorkHours.Any(e => e.WorkHourId == id);
+            return _context.WorkHours.Any(e => e.ID == id);
         }
     }
 }

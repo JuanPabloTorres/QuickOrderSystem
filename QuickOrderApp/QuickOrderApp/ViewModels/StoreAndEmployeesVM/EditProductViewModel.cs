@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using QuickOrderApp.Utilities.Static;
@@ -109,10 +110,10 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                         InventoryQuantity = ProductQuantity,
                         Price = Convert.ToDouble(ProductPrice),
                         ProductDescription = ProductDescription,
-                        ProductId = ToEditProduct.ProductId,
+                        ID = ToEditProduct.ID,
                         ProductImage = ImgArray,
                         ProductName = ProductName,
-                        StoreId = ToEditProduct.StoreId,
+                        StoreID = ToEditProduct.ID,
                         Type = productType
                     };
 

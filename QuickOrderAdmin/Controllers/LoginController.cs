@@ -35,7 +35,15 @@ namespace QuickOrderAdmin.Controllers
             {
                 var result = userDataStore.CheckUserCredential(loginViewModel.Username, loginViewModel.Password);
 
-                LogUser.Token = userDataStore.LoginCredential(loginViewModel.Username, loginViewModel.Password);
+            var _apiResponse =await userDataStore.LoginCredential(loginViewModel.Username, loginViewModel.Password);
+
+                if (_apiResponse.IsValid)
+                {
+                    LogUser.Token = _apiResponse.Data;
+                }
+
+
+             
 
                 if (result != null)
                 {
@@ -56,7 +64,7 @@ namespace QuickOrderAdmin.Controllers
                     LogUser.UsersConnected = new UsersConnected()
                     {
                         HubConnectionID = LogUser.ComunicationService.hubConnection.ConnectionId,
-                        UserID = result.UserId,
+                        UserID = result.ID,
                         IsDisable = false,
                         ConnecteDate = DateTime.Now
                     };
@@ -82,7 +90,7 @@ namespace QuickOrderAdmin.Controllers
                         return RedirectToAction("RegisterControl","Store");
                     }
 
-                    return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.StoreId });
+                    return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.ID });
                    
                 }
                 else
@@ -178,7 +186,7 @@ namespace QuickOrderAdmin.Controllers
             }
             else
             {
-                return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.StoreId });
+                return RedirectToAction("HomeStore", "Store", new { StoreId = SelectedStore.CurrentStore.ID });
             }
 
         }

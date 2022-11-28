@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using QuickOrderApp.Utilities.Presenters;
 using System;
 using System.Collections.Generic;
@@ -212,7 +213,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             //Guid guidStoreId = Guid.Parse(StoreId);
 
-            var data = await productDataStore.GetSpecificProductTypeFromStore(App.CurrentStore.StoreId, _productType);
+            var data = await productDataStore.GetSpecificProductTypeFromStore(App.CurrentStore.StoreID, _productType);
 
             foreach( var item in data )
             {

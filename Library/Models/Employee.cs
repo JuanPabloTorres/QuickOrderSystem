@@ -1,27 +1,15 @@
-﻿using System;
+﻿using Library.AbstractModels;
+using Library.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
-    public enum EmployeeType
+    public class Employee:BaseModel
     {
-        New,
-        OrderPreperarer,
-        Delivery,
-        PickUpRecepcionist,
-        SubAdministrator
-    }
-
-    public class Employee
-    {
-        public Guid EmployeeId { get; set; }
-
         [ForeignKey("StoreId")]
         public Store EmployeeStore { get; set; }
-
-        [ForeignKey("UserId")]
-        public User EmployeeUser { get; set; }
 
         public ICollection<EmployeeWorkHour> EmployeeWorkHours { get; set; }
 
@@ -30,5 +18,6 @@ namespace Library.Models
         public EmployeeType Type { get; set; }
 
         public Guid UserId { get; set; }
+        public AppUser EmployeeUser { get; set; }
     }
 }

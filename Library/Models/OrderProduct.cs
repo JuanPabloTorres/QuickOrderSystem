@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Library.AbstractModels;
+using Library.Helpers;
+using System;
 
 namespace Library.Models
 {
-    public class OrderProduct
+    public class OrderProduct:BaseModel
     {
         public Guid BuyerId { get; set; }
-        public Guid OrderId { get; set; }
+   
         public Guid OrderProductId { get; set; }
 
         public double Price { get; set; }
@@ -14,7 +16,7 @@ namespace Library.Models
         public string ProductName { get; set; }
 
         public int Quantity { get; set; }
-        public Guid StoreId { get; set; }
+   
         public ProductType Type { get; set; }
     }
 }

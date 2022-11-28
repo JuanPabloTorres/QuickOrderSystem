@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using QuickOrderApp.Managers;
@@ -52,7 +53,7 @@ namespace QuickOrderApp.ViewModels.InboxVM
                 {
                     UserRequests.Clear();
 
-                    var requestData = await requestDataStore.GetRequestOfUser(App.LogUser.UserId);
+                    var requestData = await requestDataStore.GetRequestOfUser(App.LogUser.ID);
 
                     foreach( var item in requestData )
                     {

@@ -1,4 +1,6 @@
-﻿using Library.DTO;
+﻿using Library.ApiResponses;
+using Library.DTO;
+using Library.Factories;
 using Library.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,36 +30,47 @@ namespace WebApiQuickOrder.Controllers
         }
 
         [HttpGet("[action]/{customerId}")]
-        public async Task<bool> CancelSubcription (string customerId)
+        public async Task<Response<Subcription>> CancelSubcription (string customerId)
         {
-            var subcription = await _context.Subcriptions.Where(sub => sub.StripeCustomerId == customerId && sub.IsDisable == false).FirstOrDefaultAsync();
+            ResponseFactory<Subcription> responseFactory = new ResponseFactory<Subcription>();
 
-            if( subcription != null )
+            try
             {
-                StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
+                var subcription = await _context.Subcriptions.Where(sub => sub.StripeCustomerId == customerId && sub.IsDisable == false).FirstOrDefaultAsync();
 
-                var options = new SubscriptionUpdateOptions
+                if (subcription != null)
                 {
-                    CancelAtPeriodEnd = true,
-                };
+                    StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
 
-                var service = new SubscriptionService();
+                    var options = new SubscriptionUpdateOptions
+                    {
+                        CancelAtPeriodEnd = true,
+                    };
 
-                var resultToken = await service.UpdateAsync(subcription.StripeSubCriptionID, options);
+                    var service = new SubscriptionService();
 
-                if( resultToken.CancelAtPeriodEnd )
-                {
-                    return true;
+                    var resultToken = await service.UpdateAsync(subcription.StripeSubcriptionID, options);
+
+                    if (resultToken.CancelAtPeriodEnd)
+                    {
+                        return responseFactory.FailResponse("Subcribtion was canceled.");
+                    }
+                    else
+                    {
+                        return responseFactory.FailResponse("Subcribtion still active.");
+                    }
                 }
                 else
                 {
-                    return false;
+                    return responseFactory.FailResponse("Subcribtion not found.");
                 }
             }
-            else
+            catch (Exception e)
             {
-                return false;
+                return responseFactory.FailResponse(e.Message);
             }
+
+            
         }
 
         [HttpGet("[action]/{customerId}")]
@@ -411,7 +424,7 @@ namespace WebApiQuickOrder.Controllers
         {
             try
             {
-                var key = await _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefaultAsync();
+                var key = await _context.Stores.Where(s => s.ID == storeId).FirstOrDefaultAsync();
 
                 StripeConfiguration.ApiKey = key.SKKey;
 
@@ -455,8 +468,8 @@ namespace WebApiQuickOrder.Controllers
         {
             try
             {
-                var paymentCard = _context.PaymentCards.Where(pc => pc.PaymentCardId == paymentCardId).FirstOrDefault();
-                var key = await _context.Stores.Where(s => s.StoreId == storeId).FirstOrDefaultAsync();
+                var paymentCard = _context.PaymentCards.Where(pc => pc.ID == paymentCardId).FirstOrDefault();
+                var key = await _context.Stores.Where(s => s.ID == storeId).FirstOrDefaultAsync();
 
                 StripeConfiguration.ApiKey = key.SKKey;
 
@@ -516,7 +529,7 @@ namespace WebApiQuickOrder.Controllers
         {
             try
             {
-                var key = await _context.Stores.Where(s => s.StoreId.ToString() == storeId).FirstOrDefaultAsync();
+                var key = await _context.Stores.Where(s => s.ID.ToString() == storeId).FirstOrDefaultAsync();
 
                 //StripeConfiguration.ApiKey = this._configuration.GetSection("Stripe")["SecretKey"];
 

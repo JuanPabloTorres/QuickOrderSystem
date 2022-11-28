@@ -28,7 +28,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             MessagingCenter.Subscribe<EmployeeOrderPresenter>(this, "RemoveEmpOrderPrensenter", (sender) =>
             {
-                var orderToRemove = StoreOrderPresenters.Where(op => op.DetailOrder.OrderId == sender.OrderId).FirstOrDefault();
+                var orderToRemove = StoreOrderPresenters.Where(op => op.DetailOrder.ID == sender.OrderId).FirstOrDefault();
 
                 StoreOrderPresenters.Remove(orderToRemove);
             });

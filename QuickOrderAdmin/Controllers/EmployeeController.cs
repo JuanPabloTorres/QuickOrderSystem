@@ -1,4 +1,5 @@
-﻿using Library.Models;
+﻿using Library.Helpers;
+using Library.Models;
 using Library.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using QuickOrderAdmin.Models;
@@ -35,7 +36,7 @@ namespace QuickOrderAdmin.Controllers
 
         public async Task<IActionResult> ShowEmployees()
         {
-            var employeedata = await employeeDataStore.GetEmployeesOfStore(SelectedStore.CurrentStore.StoreId);
+            var employeedata = await employeeDataStore.GetEmployeesOfStore(SelectedStore.CurrentStore.ID);
 
             StoreEmployees = new List<Employee>(employeedata);
 
@@ -52,7 +53,7 @@ namespace QuickOrderAdmin.Controllers
         public async Task<IActionResult> EditEmployee(Guid id)
         {
 
-            var employee = StoreEmployees.Where(e => e.EmployeeId == id).FirstOrDefault();
+            var employee = StoreEmployees.Where(e => e.ID == id).FirstOrDefault();
 
 
             EditEmployeeViewModel editEmployeeViewModel = new EditEmployeeViewModel();
@@ -67,15 +68,15 @@ namespace QuickOrderAdmin.Controllers
         public async Task<IActionResult> EditEmployeeForm(EditEmployeeViewModel employeeViewModel)
         {
 
-            var editEmployee = await employeeDataStore.GetItemAsync(employeeViewModel.EmployeeInformation.EmployeeId.ToString());
+            var editEmployee = await employeeDataStore.GetItemAsync(employeeViewModel.EmployeeInformation.ID.ToString());
 
             var workhourshedule = new List<EmployeeWorkHour>();
 
             workhourshedule.Add(new EmployeeWorkHour()
             {
-                EmpId = editEmployee.EmployeeId,
+                EmpId = editEmployee.ID,
                 Day = DayOfWeek.Monday.ToString(),
-                WorkHourId = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 WillWork=employeeViewModel.WillWorkMonday,
                 CloseTime = employeeViewModel.MCloseTime,
                 OpenTime = employeeViewModel.MOpenTime
@@ -83,9 +84,9 @@ namespace QuickOrderAdmin.Controllers
             });
             workhourshedule.Add(new EmployeeWorkHour()
             {
-                EmpId = editEmployee.EmployeeId,
+                EmpId = editEmployee.ID,
                 Day = DayOfWeek.Tuesday.ToString(),
-                WorkHourId = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 WillWork = employeeViewModel.WillWorkTuesday,
                 CloseTime = employeeViewModel.TCloseTime,
                 OpenTime = employeeViewModel.TOpenTime
@@ -93,9 +94,9 @@ namespace QuickOrderAdmin.Controllers
             });
             workhourshedule.Add(new EmployeeWorkHour()
             {
-                EmpId = editEmployee.EmployeeId,
+                EmpId = editEmployee.ID,
                 Day = DayOfWeek.Wednesday.ToString(),
-                WorkHourId = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 WillWork = employeeViewModel.WillWorkWednesday,
                 CloseTime = employeeViewModel.WCloseTime,
                 OpenTime = employeeViewModel.WOpenTime
@@ -103,9 +104,9 @@ namespace QuickOrderAdmin.Controllers
             });
             workhourshedule.Add(new EmployeeWorkHour()
             {
-                EmpId = editEmployee.EmployeeId,
+                EmpId = editEmployee.ID,
                 Day = DayOfWeek.Thursday.ToString(),
-                WorkHourId = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 WillWork = employeeViewModel.WillWorkThursday,
                 CloseTime = employeeViewModel.ThCloseTime,
                 OpenTime = employeeViewModel.ThOpenTime
@@ -113,9 +114,9 @@ namespace QuickOrderAdmin.Controllers
             });
             workhourshedule.Add(new EmployeeWorkHour()
             {
-                EmpId = editEmployee.EmployeeId,
+                EmpId = editEmployee.ID,
                 Day = DayOfWeek.Friday.ToString(),
-                WorkHourId = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 WillWork = employeeViewModel.WillWorkFriday,
                 CloseTime = employeeViewModel.FCloseTime,
                 OpenTime = employeeViewModel.FOpenTime
@@ -123,9 +124,9 @@ namespace QuickOrderAdmin.Controllers
             });
             workhourshedule.Add(new EmployeeWorkHour()
             {
-                EmpId = editEmployee.EmployeeId,
+                EmpId = editEmployee.ID,
                 Day = DayOfWeek.Saturday.ToString(),
-                WorkHourId = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 WillWork = employeeViewModel.WillWorkSaturday,
                 CloseTime = employeeViewModel.SCloseTime,
                 OpenTime = employeeViewModel.SOpenTime
@@ -133,9 +134,9 @@ namespace QuickOrderAdmin.Controllers
             });
             workhourshedule.Add(new EmployeeWorkHour()
             {
-                EmpId = editEmployee.EmployeeId,
+                EmpId = editEmployee.ID,
                 Day = DayOfWeek.Sunday.ToString(),
-                WorkHourId = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 WillWork = employeeViewModel.WillWorkSunday,
                 CloseTime = employeeViewModel.SuCloseTime,
                 OpenTime = employeeViewModel.SuOpenTime
@@ -159,7 +160,7 @@ namespace QuickOrderAdmin.Controllers
             else
             {
 
-                return RedirectToAction("EditEmployee", new { id = editEmployee.EmployeeId });
+                return RedirectToAction("EditEmployee", new { id = editEmployee.ID });
             }
 
         }
@@ -170,14 +171,14 @@ namespace QuickOrderAdmin.Controllers
 
             var user = await userDataStore.GetItemAsync(employee.UserId.ToString());
 
-            var workhours = await employeeWorkHourDataStore.GetEmployeeWorkHours(employee.EmployeeId.ToString());
+            var workhours = await employeeWorkHourDataStore.GetEmployeeWorkHours(employee.ID.ToString());
 
             var detailEmployeeVm = new EmployeeDetailViewModel()
             {
                 Address = user.Address,
                 Gender = user.Gender,
                 EmployeeWorkHours = workhours.ToList(),
-                EmployeeId = employee.EmployeeId,
+                EmployeeId = employee.ID,
                 Email = user.Email,
                 Name = user.Name,
                 Phone = user.Phone,

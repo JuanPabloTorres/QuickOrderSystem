@@ -12,7 +12,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.OrderId)
+                @Html.DisplayNameFor(model => model.ID)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.OrderDate)
@@ -34,7 +34,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderId)
+                @Html.DisplayFor(modelItem => item.ID)
             </td>
             <td>
                 @item.OrderDate.ToString("dddd, dd MMMM yyyy")
@@ -50,7 +50,7 @@
                 @Html.DisplayFor(modelItem => item.OrderStatus)
             </td>
             <td>
-                @Html.ActionLink("Details", "OrderDetail", "Store",new {  id=item.OrderId },new { @class="btn btn-primary"}) 
+                @Html.ActionLink("Details", "OrderDetail", "Store",new {  id=item.ID },new { @class="btn btn-primary"}) 
               
             </td>
         </tr>

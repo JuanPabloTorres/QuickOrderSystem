@@ -1,4 +1,5 @@
 ﻿using Library.DTO;
+using Library.Helpers;
 using Library.Models;
 using QuickOrderApp.ViewModels;
 using System;
@@ -43,7 +44,7 @@ namespace QuickOrderApp.Utilities.Presenters
                 {
                     var jobRequest = new UserRequest()
                     {
-                        RequestId = Guid.NewGuid(),
+                        ID = Guid.NewGuid(),
                         FromStore = RequestToStore,
                         ToUser = UserId,
                         Type = RequestType.JobRequest,

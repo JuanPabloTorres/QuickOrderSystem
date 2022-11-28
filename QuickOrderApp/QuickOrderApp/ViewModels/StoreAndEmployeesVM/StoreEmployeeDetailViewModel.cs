@@ -47,7 +47,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             var empUserInfo = await userDataStore.GetItemAsync(EmployeeDetail.UserId.ToString());
 
-            EmployeeDetail.EmployeeUser = empUserInfo;
+            //EmployeeDetail.EmployeeUser = empUserInfo;
 
             var workHours = EmployeeDetail.EmployeeWorkHours.Where(wh => wh.WillWork == true).ToList();
 

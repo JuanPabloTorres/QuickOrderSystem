@@ -1,6 +1,7 @@
 ﻿using Library.DTO;
+using Library.Helpers;
 using Library.Models;
-using QuickOrderApp.Utilities.Static;
+using Library.SolutionUtilities.ValidatorComponents;
 using QuickOrderApp.Views.Login;
 using Rg.Plugins.Popup.Contracts;
 using Rg.Plugins.Popup.Services;
@@ -18,26 +19,51 @@ namespace QuickOrderApp.ViewModels.LoginVM
     {
         private readonly INavigation Navigation;
 
-        #region Commandos
-
-        public ICommand ConfirmCodeCommand { get; set; }
-        public ICommand DoneCommand { get; set; }
-        public ICommand GoForgotPasswordCommand { get; set; }
-        public ICommand LoginCommand { get; set; }
-        public ICommand LoginEmployeeCommand { get; set; }
-
-        public ICommand RegisterCommand { get; set; }
-        public ICommand SendCodeCommand { get; set; }
-
-        #endregion Commandos
-
+        private string _confirmpassword;
+        private string _email;
+        private string _fullname;
+        private string _password;
+        private string _username;
+        private Validator addressValidator;
+        private string adress;
+        private Validator confirmAndpasswordValidator;
+        private Validator confirmpasswordValidator;
+        private Validator emailPatternValidator;
+        private Validator emailValidator;
+        private Validator fullnameValidator;
+        private string genderselected;
+        private Validator genderValidator;
         private bool isloading;
-
+        private Validator passwordValidator;
+        private string phone;
+        private Validator phoneValidator;
         private IPopupNavigation popupNavigation;
+        private Validator usernameValidator;
 
-        public LoginViewModel (INavigation _navigation)
+        public void InitialDataTest()
+        {
+            Email = "est.juanpablotorres@gmail.com";
+
+            Address = "Villalba";
+
+            Phone = "787-111-1111";
+
+            Fullname = "Juan Pablo Torres";
+
+            GenderSelected = Gender.Male.ToString();
+
+            Username = "jp94";
+
+            Password = "1234";
+
+            ConfirmPassword = "1234";
+        }
+
+        public LoginViewModel(INavigation _navigation)
         {
             Navigation = _navigation;
+
+            InitialDataTest();
 
             popupNavigation = PopupNavigation.Instance;
 
@@ -58,89 +84,91 @@ namespace QuickOrderApp.ViewModels.LoginVM
 
             LoginCommand = new Command(async () =>
             {
-                //var currentuserID = Xamarin.Forms.Application.Current.Properties["loginId "].ToString();
                 IsLoading = true;
 
-                if( !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password) )
+                if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
                 {
                     //Verifica si el telefono tiene acceso a internet
-
-                    if( Connectivity.NetworkAccess == NetworkAccess.Internet )
+                    if (Connectivity.NetworkAccess == NetworkAccess.Internet)
                     {
-                        //Obtine los credenciales del usuario
-                        //var loginresult = userDataStore.CheckUserCredential(Username, Password);
-                        //Obtiene el token de acceso
-                        App.TokenDto = userDataStore.LoginCredential(Username, Password);
+                        var apiResponse = await userDataStore.LoginCredential(Username, Password);
 
-                        var loginresult = App.TokenDto.UserDetail;
-
-                        //Verifica si el resultado del login no es vacio.
-                        if( loginresult != null )
+                        if (apiResponse.IsValid)
                         {
-                            if( !loginresult.IsValidUser )
+                            if (apiResponse.Status == ResponseStatus.Success)
                             {
-                                App.LogUser = loginresult;
+                                await App.ComunicationService.Connect();
 
-                                await popupNavigation.PushAsync(new ValidateEmailCode());
+                                App.TokenDto = apiResponse.Data;
 
-                                IsLoading = false;
+                                var loginresult = App.TokenDto.UserDetail;
+
+                                if (!loginresult.IsValidUser)
+                                {
+                                    App.LogUser = loginresult;
+
+                                    await popupNavigation.PushAsync(new ValidateEmailCode());
+
+                                    IsLoading = false;
+                                }
+                                else
+                                {
+                                    App.LogUser = loginresult;
+
+                                    bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
+
+                                    //Verfico si hay tarjetas registradas con el usuario
+                                    if (hasPaymentCard)
+                                    {
+                                        var data = App.LogUser.PaymentCards;
+
+                                        var card = new List<PaymentCard>(data);
+
+                                        var userCardTokenId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, card[0].StripeCardId);
+
+                                        App.CardPaymentToken.CardTokenId = userCardTokenId;
+                                    }
+
+                                    if (App.ComunicationService.hubConnection.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
+                                    {
+                                        App.UsersConnected = new UsersConnected()
+                                        {
+                                            HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                            UserID = App.LogUser.ID,
+                                            IsDisable = false,
+                                            ConnecteDate = DateTime.Now
+                                        };
+
+                                        var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+
+                                        var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                                    }
+
+                                    App.Current.MainPage = new AppShell();
+                                }
                             }
                             else
                             {
-                                Task.Run(async () =>
-                                {
-                                    await App.ComunicationService.Connect();
-                                }).Wait();
-
-                                App.LogUser = loginresult;
-
-                                bool hasPaymentCard = App.LogUser.PaymentCards.Count() > 0 ? true : false;
-
-                                //Verfico si hay tarjetas registradas con el usuario
-                                if( hasPaymentCard )
-                                {
-                                    var data = App.LogUser.PaymentCards;
-
-                                    var card = new List<PaymentCard>(data);
-
-                                    var userCardTokenId = await stripeServiceDS.GetCustomerCardId(App.LogUser.StripeUserId, card[0].StripeCardId);
-
-                                    App.CardPaymentToken.CardTokenId = userCardTokenId;
-                                }
-
-                                if( !String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId) )
-                                {
-                                    App.UsersConnected = new UsersConnected()
-                                    {
-                                        HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                        UserID = App.LogUser.UserId,
-                                        IsDisable = false,
-                                        ConnecteDate = DateTime.Now
-                                    };
-
-                                    var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
-
-                                    var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-                                }
-
-                                App.Current.MainPage = new AppShell();
-
-                                IsLoading = false;
+                                await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login...!", "OK");
                             }
                         }
                         else
                         {
                             IsLoading = false;
 
-                            await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login...!", "OK");
+                            await App.Current.MainPage.DisplayAlert("Notification", apiResponse.Message, "OK");
                         }
+                    }
+                    else
+                    {
+                        await App.Current.MainPage.DisplayAlert("Notification", "No internet access.", "OK");
                     }
                 }
                 else
                 {
                     IsLoading = false;
 
-                    await App.Current.MainPage.DisplayAlert("Notification", "Empty values...!", "OK");
+                    await App.Current.MainPage.DisplayAlert("Notification", "Empty Credentials...!", "OK");
                 }
             });
 
@@ -148,63 +176,63 @@ namespace QuickOrderApp.ViewModels.LoginVM
             {
                 IsLoading = true;
 
-                if( !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password) )
-                {
-                    //var loginresult = userDataStore.CheckUserCredential(Username, Password);
-                    App.TokenDto = userDataStore.LoginCredential(Username, Password);
+                //if (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password))
+                //{
+                //    //var loginresult = userDataStore.CheckUserCredential(Username, Password);
+                //    App.TokenDto = userDataStore.LoginCredential(Username, Password);
 
-                    var loginresult = App.TokenDto.UserDetail;
+                //    var loginresult = App.TokenDto.UserDetail;
 
-                    if( loginresult != null )
-                    {
-                        Task.Run(async () =>
-                        {
-                            await App.ComunicationService.Connect();
-                        }).Wait();
+                //    if (loginresult != null)
+                //    {
+                //        Task.Run(async () =>
+                //        {
+                //            await App.ComunicationService.Connect();
+                //        }).Wait();
 
-                        var userEmployees = await EmployeeDataStore.GetUserEmployees(loginresult.UserId.ToString());
+                //        var userEmployees = await EmployeeDataStore.GetUserEmployees(loginresult.ID.ToString());
 
-                        App.LogUser = loginresult;
+                //        App.LogUser = loginresult;
 
-                        if( !String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId) )
-                        {
-                            App.UsersConnected = new UsersConnected()
-                            {
-                                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                UserID = App.LogUser.UserId,
-                                IsDisable = false,
-                                ConnecteDate = DateTime.Now
-                            };
+                //        if (!String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId))
+                //        {
+                //            App.UsersConnected = new UsersConnected()
+                //            {
+                //                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                //                UserID = App.LogUser.ID,
+                //                IsDisable = false,
+                //                ConnecteDate = DateTime.Now
+                //            };
 
-                            var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+                //            var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
 
-                            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-                        }
+                //            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                //        }
 
-                        //App.UsersConnected = new UsersConnected()
-                        //{
-                        //    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                        //    UserID = App.LogUser.UserId,
-                        //    IsDisable = false,
-                        //    ConnecteDate = DateTime.Now
-                        //};
-                        //var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+                //        //App.UsersConnected = new UsersConnected()
+                //        //{
+                //        //    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                //        //    UserID = App.LogUser.UserId,
+                //        //    IsDisable = false,
+                //        //    ConnecteDate = DateTime.Now
+                //        //};
+                //        //var result = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
 
-                        //var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
+                //        //var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
 
-                        App.Current.MainPage = new EmployeeShell();
+                //        App.Current.MainPage = new EmployeeShell();
 
-                        IsLoading = false;
-                    }
-                    else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login.", "OK");
-                    }
-                }
-                else
-                {
-                    await App.Current.MainPage.DisplayAlert("Notification", "Empty inputs.", "OK");
-                }
+                //        IsLoading = false;
+                //    }
+                //    else
+                //    {
+                //        await App.Current.MainPage.DisplayAlert("Notification", "Incorrect login.", "OK");
+                //    }
+                //}
+                //else
+                //{
+                //    await App.Current.MainPage.DisplayAlert("Notification", "Empty inputs.", "OK");
+                //}
             });
 
             RegisterCommand = new Command(async () =>
@@ -216,119 +244,131 @@ namespace QuickOrderApp.ViewModels.LoginVM
             {
                 SetValidatorValues();
 
+                Validator.PropertiesToValid.AddPropertyIfNotExits(ConfirmAndPasswordValidator);
+
+                Validator.PropertiesToValid.AddPropertyIfNotExits(UsernameValidator);
+
+                Validator.PropertiesToValid.AddPropertyIfNotExits(PasswordValidator);
+
+                Validator.PropertiesToValid.AddPropertyIfNotExits(PhoneValidator);
+
+                Validator.PropertiesToValid.AddPropertyIfNotExits(AddressValidator);
+
+                Validator.PropertiesToValid.AddPropertyIfNotExits(ConfirmPasswordValidator);
+
+                Validator.PropertiesToValid.AddPropertyIfNotExits(EmailPatternValidator);
+
+                Validator.PropertiesToValid.AddPropertyIfNotExits(GenderValidator);
+
+                bool _formIsValid = Validator.PropertiesToValid.AllValidatorPassRules();
+
+                Validator.PropertiesToValid.Clear();
+
                 //Verficamos que las propiedades esten de con la informacion correcta y llenas.
-                if( !UsernameValidator.HasError && !FullNameValidator.HasError && !PhoneValidator.HasError && !AddressValidator.HasError && !PasswordValidator.HasError && !ConfirmPasswordValidator.HasError && !EmailValidator.HasError && !GenderValidator.HasError && !EmailPatternValidator.HasError )
+                if (_formIsValid)
                 {
-                    if( !await userDataStore.EmailExist(Email) )
+                    //Verificar si usuario tiene el email realizarlo en el api.
+
+                    //Si el username y password existen tendra que reinsertar esa informacion
+
+                    var _apiCredentialRequestReponse = await userDataStore.CheckIfUsernameAndPasswordExist(Username, Password);
+
+                    if (_apiCredentialRequestReponse.IsValid)
                     {
-                        ConfirmAndPasswordValidator = ValidatorRules.PasswordAndConfirmPasswordEquals(Password, ConfirmPassword);
-                        //Verificamos que el password y el confirmpassword matcheen
-                        if( !ConfirmAndPasswordValidator.HasError )
+                        if (_apiCredentialRequestReponse.Status == ResponseStatus.Not_Found)
                         {
-                            //Si el username y password existen tendra que reinsertar esa informacion
-                            if( !await userDataStore.CheckIfUsernameAndPasswordExist(Username, Password) )
+                            var userlogin = new Credential()
                             {
-                                var userlogin = new Login()
+                                ID = Guid.NewGuid(),
+                                IsConnected = false,
+                                Password = Password,
+                                Username = Username
+                            };
+
+                            Gender value;
+
+                            Enum.TryParse(GenderSelected, out value);
+
+                            var newUser = new AppUser()
+                            {
+                                ID = Guid.NewGuid(),
+                                Email = Email,
+                                Name = Fullname,
+                                LoginId = userlogin.ID,
+                                Phone = Phone,
+                                Address = Address,
+                                Gender = value,
+                                UserLogin = userlogin,
+                            };
+
+                            userlogin.UserId = newUser.ID;
+
+                            try
+                            {
+                                var optionsCustomers = new UserDTO
                                 {
-                                    LoginId = Guid.NewGuid(),
-                                    IsConnected = false,
-                                    Password = Password,
-                                    Username = Username
-                                };
-
-                                Gender value;
-
-                                Enum.TryParse(GenderSelected, out value);
-
-                                var newUser = new User()
-                                {
-                                    UserId = Guid.NewGuid(),
-                                    Email = Email,
                                     Name = Fullname,
-                                    LoginId = userlogin.LoginId,
+                                    Email = Email,
                                     Phone = Phone,
-                                    Address = Address,
-                                    Gender = value,
-                                    UserLogin = userlogin,
+                                    Address = Address
                                 };
 
-                                userlogin.UserId = newUser.UserId;
+                                //Create Customer
+                                var customertokenId = await stripeServiceDS.CreateStripeCustomer(optionsCustomers);
 
-                                try
+                                if (!string.IsNullOrEmpty(customertokenId))
                                 {
-                                    var optionsCustomers = new UserDTO
+                                    await App.ComunicationService.Connect();
+
+                                    newUser.StripeUserId = customertokenId;
+
+                                    var _apiRequestAddUserResponse = await userDataStore.AddItemAsync(newUser);
+
+                                    if (_apiRequestAddUserResponse.IsValid)
                                     {
-                                        Name = Fullname,
-                                        Email = Email,
-                                        Phone = Phone,
-                                        Address = Address
-                                    };
+                                        var _apiCredentialRequestResponse = await userDataStore.LoginCredential(Username, Password);
 
-                                    //Create Customer
-                                    var customertokenId = await stripeServiceDS.CreateStripeCustomer(optionsCustomers);
+                                        App.LogUser = App.TokenDto.UserDetail;
 
-                                    if( !string.IsNullOrEmpty(customertokenId) )
-                                    {
-                                        Task.Run(async () =>
+                                        if (App.ComunicationService.hubConnection.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
                                         {
-                                            await App.ComunicationService.Connect();
-                                        }).Wait();
-
-                                        newUser.StripeUserId = customertokenId;
-
-                                        var result = await userDataStore.AddItemAsync(newUser);
-
-                                        //var credentialsResult = userDataStore.CheckUserCredential(Username, Password);
-                                        App.TokenDto = userDataStore.LoginCredential(Username, Password);
-
-                                        if( result )
-                                        {
-                                            App.LogUser = App.TokenDto.UserDetail;
-
-                                            if( !String.IsNullOrEmpty(App.ComunicationService.hubConnection.ConnectionId) )
+                                            App.UsersConnected = new UsersConnected()
                                             {
-                                                App.UsersConnected = new UsersConnected()
-                                                {
-                                                    HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
-                                                    UserID = App.LogUser.UserId,
-                                                    IsDisable = false,
-                                                    ConnecteDate = DateTime.Now
-                                                };
+                                                HubConnectionID = App.ComunicationService.hubConnection.ConnectionId,
+                                                UserID = App.LogUser.ID,
+                                                IsDisable = false,
+                                                ConnecteDate = DateTime.Now
+                                            };
 
-                                                //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
+                                            //var oldConnectionModify = await userConnectedDataStore.ModifyOldConnections(App.UsersConnected);
 
-                                                var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
-                                            }
-
-                                            try
-                                            {
-                                                await SecureStorage.SetAsync("username", Username);
-
-                                                await SecureStorage.SetAsync("password", Password);
-                                            }
-                                            catch( Exception ex )
-                                            {
-                                                // Possible that device doesn't support secure storage on device.
-                                            }
-
-                                            await popupNavigation.PushAsync(new RegisterValidationEmail());
+                                            var hub_connected_Result = await userConnectedDataStore.AddItemAsync(App.UsersConnected);
                                         }
+
+                                        try
+                                        {
+                                            await SecureStorage.SetAsync("username", Username);
+
+                                            await SecureStorage.SetAsync("password", Password);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            await App.Current.MainPage.DisplayAlert("Notification", ex.Message, "OK");
+                                        }
+
+                                        await popupNavigation.PushAsync(new RegisterValidationEmail());
                                     }
                                 }
-                                catch( Exception e )
-                                {
-                                    await App.Current.MainPage.DisplayAlert("Notification", e.Message, "OK");
-                                }
                             }
-                            else
+                            catch (Exception e)
                             {
-                                await App.Current.MainPage.DisplayAlert("Notification", "Username or password exist try to change to other one.", "OK");
+                                await App.Current.MainPage.DisplayAlert("Notification", e.Message, "OK");
                             }
                         }
-                    }
-                    else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Notification", "Email is in used.", "OK");
+                        else
+                        {
+                            await App.Current.MainPage.DisplayAlert("Notification", _apiCredentialRequestReponse.Message, "OK");
+                        }
                     }
                 }
                 else
@@ -342,104 +382,6 @@ namespace QuickOrderApp.ViewModels.LoginVM
                 await App.Current.MainPage.Navigation.PushAsync(new ForgotPasswordPage());
             });
         }
-
-        public List<string> Genders { get; set; }
-
-        public bool IsLoading
-        {
-            get { return isloading; }
-            set
-            {
-                isloading = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private void SetValidatorValues ()
-        {
-            UsernameValidator = ValidatorRules.EmptyOrNullValueRule(Username);
-
-            FullNameValidator = ValidatorRules.EmptyOrNullValueRule(Fullname);
-
-            PhoneValidator = ValidatorRules.EmptyOrNullValueRule(Phone);
-
-            AddressValidator = ValidatorRules.EmptyOrNullValueRule(Address);
-
-            PasswordValidator = ValidatorRules.EmptyOrNullValueRule(Password);
-
-            ConfirmPasswordValidator = ValidatorRules.EmptyOrNullValueRule(ConfirmPassword);
-
-            EmailValidator = ValidatorRules.EmptyOrNullValueRule(Email);
-
-            if( !EmailValidator.HasError )
-            {
-                EmailPatternValidator = ValidatorRules.EmptyOrNullValueRule(Email);
-            }
-            GenderValidator = ValidatorRules.EmptyOrNullValueRule(GenderSelected);
-        }
-
-        private void ValidatorsInitializer ()
-        {
-            #region Instaciando Validadores
-
-            UsernameValidator = new Validator();
-
-            PhoneValidator = new Validator();
-
-            EmailValidator = new Validator();
-
-            AddressValidator = new Validator();
-
-            PasswordValidator = new Validator();
-
-            ConfirmPasswordValidator = new Validator();
-
-            GenderValidator = new Validator();
-
-            ConfirmAndPasswordValidator = new Validator();
-
-            EmailPatternValidator = new Validator();
-
-            #endregion Instaciando Validadores
-        }
-
-        #region Properties
-
-        private string _confirmpassword;
-
-        private string _email;
-
-        private string _fullname;
-
-        private string _password;
-
-        private string _username;
-
-        private Validator addressValidator;
-
-        private string adress;
-
-        private Validator confirmAndpasswordValidator;
-
-        private Validator confirmpasswordValidator;
-
-        private Validator emailPatternValidator;
-
-        private Validator emailValidator;
-
-        private Validator fullnameValidator;
-
-        private string genderselected;
-
-        private Validator genderValidator;
-
-        private Validator passwordValidator;
-
-        private string phone;
-
-        private Validator phoneValidator;
-
-        private Validator usernameValidator;
 
         public string Address
         {
@@ -469,6 +411,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
             }
         }
 
+        public ICommand ConfirmCodeCommand { get; set; }
+
         public string ConfirmPassword
         {
             get { return _confirmpassword; }
@@ -491,12 +435,14 @@ namespace QuickOrderApp.ViewModels.LoginVM
             }
         }
 
+        public ICommand DoneCommand { get; set; }
+
         public string Email
         {
             get { return _email; }
             set
             {
-                if( _email != value )
+                if (_email != value)
                 {
                     _email = value;
 
@@ -549,6 +495,8 @@ namespace QuickOrderApp.ViewModels.LoginVM
             }
         }
 
+        public List<string> Genders { get; set; }
+
         public string GenderSelected
         {
             get { return genderselected; }
@@ -571,12 +519,27 @@ namespace QuickOrderApp.ViewModels.LoginVM
             }
         }
 
+        public ICommand GoForgotPasswordCommand { get; set; }
+
+        public bool IsLoading
+        {
+            get { return isloading; }
+            set
+            {
+                isloading = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand LoginCommand { get; set; }
+        public ICommand LoginEmployeeCommand { get; set; }
+
         public string Password
         {
             get { return _password; }
             set
             {
-                if( _password != value )
+                if (_password != value)
                 {
                     _password = value;
 
@@ -618,6 +581,9 @@ namespace QuickOrderApp.ViewModels.LoginVM
             }
         }
 
+        public ICommand RegisterCommand { get; set; }
+        public ICommand SendCodeCommand { get; set; }
+
         public string Username
         {
             get { return _username; }
@@ -646,6 +612,51 @@ namespace QuickOrderApp.ViewModels.LoginVM
             }
         }
 
-        #endregion Properties
+        private void SetValidatorValues()
+        {
+            UsernameValidator = ValidatorRules.EmptyOrNullValueRule(Username);
+
+            FullNameValidator = ValidatorRules.EmptyOrNullValueRule(Fullname);
+
+            PhoneValidator = ValidatorRules.EmptyOrNullValueRule(Phone);
+
+            AddressValidator = ValidatorRules.EmptyOrNullValueRule(Address);
+
+            PasswordValidator = ValidatorRules.EmptyOrNullValueRule(Password);
+
+            ConfirmPasswordValidator = ValidatorRules.EmptyOrNullValueRule(ConfirmPassword);
+
+            EmailValidator = ValidatorRules.EmptyOrNullValueRule(Email);
+
+            if (!EmailValidator.HasError)
+            {
+                EmailPatternValidator = ValidatorRules.EmptyOrNullValueRule(Email);
+            }
+
+            GenderValidator = ValidatorRules.EmptyOrNullValueRule(GenderSelected);
+
+            ConfirmAndPasswordValidator = ValidatorRules.PasswordAndConfirmPasswordEquals(Password, ConfirmPassword);
+        }
+
+        private void ValidatorsInitializer()
+        {
+            UsernameValidator = new Validator();
+
+            PhoneValidator = new Validator();
+
+            EmailValidator = new Validator();
+
+            AddressValidator = new Validator();
+
+            PasswordValidator = new Validator();
+
+            ConfirmPasswordValidator = new Validator();
+
+            GenderValidator = new Validator();
+
+            ConfirmAndPasswordValidator = new Validator();
+
+            EmailPatternValidator = new Validator();
+        }
     }
 }

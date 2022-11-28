@@ -9,15 +9,15 @@
 
     <div>
        
-        @Html.ActionLink("Complete", "Complete", "Store", new { OrderId = Model.OrderId }, new { @class = "btn btn-warning btn-block" })
+        @Html.ActionLink("Complete", "Complete", "Store", new { OrderId = Model.ID }, new { @class = "btn btn-warning btn-block" })
 
         <hr />
         <dl class="row">
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.OrderId)
+                @Html.DisplayNameFor(model => model.ID)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.OrderId)
+                @Html.DisplayFor(model => model.ID)
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.OrderDate)

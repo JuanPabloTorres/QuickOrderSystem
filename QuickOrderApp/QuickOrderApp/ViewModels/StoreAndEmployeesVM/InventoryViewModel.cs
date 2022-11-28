@@ -21,7 +21,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             SearchItemCommand = new Command(async () =>
             {
-                var itemResult = await productDataStore.SearchItemOfStore(StoreControlPanelViewModel.YourSelectedStore.StoreId.ToString(), SearchItem);
+                var itemResult = await productDataStore.SearchItemOfStore(StoreControlPanelViewModel.YourSelectedStore.ID.ToString(), SearchItem);
 
                 if( itemResult != null )
                 {
@@ -46,7 +46,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             MessagingCenter.Subscribe<Product>(this, "InventoryItemUpdated", (obj) =>
             {
-                var itemtoRemove = StoreInventory.Where(pid => pid.ProductId == obj.ProductId).FirstOrDefault();
+                var itemtoRemove = StoreInventory.Where(pid => pid.ProductId == obj.ID).FirstOrDefault();
 
                 StoreInventory.Remove(itemtoRemove);
 
@@ -62,7 +62,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
             MoreCommand = new Command(async () =>
             {
-                var result = await productDataStore.GetDifferentProductFromStore(keyValues["productAdded"], StoreControlPanelViewModel.YourSelectedStore.StoreId);
+                var result = await productDataStore.GetDifferentProductFromStore(keyValues["productAdded"], StoreControlPanelViewModel.YourSelectedStore.ID);
 
                 if( result != null )
                 {
@@ -70,7 +70,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
                     foreach( var item in keyValues["productAdded"] )
                     {
-                        if( !tempData.Any(s => s.ProductId == item.ProductId) )
+                        if( !tempData.Any(s => s.ID == item.ID) )
                         {
                             tempData.Add(item);
                         }
@@ -78,7 +78,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
                     foreach( var item in result )
                     {
-                        if( !tempData.Any(s => s.ProductId == item.ProductId) )
+                        if( !tempData.Any(s => s.ID == item.ID) )
                         {
                             tempData.Add(item);
                         }
@@ -90,7 +90,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
                     foreach( var item in keyValues["productAdded"] )
                     {
-                        if( !StoreInventory.Any(s => s.ProductId == item.ProductId) )
+                        if( !StoreInventory.Any(s => s.ProductId == item.ID) )
                         {
                             var productPresenter = new ProductPresenter(item);
 
@@ -129,7 +129,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
                 StoreInventory.Clear();
             }
 
-            var data = productDataStore.GetProductFromStore(StoreControlPanelViewModel.YourSelectedStore.StoreId);
+            var data = productDataStore.GetProductFromStore(StoreControlPanelViewModel.YourSelectedStore.ID);
 
             if( !keyValues.ContainsKey("productAdded") )
             {

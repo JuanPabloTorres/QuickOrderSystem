@@ -63,7 +63,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{license}")]
         public async Task<bool> IsLicenseInUsed (string license)
         {
-            var result = await _context.StoreLicenses.Where(l => l.LicenseId.ToString() == license).FirstOrDefaultAsync();
+            var result = await _context.StoreLicenses.Where(l => l.ID.ToString() == license).FirstOrDefaultAsync();
 
             return result.IsUsed;
         }
@@ -78,7 +78,7 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStoreLicense", new { id = storeLicense.LicenseId }, storeLicense);
+            return CreatedAtAction("GetStoreLicense", new { id = storeLicense.ID }, storeLicense);
         }
 
         [HttpGet("[action]/{email}/{username}")]
@@ -86,7 +86,7 @@ namespace WebApiQuickOrder.Controllers
         {
             var newStoreLicense = new StoreLicense()
             {
-                LicenseId = Guid.NewGuid(),
+                ID = Guid.NewGuid(),
                 StartDate = DateTime.Today,
                 IsUsed = false
             };
@@ -95,7 +95,7 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            if( _context.StoreLicenses.Where(l => l.LicenseId == newStoreLicense.LicenseId).FirstOrDefault() != null )
+            if( _context.StoreLicenses.Where(l => l.ID == newStoreLicense.ID).FirstOrDefault() != null )
             {
                 var senderEmail = new MailAddress("est.juanpablotorres@gmail.com", "Quick Order");
 
@@ -103,7 +103,7 @@ namespace WebApiQuickOrder.Controllers
 
                 var sub = "Quick Order Lincense Code";
 
-                var body = "<span>License Code:</span>" + newStoreLicense.LicenseId;
+                var body = "<span>License Code:</span>" + newStoreLicense.ID;
 
                 var smtp = new SmtpClient
                 {
@@ -132,7 +132,7 @@ namespace WebApiQuickOrder.Controllers
                 return false;
             }
 
-            //return CreatedAtAction("GetStoreLicense", new { id = storeLicense.LicenseId }, storeLicense);
+            //return CreatedAtAction("GetStoreLicense", new { id = storeLicense.ID }, storeLicense);
         }
 
         // PUT: api/StoreLicenses/5
@@ -151,7 +151,7 @@ namespace WebApiQuickOrder.Controllers
             }
             catch( DbUpdateConcurrencyException )
             {
-                if( !StoreLicenseExists(storeLicense.LicenseId) )
+                if( !StoreLicenseExists(storeLicense.ID) )
                 {
                     return false;
                 }
@@ -165,13 +165,13 @@ namespace WebApiQuickOrder.Controllers
         [HttpGet("[action]/{id}")]
         public bool StoreLicenseExists (Guid id)
         {
-            return _context.StoreLicenses.Any(e => e.LicenseId == id);
+            return _context.StoreLicenses.Any(e => e.ID == id);
         }
 
         [HttpGet("[action]/{id}")]
         public async Task<bool> UpdateLicenceInCode (Guid id)
         {
-            var storeLicense = await _context.StoreLicenses.Where(st => st.LicenseId == id).FirstOrDefaultAsync();
+            var storeLicense = await _context.StoreLicenses.Where(st => st.ID == id).FirstOrDefaultAsync();
 
             storeLicense.IsUsed = true;
 
@@ -185,7 +185,7 @@ namespace WebApiQuickOrder.Controllers
             }
             catch( DbUpdateConcurrencyException )
             {
-                if( !StoreLicenseExists(storeLicense.LicenseId) )
+                if( !StoreLicenseExists(storeLicense.ID) )
                 {
                     return false;
                 }

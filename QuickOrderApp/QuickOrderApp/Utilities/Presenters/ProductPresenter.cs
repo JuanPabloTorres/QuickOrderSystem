@@ -35,7 +35,7 @@ namespace QuickOrderApp.Utilities.Presenters
 
             ProductImg = product.ProductImage;
 
-            ProductId = product.ProductId;
+            ProductId = product.ID;
 
             ProductPrice = product.Price;
 

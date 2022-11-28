@@ -1,16 +1,13 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using Library.AbstractModels;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Models
 {
     [Table("Logins")]
-    public class Login
+    public class Credential : BaseModel
     {
         public bool IsConnected { get; set; }
-
-        [Key]
-        public Guid LoginId { get; set; }
 
         public string Password { get; set; }
 

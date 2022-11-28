@@ -28,7 +28,7 @@ namespace WebApiQuickOrder.Controllers
         [Authorize]
         public async Task<ActionResult<bool>> DeletePaymentCard (string id)
         {
-            var paymentCard = await _context.PaymentCards.Where(pc => pc.PaymentCardId.ToString() == id).FirstOrDefaultAsync();
+            var paymentCard = await _context.PaymentCards.Where(pc => pc.ID.ToString() == id).FirstOrDefaultAsync();
 
             if( paymentCard == null )
             {
@@ -39,7 +39,7 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            var paymentcardResult = await _context.PaymentCards.Where(pc => pc.PaymentCardId.ToString() == id).FirstOrDefaultAsync();
+            var paymentcardResult = await _context.PaymentCards.Where(pc => pc.ID.ToString() == id).FirstOrDefaultAsync();
 
             if( paymentcardResult == null )
             {
@@ -70,7 +70,7 @@ namespace WebApiQuickOrder.Controllers
                         CardNumber = "●●●●" + cardlastfour,
                         HolderName = item.HolderName,
                         StripeCardId = item.StripeCardId,
-                        PaymentCardId = item.PaymentCardId
+                        PaymentCardId = item.ID
                     };
 
                     paymentCardDTOs.Add(cardDtO);
@@ -126,7 +126,7 @@ namespace WebApiQuickOrder.Controllers
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPaymentCard", new { id = paymentCard.PaymentCardId }, paymentCard);
+            return CreatedAtAction("GetPaymentCard", new { id = paymentCard.ID }, paymentCard);
         }
 
         // PUT: api/PaymentCards/5
@@ -135,7 +135,7 @@ namespace WebApiQuickOrder.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPaymentCard (Guid id, PaymentCard paymentCard)
         {
-            if( id != paymentCard.PaymentCardId )
+            if( id != paymentCard.ID )
             {
                 return BadRequest();
             }
@@ -163,7 +163,7 @@ namespace WebApiQuickOrder.Controllers
 
         private bool PaymentCardExists (Guid id)
         {
-            return _context.PaymentCards.Any(e => e.PaymentCardId == id);
+            return _context.PaymentCards.Any(e => e.ID == id);
         }
     }
 }

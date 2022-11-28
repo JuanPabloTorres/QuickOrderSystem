@@ -95,7 +95,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
         private async Task GetUserEmployeeInformation ()
         {
             //Obtine los empleos del usuario.
-            var userEmployees = await EmployeeDataStore.GetUserEmployees(App.LogUser.UserId.ToString());
+            var userEmployees = await EmployeeDataStore.GetUserEmployees(App.LogUser.ID.ToString());
 
             UserStoreEmployee = new ObservableCollection<Store>();
 
@@ -106,7 +106,7 @@ namespace QuickOrderApp.ViewModels.StoreAndEmployeesVM
 
                 if( item.EmployeeStore != null )
                 {
-                    var empWorkHours = await EmployeeWorkHour.GetEmployeeWorkHours(item.EmployeeId.ToString());
+                    var empWorkHours = await EmployeeWorkHour.GetEmployeeWorkHours(item.ID.ToString());
 
                     item.EmployeeWorkHours = empWorkHours.ToList();
 
